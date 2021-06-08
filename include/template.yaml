@@ -17,36 +17,36 @@ template:
         date: |
           <font color='#6a7377'><b>
           {%- if strptime(states('sensor.date'), '%Y-%m-%d').day != null %}
-          {%- set days = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'] %}
-          {%- set months = ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
-          'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'] %}
+          {%- set days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
+          {%- set months = ['January', 'February', 'March', 'April', 'May', 'June', 
+          'July', 'August', 'September', 'October', 'November', 'December'] %}
             {{- days[now().weekday()] }}<br>
-            {{- strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}
+            {{- months[now().month-1] }} {{strptime(states('sensor.date'), '%Y-%m-%d').day }} 
           {%- endif -%}
           </b></font>
         greet: |
           <b>
           {%- set time = now().hour %}
-          {%- if time <= 1 -%} God natt {{'\U0001F611'}}
-          {%- elif time <= 3 -%} God natt {{'\U0001F62A'}}
-          {%- elif time <= 5 -%} God natt {{'\U0001F634'}}
-          {%- elif time <= 7 -%} God morgon {{'\U0001F4A9'}}
-          {%- elif time <= 9 -%} God morgon {{'\u2615\uFE0F'}}
-          {%- elif time <= 10 -%} God morgon {{'\U0001F642'}}
-          {%- elif time <= 13 -%} God dag {{'\U0001F60A'}}
-          {%- elif time <= 15 -%} God dag {{'\U0001F60E'}}
-          {%- elif time <= 17 -%} God dag {{'\U0001F44B\U0001F3FB'}}
-          {%- elif time <= 19 -%} God kväll {{'\U0001F44B\U0001F3FB'}}
-          {%- elif time <= 22 -%} God kväll {{'\U0001F60C'}}
-          {%- elif time <= 23 -%} God kväll {{'\U0001F974'}}
-          {%- else %} God kväll {{'\U0001F974'}}
+          {%- if time <= 1 -%} Good night {{'\U0001F611'}}
+          {%- elif time <= 3 -%} Good night{{'\U0001F62A'}}
+          {%- elif time <= 5 -%} Good night {{'\U0001F634'}}
+          {%- elif time <= 7 -%} Good morning {{'\U0001F4A9'}}
+          {%- elif time <= 9 -%} Good morning {{'\u2615\uFE0F'}}
+          {%- elif time <= 10 -%} Good morning {{'\U0001F642'}}
+          {%- elif time <= 13 -%} Good day {{'\U0001F60A'}}
+          {%- elif time <= 15 -%} Good day {{'\U0001F60E'}}
+          {%- elif time <= 17 -%} Good day {{'\U0001F44B\U0001F3FB'}}
+          {%- elif time <= 19 -%} Good evening {{'\U0001F44B\U0001F3FB'}}
+          {%- elif time <= 22 -%} Good evening {{'\U0001F60C'}}
+          {%- elif time <= 23 -%} Good evening {{'\U0001F974'}}
+          {%- else %} Good evening {{'\U0001F974'}}
           {%- endif -%}
           </b>
         active: |
           <b>
           {%- set lights = [
             states.light.tv,
-            states.light.golv,
+            states.light.yeelight_hania,
             states.light.horna,
             states.light.dator,
             states.light.vask_hoger,
@@ -65,7 +65,7 @@ template:
 
           {%- set switches = [
             states.switch.computer_imac,
-            states.switch.tv_sony,
+            states.switch.tv,
             states.switch.tv_samsung,
             states.switch.playstation_5,
             states.switch.wemo_monitors,
@@ -81,55 +81,53 @@ template:
           {%- set switches_name = switches | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
 
           {%- if (lights_on | length == 0) and (switches_on | length > 0) -%} 
-            {{ switches_name | regex_replace(',([^,]*)$',' och\\1') }} är på
+            {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} är på
 
           {%- elif (lights_on | length == 1) and (switches_on | length == 1) -%}
-            {{ lights_name }} och {{switches_name }} är på
+            {{ lights_name }} and {{switches_name }} are on
 
           {%- elif (lights_on | length == 1) and (switches_on | length > 1) -%}
-            {{ lights_name }}, {{ switches_name | regex_replace(',([^,]*)$',' och\\1') }} är på
+            {{ lights_name }}, {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} are on
 
           {%- elif (lights_on | length > 1) and (switches_on | length == 1) -%}
-            {{ lights_on | length }} lampor och {{ switches_name }} är på
+            {{ lights_on | length }} lights and {{ switches_name }} are on
 
           {%- elif (lights_on | length > 1) and (switches_on | length > 1) -%}
-            {{ lights_on | length }} lampor, {{ switches_name | regex_replace(',([^,]*)$',' och\\1') }} är på
+            {{ lights_on | length }} lights, {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} are on
 
           {%- elif (lights_on | length == 1) and (switches_on | length == 0) -%}
-            {{ lights_name }} är på
+            {{ lights_name }} is on
 
           {%- elif (lights_on | length > 1) and (switches_on | length == 0) -%}
-            {{ lights_on | length }} lampor är på
+            {{ lights_on | length }} lights are on
 
           {%- else %}
-            <font color='#6a7377'>Allt är avstängt</font>
+            <font color='#6a7377'>Everything is off</font>
           {%- endif -%}
           </b>
         vacuum: |
           {% set entity_id = 'vacuum.valetudo_robot' %}
           {%- if is_state(entity_id, 'cleaning') -%}
-            <b>Morty dammsuger</b>
+            <b>Morty is cleaning</b>
           {%- elif is_state(entity_id, 'returning') -%}
-            <b>Morty är färdig</b>
+            <b>Morty is done</b>
           {%- endif %}
         weather: |
-          {%- set temperature = states('sensor.dark_sky_temperature') %}
-          {%- set apparent = states('sensor.dark_sky_apparent_temperature') | round %}
-          {%- set precip = states('sensor.dark_sky_precip_probability') | round %}
-          {% if not is_state('sensor.dark_sky_temperature', 'unknown') %}
+          {%- set temperature = states('sensor.openweathermap_temperature') %}
+          {%- set apparent = states('sensor.openweathermap_feels_like_temperature') | round %}
+          {%- set precip = states('sensor.openweathermap_forecast_precipitation_probability') | round %}
+          {% if not is_state('sensor.openweathermap_temperature', 'unknown') %}
             {%- if temperature | float <= 0.0 -%}
-              Känns som {{ apparent }}° med {{ precip }}% risk för snö {{'\u2744\uFE0F'}}
+              Feels like {{ apparent }}° with {{ precip }}% risk of snow {{'\u2744\uFE0F'}}
             {%- elif temperature | float > 0.0 -%} 
-              Känns som {{ apparent}}° med {{ precip }}% risk för regn {{ '\u2614\uFE0F' if precip > 30 }}
+             Feels like {{ apparent}}° with {{ precip }}% risk of rain {{ '\u2614\uFE0F' if precip > 30 }}
             {%- endif %}
           {%- else %}
-            Kan inte läsa in väderinformation...
+            Unable to load weather information...
           {%- endif %}
         transport: |
-          {% set entity_id = 'sensor.skanetrafiken' %}
-          {%- set date = strptime(state_attr(entity_id, 'date') + ' ' + state_attr(entity_id, 'time'), "%X") %}
-          {%- set time = as_timestamp(date) | timestamp_custom('%H:%M') -%}
-            Nästa buss går {{ time }} från {{ state_attr(entity_id, 'name').split()[1] }}
+          {% set entity_id = 'sensor.stopa_bazowa_pko_bp' %}
+            Stopa bazowa NBP wynosi {{ states('sensor.stopa_bazowa_pko_bp') }}
         laundry: |
           {%- set start_time = state_attr('calendar.tvatta', 'start_time') %}
           {% if start_time != None %}
@@ -137,21 +135,21 @@ template:
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
-            | replace('Monday', 'Måndag')
-            | replace('Tuesday', 'Tisdag')
-            | replace('Wednesday', 'Onsdag')
-            | replace('Thursday', 'Torsdag')
-            | replace('Friday', 'Fredag')
-            | replace('Saturday', 'Lördag')
-            | replace('Sunday', 'Söndag') %}
+            | replace('Monday', 'Monday')
+            | replace('Tuesday', 'Tuesday')
+            | replace('Wednesday', 'Wednesday')
+            | replace('Thursday', 'Thursday')
+            | replace('Friday', 'Friday')
+            | replace('Saturday', 'Saturday')
+            | replace('Sunday', 'Sunday') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F4A6'}} Tvätt idag {{ time }}
+              {{'\U0001F4A6'}} Wash today {{ time }}
             {%- elif count <= 1.0 -%}
-              Tvätt imorgon klockan {{ time }}
+              Wash tomorrow at  {{ time }}
             {%- elif count <= 2.0 -%}
-              Tvätt i övermorgon klockan {{ time }}
+              Wash the day after tomorrow at  {{ time }}
             {%- else -%}
-              Tvätt om {{ (count + hours) | round }} dagar på {{ day }} kl {{ time }}
+              Wash again {{ (count + hours) | round }} days on {{ day }} at {{ time }}
             {%- endif %}
           {%- endif %}
         mathem: |
@@ -163,30 +161,30 @@ template:
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
-            | replace('Monday', 'Måndag')
-            | replace('Tuesday', 'Tisdag')
-            | replace('Wednesday', 'Onsdag')
-            | replace('Thursday', 'Torsdag')
-            | replace('Friday', 'Fredag')
-            | replace('Saturday', 'Lördag')
-            | replace('Sunday', 'Söndag') %}
+            | replace('Monday', 'Monday')
+            | replace('Tuesday', 'Tuesday')
+            | replace('Wednesday', 'Wednesday')
+            | replace('Thursday', 'Thursday')
+            | replace('Friday', 'Friday')
+            | replace('Saturday', 'Saturday')
+            | replace('Sunday', 'Sunday') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F6D2'}} Mathem idag mellan {{ time }}-{{ time_end }}
+              {{'\U0001F6D2'}} Mathem today between {{ time }}-{{ time_end }}
             {%- elif count <= 1.0 -%}
-              Mathem imorgon mellan {{ time }}-{{ time_end }}
+              Mathem tomorrow between {{ time }}-{{ time_end }}
             {%- elif count <= 2.0 -%}
-              Mathem i övermorgon mellan {{ time }}-{{ time_end }}
+              Mathem the day after tomorrow between {{ time }}-{{ time_end }}
             {%- else -%}
-              Mathem om {{ (count + hours) | round }} dagar på {{ day }} mellan {{ time }}-{{ time_end }}
+              Mathem again {{ (count + hours) | round }} days on{{ day }} between {{ time }}-{{ time_end }}
             {%- endif %}
           {%- endif %}
         plex: |
           {% if is_state('binary_sensor.plex_availability', 'off') -%}
-            {{-'\u26A0\uFE0F'}} Plex är nere...
+            {{-'\u26A0\uFE0F'}} Plex is down...
           {%- endif %}
         nas: |
           {% if is_state('binary_sensor.nas_internet_access', 'off') -%}
-            {{-'\u26A0\uFE0F'}} Kontrollera NAS internetåtkomst
+            {{-'\u26A0\uFE0F'}} Check NAS Internet access 
           {%- endif %}
 
     - unique_id: coronavirus
@@ -194,16 +192,16 @@ template:
       state: template
       attributes:
         template: >
-          {% if is_state('sensor.covid_19_folkhalsomyndigheten', 'Tillgänglig') %}
+          {% if is_state('sensor.covid_19_folkhalsomyndigheten', 'Available') %}
             {% set data = state_attr('sensor.covid_19_folkhalsomyndigheten', 'embedCode') %}
             {% set total = data | regex_findall_index('Totalt[^,]*?(\d+)[^,]*?(\d+)[^,]*?(\d+)') | list %}
             {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
             <font color='#6a7377'>
             <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}
-            <ha-icon icon="mdi:chart-bar"></ha-icon> <b>{{ ((total[0] | int / 10327589) * 100) | round(2) }}%</b> av Sverige{{ break -}}
-            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ total[0] }}</b> fall{{ break -}}
-            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ total[2] }}</b> avlidna{{ break -}}
-            <ha-icon icon="mdi:map-marker-radius"></ha-icon> <b>{{ data | regex_findall_index('Skåne[^,]*?(\d+)') }}</b> fall i Skåne
+            <ha-icon icon="mdi:chart-bar"></ha-icon> <b>{{ ((total[0] | int / 10327589) * 100) | round(2) }}%</b> in Sweden{{ break -}}
+            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ total[0] }}</b> cases{{ break -}}
+            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ total[2] }}</b> deceased{{ break -}}
+            <ha-icon icon="mdi:map-marker-radius"></ha-icon> <b>{{ data | regex_findall_index('Skåne[^,]*?(\d+)') }}</b> cases in Skåne
             </font>
           {% endif %}
 
@@ -220,8 +218,8 @@ template:
 
     - unique_id: imac_vpn
       state: >
-        {{ 'Ej Ansluten' if is_state('switch.computer_imac', 'on') and 
-        states('sensor.imac_ip') == states('sensor.template_public_ip') else 'Ansluten' }}
+        {{ 'Not connected' if is_state('switch.computer_imac', 'on') and 
+        states('sensor.imac_ip') == states('sensor.template_public_ip') else 'Connected' }}
       icon: >
         mdi:shield-{{ 'alert' if is_state('switch.computer_imac', 'on') and 
         states('sensor.imac_ip') == states('sensor.template_public_ip') else 'check' }}
@@ -232,14 +230,14 @@ template:
         {% macro prt(state, translate) %}
         {{ translate if states('sensor.hp_deskjet_2600_series') == state }}
         {% endmacro %}
-        {{ prt('On', 'På') }}
-        {{ prt('Scanning', 'Skannar') }}
-        {{ prt('Copying', 'Kopierar') }}
-        {{ prt('Printing', 'Skriver ut') }}
-        {{ prt('Cancelling Job', 'Avbryter') }}
-        {{ prt('trayEmptyOrOpen', 'Inga papper') }}
-        {{ prt('idle', 'Viloläge') }}
-        {{ prt('Off', 'Av') }}
+        {{ prt('On', 'On') }}
+        {{ prt('Scanning', 'Scanning') }}
+        {{ prt('Copying', 'Copying') }}
+        {{ prt('Printing', 'Printing') }}
+        {{ prt('Cancelling Job', 'Cancelling Job') }}
+        {{ prt('trayEmptyOrOpen', 'trayEmptyOrOpen') }}
+        {{ prt('idle', 'idle') }}
+        {{ prt('Off', 'Off') }}
 
     - unique_id: roborock_filter
       icon: custom:roborock-filter
@@ -302,16 +300,16 @@ template:
       state: >
         {% set entity_id = 'sensor.nas_volume_1_status' %}
         {% if is_state(entity_id, 'normal') %}
-          Bra
+          Good
         {% elif is_state(entity_id, 'background') %}
-          Verifierar
+          Verifier
         {% else %}
           {{ states(entity_id) }}
         {% endif %}
 
     - unique_id: nas_vpn
       state: >
-        {{ 'Ej Ansluten' if states('sensor.myip') == states('sensor.template_public_ip') else 'Ansluten' }}
+        {{ 'Not connected' if states('sensor.myip') == states('sensor.template_public_ip') else 'Connected' }}
       icon: >
         mdi:shield-{{ 'alert' if states('sensor.myip') == states('sensor.template_public_ip') else 'check' }}
 
@@ -323,9 +321,9 @@ sensor:
       hass_version:
         icon_template: mdi:home-assistant
         friendly_name_template: >
-          Installerad {{ states('sensor.hass_version_installed') }}
+          Installed {{ states('sensor.hass_version_installed') }}
         value_template: >
-          {{ 'Senaste' if states('sensor.hass_version_installed') == 
+          {{ 'Latest' if states('sensor.hass_version_installed') == 
           states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
 
       hass_dev_release:
@@ -334,9 +332,9 @@ sensor:
         friendly_name_template: >
           {% set release = state_attr('calendar.home_assistant_devs','message') %}
           {% if release == 'Home Assistant Core Beta Release' %}
-            Nästa beta
+            Next beta
           {% elif release == 'Home Assistant Core Release' %}
-            Nästa release
+            Next release
           {% else %}
             {{ release }}
           {% endif %}

@@ -10,11 +10,11 @@ input_boolean:
   laundry_display:
 
   sovrum_anslut_oscillate:
-    name: Oscillera
+    name: Oscillate
     icon: mdi:arrow-left-right
 
   computer_lock:
-    name: Avstängningslås
+    name: Shut-off lock
     icon: custom:lock
 
 input_number:
@@ -26,7 +26,7 @@ input_number:
   ####################################################
 
   monitors_volume:
-    name: Volym
+    name: Volume
     icon: mdi:volume-high
     initial: 20
     min: 7
@@ -34,7 +34,7 @@ input_number:
     unit_of_measurement: '%'
 
   wemo_fan_timer:
-    name: Stäng efter
+    name: Close after
     icon: mdi:timer-outline
     initial: 12
     min: 1
@@ -42,7 +42,7 @@ input_number:
     unit_of_measurement: h
 
   sovrum_anslut_timer:
-    name: Stäng efter
+    name: Close after
     icon: mdi:timer-outline
     initial: 12
     min: 1
@@ -50,14 +50,14 @@ input_number:
     unit_of_measurement: h
 
   sovrum_anslut_speed:
-    name: Fläkthastighet
+    name: Fan speed
     initial: 0
     min: 0
     max: 100
     unit_of_measurement: '%'
 
   air_purifier_speed:
-    name: Hastighet
+    name: Speed
     initial: 0
     min: 0
     max: 100
@@ -72,7 +72,7 @@ input_select:
   ####################################################
 
   hdmi:
-    name: Källa
+    name: Source
     options:
       - HDMI 1
       - HDMI 2/MHL
@@ -82,7 +82,7 @@ input_select:
     icon: custom:hdmi-source
 
   hdmi2:
-    name: Källa
+    name: Source
     options:
       - TV
       - HDMI
@@ -90,45 +90,45 @@ input_select:
     icon: custom:hdmi-source
 
   roborock_speed:
-    name: Rengöringsläge
+    name: Cleaning mode
     icon: mdi:format-list-bulleted
     options:
-      - Tyst
+      - Silent
       - Standard
       - Medium
       - Turbo
-      - Av
+      - Off
 
   sovrum_anslut_speed:
-    name: Fläkthastighet
+    name: Fan speed
     options:
-      - Tyst
+      - Silent
       - Medium
       - Max
 
   air_purifier_speed:
-    name: Hastighet
+    name: Speed
     options:
-      - Tyst
-      - Låg
-      - Hög
+      - Silent
+      - Low
+      - High
       - Turbo
 
   roborock_zone:
-    initial: Ingen vald
+    initial: No selection
     options:
-      - Ingen vald
+      - No selection
       - Hall
-      - Kök
-      - Vardagsrum
+      - Kitchen
+      - Living Room
       - Studio
-      - Sovrum
+      - Bedroom
 
   conditional_media:
-    initial: Senast nedladdat
+    initial: Last downloaded
     options:
-      - Senast nedladdat
-      - Vardagsrum
-      - Sovrum
+      - Last downloaded
+      - Shield
+      - Chromecast
       - Spotify
       - Google Nest Mini

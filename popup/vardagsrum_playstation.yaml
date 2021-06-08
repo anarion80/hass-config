@@ -11,7 +11,7 @@ browser_mod:
         secondary_info: last-changed
 
       - type: custom:calendar-card
-        title: Kommande
+        title: Upcoming
         disableLinks: true
         numberOfDays: 730
         hidePastEvents: true

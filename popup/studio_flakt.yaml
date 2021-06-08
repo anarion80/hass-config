@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: "Fläkt\u00B2"
+  title: "Fan\u00B2"
   style:
     hui-grid-card$: |
       #root {

@@ -20,7 +20,7 @@ switch:
     is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
 
   - platform: mqtt
-    name: Strömbrytare
+    name: Switch
     icon: mdi:power-socket-de
     command_topic: cmnd/gosund1/POWER1
     payload_on: 'ON'
@@ -33,7 +33,7 @@ switch:
     retain: false
 
   - platform: mqtt
-    name: Strömbrytare
+    name: Switch
     icon: mdi:power-socket-de
     command_topic: cmnd/gosund2/POWER1
     payload_on: 'ON'
@@ -46,7 +46,7 @@ switch:
     retain: false
 
   - platform: mqtt
-    name: Balkong
+    name: Balcony
     icon: mdi:power-socket-de
     command_topic: cmnd/gosund3/POWER1
     payload_on: 'ON'
@@ -67,7 +67,7 @@ switch:
   - platform: template
     switches:
       computer_imac:
-        friendly_name: Dator
+        friendly_name: PC
         icon_template: custom:imac-alternative
         value_template: "{{ is_state('switch.wol_imac', 'on') }}"
         turn_on:
@@ -84,7 +84,7 @@ switch:
                 - service: browser_mod.toast
                   data:
                     duration: 8000
-                    message: Dator är låst från att stängas av...
+                    message: Computer is locked from shutting down...
             default:
               - service: shell_command.imac_off
 

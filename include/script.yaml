@@ -27,7 +27,7 @@ script:
       - service: browser_mod.toast
         data:
           duration: 16000
-          message: Startar om Home Assistant container...
+          message: Restarting Home Assistant container...
       - service: shell_command.ha_dockermon_restart_container
 
   zoned_cleanup:
@@ -36,7 +36,7 @@ script:
         conditions:
           - condition: state
             entity_id: input_select.roborock_zone
-            state: Ingen vald
+            state: No selection
       - service: vacuum.send_command
         data:
           entity_id: vacuum.rockrobo
@@ -45,13 +45,13 @@ script:
             zone_ids: ["{{ states('input_select.roborock_zone') }}"]
 
   samsung_tv_energy_saving:
-    alias: Eko-läge
+    alias: Eco mode
     icon: mdi:leaf
     sequence:
       - service: browser_mod.toast
         data:
           duration: 8000
-          message: Ställer in eko-läge på Tv i sovrummet...
+          message: Setting Eco mode on TV in the bedroom...
       - service: media_player.play_media
         data:
           entity_id: media_player.samsung_tv
@@ -64,10 +64,10 @@ script:
       - repeat:
           count: 3
           sequence:
-            - service: notify.mobile_app_mattias_iphone_ios
+            - service: notify.mobile_app_nokia_8_3_5g
               data:
-                title: Hitta min iPhone
-                message: Här är jag
+                title: Find my Phone
+                message: I'm here
                 data:
                   push:
                     sound:
@@ -82,10 +82,10 @@ script:
       - repeat:
           count: 3
           sequence:
-            - service: notify.mobile_app_sanja_iphone
+            - service: notify.mobile_app_redmi_note_5
               data:
-                title: Hitta min iPhone
-                message: Här är jag
+                title: Find my Phone
+                message: I'm here
                 data:
                   push:
                     sound:
@@ -102,7 +102,7 @@ script:
   ####################################################
 
   home_arrive:
-    alias: Hemma
+    alias: Home
     sequence:
       - choose:
         - conditions:
@@ -113,12 +113,11 @@ script:
               entity_id: switch.galaxy_tab_a_screensaver
               state: 'off'
           sequence:
-            - service: tts.cloud_say
+            - service: tts.google_cloud_say
               data:
-                entity_id: media_player.galaxy_tab_a
+                entity_id: media_player.nest_mini
                 message: >
-                  {{ ['Hej', 'Startar', 'Värmer upp', 'Välkommen hem'] | random }}
-                language: sv-SE
+                  {{ ['Witaj', 'Cześć', 'Hej', 'Witaj w domu'] | random }}
       - choose:
         - conditions:
             - condition: state
@@ -136,7 +135,7 @@ script:
           seconds: 4
 
   home_leave:
-    alias: Stäng allt
+    alias: Close everything
     sequence:
       - choose:
         - conditions:
@@ -144,27 +143,27 @@ script:
               entity_id: switch.galaxy_tab_a_screensaver
               state: 'off'
           sequence:
-            - service: tts.cloud_say
+            - service: tts.google_cloud_say
               data:
-                entity_id: media_player.galaxy_tab_a
+                entity_id: media_player.nest_mini
                 message: >
-                  {{ ['Ha det bra', 'Saknar dig redan', 'Hej då', 'Stänger ner allt'] | random }}
+                  {{ ['Do widzenia', 'Pa Pa', 'Cześć', 'Już za tobą tęsknię', 'Wyłączam wszystko'] | random }}
       - service: homeassistant.turn_off
         data:
           entity_id: >
             {% set states = [
               states.light.all_lights_exclude_hall,
+              states.light.yeelight_hania,
               states.switch.wemo_fan,
               states.switch.wemo_monitors,
-              states.switch.computer_imac,
+              states.switch.radio,
               states.switch.balkong,
-              states.switch.tv_sony,
-              states.switch.tv_samsung,
+              states.switch.tv,
               states.fan.sovrum_anslut ] %}
             {{ states | selectattr('state','eq','on') | map(attribute='entity_id') | list }}
       - delay:
           seconds: 1
       - service: fan.turn_off
-        entity_id: fan.air_purifier
+        entity_id: fan.zhimi_airpurifier_v7
       - delay:
           seconds: 4

@@ -10,8 +10,8 @@ views:
       grid-template-rows: 0 repeat(2, fit-content(100%)) 0fr
       grid-template-areas: |
         "sidebar  .           .       .       ."
-        "sidebar  vardagsrum  studio  sovrum  ."
-        "sidebar  media       övrigt  hemma   ."
+        "sidebar  living_room  studio  bedroom  ."
+        "sidebar  media       other  home   ."
         "sidebar  footer      footer  footer  ."
       mediaquery:
         #phone
@@ -22,9 +22,9 @@ views:
           grid-template-areas: |
             ".  .           .        ."
             ".  sidebar     sidebar  ."
-            ".  vardagsrum  sovrum   ."
-            ".  studio      övrigt   ."
-            ".  media       hemma    ."
+            ".  living_room  bedroom   ."
+            ".  studio      other   ."
+            ".  media       home    ."
             ".  footer      footer   ."
             ".  .           .        ."
         #portrait
@@ -34,9 +34,9 @@ views:
           grid-template-rows: 0 repeat(3, fit-content(100%)) 0fr
           grid-template-areas: |
             "sidebar  .           .       ."
-            "sidebar  vardagsrum  sovrum  ."
-            "sidebar  studio      övrigt  ."
-            "sidebar  media       hemma   ."
+            "sidebar  living_room  bedroom  ."
+            "sidebar  studio      other  ."
+            "sidebar  media       home   ."
             "sidebar  footer      footer  ."
             "sidebar  .           .       ."
     cards:
@@ -88,37 +88,56 @@ views:
 
       #################################################
       #                                               #
-      #                  VARDAGSRUM                   #
+      #                  living_room                  #
       #                                               #
       #################################################
 
       - type: grid
-        title: Vardagsrum
+        title: Living Room
         view_layout:
-          grid-area: vardagsrum
+          grid-area: living_room
         columns: 2
         cards:
 
           - type: custom:button-card
-            entity: light.vardagsrum #hue_group
-            name: Belysning
+            entity: light.yeelight_hania #hue_group
+            name: U Hani
             template:
               - light
               - icon_shade
-
+              
           - type: custom:button-card
-            entity: switch.balkong
-            name: Balkong
+            entity: fan.zhimi_airpurifier_v7
+            name: Air Purifier
             hold_action:
-              !include popup/vardagsrum_balkong.yaml
+              !include popup/sovrum_luftrenare.yaml
             template:
               - base
-              - icon_hue
+              - icon_air_purifier
+              - circle
               - loader
+            variables:
+              circle_input: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    parseInt(entity.attributes.aqi);
+                ]]]
+              
+              
+#          - type: custom:button-card
+#            entity: switch.balkong
+#            name: Balcony
+#            hold_action:
+#              !include popup/living_room_balkong.yaml
+#            template:
+#              - base
+#              - icon_hue
+#              - loader
 
           - type: custom:button-card
             entity: media_player.sony_bravia_tv
-            name: Tv
+            name: TV
             hold_action:
               !include popup/vardagsrum_tv.yaml
             template:
@@ -127,8 +146,8 @@ views:
               - loader
 
           - type: custom:button-card
-            entity: switch.playstation_5
-            name: Playstation
+            entity: switch.radio
+            name: Radio
             hold_action:
               !include popup/vardagsrum_playstation.yaml
             template:
@@ -150,22 +169,22 @@ views:
         cards:
 
           - type: custom:button-card
-            entity: light.dator
-            name: Datorlampa
+            entity: light.yeelight_hania
+            name: U Hani
             template:
               - light
               - icon_hue
 
           - type: custom:button-card
-            entity: light.taklampor #hue_group
-            name: Taklampor
+            entity: light.yeelight_hania #hue_group
+            name: U Hani
             template:
               - light
               - icon_spot
 
           - type: custom:button-card
-            entity: switch.computer_imac
-            name: Dator
+            entity: switch.radio
+            name: Radio
             triggers_update:
               - lock.dator
               - script.home_leave
@@ -179,7 +198,7 @@ views:
 
           - type: custom:button-card
             entity: switch.wemo_monitors
-            name: Monitorer
+            name: Monitors
             triggers_update: sensor.monitors_volume
             hold_action:
               !include popup/studio_monitorer.yaml
@@ -197,27 +216,27 @@ views:
 
       #################################################
       #                                               #
-      #                    SOVRUM                     #
+      #                    bedroom                    #
       #                                               #
       #################################################
 
       - type: grid
-        title: Sovrum
+        title: Bedroom
         view_layout:
-          grid-area: sovrum
+          grid-area: bedroom
         columns: 2
         cards:
 
           - type: custom:button-card
-            entity: light.sovrum #hue_group
-            name: Sänglampor
+            entity: light.yeelight_hania #hue_group
+            name: U Hani
             template:
               - light
               - icon_lamp
 
           - type: custom:button-card
-            entity: fan.air_purifier
-            name: Luftrenare
+            entity: fan.zhimi_airpurifier_v7
+            name: Air Purifier
             hold_action:
               !include popup/sovrum_luftrenare.yaml
             template:
@@ -234,8 +253,8 @@ views:
                 ]]]
 
           - type: custom:button-card
-            entity: fan.sovrum_anslut
-            name: Fläkt
+            entity: fan.bedroom_anslut
+            name: Fan
             hold_action:
               !include popup/sovrum_flakt.yaml
             template:
@@ -252,8 +271,8 @@ views:
                 ]]]
 
           - type: custom:button-card
-            entity: media_player.samsung_tv
-            name: "Tv\u00B2"
+            entity: media_player.sony_bravia_tv
+            name: TV
             hold_action:
               !include popup/sovrum_tv2.yaml
             template:
@@ -293,7 +312,7 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Senast nedladdat
+                        state: Last downloaded
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
@@ -303,36 +322,36 @@ views:
                         - conditional_media
                         - recently_downloaded
                         - icon_plex
-
+                                                
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Vardagsrum
+                        state: Shield
                     card:
                       type: custom:button-card
-                      entity: media_player.vardagsrum
+                      entity: media_player.nvidia_shield
                       template:
                         - conditional_media
-                        - icon_apple_tv
-
+                        - icon_spotify
+                        
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Sovrum
+                        state: Chromecast
                     card:
                       type: custom:button-card
-                      entity: media_player.sovrum
+                      entity: media_player.chromecastaudio
                       template:
                         - conditional_media
-                        - icon_apple_tv
-
+                        - icon_spotify
+                        
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
                         state: Spotify
                     card:
                       type: custom:button-card
-                      entity: media_player.spotify
+                      entity: media_player.spotify_anarion
                       template:
                         - conditional_media
                         - icon_spotify
@@ -343,7 +362,7 @@ views:
                         state: Google Nest Mini
                     card:
                       type: custom:button-card
-                      entity: media_player.kok
+                      entity: media_player.nest_mini
                       template:
                         - conditional_media
                         - icon_nest_mini
@@ -353,28 +372,28 @@ views:
                 cards:
 
                   - type: custom:button-card
-                    entity: media_player.vardagsrum
-                    name: Vardagsrum
+                    entity: media_player.nvidia_shield
+                    name: Shield
                     template:
                       - media
                       - icon_apple_tv
 
                   - type: custom:button-card
-                    name: Sovrum
-                    entity: media_player.sovrum
+                    name: Chromecast
+                    entity: media_player.chromecastaudio
                     template:
                       - media
                       - icon_apple_tv
 
                   - type: custom:button-card
-                    entity: media_player.spotify
+                    entity: media_player.spotify_anarion
                     name: Spotify
                     template:
                       - media
                       - icon_spotify
 
                   - type: custom:button-card
-                    entity: media_player.kok
+                    entity: media_player.nest_mini
                     name: Nest Mini
                     template:
                       - media
@@ -382,27 +401,27 @@ views:
 
       #################################################
       #                                               #
-      #                    ÖVRIGT                     #
+      #                    other                     #
       #                                               #
       #################################################
 
       - type: grid
-        title: Övrigt
+        title: Other
         view_layout:
-          grid-area: övrigt
+          grid-area: other
         columns: 2
         cards:
 
           - type: custom:button-card
-            entity: light.badrum #hue_group
-            name: Badrum
+            entity: light.yeelight_hania #hue_group
+            name: Bathroom
             template:
               - light
               - icon_bathroom
 
           - type: custom:button-card
             entity: fan.studio_wemo
-            name: "Fläkt\u00B2"
+            name: Fan
             hold_action:
               !include popup/studio_flakt.yaml
             template:
@@ -412,13 +431,13 @@ views:
 
           - type: custom:button-card
             entity: light.garderob
-            name: Garderob
+            name: Wardrobe
             template:
               - light
               - icon_closet
 
           - type: custom:button-card
-            entity: light.hall #hue_group
+            entity: light.yeelight_hania #hue_group
             name: Hall
             template:
               - light
@@ -426,20 +445,20 @@ views:
 
       #################################################
       #                                               #
-      #                     HEMMA                     #
+      #                     home                     #
       #                                               #
       #################################################
 
       - type: grid
-        title: Hemma
+        title: Home
         view_layout:
-          grid-area: hemma
+          grid-area: home
         columns: 2
         cards:
 
           - type: custom:button-card
-            entity: person.matte
-            name: Mattias
+            entity: person.anarion
+            name: Anarion
             tap_action:
               !include popup/hemma_mattias.yaml
             hold_action:
@@ -447,8 +466,8 @@ views:
             template: person
 
           - type: custom:button-card
-            entity: person.sanja
-            name: Sanja
+            entity: person.iwona
+            name: Iwona
             tap_action:
               !include popup/hemma_sanja.yaml
             hold_action:
@@ -457,7 +476,7 @@ views:
 
           - type: custom:button-card
             entity: script.home_leave
-            name: Stäng allt
+            name: Close All
             hold_action:
               action: none
             template:
@@ -466,7 +485,7 @@ views:
 
           - type: custom:button-card
             entity: script.home_arrive
-            name: Hemma
+            name: Back Home
             hold_action:
               action: none
             template:

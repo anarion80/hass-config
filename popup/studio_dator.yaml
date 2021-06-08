@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Dator
+  title: PC
   style:
     hui-vertical-stack-card:
       $hui-conditional-card>hui-grid-card$hui-horizontal-stack-card$: |
@@ -23,7 +23,7 @@ browser_mod:
       ### ON ###
       - type: conditional
         conditions:
-          - entity: switch.computer_imac
+          - entity: switch.radio
             state: 'on'
         card:
           type: grid
@@ -34,8 +34,8 @@ browser_mod:
               state_color: true
               entities:
 
-                - entity: switch.computer_imac
-                  name: iMac
+                - entity: switch.radio
+                  name: Radio
                   secondary_info: last-changed
 
                 - type: custom:bar-card
@@ -57,22 +57,22 @@ browser_mod:
                   entity_row: true
                   entities:
 
-                    - entity: sensor.imac_cpu
+                    - entity: sensor.processor_use_percent
                       tap_action:
                         action: call-service
                         service: homeassistant.update_entity
                         service_data:
-                          entity_id: sensor.imac_cpu
+                          entity_id: sensor.processor_use_percent
 
-                    - entity: sensor.imac_mem
+                    - entity: sensor.memory_use_percent
                       tap_action:
                         action: call-service
                         service: homeassistant.update_entity
                         service_data:
-                          entity_id: sensor.imac_mem
+                          entity_id: sensor.memory_use_percent
 
                 - entity: automation.macos_notification_motion_hall
-                - entity: sensor.imac_uptime
+                - entity: sensor.ha_uptime
 
                 - entity: sensor.template_imac_vpn
                   tap_action:
@@ -98,24 +98,24 @@ browser_mod:
                   entity_row: true
                   entities:
 
-                    - entity: sensor.imac_system_ssd
-                      tap_action:
-                        action: call-service
-                        service: homeassistant.update_entity
-                        service_data:
-                          entity_id: sensor.imac_system_ssd
+#                    - entity: sensor.imac_system_ssd
+#                      tap_action:
+#                        action: call-service
+#                        service: homeassistant.update_entity
+#                        service_data:
+#                          entity_id: sensor.imac_system_ssd
 
-                    - entity: sensor.imac_macintosh_hd
+                    - entity: sensor.disk_use_percent
                       tap_action:
                         action: call-service
                         service: homeassistant.update_entity
                         service_data:
-                          entity_id: sensor.imac_macintosh_hd
+                          entity_id: sensor.disk_use_percent
 
             - type: horizontal-stack
               cards:
               - type: custom:button-card
-                name: Försätt i vila
+                name: Sleep
                 icon: mdi:power-sleep
                 tap_action:
                   action: call-service
@@ -123,7 +123,7 @@ browser_mod:
                 template: icon_name
 
               - type: custom:button-card
-                name: Starta om
+                name: Restart
                 icon: mdi:restart
                 tap_action:
                   action: call-service
@@ -133,7 +133,7 @@ browser_mod:
       ### OFF ###
       - type: conditional
         conditions:
-          - entity: switch.computer_imac
+          - entity: switch.radio
             state: 'off'
         card:
           type: grid
@@ -145,21 +145,21 @@ browser_mod:
               show_header_toggle: false
               entities:
 
-                - entity: switch.computer_imac
-                  name: iMac
+                - entity: switch.radio
+                  name: Radio
                   secondary_info: last-changed
                 - entity: automation.macos_notification_motion_hall
-                - entity: sensor.imac_uptime
+                - entity: sensor.ha_uptime
                 - entity: input_boolean.computer_lock
 
             - type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  name: Sätt igång Dator
+                  name: Turn on Radio
                   icon: mdi:power
                   tap_action:
                     action: call-service
                     service: switch.turn_on
                     service_data:
-                      entity_id: switch.computer_imac
+                      entity_id: switch.radio
                   template: icon_name

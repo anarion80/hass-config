@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Dammsugare
+  title: Vacuum cleaner
   style:
     .: |
       :host .content {
@@ -65,7 +65,7 @@ browser_mod:
           - type: entities
             view_layout:
               grid-area: info
-            title: Inställningar
+            title: Settings
             entities:
             - entity: vacuum.valetudo_robot
               name: Roborock S5
@@ -156,7 +156,7 @@ browser_mod:
       #################################################
 
       - type: picture-elements
-        title: Kartläggning
+        title: Survey
         view_layout:
           grid-area: map
         image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 45' /%3E"
@@ -210,7 +210,7 @@ browser_mod:
               service: input_select.select_option
               service_data:
                 entity_id: input_select.roborock_zone
-                option: Ingen vald
+                option: None selected
             image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50' /%3E"
             title: null
             style:
@@ -220,13 +220,13 @@ browser_mod:
               cursor: default
 
           - type: custom:button-card
-            name: Vardagsrum
+            name: Living Room
             tap_action:
               action: call-service
               service: input_select.select_option
               service_data:
                 entity_id: input_select.roborock_zone
-                option: Vardagsrum
+                option: Living Room
             show_label: false
             show_icon: false
             styles: &button-card-styles
@@ -276,13 +276,13 @@ browser_mod:
               left: 58%
 
           - type: custom:button-card
-            name: Kök
+            name: Kitchen
             tap_action:
               action: call-service
               service: input_select.select_option
               service_data:
                 entity_id: input_select.roborock_zone
-                option: Kök
+                option: Kitchen
             show_label: false
             show_icon: false
             styles: *button-card-styles
@@ -291,13 +291,13 @@ browser_mod:
               left: 17%
 
           - type: custom:button-card
-            name: Sovrum
+            name: Bedroom
             tap_action:
               action: call-service
               service: input_select.select_option
               service_data:
                 entity_id: input_select.roborock_zone
-                option: Sovrum
+                option: Bedroom
             show_label: false
             show_icon: false
             styles: *button-card-styles
@@ -307,7 +307,7 @@ browser_mod:
 
           - type: custom:button-card
             entity: input_select.roborock_zone
-            name: Rengöringszon
+            name: Cleaning zone
             label: >
               [[[ return entity.state; ]]]
             show_label: true

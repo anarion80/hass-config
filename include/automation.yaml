@@ -28,15 +28,14 @@ automation:
             - condition: state
               entity_id:
                 - media_player.sony_bravia_tv
-                - media_player.samsung_tv
-                - media_player.spotify
-                - media_player.kok
+                - media_player.spotify_anarion
+                - media_player.nest_mini
               state: 'off'
           sequence:
             - service: input_select.select_option
               data:
                 entity_id: input_select.conditional_media
-                option: Senast nedladdat
+                option: Last downloaded
       - delay:
           seconds: 10
       - service: fullykiosk.load_start_url
@@ -169,7 +168,7 @@ automation:
         data:
           duration: 8000
           message: >
-            Rörelse detekterat i {{ trigger.to_state.name }}
+            Movement detected in {{ trigger.to_state.name }}
 
   - alias: macos_notification_motion_hall
     id: '4135668040301'
@@ -196,14 +195,14 @@ automation:
       - condition: state
         entity_id: sensor.template_hass_dev_release
         state:
-          - Idag
-          - Släppt
+          - Today
+          - Released
     action:
-      - service: notify.mobile_app_iphone
+      - service: notify.mobile_app_nokia_8_3_5g
         data:
           title: >
-            RC {{ states(trigger.entity_id) }} tillgänglig
-          message: Tryck för att läsa versionsinformation
+            RC {{ states(trigger.entity_id) }} available
+          message: Press to read version information
           data:
             url: https://rc.home-assistant.io/latest-release-notes/
 
@@ -219,14 +218,14 @@ automation:
         - condition: state
           entity_id: sensor.template_hass_version
           state:
-            - Senaste
+            - Latest
             - unknown
     action:
-      - service: notify.mobile_app_iphone
+      - service: notify.mobile_app_nokia_8_3_5g
         data:
           title: >
-            {{ states(trigger.entity_id) }} tillgänglig {{ '\U0001F389' }}
-          message: Håll in för att uppdatera
+            {{ states(trigger.entity_id) }} available {{ '\U0001F389' }}
+          message: Hold to update
           data:
             data:
               url: https://www.home-assistant.io/latest-release-notes/
@@ -254,9 +253,9 @@ automation:
       - platform: event
         event_type: transmission_downloaded_torrent
     action:
-      - service: notify.mobile_app_iphone
+      - service: notify.mobile_app_nokia_8_3_5g
         data:
-          title: Torrent nedladdad
+          title: Torrent downloaded
           message: >
             {{ trigger.event.data.name }}
       - service: transmission.stop_torrent
@@ -460,8 +459,8 @@ automation:
           before: '07:00:00'
         - condition: state
           entity_id:
-            - person.matte
-            - person.sanja
+            - person.anarion
+            - person.iwona
           state: home
     action:
       - condition: state
@@ -847,14 +846,14 @@ automation:
           seconds: 2
       - service: tts.cloud_say
         data:
-          entity_id: media_player.galaxy_tab_a
+          entity_id: media_player.nest_mini
           message: >
-            {{ ['Tvätten är färdig', 'Tvätten är klar', 'Dags att gå ner!'] | random }}
+            {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
           language: sv-SE
-      - service: notify.mobile_app_iphone
+      - service: notify.mobile_app_nokia_8_3_5g
         data:
           message: >
-            {{'\U0001F9FA'}} {{ ['Tvätten är färdig', 'Tvätten är klar', 'Dags att gå ner'] | random }}
+            {{'\U0001F9FA'}} {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
       - service: shell_command.imac_notify_laundry
       - delay:
           seconds: 3
@@ -876,11 +875,11 @@ automation:
         data:
           entity_id: vacuum.valetudo_robot
           fan_speed: >
-            {% if is_state(trigger.entity_id, 'Tyst') %} low
+            {% if is_state(trigger.entity_id, 'Silent') %} low
             {% elif is_state(trigger.entity_id, 'Standard') %} medium
             {% elif is_state(trigger.entity_id, 'Medium') %} high
             {% elif is_state(trigger.entity_id, 'Turbo') %} max
-            {% elif is_state(trigger.entity_id, 'Av') %} off
+            {% elif is_state(trigger.entity_id, 'Off') %} off
             {% endif %}
 
   - alias: roborock_speed_update
@@ -897,11 +896,11 @@ automation:
           entity_id: input_select.roborock_speed
           option: >
             {% set entity_id = 'vacuum.valetudo_robot' %}
-            {% if is_state_attr(entity_id, 'fan_speed', 'low') %} Tyst
+            {% if is_state_attr(entity_id, 'fan_speed', 'low') %} Sil;ent
             {% elif is_state_attr(entity_id, 'fan_speed', 'medium') %} Standard
             {% elif is_state_attr(entity_id, 'fan_speed', 'high') %} Medium
             {% elif is_state_attr(entity_id, 'fan_speed', 'max') %} Turbo
-            {% elif is_state_attr(entity_id, 'fan_speed', 'off') %} Av
+            {% elif is_state_attr(entity_id, 'fan_speed', 'off') %} Off
             {% endif %}
 
       ####################################################
@@ -919,8 +918,8 @@ automation:
         entity_id:
           - media_player.vardagsrum
           - media_player.sovrum
-          - media_player.spotify
-          - media_player.kok
+          - media_player.spotify_anarion
+          - media_player.nest_mini
         to: playing
     action:
       - service: input_select.select_option
@@ -938,16 +937,16 @@ automation:
         entity_id:
           - media_player.vardagsrum
           - media_player.sovrum
-          - media_player.spotify
-          - media_player.kok
+          - media_player.spotify_anarion
+          - media_player.nest_mini
         to:
           ['off', 'idle', 'standby']
       - platform: state
         entity_id:
           - media_player.vardagsrum
           - media_player.sovrum
-          - media_player.spotify
-          - media_player.kok
+          - media_player.spotify_anarion
+          - media_player.nest_mini
         to: paused
         for:
           minutes: 10
@@ -958,10 +957,10 @@ automation:
           option: >
             {% set media_players = 
               [states.media_player.vardagsrum, states.media_player.sovrum, 
-               states.media_player.spotify, states.media_player.kok] %}
+               states.media_player.spotify_anarion, states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Senast nedladdat
+              Last downloaded 
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -977,17 +976,17 @@ automation:
         value_template: >
           {{ is_state('media_player.vardagsrum', 'idle') and
           is_state('media_player.sovrum', 'idle') and
-          is_state('media_player.spotify', 'idle') and
-          is_state('media_player.kok', 'off') 
+          is_state('media_player.spotify_anarion', 'idle') and
+          is_state('media_player.nest_mini', 'off') 
           or
           is_state('media_player.sony_bravia_tv', 'off') and
           is_state('media_player.samsung_tv', 'off') and
-          is_state('media_player.kok', 'off') }}
+          is_state('media_player.nest_mini', 'off') }}
     action:
       - service: input_select.select_option
         data:
           entity_id: input_select.conditional_media
-          option: Senast nedladdat
+          option: Last downloaded
 
   - alias: conditional_media_atv1_fix
     id: '8872219660798'
@@ -1005,17 +1004,17 @@ automation:
           entity_id: input_select.conditional_media
           option: >
             {% set media_players = 
-              [states.media_player.vardagsrum, states.media_player.spotify, 
-               states.media_player.kok] %}
+              [states.media_player.vardagsrum, states.media_player.spotify_anarion, 
+               states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Senast nedladdat
+              Last downloaded
               {% elif is_state('media_player.vardagsrum', 'paused') and 
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
               is_state('media_player.sovrum', 'paused') and 
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
-              Senast nedladdat
+              Last downloaded
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -1039,17 +1038,17 @@ automation:
           entity_id: input_select.conditional_media
           option: >
             {% set media_players = 
-              [states.media_player.vardagsrum, states.media_player.spotify, 
-               states.media_player.kok] %}
+              [states.media_player.vardagsrum, states.media_player.spotify_anarion, 
+               states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Senast nedladdat
+              Last downloaded
               {% elif is_state('media_player.vardagsrum', 'paused') and 
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
               is_state('media_player.sovrum', 'paused') and 
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
-              Senast nedladdat
+              Last downloaded
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}

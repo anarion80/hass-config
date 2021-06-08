@@ -18,7 +18,7 @@
     show_state: true
     show_icon: false
     state_display: >
-      [[[ if (variables.state === true) return 'Okänd'; ]]]
+      [[[ if (variables.state === true) return 'Unknown'; ]]]
     tap_action:
       ui_sound_tablet: |
         [[[
@@ -333,7 +333,7 @@
       - base
       - circle
     state_display: >
-      [[[ return variables.state === 'home' ? 'Ja' : 'Nej'; ]]]
+      [[[ return variables.state === 'home' ? 'Yes' : 'No'; ]]]
     triggers_update: sensor.time
     styles:
       custom_fields:
@@ -597,7 +597,7 @@
   #################################################
 
   recently_downloaded:
-    name: Senast nedladdat
+    name: Last downloaded
     state_display: >
       [[[
         if (entity != undefined) {
@@ -605,7 +605,7 @@
           const number = data[1].number == undefined ? '(' + data[1].aired.split('-')[0] + ')' : data[1].number;
           return `${data[1].title} ${number}`;
         }
-        return 'Okänd';
+        return 'Unknown';
       ]]]
     custom_fields:
       blur: >

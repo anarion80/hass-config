@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Uppdateringar
+  title: Updates
   style:
     .: |
       :host .content {
@@ -71,9 +71,9 @@ browser_mod:
           {% if states('sensor.hass_version_installed') | regex_search('b') %}
           <span><ha-icon icon="mdi:home-assistant"></ha-icon> Home Assistant {{ states('sensor.hass_version_installed') }}</span><br>
           {% if states('sensor.hass_version_installed') == states('sensor.hass_version_latest_beta') %}
-          <b>Inga uppdateringar</b>
+          <b>No updates</b>
           {% else %}
-          <b>{{ states('sensor.hass_version_latest_beta') }} tillgänglig</b> {{ '\U0001f389' }}
+          <b>{{ states('sensor.hass_version_latest_beta') }} available</b> {{ '\U0001f389' }}
       
           {% if states('sensor.hass_version_latest_beta') == states('sensor.hass_release_notes_rc') %}
           {{- state_attr('sensor.hass_release_notes_rc', 'body') }}
@@ -82,9 +82,9 @@ browser_mod:
           {% else %}
           <span><ha-icon icon="mdi:home-assistant"></ha-icon> Home Assistant {{ states('sensor.hass_version_installed') }}</span><br>
           {% if states('sensor.hass_version_installed') == states('sensor.hass_version_latest') %}
-          <b>Inga uppdateringar</b>
+          <b>No updates</b>
           {% else %}
-          <b>{{ states('sensor.hass_version_latest') }} tillgänglig</b> {{ '\U0001f389' }}
+          <b>{{ states('sensor.hass_version_latest') }} available</b> {{ '\U0001f389' }}
       
           {% if states('sensor.hass_version_latest') == states('sensor.hass_release_notes') %}
           {{- state_attr('sensor.hass_release_notes', 'body') }}
@@ -97,7 +97,7 @@ browser_mod:
         triggers_update:
           - sensor.hass_version_latest
           - sensor.hass_version_latest_beta
-        name: Uppdatera HASS
+        name: Update HASS
         icon: mdi:update
         styles:
           card:
@@ -112,7 +112,7 @@ browser_mod:
           services: |
             [[[
               hass.callService('browser_mod', 'toast', {
-                message: 'Startar watchtower...'
+                message: 'Starting watchtower...'
               });
               hass.callService('switch', 'turn_on', {
                 entity_id: 'switch.watchtower'
@@ -125,10 +125,10 @@ browser_mod:
         content: >
           <span><ha-icon icon="hacs:hacs"></ha-icon> Community Store {{ states('sensor.hacs_version') }}</span><br>
           {% if is_state('sensor.hacs', '0') or is_state('sensor.hacs', 'unknown') %}
-          <b>Inga uppdateringar</b>
+          <b>No updates</b>
           {% else %}
-          <b>{{ states('sensor.hacs') }} {{ 'uppdatering tillgänglig' if is_state('sensor.hacs', '1') 
-          else 'uppdateringar tillgängliga' }}</b> {{ '\U0001f389' }}
+          <b>{{ states('sensor.hacs') }} {{ 'update available' if is_state('sensor.hacs', '1') 
+          else 'updates available' }}</b> {{ '\U0001f389' }}
 
           {% for repo in state_attr('sensor.hacs', 'repositories') %}
           * {{ repo.display_name }} - Version {{ repo.available_version }} ([{{ repo.installed_version }}](https://github.com/{{ repo.name }}/releases))
@@ -138,7 +138,7 @@ browser_mod:
 
       - type: custom:button-card
         entity: sensor.hacs
-        name: Öppna HACS
+        name: Open HACS
         icon: mdi:open-in-new
         styles:
           card:
@@ -160,9 +160,9 @@ browser_mod:
           {% set tasmota_latest = states('sensor.tasmota_version_latest') %}
           {% set valetudo_installed = states('sensor.valetudo_version_installed') %}
           {% set valetudo_latest = states('sensor.valetudo_version_latest') %}
-          <span><ha-icon icon="mdi:update"></ha-icon> Övrigt</span><br>
+          <span><ha-icon icon="mdi:update"></ha-icon> Other</span><br>
           {% if tasmota_installed == tasmota_latest and valetudo_installed == valetudo_latest %}
-          <b>Inga uppdateringar</b>
+          <b>No updates</b>
           {% else %}
           {{- '[<b>Tasmota ' + tasmota_latest + '](https://github.com/arendst/Tasmota/releases/latest) tillgänglig</b> ' + '\U0001f389' if tasmota_installed != tasmota_latest }}
 

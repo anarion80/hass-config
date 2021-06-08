@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Vardagsrum Tv
+  title: Living Room Tv
   style:
     hui-grid-card:
       $hui-horizontal-stack-card$: |

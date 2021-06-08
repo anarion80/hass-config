@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Luftrenare
+  title: Air purifier
   card:
     type: entities
     state_color: true

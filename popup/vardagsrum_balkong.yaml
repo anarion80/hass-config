@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Balkong
+  title: Balcony
   style:
     hui-grid-card:
       $: |

@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Matte
+  title: Anarion
   style:
     hui-grid-card:
       $hui-entities-card$: |
@@ -36,12 +36,12 @@ browser_mod:
     cards:
       - type: entities
         entities:
-          - entity: person.matte
+          - entity: person.anarion
             secondary_info: last-changed
 
       - type: history-graph
         entities:
-          - entity: person.matte
+          - entity: person.anarion
         hours_to_show: 24
         refresh_interval: 0
 
@@ -62,13 +62,13 @@ browser_mod:
             icon: mdi:bluetooth
             style: *style
 
-          - entity: device_tracker.mattias_iphone_ios
+          - entity: device_tracker.nokia_8_3_5g
             name: Position
             icon: custom:iphone-modern
             style: *style
 
       - type: custom:button-card
-        name: Spela upp ljud på iPhone X
+        name: Play sound on Phone
         icon: mdi:volume-high
         tap_action:
           action: call-service
@@ -77,6 +77,6 @@ browser_mod:
 
       - type: map
         entities:
-          - device_tracker.mattias_iphone_ios
+          - device_tracker.nokia_8_3_5g
         default_zoom: 16
         dark_mode: true
