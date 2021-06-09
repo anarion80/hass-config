@@ -333,6 +333,28 @@ views:
                       template:
                         - conditional_media
                         - icon_spotify
+
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.conditional_media
+                        state: Plex
+                    card:
+                      type: custom:button-card
+                      entity: media_player.plex_plex_for_android_tv_shield_android_tv
+                      template:
+                        - conditional_media
+                        - icon_plex
+
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.conditional_media
+                        state: Sony TV
+                    card:
+                      type: custom:button-card
+                      entity: media_player.sony_bravia_tv
+                      template:
+                        - conditional_media
+                        - icon_spotify
                         
                   - type: conditional
                     conditions:

@@ -916,10 +916,12 @@ automation:
     trigger:
       - platform: state
         entity_id:
-          - media_player.vardagsrum
-          - media_player.sovrum
+          - media_player.nvidia_shield
+          - media_player.plex_plex_for_android_tv_shield_android_tv
           - media_player.spotify_anarion
           - media_player.nest_mini
+          - media_player.kd_55xe9305
+          - media_player.sony_bravia_tv
         to: playing
     action:
       - service: input_select.select_option
@@ -935,18 +937,22 @@ automation:
     trigger:
       - platform: state
         entity_id:
-          - media_player.vardagsrum
-          - media_player.sovrum
+          - media_player.nvidia_shield
+          - media_player.plex_plex_for_android_tv_shield_android_tv
           - media_player.spotify_anarion
           - media_player.nest_mini
+          - media_player.kd_55xe9305
+          - media_player.sony_bravia_tv
         to:
           ['off', 'idle', 'standby']
       - platform: state
         entity_id:
-          - media_player.vardagsrum
-          - media_player.sovrum
+          - media_player.nvidia_shield
+          - media_player.plex_plex_for_android_tv_shield_android_tv
           - media_player.spotify_anarion
           - media_player.nest_mini
+          - media_player.kd_55xe9305
+          - media_player.sony_bravia_tv
         to: paused
         for:
           minutes: 10
@@ -956,8 +962,8 @@ automation:
           entity_id: input_select.conditional_media
           option: >
             {% set media_players = 
-              [states.media_player.vardagsrum, states.media_player.sovrum, 
-               states.media_player.spotify_anarion, states.media_player.nest_mini] %}
+              [states.media_player.nvidia_shield, states.media_player.plex_plex_for_android_tv_shield_android_tv, 
+               states.media_player.spotify_anarion, states.media_player.nest_mini, states.media_player.kd_55xe9305, states.sony_bravia_tv] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
               Last downloaded 
@@ -974,13 +980,13 @@ automation:
     trigger:
       - platform: template
         value_template: >
-          {{ is_state('media_player.vardagsrum', 'idle') and
-          is_state('media_player.sovrum', 'idle') and
+          {{ is_state('media_player.nvidia_shield', 'idle') and
+          is_state('media_player.plex_plex_for_android_tv_shield_android_tv', 'idle') and
           is_state('media_player.spotify_anarion', 'idle') and
           is_state('media_player.nest_mini', 'off') 
           or
           is_state('media_player.sony_bravia_tv', 'off') and
-          is_state('media_player.samsung_tv', 'off') and
+          is_state('media_player.kd_55xe9305', 'off') and
           is_state('media_player.nest_mini', 'off') }}
     action:
       - service: input_select.select_option

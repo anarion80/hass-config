@@ -469,9 +469,9 @@
     state_display: >
       [[[
         if (entity.attributes.media_title === 'Nothing playing' || entity.attributes.media_title === 'No title' && variables.state === 'paused') {
-          return 'Inget spelas';
+          return 'Nothing playing';
         }
-        return entity.attributes.media_title === 'No title' && variables.state === 'playing' ? 'Ingen titel' : entity.attributes.media_title;
+        return entity.attributes.media_title === 'No title' && variables.state === 'playing' ? 'No title' : entity.attributes.media_title;
       ]]]
     custom_fields:
       blur: >
