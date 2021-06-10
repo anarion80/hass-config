@@ -109,10 +109,9 @@ input_select:
   air_purifier_speed:
     name: Speed
     options:
+      - Auto
       - Silent
-      - Low
-      - High
-      - Turbo
+      - Favorite
 
   roborock_zone:
     initial: No selection
@@ -128,8 +127,6 @@ input_select:
     initial: Last downloaded
     options:
       - Last downloaded
-      - Sony TV
-      - Plex
       - Shield
       - Chromecast
       - Spotify

@@ -1,13 +1,74 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Air purifier
+  title: Air Purifier
+  style:
+    hui-grid-card$: |
+      #root {
+        grid-gap: 0 !important;
+      }
+      ha-dialog div.content {
+        width: 500px;
+      }
+      
   card:
-    type: entities
-    state_color: true
-    entities:
-      - entity: fan.air_purifier
-        icon: mdi:air-purifier
-        secondary_info: last-changed
-      - entity: switch.strombrytare_2
-      - entity: input_select.air_purifier_speed
+    type: grid
+    columns: 1
+    square: false
+    cards:
+      - type: entities
+        state_color: true
+        entities:
+          - entity: fan.zhimi_airpurifier_v7
+            icon: mdi:air-purifier
+            secondary_info: last-changed
+          - entity: input_select.air_purifier_speed
+
+      - type: custom:purifier-card
+        entity: fan.zhimi_airpurifier_v7
+        stats:
+          - attribute: filter_life_remaining
+            unit: '%'
+            subtitle: Filter Remaining
+          - attribute: temperature
+            unit: °C
+            subtitle: Temperature
+          - attribute: humidity
+            unit: '%'
+            subtitle: Humidity
+          - attribute: favorite_level
+            unit: ''
+            subtitle: Level
+          - attribute: motor_speed
+            unit: RPM
+            subtitle: Fan speed
+          - attribute: speed
+            unit: null
+            subtitle: Speed
+        actions:
+          - name: Silent
+            icon: mdi:weather-night
+            speed: Silent
+          - name: 25%
+            icon: mdi:circle-slice-2
+            speed: Favorite
+            xiaomi_miio_favorite_level: 4
+          - name: 50%
+            icon: mdi:circle-slice-4
+            speed: Favorite
+            xiaomi_miio_favorite_level: 8
+          - name: 75%
+            icon: mdi:circle-slice-6
+            speed: Favorite
+            xiaomi_miio_favorite_level: 12
+          - name: 100%
+            icon: mdi:circle-slice-8
+            speed: Favorite
+            xiaomi_miio_favorite_level: 16
+          - name: Auto
+            icon: mdi:brightness-auto
+            speed: Auto
+        show_name: true
+        show_state: true
+        show_toolbar: true
+        compact_view: false
