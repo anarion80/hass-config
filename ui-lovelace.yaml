@@ -326,13 +326,13 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Shield
+                        state: Nvidia Shield
                     card:
                       type: custom:button-card
                       entity: media_player.nvidia_shield
                       template:
                         - conditional_media
-                        - icon_spotify
+                        - icon_nvidia
 
                   - type: conditional
                     conditions:
@@ -348,14 +348,25 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Sony TV
+                        state: TV
                     card:
                       type: custom:button-card
                       entity: media_player.sony_bravia_tv
                       template:
                         - conditional_media
-                        - icon_spotify
-                        
+                        - icon_tv
+
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.conditional_media
+                        state: KD-55XE9305
+                    card:
+                      type: custom:button-card
+                      entity: media_player.kd_55xe9305
+                      template:
+                        - conditional_media
+                        - icon_tv
+
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
@@ -365,7 +376,7 @@ views:
                       entity: media_player.chromecastaudio
                       template:
                         - conditional_media
-                        - icon_spotify
+                        - icon_chromecast
                         
                   - type: conditional
                     conditions:
@@ -395,17 +406,17 @@ views:
 
                   - type: custom:button-card
                     entity: media_player.nvidia_shield
-                    name: Shield
+                    name: Nvidia Shield
                     template:
                       - media
-                      - icon_apple_tv
+                      - icon_nvidia
 
                   - type: custom:button-card
                     name: Chromecast
                     entity: media_player.chromecastaudio
                     template:
                       - media
-                      - icon_apple_tv
+                      - icon_chromecast
 
                   - type: custom:button-card
                     entity: media_player.spotify_anarion
