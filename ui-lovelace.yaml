@@ -114,7 +114,7 @@ views:
             template:
               - base
               - icon_air_purifier
-              - circle
+              - full_circle
               - loader
             variables:
               circle_input: >
@@ -146,14 +146,32 @@ views:
               - loader
 
           - type: custom:button-card
-            entity: switch.radio
-            name: Radio
+            entity: climate.living_room_ac
+            name: A/C
             hold_action:
-              !include popup/vardagsrum_playstation.yaml
+              !include popup/livingroom_ac.yaml
             template:
               - base
-              - icon_ps5
+              - icon_ac
+              - full_circle
               - loader
+            variables:
+              circle_input: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    parseFloat(entity.attributes.current_temperature);
+                ]]]
+
+          # - type: custom:button-card
+            # entity: switch.radio
+            # name: Radio
+            # hold_action:
+              # !include popup/vardagsrum_playstation.yaml
+            # template:
+              # - base
+              # - icon_ps5
+              # - loader
 
       #################################################
       #                                               #
@@ -253,22 +271,23 @@ views:
                 ]]]
 
           - type: custom:button-card
-            entity: fan.bedroom_anslut
-            name: Fan
+            entity: calendar.garbage_collection
+            name: Calendar
             hold_action:
-              !include popup/sovrum_flakt.yaml
+              #!include popup/sovrum_flakt.yaml
+              !include popup/home_calendar.yaml
             template:
               - base
               - icon_fan
-              - circle
+             # - circle
               - loader
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    parseInt(entity.attributes.percentage_step);
-                ]]]
+            # variables:
+              # circle_input: >
+                # [[[
+                  # return entity === undefined ?
+                    # null :
+                    # parseInt(entity.attributes.percentage_step);
+                # ]]]
 
           - type: custom:button-card
             entity: media_player.sony_bravia_tv
@@ -322,17 +341,6 @@ views:
                         - conditional_media
                         - recently_downloaded
                         - icon_plex
-                                                
-                  - type: conditional
-                    conditions:
-                      - entity: input_select.conditional_media
-                        state: Nvidia Shield
-                    card:
-                      type: custom:button-card
-                      entity: media_player.nvidia_shield
-                      template:
-                        - conditional_media
-                        - icon_nvidia
 
                   - type: conditional
                     conditions:
@@ -405,11 +413,11 @@ views:
                 cards:
 
                   - type: custom:button-card
-                    entity: media_player.nvidia_shield
-                    name: Nvidia Shield
+                    entity: media_player.plex_plex_for_android_tv_shield_android_tv
+                    name: Plex
                     template:
                       - media
-                      - icon_nvidia
+                      - icon_plex
 
                   - type: custom:button-card
                     name: Chromecast
@@ -431,6 +439,26 @@ views:
                     template:
                       - media
                       - icon_nest_mini
+                      
+              - type: grid
+                columns: 2
+                cards:
+
+                  - type: custom:button-card
+                    entity: media_player.sony_bravia_tv
+                    name: TV
+                    template:
+                      - media
+                      - icon_tv
+
+                  - type: custom:button-card
+                    name: TV
+                    entity: media_player.kd_55xe9305
+                    template:
+                      - media
+                      - icon_tv
+
+
 
       #################################################
       #                                               #
