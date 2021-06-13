@@ -110,7 +110,7 @@ views:
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
             hold_action:
-              !include popup/living_room_purifier.yaml
+              !include popup/sovrum_luftrenare.yaml
             template:
               - base
               - icon_air_purifier
@@ -378,7 +378,7 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Chromecast
+                        state: ChromecastAudio
                     card:
                       type: custom:button-card
                       entity: media_player.chromecastaudio
@@ -420,7 +420,7 @@ views:
                       - icon_plex
 
                   - type: custom:button-card
-                    name: Chromecast
+                    name: ChromecastAudio
                     entity: media_player.chromecastaudio
                     template:
                       - media

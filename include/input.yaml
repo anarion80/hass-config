@@ -127,10 +127,9 @@ input_select:
     initial: Last downloaded
     options:
       - Last downloaded
-      - Nvidia Shield
       - Plex
       - TV
       - KD-55XE9305
-      - Chromecast
+      - ChromecastAudio
       - Spotify
       - Google Nest Mini
