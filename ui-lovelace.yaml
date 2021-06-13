@@ -474,35 +474,35 @@ views:
         cards:
 
           - type: custom:button-card
-            entity: light.yeelight_hania #hue_group
-            name: Bathroom
+            entity: switch.plex
+            name: Plex
             template:
-              - light
-              - icon_bathroom
+              - media
+              - icon_plex
 
           - type: custom:button-card
-            entity: fan.studio_wemo
-            name: Fan
-            hold_action:
-              !include popup/studio_flakt.yaml
+            entity: switch.tv
+            name: TV
             template:
-              - base
-              - icon_fan2
+              - media
+              - icon_tv
               - loader
 
           - type: custom:button-card
-            entity: light.garderob
-            name: Wardrobe
+            entity: switch.radio
+            name: Radio
             template:
-              - light
-              - icon_closet
+              - media
+              - icon_radio
+              - loader
 
           - type: custom:button-card
-            entity: light.yeelight_hania #hue_group
-            name: Hall
+            entity: switch.netflix
+            name: Netflix
             template:
-              - light
-              - icon_spot
+              - media
+              - icon_netflix4
+              - loader
 
       #################################################
       #                                               #

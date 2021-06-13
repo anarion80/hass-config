@@ -42,27 +42,70 @@ browser_mod:
           - name: Silent
             icon: mdi:weather-night
             preset_mode: Silent
+            #service: fan.set_preset_mode
+            #service_data:
+            #  preset_mode: Silent
           - name: 25%
             icon: mdi:circle-slice-2
             preset_mode: Favorite
             speed: Favorite
             xiaomi_miio_favorite_level: 4
+            #service: fan.set_preset_mode
+            #service_data:
+            #  preset_mode: Favorite
           - name: 50%
             icon: mdi:circle-slice-4
             speed: Favorite
+            #service: fan.set_preset_mode
+            #service_data:
+            #  preset_mode: Favorite
             xiaomi_miio_favorite_level: 8
           - name: 75%
             icon: mdi:circle-slice-6
             speed: Favorite
+            #service: fan.set_preset_mode
+            #service_data:
+            #  preset_mode: Favorite
             xiaomi_miio_favorite_level: 12
           - name: 100%
             icon: mdi:circle-slice-8
             speed: Favorite
+            #service: fan.set_preset_mode
+            #service_data:
+            #  preset_mode: Favorite
             xiaomi_miio_favorite_level: 16
           - name: Auto
             icon: mdi:brightness-auto
             preset_mode: Auto
+            #service: fan.set_preset_mode
+            #service_data:
+            #  preset_mode: Auto
         show_name: true
         show_state: true
         show_toolbar: true
         compact_view: false
+      
+      - type: custom:mini-graph-card
+        entities:
+          #- color: '#385581'
+          - entity: sensor.room_aqi
+        line_width: 8
+        hour24: true
+        group: true
+        align_icon: left
+        align_state: right
+        align_header: left
+        hours_to_show: 24
+        show:
+          {fill: fade, icon: false, name: false, state: false, 
+          name_adaptive_color: false, labels: hover, legend: false}
+        color_thresholds:
+          - value: 1
+            color: "#385581"
+          - value: 30
+            color: "#32a852"
+          - value: 60
+            color: "#c0392b"
+
+        tap_action:
+          action: non
