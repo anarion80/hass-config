@@ -110,7 +110,7 @@ views:
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
             hold_action:
-              !include popup/sovrum_luftrenare.yaml
+              !include popup/living_room_purifier.yaml
             template:
               - base
               - icon_air_purifier
