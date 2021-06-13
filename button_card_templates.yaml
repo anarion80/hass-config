@@ -516,13 +516,19 @@
     template:
       #- base
       #- circle
-    # styles:
-      # custom_fields:
-        # circle:
+    styles:
+      custom_fields:
+        circle:
           # - clip-path: circle()
           # - width: 79%
           # - pointer-events: none
           # - display: flex
+          - display: initial
+          - width: 90%
+          - letter-spacing: 0.03vw
+          - margin: -6% -6% 0 0
+          - justify-self: end
+          - opacity: 1
     custom_fields:
       circle: >
         [[[
