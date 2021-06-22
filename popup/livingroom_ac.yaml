@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: "Fan\u00B2"
+  title: A/C
   style:
     hui-grid-card$: |
       #root {
@@ -12,19 +12,13 @@ browser_mod:
     columns: 1
     square: false
     cards:
-      - type: entities
-        state_color: true
-        entities:
-          - entity: fan.studio_wemo
-            secondary_info: last-changed
-          - type: custom:slider-entity-row
-            entity: input_number.wemo_fan_timer
-            hide_state: false
+      - type: thermostat
+        entity: climate.living_room_ac
 
       - type: custom:mini-graph-card
         entities:
-          - color: '#385581'
-            entity: sensor.temperature_living_room
+          #- color: '#385581'
+          - entity: sensor.temperature_living_room
         line_width: 8
         hour24: true
         group: true
@@ -35,5 +29,19 @@ browser_mod:
         show:
           {fill: fade, icon: false, name: false, state: false, 
           name_adaptive_color: false, labels: hover, legend: false}
+        color_thresholds:
+          - value: 20
+            color: "#385581"
+          - value: 22
+            color: "#32a852"
+          - value: 24
+            color: "#d35400"
+          - value: 26
+            color: "#c0392b"
         tap_action:
-          action: none
+          action: non
+
+
+
+
+

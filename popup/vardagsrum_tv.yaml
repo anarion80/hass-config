@@ -26,10 +26,9 @@ browser_mod:
         show_header_toggle: false
         entities:
 
-          - entity: switch.tv_sony
-            name: Sony Bravia
-            secondary_info: last-changed
-          - entity: automation.tv_on_lights
+          # - entity: switch.tv_sony
+            # name: Sony Bravia
+          #  secondary_info: last-changed
           - entity: input_select.hdmi
 
       - type: horizontal-stack
@@ -53,16 +52,43 @@ browser_mod:
             icon: mdi:volume-minus
             tap_action:
               action: call-service
-              service: media_player.volume_down
-              service_data:
-                entity_id: media_player.sony_bravia_tv
+              service: script.yamaha_avr_volume_down
             template: icon_only
 
           - type: custom:button-card
             icon: mdi:volume-plus
             tap_action:
               action: call-service
-              service: media_player.volume_up
-              service_data:
-                entity_id: media_player.sony_bravia_tv
+              service: script.yamaha_avr_volume_up
             template: icon_only
+
+      # - type: horizontal-stack
+        # cards:
+          # - entity: switch.tv
+            # tap_action:
+              # action: toggle
+            # type: custom:button-card
+            # template: icon_only
+            # show_name: false
+          # - entity: switch.plex
+            # tap_action:
+              # action: toggle
+            # type: custom:button-card
+            # template: icon_only
+            # show_name: false
+          # - entity: switch.netflix
+            # tap_action:
+              # action: toggle
+            # type: custom:button-card
+            # template: icon_only
+            # show_name: false
+          # - entity: switch.youtube
+            # tap_action:
+              # action: toggle
+            # type: custom:button-card
+            # template: icon_only
+            # show_name: false
+
+
+
+

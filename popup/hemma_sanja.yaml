@@ -49,23 +49,13 @@ browser_mod:
         show_state: false
         entities:
 
-          - entity: device_tracker.sanja_iphonedetect
-            name: Router
-            icon: mdi:wifi
+          - entity: device_tracker.redmi_note_5
+            name: Position
+            icon: mdi:crosshairs-gps
             style: &style |
               state-badge {
                 color: {{ '#3182b7' if is_state(config.entity, 'home') else '#3c3f3f' }};
               }
-
-          - entity: device_tracker.sanja_bluetooth
-            name: Bluetooth
-            icon: mdi:bluetooth
-            style: *style
-
-          - entity: device_tracker.sanjas_iphone_ios
-            name: Position
-            icon: custom:iphone-modern
-            style: *style
 
       - type: custom:button-card
         name: Play sound on Phone
@@ -75,46 +65,6 @@ browser_mod:
           service: script.sanja_find_my_iphone
         template: icon_name
 
-      - type: entities
-        entities:
-          - entity: sensor.template_printer_status
-
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions:
-              icon: outside
-              indicator: 'off'
-              name: outside
-            severity:
-              - color: '#303435'
-                from: 11
-                to: 100
-              - color: '#6d2525'
-                from: 0
-                to: 10
-            entity_row: true
-            entities:
-
-              - entity: sensor.hp_deskjet_2600_series_black_ink
-                name: Svart
-                icon: mdi:water-outline
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.hp_deskjet_2600_series_black_ink
-
-              - entity: sensor.hp_deskjet_2600_series_tri_color_ink
-                name: Färg
-                icon: mdi:water
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.hp_deskjet_2600_series_tri_color_ink
       - type: map
         entities:
          - device_tracker.redmi_note_5

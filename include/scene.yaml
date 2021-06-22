@@ -1,6 +1,6 @@
 scene:
   - id: '1574796562965'
-    name: Home below horizon
+    name: Hemma below horizon
     entities:
       light.dator:
         brightness: 254
@@ -9,7 +9,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: PC lamp
+        friendly_name: Datorlampa
         max_mireds: 500
         min_mireds: 153
         state: 'on'

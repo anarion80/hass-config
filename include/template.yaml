@@ -64,14 +64,13 @@ template:
           ] %}
 
           {%- set switches = [
-            states.switch.computer_imac,
+            states.switch.router,
             states.switch.tv,
-            states.switch.tv_samsung,
+            states.switch.smart_plug_2,
             states.switch.playstation_5,
             states.switch.wemo_monitors,
-            states.fan.studio_wemo,
-            states.fan.sovrum_anslut,
-            states.fan.air_purifier
+            states.binary_sensor.ac,
+            states.fan.zhimi_airpurifier_v7
           ] %}
 
           {%- set lights_on = lights | selectattr('state','eq','on') | list %}
@@ -80,8 +79,11 @@ template:
           {%- set switches_on = switches | selectattr('state','eq','on') | list %} 
           {%- set switches_name = switches | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
 
-          {%- if (lights_on | length == 0) and (switches_on | length > 0) -%} 
-            {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} är på
+          {%- if (lights_on | length == 0) and (switches_on | length == 1) -%} 
+            {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} is on
+            
+          {%- elif (lights_on | length == 0) and (switches_on | length > 1) -%} 
+            {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} are on
 
           {%- elif (lights_on | length == 1) and (switches_on | length == 1) -%}
             {{ lights_name }} and {{switches_name }} are on
@@ -125,9 +127,9 @@ template:
           {%- else %}
             Unable to load weather information...
           {%- endif %}
-        transport: |
-          {% set entity_id = 'sensor.stopa_bazowa_pko_bp' %}
-            Stopa bazowa NBP wynosi {{ states('sensor.stopa_bazowa_pko_bp') }}
+ #       transport: |
+ #         {% set entity_id = 'sensor.stopa_bazowa_pko_bp' %}
+ #           Stopa bazowa NBP wynosi {{ states('sensor.stopa_bazowa_pko_bp') }}
         laundry: |
           {%- set start_time = state_attr('calendar.tvatta', 'start_time') %}
           {% if start_time != None %}
@@ -152,9 +154,11 @@ template:
               Wash again {{ (count + hours) | round }} days on {{ day }} at {{ time }}
             {%- endif %}
           {%- endif %}
-        mathem: |
-          {%- set start_time = state_attr('calendar.mathem', 'start_time') %}
-          {%- set end_time = state_attr('calendar.mathem', 'end_time') %}
+        calendar: |
+          {%- set start_time = state_attr('calendar.anarion_dunedain', 'start_time') %}
+          {%- set end_time = state_attr('calendar.anarion_dunedain', 'end_time') %}
+          {%- set event = state_attr('calendar.anarion_dunedain', 'message') %}
+          {%- set location = state_attr('calendar.anarion_dunedain', 'location') %}
           {% if start_time != None %}
             {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
             {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
@@ -169,22 +173,55 @@ template:
             | replace('Saturday', 'Saturday')
             | replace('Sunday', 'Sunday') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F6D2'}} Mathem today between {{ time }}-{{ time_end }}
+              {{'\U0001F4C5'}} {{ event }} today between {{ time }}-{{ time_end }}
             {%- elif count <= 1.0 -%}
-              Mathem tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} tomorrow between {{ time }}-{{ time_end }}
             {%- elif count <= 2.0 -%}
-              Mathem the day after tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} the day after tomorrow between {{ time }}-{{ time_end }}
             {%- else -%}
-              Mathem again {{ (count + hours) | round }} days on{{ day }} between {{ time }}-{{ time_end }}
+              {{event }} in {{ (count + hours) | round }} days on {{ day }} between {{ time }}-{{ time_end }}
             {%- endif %}
           {%- endif %}
+          
         plex: |
           {% if is_state('binary_sensor.plex_availability', 'off') -%}
             {{-'\u26A0\uFE0F'}} Plex is down...
           {%- endif %}
-        nas: |
-          {% if is_state('binary_sensor.nas_internet_access', 'off') -%}
-            {{-'\u26A0\uFE0F'}} Check NAS Internet access 
+        # nas: |
+          # {% if is_state('binary_sensor.nas_internet_access', 'off') -%}
+            # {{-'\u26A0\uFE0F'}} Check NAS Internet access 
+          # {%- endif %}
+
+    - unique_id: sidebar_calendar
+      state: template
+      attributes:
+        calendar: |
+          {%- set start_time = state_attr('calendar.anarion_dunedain', 'start_time') %}
+          {%- set end_time = state_attr('calendar.anarion_dunedain', 'end_time') %}
+          {%- set event = state_attr('calendar.anarion_dunedain', 'message') %}
+          {%- set location = state_attr('calendar.anarion_dunedain', 'location') %}
+          {% if start_time != None %}
+            {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
+            {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
+            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
+            {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
+            {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
+            | replace('Monday', 'Monday')
+            | replace('Tuesday', 'Tuesday')
+            | replace('Wednesday', 'Wednesday')
+            | replace('Thursday', 'Thursday')
+            | replace('Friday', 'Friday')
+            | replace('Saturday', 'Saturday')
+            | replace('Sunday', 'Sunday') %}
+            {%- if count <= 0.0 -%}
+              {{'\U0001F4C5'}} {{ event }} today between {{ time }}-{{ time_end }}
+            {%- elif count <= 1.0 -%}
+              {{ event}} tomorrow between {{ time }}-{{ time_end }}
+            {%- elif count <= 2.0 -%}
+              {{ event}} the day after tomorrow between {{ time }}-{{ time_end }}
+            {%- else -%}
+              {{event }} {{ (count + hours) | round }} days on {{ day }} between {{ time }}-{{ time_end }}
+            {%- endif %}
           {%- endif %}
 
     - unique_id: coronavirus
@@ -192,22 +229,17 @@ template:
       state: template
       attributes:
         template: >
-          {% if is_state('sensor.covid_19_folkhalsomyndigheten', 'Available') %}
-            {% set data = state_attr('sensor.covid_19_folkhalsomyndigheten', 'embedCode') %}
-            {% set total = data | regex_findall_index('Totalt[^,]*?(\d+)[^,]*?(\d+)[^,]*?(\d+)') | list %}
             {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
             <font color='#6a7377'>
-            <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}
-            <ha-icon icon="mdi:chart-bar"></ha-icon> <b>{{ ((total[0] | int / 10327589) * 100) | round(2) }}%</b> in Sweden{{ break -}}
-            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ total[0] }}</b> cases{{ break -}}
-            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ total[2] }}</b> deceased{{ break -}}
-            <ha-icon icon="mdi:map-marker-radius"></ha-icon> <b>{{ data | regex_findall_index('Skåne[^,]*?(\d+)') }}</b> cases in Skåne
+            <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}          
+            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.zakazenia_covid19') }}</b> cases{{ break -}}
+            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.zgony_covid19') }}</b> deceased{{ break -}}
+            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.wyleczeni_covid19') }}</b> recovered
             </font>
-          {% endif %}
 
-    - unique_id: public_ip
-      icon: mdi:ip
-      state: !secret public_ip
+    # - unique_id: public_ip
+      # icon: mdi:ip
+      # state: !secret public_ip
 
     - unique_id: dockermon_mem
       icon: mdi:memory

@@ -49,7 +49,7 @@ browser_mod:
         show_state: false
         entities:
 
-          - entity: device_tracker.mattias_iphonedetect
+          - entity: device_tracker.nokia_8_3_5g
             name: Router
             icon: mdi:wifi
             style: &style |
@@ -57,14 +57,9 @@ browser_mod:
                 color: {{ '#3182b7' if is_state(config.entity, 'home') else '#3c3f3f' }};
               }
 
-          - entity: device_tracker.mattias_bluetooth
-            name: Bluetooth
-            icon: mdi:bluetooth
-            style: *style
-
           - entity: device_tracker.nokia_8_3_5g
             name: Position
-            icon: custom:iphone-modern
+            icon: mdi:crosshairs-gps
             style: *style
 
       - type: custom:button-card

@@ -1,0 +1,36 @@
+action: fire-dom-event
+browser_mod:
+  command: popup
+  title: Finance
+  style:
+    hui-grid-card$: |
+      #root {
+        grid-gap: 0 !important;
+      }
+  card:
+    type: grid
+    columns: 1
+    square: false
+    cards:
+      - type: custom:apexcharts-card
+        update_interval: 1d
+        graph_span: 30d
+        span:
+          end: day
+        header:
+          show: true
+          title: Stopy procentowe PKO BP
+          show_states: true
+          colorize_states: true
+        series:
+          - entity: sensor.stopa_bazowa_pko_bp
+            curve: straight
+            float_precision: 2
+          - entity: sensor.wibor_6m
+            curve: straight
+            float_precision: 2
+
+
+
+
+

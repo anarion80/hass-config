@@ -78,8 +78,42 @@ input_select:
       - HDMI 2/MHL
       - HDMI 3
       - HDMI 4
+      - TVP1 HD
+      - TVP2 HD
+      - TVP3 Krakow
+      - Polsat
+      - TVN
+      - TV4
+      - TV Puls
+      - TVN 7
+      - PULS 2
+      - TV6
+      - Super Polsat
+      - ESKA TV
+      - TTV
+      - Polo TV
+      - SILVER TV
+      - TV Trwam
+      - Stopklatka TV
+      - Fokus TV
+      - TVP ABC
+      - TVP Kultura HD
+      - TVP Historia
+      - TVP Sport HD
+      - TVP Info
+      - TVP Kobieta
+      - Metro
+      - Zoom TV
+      - Nowa TV
+      - WP
+      - TVP 4K
+      - eSZKOLA DOMOWE PRZEDSZKOLE
+      - Telewizja Naziemna
+      - TVP Kultura 2
+      - EmiTV
+      - TOYAcyfrowaINFO
     initial: HDMI 1
-    icon: custom:hdmi-source
+    icon: mdi:video-input-hdmi
 
   hdmi2:
     name: Source

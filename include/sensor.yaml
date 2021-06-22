@@ -22,15 +22,15 @@ sensor:
     file_paths:
       - /config/home-assistant.log
 
-  - platform: sql
-    db_url: !secret recorder_db_url
-    queries:
-      - name: Database
-        query: >
-          SELECT table_schema "database", Round(Sum(data_length + index_length) / POWER(1024,2), 1) 
-          "value" FROM information_schema.tables WHERE table_schema="homeassistant" GROUP BY table_schema;
-        column: value
-        unit_of_measurement: MB
+  # - platform: sql
+    # db_url: !secret recorder_db_url
+    # queries:
+      # - name: Database
+        # query: >
+          # SELECT table_schema "database", Round(Sum(data_length + index_length) / POWER(1024,2), 1) 
+          # "value" FROM information_schema.tables WHERE table_schema="homeassistant" GROUP BY table_schema;
+        # column: value
+        # unit_of_measurement: MB
 
   #- platform: systemmonitor
     #resources:
@@ -47,52 +47,49 @@ sensor:
       - time
       - date
 
-  - platform: mqtt
-    name: valetudo_version_installed
-    state_topic: homeassistant/vacuum/robot/robot_vacuum/config
-    value_template: >
-      {{ value_json.device.sw_version.split(' ')[0] }}
+  # - platform: mqtt
+    # name: valetudo_version_installed
+    # state_topic: homeassistant/vacuum/robot/robot_vacuum/config
+    # value_template: >
+      # {{ value_json.device.sw_version.split(' ')[0] }}
 
-  - platform: rest
-    name: valetudo_version_latest
-    resource: https://api.github.com/repos/Hypfer/Valetudo/releases/latest
-    value_template: >
-      {{ value_json.tag_name }}
-    scan_interval: 86400
+  # - platform: rest
+    # name: valetudo_version_latest
+    # resource: https://api.github.com/repos/Hypfer/Valetudo/releases/latest
+    # value_template: >
+      # {{ value_json.tag_name }}
+    # scan_interval: 86400
 
-  - platform: mqtt
-    name: tasmota_version_installed
-    state_topic: tasmota/discovery/C44F33B95EBA/config
-    value_template: >
-      {{ value_json.sw }}
+  # - platform: mqtt
+    # name: tasmota_version_installed
+    # state_topic: tasmota/discovery/C44F33B95EBA/config
+    # value_template: >
+      # {{ value_json.sw }}
 
-  - platform: rest
-    name: tasmota_version_latest
-    resource: https://api.github.com/repos/arendst/Tasmota/releases/latest
-    value_template: >
-      {{ value_json.tag_name.split("v")[1] }}
-    scan_interval: 86400
+  # - platform: rest
+    # name: tasmota_version_latest
+    # resource: https://api.github.com/repos/arendst/Tasmota/releases/latest
+    # value_template: >
+      # {{ value_json.tag_name.split("v")[1] }}
+    # scan_interval: 86400
 
-  - platform: rest
-    name: covid_19_folkhalsomyndigheten
-    resource: https://www.arcgis.com/sharing/rest/content/items/2dc63e26f509468f896ec69476b0dab3/data
-    value_template: >
-      {{ 'Inaccessible' if value_json.embedCode == '' else 'Available' }}
-    json_attributes_path: $.widgets.widget_1.config
-    json_attributes: [embedCode]
-    scan_interval: 21600
+  # - platform: rest
+    # name: covid_19_folkhalsomyndigheten
+    # resource: https://www.arcgis.com/sharing/rest/content/items/2dc63e26f509468f896ec69476b0dab3/data
+    # value_template: >
+      # {{ 'Inaccessible' if value_json.embedCode == '' else 'Available' }}
+    # json_attributes_path: $.widgets.widget_1.config
+    # json_attributes: [embedCode]
+    # scan_interval: 21600
 
-  - platform: rest
-    name: skanetrafiken
-    resource: !secret skanetrafiken
-    value_template: >
-      {{ value_json.Trip[0].LegList.Leg[1].Product.num }}
-    json_attributes_path: $.Trip[0].LegList.Leg[1].Origin
-    json_attributes: [name, time, date]
-    scan_interval: 268
-    # {% set monthly_api_calls = 10000 %}
-    # {% set seconds_in_a_month = 2678400 %}
-    # {{ (seconds_in_a_month / monthly_api_calls) | round }}
+  # - platform: rest
+    # name: skanetrafiken
+    # resource: !secret skanetrafiken
+    # value_template: >
+      # {{ value_json.Trip[0].LegList.Leg[1].Product.num }}
+    # json_attributes_path: $.Trip[0].LegList.Leg[1].Origin
+    # json_attributes: [name, time, date]
+    # scan_interval: 60
 
   - platform: rest
     name: hass_release_notes
@@ -110,27 +107,27 @@ sensor:
     json_attributes: [body]
     scan_interval: 21600
 
-  - platform: dnsip
+  # - platform: dnsip
 
-  - platform: darksky
-    api_key: !secret darksky_api_key
-    language: sv
-    monitored_conditions:
-      - temperature
-      - apparent_temperature
-      - precip_probability
+  # - platform: darksky
+    # api_key: !secret darksky_api_key
+    # language: sv
+    # monitored_conditions:
+      # - temperature
+      # - apparent_temperature
+      # - precip_probability
 
-  - platform: rest
-    name: docker_cpu
-    resource: !secret ha_dockermon_cpu
-    value_template: >
-      {% set cpuDelta = value_json.cpu_stats.cpu_usage.total_usage - value_json.precpu_stats.cpu_usage.total_usage %}
-      {% set systemDelta = value_json.cpu_stats.system_cpu_usage - value_json.precpu_stats.system_cpu_usage %}
-      {{ (cpuDelta / systemDelta * value_json.cpu_stats.cpu_usage.percpu_usage | length * 100) | round(1) }}
-    json_attributes:
-      - cpu_stats
-      - precpu_stats
-      - memory_stats
+  # - platform: rest
+    # name: docker_cpu
+    # resource: !secret ha_dockermon_cpu
+    # value_template: >
+      # {% set cpuDelta = value_json.cpu_stats.cpu_usage.total_usage - value_json.precpu_stats.cpu_usage.total_usage %}
+      # {% set systemDelta = value_json.cpu_stats.system_cpu_usage - value_json.precpu_stats.system_cpu_usage %}
+      # {{ (cpuDelta / systemDelta * value_json.cpu_stats.cpu_usage.percpu_usage | length * 100) | round(1) }}
+    # json_attributes:
+      # - cpu_stats
+      # - precpu_stats
+      # - memory_stats
 
   - platform: plex_recently_added
     token: !secret plex_token
@@ -140,46 +137,46 @@ sensor:
     img_dir: /
     image_resolution: 500
 
-  - platform: command_line
-    name: imac_ip
-    scan_interval: 86400
-    command: !secret imac_ip
+  # - platform: command_line
+    # name: imac_ip
+    # scan_interval: 86400
+    # command: !secret imac_ip
 
-  - platform: command_line
-    name: imac_system_ssd
-    scan_interval: 86400
-    unit_of_measurement: '%'
-    command: !secret imac_system_ssd
+  # - platform: command_line
+    # name: imac_system_ssd
+    # scan_interval: 86400
+    # unit_of_measurement: '%'
+    # command: !secret imac_system_ssd
 
-  - platform: command_line
-    name: imac_macintosh_hd
-    scan_interval: 86400
-    unit_of_measurement: '%'
-    command: !secret imac_macintosh_hd
+  # - platform: command_line
+    # name: imac_macintosh_hd
+    # scan_interval: 86400
+    # unit_of_measurement: '%'
+    # command: !secret imac_macintosh_hd
 
-  - platform: command_line
-    name: imac_cpu
-    scan_interval: 86400
-    unit_of_measurement: '%'
-    command: !secret imac_cpu
+  # - platform: command_line
+    # name: imac_cpu
+    # scan_interval: 86400
+    # unit_of_measurement: '%'
+    # command: !secret imac_cpu
 
-  - platform: command_line
-    name: imac_mem
-    scan_interval: 86400
-    unit_of_measurement: '%'
-    command: !secret imac_mem
+  # - platform: command_line
+    # name: imac_mem
+    # scan_interval: 86400
+    # unit_of_measurement: '%'
+    # command: !secret imac_mem
 
-  - platform: command_line
-    name: monitors_volume
-    scan_interval: 86400
-    command: !secret monitors_update_volume
+  # - platform: command_line
+    # name: monitors_volume
+    # scan_interval: 86400
+    # command: !secret monitors_update_volume
 
-  - platform: command_line
-    name: imac_uptime
-    scan_interval: 86400
-    command: !secret imac_uptime
-    value_template: >
-      {{ value | int | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}
+  # - platform: command_line
+    # name: imac_uptime
+    # scan_interval: 86400
+    # command: !secret imac_uptime
+    # value_template: >
+      # {{ value | int | timestamp_custom('%Y-%m-%dT%H:%M:%S') }}
 
   - platform: command_line
     name: hacs_version

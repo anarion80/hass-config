@@ -1,85 +1,85 @@
-homekit:
+# homekit:
 
-    ####################################################
-    #                                                  #
-    #                     HOMEKIT                      #
-    #                                                  #
-    ####################################################
+    # ####################################################
+    # #                                                  #
+    # #                     HOMEKIT                      #
+    # #                                                  #
+    # ####################################################
 
-  - ip_address: !secret homekit_ip_address
-    filter:
-      include_entities:
-        - switch.playstation_5
-        - switch.computer_imac
-        - switch.wemo_monitors
-        - fan.air_purifier
-        - fan.sovrum_anslut
-        - fan.studio_wemo
-        - person.anarion
-        - person.iwona
-        - script.home_leave
-        - script.home_arrive
-        - script.samsung_tv_energy_saving
-        - vacuum.valetudo_robot
-    entity_config:
-      switch.playstation_5:
-        name: Playstation
-      switch.computer_imac:
-        name: PC
-      switch.wemo_monitors:
-        name: Monitors
-      fan.air_purifier:
-        name: Air Purifier
-      fan.sovrum_anslut:
-        name: Fan
-      fan.studio_wemo:
-        name: Fan 2
-      person.anarion:
-        name: Anarion
-      person.iwona:
-        name: Iwona
-      script.home_leave:
-        name: Close all
-      script.home_arrive:
-        name: Home
-      script.samsung_tv_energy_saving:
-        name: Eco
-      vacuum.valetudo_robot:
-        name: Morty
+  # - ip_address: !secret homekit_ip_address
+    # filter:
+      # include_entities:
+        # - switch.playstation_5
+        # - switch.computer_imac
+        # - switch.wemo_monitors
+        # - fan.air_purifier
+        # - fan.sovrum_anslut
+        # - fan.studio_wemo
+        # - person.anarion
+        # - person.iwona
+        # - script.home_leave
+        # - script.home_arrive
+        # - script.samsung_tv_energy_saving
+        # - vacuum.valetudo_robot
+    # entity_config:
+      # switch.playstation_5:
+        # name: Playstation
+      # switch.computer_imac:
+        # name: PC
+      # switch.wemo_monitors:
+        # name: Monitors
+      # fan.air_purifier:
+        # name: Air Purifier
+      # fan.sovrum_anslut:
+        # name: Fan
+      # fan.studio_wemo:
+        # name: Fan 2
+      # person.anarion:
+        # name: Anarion
+      # person.iwona:
+        # name: Iwona
+      # script.home_leave:
+        # name: Close all
+      # script.home_arrive:
+        # name: Home
+      # script.samsung_tv_energy_saving:
+        # name: Eco
+      # vacuum.valetudo_robot:
+        # name: Morty
 
-  - name: HASS Bridge Sony
-    ip_address: !secret homekit_ip_address
-    port: 51828
-    mode: accessory
-    filter:
-      include_entities:
-        - media_player.sony_bravia_tv
-    entity_config:
-      media_player.sony_bravia_tv:
-        name: Sony TV
-        feature_list:
-          - feature: on_off
+  # - name: HASS Bridge Sony
+    # ip_address: !secret homekit_ip_address
+    # port: 51828
+    # mode: accessory
+    # filter:
+      # include_entities:
+        # - media_player.sony_bravia_tv
+    # entity_config:
+      # media_player.sony_bravia_tv:
+        # name: Sony TV
+        # feature_list:
+          # - feature: on_off
 
-  - name: HASS Bridge Samsung
-    ip_address: !secret homekit_ip_address
-    port: 51829
-    mode: accessory
-    filter:
-      include_entities:
-        - media_player.samsung_tv
-    entity_config:
-      media_player.samsung_tv:
-        name: Samsung TV
-        feature_list:
-          - feature: on_off
+  # - name: HASS Bridge Samsung
+    # ip_address: !secret homekit_ip_address
+    # port: 51829
+    # mode: accessory
+    # filter:
+      # include_entities:
+        # - media_player.samsung_tv
+    # entity_config:
+      # media_player.samsung_tv:
+        # name: Samsung TV
+        # feature_list:
+          # - feature: on_off
 
-  - name: HASS Bridge Lock
-    ip_address: !secret homekit_ip_address
-    port: 51830
-    mode: accessory
-    filter:
-      include_entities:
-        - lock.dator
-    entity_config:
-      lock.dator:
-        name: PC
+  # - name: HASS Bridge Lock
+    # ip_address: !secret homekit_ip_address
+    # port: 51830
+    # mode: accessory
+    # filter:
+      # include_entities:
+        # - lock.dator
+    # entity_config:
+      # lock.dator:
+        # name: PC

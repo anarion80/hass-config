@@ -549,6 +549,39 @@
             `;
         ]]]
 
+ #################################################
+ #                                               #
+ #                 MEDIA SOURCE                  #
+ #                                               #
+ #################################################
+
+  media_source:
+    styles:
+      custom_fields:
+        circle:
+          # - clip-path: circle()
+          # - width: 79%
+          # - pointer-events: none
+          # - display: flex
+          - display: flex
+          #- width: 90%
+          - letter-spacing: 0.03vw
+          #- margin: -6% -6% 0 0
+          - justify-self: end
+          - white-space: normal
+          - word-wrap: break-word
+          #- font-size: 0.5vw
+          - opacity: 1
+    custom_fields:
+      circle: >
+        [[[
+            if (entity.state === 'on') {
+               const input = variables.circle;
+               return `${input}`;
+            } 
+        ]]]
+
+
 
   #################################################
   #                                               #
@@ -924,6 +957,97 @@
 
   #################################################
   #                                               #
+  #                    CALENDAR                   #
+  #                                               #
+  #################################################
+
+  calendar:
+    show_icon: false
+    show_name: false
+    show_state: true
+    state_display: |
+          [[[
+             console.log("Calendar Button 1");
+             const start_time = state_attr('calendar.anarion_dunedain', 'start_time');
+             const end_time = state_attr('calendar.anarion_dunedain', 'end_time');
+             const event = state_attr('calendar.anarion_dunedain', 'message');
+             const location = state_attr('calendar.anarion_dunedain', 'location');
+             if start_time != None {
+               const time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
+               {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
+               {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
+               {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
+               {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
+            | replace('Monday', 'Monday')
+            | replace('Tuesday', 'Tuesday')
+            | replace('Wednesday', 'Wednesday')
+            | replace('Thursday', 'Thursday')
+            | replace('Friday', 'Friday')
+            | replace('Saturday', 'Saturday')
+            | replace('Sunday', 'Sunday') %}
+            {%- if count <= 0.0 -%}
+              {{'\U0001F4C5'}} {{ event }} today between {{ time }}-{{ time_end }}
+            {%- elif count <= 1.0 -%}
+              {{ event}} tomorrow between {{ time }}-{{ time_end }}
+            {%- elif count <= 2.0 -%}
+              {{ event}} the day after tomorrow between {{ time }}-{{ time_end }}
+            {%- else -%}
+              {{event }} {{ (count + hours) | round }} days on {{ day }} between {{ time }}-{{ time_end }}
+            {%- endif %}
+          {%- endif %}
+          
+              }
+              [[[ if (variables.state === true) return 'Unknown'; ]]]
+          ]]]
+    # tap_action:
+      # services: >
+        # [[[
+          # hass.callService('timer', 'cancel', {
+            # entity_id: entity.entity_id
+          # });
+          # hass.callService('timer', 'start', {
+            # entity_id: entity.entity_id
+          # });
+        # ]]]
+    # hold_action:
+      # services: >
+        # [[[
+          # hass.callService('timer', 'cancel', {
+            # entity_id: entity.entity_id
+          # });
+          # hass.callService('input_boolean', 'turn_off', {
+            # entity_id: 'input_boolean.laundry_display'
+          # });
+        # ]]]
+    styles:
+      card:
+        - font-family: SF Display;
+        - font-size: var(--markdown-sidebar-font-size);
+        - line-height: var(--markdown-sidebar-line-height);
+        - font-weight: 300;
+        - letter-spacing: 0.06vw;
+        - color: #6a7377;
+      # state:
+        # - font-size: 2.7vw
+        # - font-family: SF Mono
+        # - opacity: 0.65
+        # - padding: 0.55vw 1.2vw 0.5vw 1.2vw
+    # extra_styles: |
+      # #card {
+        # animation: fade 0.8s;
+      # }
+      # @keyframes fade {
+        # 0%, 30% {
+          # opacity: 0;
+        # }
+        # 100% {
+          # opacity: 1;
+        # }
+      # }
+
+
+  #################################################
+  #                                               #
   #                 POPUP BUTTONS                 #
   #                                               #
   #################################################
@@ -965,6 +1089,29 @@
         - height: 4em
         - width: 4em
         - margin: 4px
+
+  icon_name_footer:
+    size: 1.4em
+    color: '#9da0a2'
+    styles:
+      grid:
+        - grid-template-areas: '"i n s"'
+        - grid-column-gap: 0.3em
+      name:
+        - font-size: 1.06em
+        - letter-spacing: 0.015em
+      state:
+        - font-size: 1.06em
+        - letter-spacing: 0.015em
+      card:
+        - color: '#9da0a2'
+        - border-radius: 0.6em
+        - padding: 1em 1.4em 1em 1.2em
+        - width: 100%
+        - font-size: 1.06em
+        - font-weight: 500
+        - letter-spacing: 0.015em
+        #- background: '#FFFFFF10'
 
   #################################################
   #                                               #
@@ -1106,6 +1253,12 @@
            </g>
         </svg>
 
+  icon_chromecast_audio:
+    custom_fields:
+      icon: >
+        <svg viewBox="0 0 24 24">
+          <path d="M2 11V13C7 13 11 17 11 22H13C13 15.9 8.1 11 2 11M20 2H10C8.9 2 8 2.9 8 4V10.5C9 11 9.9 11.7 10.7 12.4C11.6 11 13.2 10 15 10C17.8 10 20 12.2 20 15S17.8 20 15 20H14.8C14.9 20.7 15 21.3 15 22H20C21.1 22 22 21.1 22 20V4C22 2.9 21.1 2 20 2M15 8C13.9 8 13 7.1 13 6C13 4.9 13.9 4 15 4C16.1 4 17 4.9 17 6S16.1 8 15 8M15 18C14.8 18 14.5 18 14.3 17.9C13.8 16.4 13.1 15.1 12.2 13.9C12.6 12.8 13.7 11.9 15 11.9C16.7 11.9 18 13.2 18 14.9S16.7 18 15 18M2 15V17C4.8 17 7 19.2 7 22H9C9 18.1 5.9 15 2 15M2 19V22H5C5 20.3 3.7 19 2 19" />
+        </svg>
         
   icon_spotify:
     custom_fields:

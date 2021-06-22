@@ -246,6 +246,7 @@ frontend:
         #################################################
 
         "grid-layout$hui-grid-card:first-of-type":
+        #"grid-layout$hui-grid-card":
           .: |
             hui-grid-card:first-of-type {
               display: flex;
@@ -326,42 +327,85 @@ frontend:
         #                                               #
         #################################################
 
-        "grid-layout$hui-markdown-card:last-of-type$":
-          .: |
-            ha-card, ha-markdown {
-              background: none;
-              padding: 0 !important;
-              pointer-events: none;
-              margin-top: -1vw;
-            }
+        # "grid-layout$hui-markdown-card:last-of-type$":
+          # .: |
+            # ha-card, ha-markdown {
+              # background: none;
+              # padding: 0 !important;
+              # pointer-events: none;
+              # margin-top: -1vw;
+            # }
 
-            ha-markdown {
-              overflow: hidden;
-            }
+            # ha-markdown {
+              # overflow: hidden;
+            # }
 
-          ha-card>ha-markdown$: |
-            ha-markdown-element {
-              opacity: 0.6;
-              font-size: 1.26vw;
-              font-weight: 400;
-              --mdc-icon-size: 1.2vw;
-              font-family: SF Display;
-              letter-spacing: 0.05vw;
-              line-height: 0px;
-              white-space: nowrap;
-            }
+          # ha-card>ha-markdown$: |
+            # ha-markdown-element {
+              # opacity: 0.6;
+              # font-size: 1.26vw;
+              # font-weight: 400;
+              # --mdc-icon-size: 1.2vw;
+              # font-family: SF Display;
+              # letter-spacing: 0.05vw;
+              # line-height: 0px;
+              # white-space: nowrap;
+            # }
 
-            ha-icon {
-              vertical-align: 3%;
-              opacity: 0.4;
-            }
+            # ha-icon {
+              # vertical-align: 3%;
+              # opacity: 0.4;
+            # }
 
-            /* phone */
-            @media screen and (max-width: 800px) {
-              ha-markdown-element {
-                display: none;
-              }
-            }
+            # /* phone */
+            # @media screen and (max-width: 800px) {
+              # ha-markdown-element {
+                # display: none;
+              # }
+            # }
+
+        #################################################
+        #                                               #
+        #           CORONAVIRUS MARKDOWN CARD           #
+        #                                               #
+        #################################################
+
+        # "grid-layout$hui-horizontal-stack-card:first-of-type$":
+          # .: |
+            # ha-card, button-card {
+              # background: none;
+              # padding: 0 !important;
+              # pointer-events: none;
+              # margin-top: -1vw;
+            # }
+
+            # ha-markdown {
+              # overflow: hidden;
+            # }
+
+          # button-card$: |
+            # ha-card {
+              # opacity: 0.6;
+              # font-size: 1.26vw;
+              # font-weight: 400;
+              # --mdc-icon-size: 1.2vw;
+              # font-family: SF Display;
+              # letter-spacing: 0.05vw;
+              # line-height: 0px;
+              # white-space: nowrap;
+            # }
+
+            # ha-icon {
+              # vertical-align: 3%;
+              # opacity: 0.4;
+            # }
+
+            # /* phone */
+            # @media screen and (max-width: 800px) {
+              # ha-markdown-element {
+                # display: none;
+              # }
+            # }
 
       card-mod-card: |
         .card-content {

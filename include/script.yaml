@@ -6,21 +6,21 @@ script:
   #                                                  #
   ####################################################
 
-  monitors_mute:
-    sequence:
-      - choose:
-        - conditions:
-            - condition: state
-              entity_id: binary_sensor.monitors_mute_check
-              state: 'off'
-          sequence:
-            - service: shell_command.monitors_mute_on
-        default:
-          - service: shell_command.monitors_mute_off
-      - delay:
-          milliseconds: 300
-      - service: homeassistant.update_entity
-        entity_id: binary_sensor.monitors_mute_check
+  # monitors_mute:
+    # sequence:
+      # - choose:
+        # - conditions:
+            # - condition: state
+              # entity_id: binary_sensor.monitors_mute_check
+              # state: 'off'
+          # sequence:
+            # - service: shell_command.monitors_mute_on
+        # default:
+          # - service: shell_command.monitors_mute_off
+      # - delay:
+          # milliseconds: 300
+      # - service: homeassistant.update_entity
+        # entity_id: binary_sensor.monitors_mute_check
 
   homeassistant_restart:
     sequence:
@@ -137,17 +137,11 @@ script:
   home_leave:
     alias: Close everything
     sequence:
-      - choose:
-        - conditions:
-            - condition: state
-              entity_id: switch.galaxy_tab_a_screensaver
-              state: 'off'
-          sequence:
-            - service: tts.google_cloud_say
-              data:
-                entity_id: media_player.nest_mini
-                message: >
-                  {{ ['Do widzenia', 'Pa Pa', 'Cześć', 'Już za tobą tęsknię', 'Wyłączam wszystko'] | random }}
+      - service: tts.google_cloud_say
+        data:
+          entity_id: media_player.nest_mini
+          message: >
+            {{ ['Do widzenia', 'Pa Pa', 'Cześć', 'Już za tobą tęsknię', 'Wyłączam wszystko'] | random }}
       - service: homeassistant.turn_off
         data:
           entity_id: >

@@ -56,6 +56,27 @@ views:
           {{ state_attr('sensor.template_sidebar', template) }}
           {% endfor %}
 
+      # - type: entities
+        # view_layout:
+          # grid-area: sidebar
+        # entities:
+          # - entity: sensor.template_sidebar_calendar
+            # tap_action:
+              # #!include popup/sovrum_flakt.yaml
+              # !include popup/home_calendar.yaml
+        # content: |
+          # {% set attributes = states.sensor.template_sidebar_calendar.attributes | default %}
+          # {% for template in attributes %}
+          # {{ state_attr('sensor.template_sidebar_calendar', template) }}
+          # {% endfor %}
+        
+
+      # - type: custom:button-card
+        # view_layout:
+          # grid-area: sidebar
+        # entity: calendar.anarion_dunedain
+        # template: calendar
+
       - type: conditional
         view_layout:
           grid-area: sidebar
@@ -144,6 +165,16 @@ views:
               - base
               - icon_tv
               - loader
+              - media_source
+            variables:
+              circle: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    entity.attributes.source;
+                ]]]
+
+
 
           - type: custom:button-card
             entity: climate.living_room_ac
@@ -462,51 +493,121 @@ views:
 
       #################################################
       #                                               #
-      #                    other                     #
+      #                    other                      #
       #                                               #
       #################################################
-
+           
       - type: grid
         title: Other
         view_layout:
           grid-area: other
-        columns: 2
+        columns: 1
         cards:
 
-          - type: custom:button-card
-            entity: switch.plex
-            name: Plex
-            template:
-              - media
-              - icon_plex
+          - type: custom:swipe-card
+            start_card: 1
+            parameters:
+              roundLengths: true
+              #autoHeight: false
+              #height: 424px
+              effect: coverflow
+              speed: 650
+              spaceBetween: 20
+              threshold: 7
+              coverflowEffect:
+                rotate: 80
+                depth: 300
+            cards:
+              # - type: entities
+                # state_color: true
+                # entities:
+                  # - entity: sensor.stopa_bazowa_pko_bp
+                    # secondary_info: last-changed
+                  # - entity: sensor.wibor_6m
+                  # - entity: sensor.stopa_bazowa_pko_bp
+                    # secondary_info: last-changed
+                  # - entity: sensor.wibor_6m
+                  # - entity: sensor.stopa_bazowa_pko_bp
+                    # secondary_info: last-changed
+                  # - entity: sensor.wibor_6m
+                  # - entity: sensor.stopa_bazowa_pko_bp
+                    # secondary_info: last-changed
+                  # - entity: sensor.wibor_6m
+                        
+                  
+              - type: grid
+                columns: 2
+                cards:
+              
+                  - type: custom:button-card
+                    entity: switch.plex
+                    name: Plex
+                    template:
+                      - media
+                      - icon_plex
 
-          - type: custom:button-card
-            entity: switch.tv
-            name: TV
-            template:
-              - media
-              - icon_tv
-              - loader
+                  - type: custom:button-card
+                    entity: switch.tv
+                    name: TV
+                    template:
+                      - media
+                      - icon_tv
+                      - loader
 
-          - type: custom:button-card
-            entity: switch.radio
-            name: Radio
-            template:
-              - media
-              - icon_radio
-              - loader
+                  - type: custom:button-card
+                    entity: switch.radio
+                    name: Radio
+                    template:
+                      - media
+                      - icon_radio
+                      - loader
 
-          - type: custom:button-card
-            entity: switch.netflix
-            name: Netflix
-            template:
-              - media
-              - icon_netflix4
-              - loader
+                  - type: custom:button-card
+                    entity: switch.netflix
+                    name: Netflix
+                    template:
+                      - media
+                      - icon_netflix4
+                      - loader
 
+              - type: grid
+                columns: 2
+                cards:
+              
+                  - type: custom:button-card
+                    entity: switch.chromecast_audio
+                    name: ChromecastAudio
+                    template:
+                      - media
+                      - icon_chromecast
+
+                  - type: custom:button-card
+                    entity: switch.tv
+                    name: TV
+                    template:
+                      - media
+                      - icon_tv
+                      - loader
+
+                  - type: custom:button-card
+                    entity: switch.radio
+                    name: Radio
+                    template:
+                      - media
+                      - icon_radio
+                      - loader
+
+                  - type: custom:button-card
+                    entity: switch.netflix
+                    name: Netflix
+                    template:
+                      - media
+                      - icon_netflix4
+                      - loader 
+  
       #################################################
       #                                               #
-      #                     home                     #
+      #                     home                      #
       #                                               #
       #################################################
 
@@ -559,8 +660,41 @@ views:
       #                                               #
       #################################################
 
-      - type: markdown
+      # - type: markdown
+        # view_layout:
+          # grid-area: footer
+        # content: >
+          # {{ state_attr('sensor.template_coronavirus', 'template') }}
+      - type: horizontal-stack
         view_layout:
           grid-area: footer
-        content: >
-          {{ state_attr('sensor.template_coronavirus', 'template') }}
+        cards:
+          - type: custom:button-card
+            entity: sensor.stopa_bazowa_pko_bp
+            #name: Open HACS
+            show_name: true
+            show_state: true
+            icon: >
+                [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]      
+            tap_action:
+              !include popup/finance.yaml
+            template: icon_name_footer
+            styles:
+              icon:
+                - color: >
+                     [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'green' : 'red'; ]]]
+          - type: custom:button-card
+            entity: sensor.wibor_6m
+            #name: Update HASS
+            icon: mdi:finance
+            show_name: true
+            show_state: true
+            icon: >
+                [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]      
+            tap_action:
+              !include popup/finance.yaml
+            template: icon_name_footer
+            styles:
+              icon:
+                - color: >
+                     [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'green' : 'red'; ]]]

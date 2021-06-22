@@ -30,6 +30,9 @@ automation:
                 - media_player.sony_bravia_tv
                 - media_player.spotify_anarion
                 - media_player.nest_mini
+                - media_player.plex_plex_for_android_tv_shield_android_tv
+                - media_player.chromecastaudio
+                - media_player.kd_55xe9305
               state: 'off'
           sequence:
             - service: input_select.select_option
@@ -73,27 +76,27 @@ automation:
     action:
       - service: shell_command.ha_purge_logs
 
-  - alias: imac_update
-    id: '3673314240807'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: switch.computer_imac
-        from: 'off'
-        to: 'on'
-    action:
-      - delay:
-          seconds: 10
-      - service: homeassistant.update_entity
-        entity_id:
-          - sensor.imac_ip
-          - sensor.imac_cpu
-          - sensor.imac_mem
-          - sensor.imac_system_ssd
-          - sensor.imac_macintosh_hd
-          - sensor.monitors_volume
-          - binary_sensor.monitors_mute_check
-          - sensor.imac_uptime
+  # - alias: imac_update
+    # id: '3673314240807'
+    # initial_state: true
+    # trigger:
+      # - platform: state
+        # entity_id: switch.computer_imac
+        # from: 'off'
+        # to: 'on'
+    # action:
+      # - delay:
+          # seconds: 10
+      # - service: homeassistant.update_entity
+        # entity_id:
+          # - sensor.imac_ip
+          # - sensor.imac_cpu
+          # - sensor.imac_mem
+          # - sensor.imac_system_ssd
+          # - sensor.imac_macintosh_hd
+          # - sensor.monitors_volume
+          # - binary_sensor.monitors_mute_check
+          # - sensor.imac_uptime
 
   - alias: tv_on_lights
     id: '6657050215613'
@@ -277,27 +280,27 @@ automation:
     #                                                  #
     ####################################################
 
-  - alias: conditional_scan_interval
-    id: '0007659752611'
-    initial_state: true
-    trigger:
-      - platform: time_pattern
-        minutes: /5
-    condition:
-      - condition: state
-        entity_id: switch.computer_imac
-        state: 'on'
-    action:
-      - service: homeassistant.update_entity
-        entity_id:
-          - sensor.imac_ip
-          - sensor.imac_cpu
-          - sensor.imac_mem
-          - sensor.imac_system_ssd
-          - sensor.imac_macintosh_hd
-          - sensor.monitors_volume
-          - binary_sensor.monitors_mute_check
-          - sensor.imac_uptime
+  # - alias: conditional_scan_interval
+    # id: '0007659752611'
+    # initial_state: true
+    # trigger:
+      # - platform: time_pattern
+        # minutes: /5
+    # condition:
+      # - condition: state
+        # entity_id: switch.computer_imac
+        # state: 'on'
+    # action:
+      # - service: homeassistant.update_entity
+        # entity_id:
+          # - sensor.imac_ip
+          # - sensor.imac_cpu
+          # - sensor.imac_mem
+          # - sensor.imac_system_ssd
+          # - sensor.imac_macintosh_hd
+          # - sensor.monitors_volume
+          # - binary_sensor.monitors_mute_check
+          # - sensor.imac_uptime
 
   - alias: tasmota_scan_interval
     id: '2405277038357'
@@ -317,48 +320,48 @@ automation:
     #                                                  #
     ####################################################
 
-  - alias: monitors_volume_slider
-    id: '0022255594357'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: input_number.monitors_volume
-    condition:
-      - condition: state
-        entity_id: switch.computer_imac
-        state: 'on'
-    action:
-      - service: shell_command.monitors_volume_slider
-      - service: homeassistant.update_entity
-        entity_id: binary_sensor.monitors_mute_check
-      - service: homeassistant.update_entity
-        entity_id: sensor.monitors_volume
+  # - alias: monitors_volume_slider
+    # id: '0022255594357'
+    # initial_state: true
+    # trigger:
+      # - platform: state
+        # entity_id: input_number.monitors_volume
+    # condition:
+      # - condition: state
+        # entity_id: switch.computer_imac
+        # state: 'on'
+    # action:
+      # - service: shell_command.monitors_volume_slider
+      # - service: homeassistant.update_entity
+        # entity_id: binary_sensor.monitors_mute_check
+      # - service: homeassistant.update_entity
+        # entity_id: sensor.monitors_volume
 
-  - alias: monitors_volume_update
-    id: '1275485733091'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: sensor.monitors_volume
-    condition:
-      - condition: state
-        entity_id: switch.computer_imac
-        state: 'on'
-    action:
-      - service: homeassistant.update_entity
-        entity_id: binary_sensor.monitors_mute_check
-      - service: input_number.set_value
-        data:
-          entity_id: input_number.monitors_volume
-          value: >
-            {% set max_volume = 75 %} {% set min_volume = 7 %}
-            {% if states(trigger.entity_id) | int > max_volume %}
-              {{ max_volume }}
-            {% elif states(trigger.entity_id) | int < min_volume %}
-              {{ min_volume }}
-            {% else %}
-              {{ states(trigger.entity_id) }}
-            {% endif %}
+  # - alias: monitors_volume_update
+    # id: '1275485733091'
+    # initial_state: true
+    # trigger:
+      # - platform: state
+        # entity_id: sensor.monitors_volume
+    # condition:
+      # - condition: state
+        # entity_id: switch.computer_imac
+        # state: 'on'
+    # action:
+      # - service: homeassistant.update_entity
+        # entity_id: binary_sensor.monitors_mute_check
+      # - service: input_number.set_value
+        # data:
+          # entity_id: input_number.monitors_volume
+          # value: >
+            # {% set max_volume = 75 %} {% set min_volume = 7 %}
+            # {% if states(trigger.entity_id) | int > max_volume %}
+              # {{ max_volume }}
+            # {% elif states(trigger.entity_id) | int < min_volume %}
+              # {{ min_volume }}
+            # {% else %}
+              # {{ states(trigger.entity_id) }}
+            # {% endif %}
 
   - alias: eq_calibration
     id: '7780410156815'
@@ -469,48 +472,48 @@ automation:
       - service: fan.turn_on
         entity_id: fan.sovrum_anslut
 
-  - alias: sovrum_anslut_oscillate
-    id: '9897303821028'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: input_boolean.sovrum_anslut_oscillate
-    action:
-      - service: remote.send_command
-        data:
-          entity_id: remote.broadlink_remote
-          command: !secret ir_fan_swing
+  # - alias: sovrum_anslut_oscillate
+    # id: '9897303821028'
+    # initial_state: true
+    # trigger:
+      # - platform: state
+        # entity_id: input_boolean.sovrum_anslut_oscillate
+    # action:
+      # - service: remote.send_command
+        # data:
+          # entity_id: remote.broadlink_remote
+          # command: !secret ir_fan_swing
 
-  - alias: sovrum_anslut_speed
-    id: '9292376382008'
-    mode: queued
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: fan.sovrum_anslut
-    action:
-      - choose:
-        - conditions: >
-            {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'medium' or 
-            trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'low' or 
-            trigger.from_state.attributes.speed == 'low' and trigger.to_state.attributes.speed == 'high' }}
-          sequence:
-            - repeat:
-                count: 2
-                sequence:
-                  - service: remote.send_command
-                    data:
-                      entity_id: remote.broadlink_remote
-                      command: !secret ir_fan_speed
-        - conditions: >
-            {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'low' or 
-            trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'high' or 
-            trigger.from_state.attributes.speed == 'low' and trigger.to_state.attributes.speed == 'medium' }}
-          sequence:
-            - service: remote.send_command
-              data:
-                entity_id: remote.broadlink_remote
-                command: !secret ir_fan_speed
+  # - alias: sovrum_anslut_speed
+    # id: '9292376382008'
+    # mode: queued
+    # initial_state: true
+    # trigger:
+      # - platform: state
+        # entity_id: fan.sovrum_anslut
+    # action:
+      # - choose:
+        # - conditions: >
+            # {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'medium' or 
+            # trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'low' or 
+            # trigger.from_state.attributes.speed == 'low' and trigger.to_state.attributes.speed == 'high' }}
+          # sequence:
+            # - repeat:
+                # count: 2
+                # sequence:
+                  # - service: remote.send_command
+                    # data:
+                      # entity_id: remote.broadlink_remote
+                      # command: !secret ir_fan_speed
+        # - conditions: >
+            # {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'low' or 
+            # trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'high' or 
+            # trigger.from_state.attributes.speed == 'low' and trigger.to_state.attributes.speed == 'medium' }}
+          # sequence:
+            # - service: remote.send_command
+              # data:
+                # entity_id: remote.broadlink_remote
+                # command: !secret ir_fan_speed
 
   # ###temp
   # - alias: sovrum_anslut_speed_fix1_sync
@@ -557,105 +560,105 @@ automation:
     #                                                  #
     ####################################################
 
-  - alias: air_purifier_speed
-    id: '3692857919366'
-    mode: queued
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: input_number.air_purifier_speed
-    action:
-      - choose:
-        - conditions:
-            - condition: template
-              value_template: >
-                {% set from_1 = ( trigger.from_state.state  | int > 0    and   trigger.from_state.state  | int <= 25  ) %}
-                {% set to_2   = ( trigger.to_state.state    | int > 25   and   trigger.to_state.state    | int <= 50  ) %}
-                {% set from_2 = ( trigger.from_state.state  | int > 25   and   trigger.from_state.state  | int <= 50  ) %}
-                {% set to_3   = ( trigger.to_state.state    | int > 50   and   trigger.to_state.state    | int <= 75  ) %}
-                {% set from_3 = ( trigger.from_state.state  | int > 50   and   trigger.from_state.state  | int <= 75  ) %}
-                {% set to_4   = ( trigger.to_state.state    | int > 75   and   trigger.to_state.state    | int <= 100 ) %}
+  # - alias: air_purifier_speed
+    # id: '3692857919366'
+    # mode: queued
+    # initial_state: true
+    # trigger:
+      # - platform: state
+        # entity_id: input_number.air_purifier_speed
+    # action:
+      # - choose:
+        # - conditions:
+            # - condition: template
+              # value_template: >
+                # {% set from_1 = ( trigger.from_state.state  | int > 0    and   trigger.from_state.state  | int <= 25  ) %}
+                # {% set to_2   = ( trigger.to_state.state    | int > 25   and   trigger.to_state.state    | int <= 50  ) %}
+                # {% set from_2 = ( trigger.from_state.state  | int > 25   and   trigger.from_state.state  | int <= 50  ) %}
+                # {% set to_3   = ( trigger.to_state.state    | int > 50   and   trigger.to_state.state    | int <= 75  ) %}
+                # {% set from_3 = ( trigger.from_state.state  | int > 50   and   trigger.from_state.state  | int <= 75  ) %}
+                # {% set to_4   = ( trigger.to_state.state    | int > 75   and   trigger.to_state.state    | int <= 100 ) %}
 
-                {{ from_1 and to_2 or from_2 and to_3 or from_3 and to_4 }}
-          sequence:
-            - service: remote.send_command
-              data:
-                entity_id: remote.broadlink_remote
-                command: !secret ir_purifier_speed_up
-        - conditions:
-            - condition: template
-              value_template: >
-                {% set from_1 = ( trigger.from_state.state  | int > 0    and   trigger.from_state.state  | int <= 25  ) %}
-                {% set to_3   = ( trigger.to_state.state    | int > 50   and   trigger.to_state.state    | int <= 75  ) %}
+                # {{ from_1 and to_2 or from_2 and to_3 or from_3 and to_4 }}
+          # sequence:
+            # - service: remote.send_command
+              # data:
+                # entity_id: remote.broadlink_remote
+                # command: !secret ir_purifier_speed_up
+        # - conditions:
+            # - condition: template
+              # value_template: >
+                # {% set from_1 = ( trigger.from_state.state  | int > 0    and   trigger.from_state.state  | int <= 25  ) %}
+                # {% set to_3   = ( trigger.to_state.state    | int > 50   and   trigger.to_state.state    | int <= 75  ) %}
 
-                {{ from_1 and to_3 }}
-          sequence:
-            - repeat:
-                count: 2
-                sequence:
-                  - service: remote.send_command
-                    data:
-                      entity_id: remote.broadlink_remote
-                      command: !secret ir_purifier_speed_up
-        - conditions:
-            - condition: template
-              value_template: >
-                {% set from_2 = ( trigger.from_state.state  | int > 25   and   trigger.from_state.state  | int <= 50  ) %}
-                {% set to_1   = ( trigger.to_state.state    | int > 0    and   trigger.to_state.state    | int <= 25  ) %}
-                {% set from_3 = ( trigger.from_state.state  | int > 50   and   trigger.from_state.state  | int <= 75  ) %}
-                {% set to_2   = ( trigger.to_state.state    | int > 25   and   trigger.to_state.state    | int <= 50  ) %}
-                {% set from_4 = ( trigger.from_state.state  | int > 75   and   trigger.from_state.state  | int <= 100 ) %}
-                {% set to_3   = ( trigger.to_state.state    | int > 50   and   trigger.to_state.state    | int <= 75  ) %}
+                # {{ from_1 and to_3 }}
+          # sequence:
+            # - repeat:
+                # count: 2
+                # sequence:
+                  # - service: remote.send_command
+                    # data:
+                      # entity_id: remote.broadlink_remote
+                      # command: !secret ir_purifier_speed_up
+        # - conditions:
+            # - condition: template
+              # value_template: >
+                # {% set from_2 = ( trigger.from_state.state  | int > 25   and   trigger.from_state.state  | int <= 50  ) %}
+                # {% set to_1   = ( trigger.to_state.state    | int > 0    and   trigger.to_state.state    | int <= 25  ) %}
+                # {% set from_3 = ( trigger.from_state.state  | int > 50   and   trigger.from_state.state  | int <= 75  ) %}
+                # {% set to_2   = ( trigger.to_state.state    | int > 25   and   trigger.to_state.state    | int <= 50  ) %}
+                # {% set from_4 = ( trigger.from_state.state  | int > 75   and   trigger.from_state.state  | int <= 100 ) %}
+                # {% set to_3   = ( trigger.to_state.state    | int > 50   and   trigger.to_state.state    | int <= 75  ) %}
 
-                {{ from_2 and to_1 or from_3 and to_2 or from_4 and to_3 }}
-          sequence:
-            - service: remote.send_command
-              data:
-                entity_id: remote.broadlink_remote
-                command: !secret ir_purifier_speed_down
-        - conditions:
-            - condition: template
-              value_template: >
-                {% set from_3 = ( trigger.from_state.state  | int > 50   and   trigger.from_state.state  | int <= 75  ) %}
-                {% set to_1   = ( trigger.to_state.state    | int > 0    and   trigger.to_state.state    | int <= 25  ) %}
-                {% set from_4 = ( trigger.from_state.state  | int > 75   and   trigger.from_state.state  | int <= 100 ) %}
-                {% set to_2   = ( trigger.to_state.state    | int > 25   and   trigger.to_state.state    | int <= 50  ) %}
+                # {{ from_2 and to_1 or from_3 and to_2 or from_4 and to_3 }}
+          # sequence:
+            # - service: remote.send_command
+              # data:
+                # entity_id: remote.broadlink_remote
+                # command: !secret ir_purifier_speed_down
+        # - conditions:
+            # - condition: template
+              # value_template: >
+                # {% set from_3 = ( trigger.from_state.state  | int > 50   and   trigger.from_state.state  | int <= 75  ) %}
+                # {% set to_1   = ( trigger.to_state.state    | int > 0    and   trigger.to_state.state    | int <= 25  ) %}
+                # {% set from_4 = ( trigger.from_state.state  | int > 75   and   trigger.from_state.state  | int <= 100 ) %}
+                # {% set to_2   = ( trigger.to_state.state    | int > 25   and   trigger.to_state.state    | int <= 50  ) %}
 
-                {{ from_3 and to_1 or from_4 and to_2 }}
-          sequence:
-            - repeat:
-                count: 2
-                sequence:
-                  - service: remote.send_command
-                    data:
-                      entity_id: remote.broadlink_remote
-                      command: !secret ir_purifier_speed_down
-        - conditions:
-            - condition: template
-              value_template: >
-                {% set to_4   = ( trigger.to_state.state    | int > 75   and   trigger.to_state.state    | int <= 100 ) %}
+                # {{ from_3 and to_1 or from_4 and to_2 }}
+          # sequence:
+            # - repeat:
+                # count: 2
+                # sequence:
+                  # - service: remote.send_command
+                    # data:
+                      # entity_id: remote.broadlink_remote
+                      # command: !secret ir_purifier_speed_down
+        # - conditions:
+            # - condition: template
+              # value_template: >
+                # {% set to_4   = ( trigger.to_state.state    | int > 75   and   trigger.to_state.state    | int <= 100 ) %}
 
-                {{ to_4 }}
-          sequence:
-            - service: remote.send_command
-              data:
-                entity_id: remote.broadlink_remote
-                command: !secret ir_purifier_turbo
-        - conditions:
-            - condition: template
-              value_template: >
-                {% set from_4 = ( trigger.from_state.state  | int > 75   and   trigger.from_state.state  | int <= 100 ) %}
-                {% set to_1   = ( trigger.to_state.state    | int > 0    and   trigger.to_state.state    | int <= 25  ) %}
+                # {{ to_4 }}
+          # sequence:
+            # - service: remote.send_command
+              # data:
+                # entity_id: remote.broadlink_remote
+                # command: !secret ir_purifier_turbo
+        # - conditions:
+            # - condition: template
+              # value_template: >
+                # {% set from_4 = ( trigger.from_state.state  | int > 75   and   trigger.from_state.state  | int <= 100 ) %}
+                # {% set to_1   = ( trigger.to_state.state    | int > 0    and   trigger.to_state.state    | int <= 25  ) %}
 
-                {{ from_4 and to_1 }}
-          sequence:
-            - repeat:
-                count: 3
-                sequence:
-                  - service: remote.send_command
-                    data:
-                      entity_id: remote.broadlink_remote
-                      command: !secret ir_purifier_speed_down
+                # {{ from_4 and to_1 }}
+          # sequence:
+            # - repeat:
+                # count: 3
+                # sequence:
+                  # - service: remote.send_command
+                    # data:
+                      # entity_id: remote.broadlink_remote
+                      # command: !secret ir_purifier_speed_down
 
   # ###temp
   # - alias: air_purifier_speed_fix1_sync
@@ -916,12 +919,12 @@ automation:
     trigger:
       - platform: state
         entity_id:
-          - media_player.nvidia_shield
           - media_player.plex_plex_for_android_tv_shield_android_tv
           - media_player.spotify_anarion
           - media_player.nest_mini
           - media_player.kd_55xe9305
           - media_player.sony_bravia_tv
+          - media_player.chromecastaudio
         to: playing
     action:
       - service: input_select.select_option
@@ -937,22 +940,22 @@ automation:
     trigger:
       - platform: state
         entity_id:
-          - media_player.nvidia_shield
           - media_player.plex_plex_for_android_tv_shield_android_tv
           - media_player.spotify_anarion
           - media_player.nest_mini
           - media_player.kd_55xe9305
           - media_player.sony_bravia_tv
+          - media_player.chromecastaudio
         to:
           ['off', 'idle', 'standby']
       - platform: state
         entity_id:
-          - media_player.nvidia_shield
           - media_player.plex_plex_for_android_tv_shield_android_tv
           - media_player.spotify_anarion
           - media_player.nest_mini
           - media_player.kd_55xe9305
           - media_player.sony_bravia_tv
+          - media_player.chromecastaudio
         to: paused
         for:
           minutes: 10
@@ -962,8 +965,8 @@ automation:
           entity_id: input_select.conditional_media
           option: >
             {% set media_players = 
-              [states.media_player.nvidia_shield, states.media_player.plex_plex_for_android_tv_shield_android_tv, 
-               states.media_player.spotify_anarion, states.media_player.nest_mini, states.media_player.kd_55xe9305, states.sony_bravia_tv] %}
+              [states.media_player.chromecastaudio, states.media_player.plex_plex_for_android_tv_shield_android_tv, 
+               states.media_player.spotify_anarion, states.media_player.nest_mini, states.media_player.kd_55xe9305, states.media_player.sony_bravia_tv] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
               Last downloaded 
@@ -980,7 +983,7 @@ automation:
     trigger:
       - platform: template
         value_template: >
-          {{ is_state('media_player.nvidia_shield', 'idle') and
+          {{ is_state('media_player.chromecastaudio', 'idle') and
           is_state('media_player.plex_plex_for_android_tv_shield_android_tv', 'idle') and
           is_state('media_player.spotify_anarion', 'idle') and
           is_state('media_player.nest_mini', 'off') 

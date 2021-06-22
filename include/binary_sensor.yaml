@@ -11,36 +11,36 @@ binary_sensor:
     command: !secret plex_availability
     scan_interval: 300
 
-  - platform: command_line
-    name: monitors_mute_check
-    scan_interval: 86400
-    command: !secret monitors_mute_check
-    payload_on: 'true'
-    payload_off: 'false'
+  # - platform: command_line
+    # name: monitors_mute_check
+    # scan_interval: 86400
+    # command: !secret monitors_mute_check
+    # payload_on: 'true'
+    # payload_off: 'false'
 
   - platform: ping
     name: nas_internet_access
     host: 8.8.8.8
 
-  - platform: command_line
-    name: Playstation
-    command: !secret playstation_5_state
-    scan_interval: 300
+  # - platform: command_line
+    # name: Playstation
+    # command: !secret playstation_5_state
+    # scan_interval: 300
 
-  - platform: mqtt
-    name: gosund_fan
-    state_topic: stat/gosund1/STATUS8
-    #https://tasmota.github.io/docs/Commands/#rules
-    #Backlog Rule1 ON ENERGY#Power>10 DO Status 8 ENDON ON ENERGY#Power<10 DO Status 8 ENDON; Rule1 1; Rule1 5
-    value_template: >
-      {{ 'ON' if value_json.StatusSNS.ENERGY.Power | int > 10 else 'OFF' }}
+  # - platform: mqtt
+    # name: gosund_fan
+    # state_topic: stat/gosund1/STATUS8
+    # #https://tasmota.github.io/docs/Commands/#rules
+    # #Backlog Rule1 ON ENERGY#Power>10 DO Status 8 ENDON ON ENERGY#Power<10 DO Status 8 ENDON; Rule1 1; Rule1 5
+    # value_template: >
+      # {{ 'ON' if value_json.StatusSNS.ENERGY.Power | int > 10 else 'OFF' }}
 
-  - platform: mqtt
-    name: gosund_air_purifier
-    state_topic: stat/gosund2/STATUS8
-    #Backlog Rule1 ON ENERGY#Power>0 DO Status 8 ENDON ON ENERGY#Power==0 DO Status 8 ENDON; Rule1 1; Rule1 5
-    value_template: >
-      {{ 'ON' if value_json.StatusSNS.ENERGY.Power | int > 0 else 'OFF' }}
+  # - platform: mqtt
+    # name: gosund_air_purifier
+    # state_topic: stat/gosund2/STATUS8
+    # #Backlog Rule1 ON ENERGY#Power>0 DO Status 8 ENDON ON ENERGY#Power==0 DO Status 8 ENDON; Rule1 1; Rule1 5
+    # value_template: >
+      # {{ 'ON' if value_json.StatusSNS.ENERGY.Power | int > 0 else 'OFF' }}
 
   - platform: template
     sensors:
