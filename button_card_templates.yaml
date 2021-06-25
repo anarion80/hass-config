@@ -1044,6 +1044,26 @@
           # opacity: 1;
         # }
       # }
+      
+  #################################################
+  #                                               #
+  #               SIDEBAR BUTTONS                 #
+  #                                               #
+  #################################################
+
+  sidebar_button:
+    styles:
+      grid:
+        - grid-template-areas: '"n"'
+        - grid-column-gap: 0.3em
+      card:
+        - font-family: SF Text
+        - font-size: var(--markdown-sidebar-clock-font-size)
+        - font-weight: 200
+        - line-height: var(--markdown-sidebar-clock-line-height)
+        - letter-spacing: -0.05vw
+        - margin-left: -0.3vw
+        - color: var(--ha-card-header-color)
 
 
   #################################################

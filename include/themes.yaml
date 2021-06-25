@@ -206,6 +206,86 @@ frontend:
                   letter-spacing: 0.16vw;
                 }
               }
+              
+        #################################################
+        #                                               #
+        #         SIDEBAR VERTICAL STACK CARD           #
+        #                                               #
+        #################################################              
+              
+        "grid-layout$hui-vertical-stack-card":
+          $: |
+            #root {
+              background-color: #00000010;
+              border-radius: 0;
+              min-height: 100vh;
+              animation: ha-card 1s forwards;
+              /* padding: 0 13% 13% 13%; */
+              padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
+            }
+
+            @keyframes ha-card {
+              0%, 100% {
+                border-right: 0.1vw solid rgba(58, 69, 73, 0.2);
+              }
+            }
+
+            /* phone */
+            @media screen and (max-width: 800px) {
+              ha-card {
+                background: none;
+                min-height: 100%;
+                animation: none;
+              }
+
+          #"$#root>button-card:nth-child(1)$":
+          #"$#root>button-card$":
+          #ha-card$:
+          #  .: |
+          #   /* ha-card {
+          #      padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
+          #      pointer-events: none;
+          #    } */
+          "$#root>button-card":
+            $: |
+              #name {
+                text-overflow: UNSET;
+                white-space: normal;
+                overflow: hidden;
+              } 
+              
+              /* colon */
+              span > span {
+                position: relative;
+                top: -.09em;
+              }
+              
+              #container {
+                display: block !important;
+                text-align: unset !important;
+                align-items: unset !important;
+              }
+              
+              /* text */
+              p {
+                font-family: SF Display;
+                font-size: var(--markdown-sidebar-font-size);
+                line-height: var(--markdown-sidebar-line-height);
+                font-weight: 300;
+                letter-spacing: 0.06vw;
+                color: #6a7377;
+              }
+              
+              p > b {
+                color: var(--ha-card-header-color);
+              }              
+
+              /* phone */
+              @media screen and (max-width: 800px) {
+                ha-card {
+                  padding: 0 !important;
+                }
+
 
         #################################################
         #                                               #
