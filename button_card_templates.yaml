@@ -13,7 +13,7 @@
       timeout: >
         [[[ return entity === undefined || Date.now() - Date.parse(entity.last_changed); ]]]
       light_color: >
-        [[[ return entity === undefined ? 'var(--state-icon-color)' : 'var(--button-card-light-color-no-temperature)'; ]]]
+        [[[ return entity === undefined || entity.state === 'unavailable' ? 'var(--state-icon-color)' : 'var(--button-card-light-color-no-temperature)'; ]]]
     aspect_ratio: 1/1
     show_state: true
     show_icon: false
@@ -22,8 +22,8 @@
     tap_action:
       ui_sound_tablet: |
         [[[
-          const tablet = states['switch.galaxy_tab_a_screensaver'];
-          const screensaver = states[tablet] === undefined || states[tablet].state;
+          const screensaver = states['switch.galaxy_tab_a_screensaver'] === undefined || 
+            states['switch.galaxy_tab_a_screensaver'].state;
 
           if (variables.state === 'off' && screensaver === 'off') {
             hass.callService('media_player', 'play_media', {
@@ -75,19 +75,19 @@
         - padding: 10%
         - --mdc-ripple-color: >
             [[[
-              return (variables.state === 'on' || variables.state === 'home') ?
+              return (variables.state === 'on' || variables.state === 'home' || variables.state === 'cool') ?
                 'rgb(0, 0, 0)' :
                 'rgba(255, 255, 255, 0.3)';
             ]]]
         - color: >
             [[[
-              return (variables.state === 'on' || variables.state === 'home') ?
+              return (variables.state === 'on' || variables.state === 'home' || variables.state === 'cool') ?
                 'rgba(0, 0, 0, 0.6)' :
                 'rgba(255, 255, 255, 0.3)';
             ]]]
         - background-color: >
             [[[
-              return (variables.state === 'on' || variables.state === 'home') ?
+              return (variables.state === 'on' || variables.state === 'home' || variables.state === 'cool') ?
                 'rgba(255, 255, 255, 0.8)' :
                 'rgba(115, 115, 115, 0.2)';
             ]]]
@@ -337,6 +337,40 @@
           - opacity: 0.5
           - filter: >
               [[[ return variables.state === 'off' ? 'invert(1)' : 'none'; ]]]
+
+  climate:
+    state_display: >
+      [[[ return variables.state === 'cool' ? 'On' : 'Off'; ]]]
+    custom_fields:
+      circle: >
+        [[[
+          const input = variables.circle_input;
+          const stroke_color = variables.state === 'cool' ? '#b2b2b2' : '#313638';
+          const fill_color = variables.state === 'cool' ? 'none' : '#FFFFFF08';
+          return `
+            <svg viewBox="0 0 50 50">
+              <style>
+                circle {
+                  transform: none;
+                  transform-origin: none;
+                  stroke-dasharray: none;
+                  stroke-dashoffset: none;
+                }
+              </style>
+              <circle cx="25" cy="25" r="20.5" stroke="${stroke_color}" stroke-width="1.5" fill="${fill_color}" />
+              <text x="50%" y="54%" fill="#8d8e90" font-size="14" text-anchor="middle" alignment-baseline="middle" dominant-baseline="middle">${input}<tspan font-size="10">°C</tspan></text>
+            </svg>
+          `;
+        ]]]
+    styles:
+      custom_fields:
+        circle:
+          - display: initial
+          - width: 90%
+          - letter-spacing: 0.03vw
+          - margin: -6% -6% 0 0
+          - justify-self: end
+          - opacity: 1
 
   #################################################
   #                                               #
@@ -942,18 +976,6 @@
         - font-family: SF Mono
         - opacity: 0.65
         - padding: 0.55vw 1.2vw 0.5vw 1.2vw
-    extra_styles: |
-      #card {
-        animation: fade 0.8s;
-      }
-      @keyframes fade {
-        0%, 30% {
-          opacity: 0;
-        }
-        100% {
-          opacity: 1;
-        }
-      }
 
   #################################################
   #                                               #

@@ -154,6 +154,20 @@ template:
               Wash again {{ (count + hours) | round }} days on {{ day }} at {{ time }}
             {%- endif %}
           {%- endif %}
+        battery: |
+          {% set entities = [
+            'sensor.button1_battery',
+            'sensor.door_sensor_1_battery',
+            'sensor.switch1_battery',
+            'sensor.ipad_iwona_battery_level',
+            'sensor.motion_sensor_1_battery',
+            'sensor.nokia_8_3_5g_battery_level',
+            'sensor.ta_1004_poziom_baterii',
+            'sensor.redmi_note_5_battery_level' ] %}
+          {%- for sensor in entities if states(sensor) | int <= 20 and states(sensor) != 'unknown' %}
+            {%- if loop.first %} {{-'\u26A0\uFE0F'}} Battery: {% else %}, {% endif -%}
+            {{ state_attr(sensor, 'friendly_name') + ' ' +  states(sensor) + '%' }}
+          {%- endfor %}
         calendar: |
           {%- set start_time = state_attr('calendar.anarion_dunedain', 'start_time') %}
           {%- set end_time = state_attr('calendar.anarion_dunedain', 'end_time') %}
@@ -241,12 +255,12 @@ template:
       # icon: mdi:ip
       # state: !secret public_ip
 
-    - unique_id: dockermon_mem
-      icon: mdi:memory
-      state: >
-        {% set entity_id = 'sensor.docker_cpu' %}
-        {{ (state_attr(entity_id, 'memory_stats')['usage'] / 
-        state_attr(entity_id, 'memory_stats')['limit'] * 100) | round(1) | default(0) }}
+    # - unique_id: dockermon_mem
+      # icon: mdi:memory
+      # state: >
+        # {% set entity_id = 'sensor.docker_cpu' %}
+        # {{ (state_attr(entity_id, 'memory_stats')['usage'] / 
+        # state_attr(entity_id, 'memory_stats')['limit'] * 100) | round(1) | default(0) }}
 
     - unique_id: imac_vpn
       state: >

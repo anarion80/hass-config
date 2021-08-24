@@ -3,10 +3,29 @@ browser_mod:
   command: popup
   title: A/C
   style:
-    hui-grid-card$: |
-      #root {
-        grid-gap: 0 !important;
-      }
+    hui-grid-card:
+      $more-info-card$:
+        .: |
+          ha-card>h1 {
+            display: none;
+          }
+          .card-content {
+            padding-bottom: 0em;
+          }
+        more-info-fan$: |
+          .more-info-fan {
+            padding: 0.4em 0.31em 0em 0.7em;
+          }
+          .container-percentage {
+            padding-top: 0.3em;
+          }
+          .container-oscillating {
+            padding-top: 1.3em;
+          }
+      $: |
+        #root {
+          grid-gap: 0 !important;
+        }
   card:
     type: grid
     columns: 1
@@ -14,6 +33,15 @@ browser_mod:
     cards:
       - type: thermostat
         entity: climate.living_room_ac
+
+      - type: entities
+        state_color: true
+        entities:
+          - climate.living_room_ac
+          - entity: sensor.temperature_living_room
+            name: Living Room Temperature
+          - entity: sensor.humidity_living_room
+            name: Living Room Humidity
 
       - type: custom:mini-graph-card
         entities:
@@ -32,8 +60,6 @@ browser_mod:
         color_thresholds:
           - value: 20
             color: "#385581"
-          - value: 22
-            color: "#32a852"
           - value: 24
             color: "#d35400"
           - value: 26

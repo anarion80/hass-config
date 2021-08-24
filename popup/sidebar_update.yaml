@@ -9,55 +9,61 @@ browser_mod:
         height: 100%;
         padding: 1.1em 1.9em 1.9em 1.9em;
       }
-    hui-grid-card:
-      $: |
-        button-card {
-          margin: 0.8em 0 2.5em 1em;
-        }
-        #root {
-          grid-gap: 0 !important;
-        }
-      $hui-markdown-card:
-        $ha-markdown$: |
-          ha-markdown-element {
-            cursor: default;
+  card:
+    type: custom:mod-card
+    style:
+      hui-grid-card:
+        $: |
+          button-card {
+            margin: 0.8em 0 2.5em 1em;
           }
-          ha-markdown-element > p > span {
-            font-family: SF Text;
-            font-size: 1.5em;
-            font-weight: 500;
-            vertical-align: 30%;
+          #root {
+            grid-gap: 0 !important;
           }
-          ha-markdown-element > p > span > ha-icon {
-            vertical-align: 10%;
-            opacity: 0.5;
-          }
-          ha-markdown-element > p > b {
-            font-family: SF Text;
-            font-size: 1.2em;
-            font-weight: 500;
-            line-height: 1.9em;
-            opacity: 0.5;
-          }
-          a {
-            font-family: SF Text;
-            font-size: 1.2em;
-            font-weight: 600;
-            line-height: 1.9em;
-            opacity: 0.8;
-            letter-spacing: 0px;
-          }
-          ha-markdown-element > ul {
-            font-family: SF Display;
-            font-size: 1.1em;
-            padding-left: 2.5em;
-          }
-          ha-markdown-element > ul > li {
-            margin-bottom: 0.4em;
-          }
-          ha-markdown-element > ul > li:last-child {
-            margin-bottom: 0px;
-          }
+        $hui-markdown-card:
+          $ha-markdown$: |
+            ha-markdown-element {
+              cursor: default;
+            }
+            ha-markdown-element > p > span {
+              font-family: SF Text;
+              font-size: 1.5em;
+              font-weight: 500;
+              vertical-align: 30%;
+            }
+            ha-markdown-element > p > span > ha-icon {
+              vertical-align: 10%;
+              opacity: 0.5;
+            }
+            ha-markdown-element > p > strong {
+              font-family: SF Text;
+              font-size: 1.2em;
+              font-weight: 500;
+              line-height: 1.9em;
+              opacity: 0.5;
+            }
+            a {
+              font-family: SF Text;
+              font-size: 1.2em;
+              font-weight: 600;
+              line-height: 1.9em;
+              opacity: 0.8;
+              letter-spacing: 0px;
+            }
+            ha-markdown-element > ul {
+              font-family: SF Display;
+              font-size: 1.1em;
+              padding-left: 2.5em;
+            }
+            ha-markdown-element > ul > li {
+              margin-bottom: 0.4em;
+            }
+            ha-markdown-element > ul > li:last-child {
+              margin-bottom: 0px;
+            }
+            ha-markdown-element > ul > li > code {
+              background-color: var(--secondary-background-color);
+            }
 
   card:
     type: grid
@@ -71,9 +77,9 @@ browser_mod:
           {% if states('sensor.hass_version_installed') | regex_search('b') %}
           <span><ha-icon icon="mdi:home-assistant"></ha-icon> Home Assistant {{ states('sensor.hass_version_installed') }}</span><br>
           {% if states('sensor.hass_version_installed') == states('sensor.hass_version_latest_beta') %}
-          <b>No updates</b>
+          **No updates**
           {% else %}
-          <b>{{ states('sensor.hass_version_latest_beta') }} available</b> {{ '\U0001f389' }}
+          **{{ states('sensor.hass_version_latest_beta') }} available** {{ '\U0001f389' }}
       
           {% if states('sensor.hass_version_latest_beta') == states('sensor.hass_release_notes_rc') %}
           {{- state_attr('sensor.hass_release_notes_rc', 'body') }}
@@ -82,9 +88,9 @@ browser_mod:
           {% else %}
           <span><ha-icon icon="mdi:home-assistant"></ha-icon> Home Assistant {{ states('sensor.hass_version_installed') }}</span><br>
           {% if states('sensor.hass_version_installed') == states('sensor.hass_version_latest') %}
-          <b>No updates</b>
+          **No updates**
           {% else %}
-          <b>{{ states('sensor.hass_version_latest') }} available</b> {{ '\U0001f389' }}
+          **{{ states('sensor.hass_version_latest') }} available** {{ '\U0001f389' }}
       
           {% if states('sensor.hass_version_latest') == states('sensor.hass_release_notes') %}
           {{- state_attr('sensor.hass_release_notes', 'body') }}
@@ -123,15 +129,15 @@ browser_mod:
       ### hacs
       - type: markdown
         content: >
-          <span><ha-icon icon="hacs:hacs"></ha-icon> Community Store {{ states('sensor.hacs_version') }}</span><br>
+          <span><ha-icon icon="hacs:hacs"></ha-icon> Community Store {{ device_attr(device_id('sensor.hacs'), 'sw_version') }}</span><br>
           {% if is_state('sensor.hacs', '0') or is_state('sensor.hacs', 'unknown') %}
-          <b>No updates</b>
+          **No updates**
           {% else %}
-          <b>{{ states('sensor.hacs') }} {{ 'update available' if is_state('sensor.hacs', '1') 
-          else 'updates available' }}</b> {{ '\U0001f389' }}
+          **{{ states('sensor.hacs') }} {{ 'update available' if is_state('sensor.hacs', '1') 
+          else 'updates available' }}** {{ '\U0001f389' }}
 
           {% for repo in state_attr('sensor.hacs', 'repositories') %}
-          * {{ repo.display_name }} - Version {{ repo.available_version }} ([{{ repo.installed_version }}](https://github.com/{{ repo.name }}/releases))
+          * **[{{ repo.display_name }}](https://github.com/{{ repo.name }}/releases)** {{ repo.installed_version + ' \u279e ' + repo.available_version }}
 
           {% endfor %}
           {% endif %}
@@ -149,22 +155,35 @@ browser_mod:
                     'drop-shadow(3px 3px 5px #00000050)';
                 ]]]
         tap_action:
-          action: url
-          url_path: /hacs
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            title: Home Assistant Community Store
+            style: >
+              :host .content {
+                width: 75em;
+              }
+            card:
+              type: iframe
+              url: /hacs
+              aspect_ratio: 65%
+              style: |
+                ha-card {
+                  border-radius: 0 0 1em 1em;
+                }
         template: icon_name
 
       ### other
-      # - type: markdown
-        # content: >
-          # {% set tasmota_installed = states('sensor.tasmota_version_installed') %}
-          # {% set tasmota_latest = states('sensor.tasmota_version_latest') %}
-          # {% set valetudo_installed = states('sensor.valetudo_version_installed') %}
-          # {% set valetudo_latest = states('sensor.valetudo_version_latest') %}
-          # <span><ha-icon icon="mdi:update"></ha-icon> Other</span><br>
-          # {% if tasmota_installed == tasmota_latest and valetudo_installed == valetudo_latest %}
-          # <b>No updates</b>
-          # {% else %}
-          # {{- '[<b>Tasmota ' + tasmota_latest + '](https://github.com/arendst/Tasmota/releases/latest) tillgänglig</b> ' + '\U0001f389' if tasmota_installed != tasmota_latest }}
-
-          # {{- '[<b>Valetudo ' + valetudo_latest + '](https://github.com/Hypfer/Valetudo/releases/latest) tillgänglig</b> ' + '\U0001f389' if valetudo_installed != valetudo_latest }}
-          # {% endif %}
+      - type: markdown
+        content: >
+          <span><ha-icon icon="mdi:update"></ha-icon> Other</span><br>
+            {% set attributes = states.sensor.template_updates.attributes | default %}
+            {% for template in attributes if state_attr('sensor.template_updates', template) != 'false' %}
+              {%- if loop.first > 0 -%}
+                **{{ loop.length }} {{ 'update available' if loop.length == 1 
+                else 'updates available' }}** {{ '\U0001f389' }}
+              {% endif %}
+              * {{ state_attr('sensor.template_updates', template) }}
+            {%- else -%}
+              **No updates**
+            {% endfor %}

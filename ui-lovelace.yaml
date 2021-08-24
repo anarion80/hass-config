@@ -55,6 +55,9 @@ views:
           # {% for template in attributes %}
           # {{ state_attr('sensor.template_sidebar', template) }}
           # {% endfor %}
+        #  style: #force style - duplicate of themes markdown
+          #  {.: "ha-card{background-color:#00000010;border-radius:0;min-height:100vh;animation:ha-card 1s forwards}@keyframes ha-card{0%,100%{border-right:.1vw solid rgba(58,69,73,.2)}}@media screen and (max-width:800px){ha-card{background:0 0;min-height:100%;animation:none}}\n", ha-markdown: {.: "ha-markdown{padding:var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding)!important;pointer-events:none}@media screen and (max-width:800px){ha-markdown{padding:0!important}}\n", $: "p>span{font-family:SF Text;font-size:var(--markdown-sidebar-clock-font-size);font-weight:200;line-height:var(--markdown-sidebar-clock-line-height);letter-spacing:-.05vw;margin-left:-.3vw;color:var(--ha-card-header-color)}p>span>span{position:relative;top:-.09em}p{font-family:SF Display;font-size:var(--markdown-sidebar-font-size);line-height:var(--markdown-sidebar-line-height);font-weight:300;letter-spacing:.06vw;color:#6a7377}p>b{color:var(--ha-card-header-color)}@media screen and (max-width:1200px){p>span{font-size:calc(var(--markdown-sidebar-clock-font-size) * 1.4);line-height:calc(var(--markdown-sidebar-clock-line-height) * 1.4)}p{font-size:calc(var(--markdown-sidebar-font-size) * 1.4);line-height:calc(var(--markdown-sidebar-line-height) * 1.4)}}@media screen and (max-width:800px){p>span{font-size:calc(var(--markdown-sidebar-clock-font-size) * 2.6);line-height:calc(var(--markdown-sidebar-clock-line-height) * 2.6)}p{font-size:calc(var(--markdown-sidebar-font-size) * 2.6);line-height:calc(var(--markdown-sidebar-line-height) * 2.6);letter-spacing:.16vw}}\n"}}
+
           
           
       - type: vertical-stack
@@ -197,6 +200,18 @@ views:
             entity: sensor.template_sidebar
             name: >
                [[[ 
+                   return entity.attributes.battery;
+                   ]]]
+            show_name: true
+            show_state: false
+            show_icon: false
+            styles:
+              card:
+                - color: "#6a7377"
+          - type: custom:button-card
+            entity: sensor.template_sidebar
+            name: >
+               [[[ 
                    return entity.attributes.calendar;
                    ]]]
             show_name: true
@@ -278,6 +293,11 @@ views:
             icon: mdi:arrow-up-bold-circle-outline
             tap_action:
               !include popup/sidebar_update.yaml
+            hold_action:
+              action: call-service
+              service: homeassistant.update_entity
+              service_data:
+                entity_id: sensor.hacs
 
       #################################################
       #                                               #
@@ -298,7 +318,7 @@ views:
             template:
               - light
               - icon_shade
-              
+
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
@@ -316,17 +336,6 @@ views:
                     null :
                     parseInt(entity.attributes.aqi);
                 ]]]
-              
-              
-#          - type: custom:button-card
-#            entity: switch.balkong
-#            name: Balcony
-#            hold_action:
-#              !include popup/living_room_balkong.yaml
-#            template:
-#              - base
-#              - icon_hue
-#              - loader
 
           - type: custom:button-card
             entity: media_player.sony_bravia_tv
@@ -346,8 +355,6 @@ views:
                     entity.attributes.source;
                 ]]]
 
-
-
           - type: custom:button-card
             entity: climate.living_room_ac
             name: A/C
@@ -365,16 +372,6 @@ views:
                     null :
                     parseFloat(entity.attributes.current_temperature);
                 ]]]
-
-          # - type: custom:button-card
-            # entity: switch.radio
-            # name: Radio
-            # hold_action:
-              # !include popup/vardagsrum_playstation.yaml
-            # template:
-              # - base
-              # - icon_ps5
-              # - loader
 
       #################################################
       #                                               #
@@ -474,23 +471,24 @@ views:
                 ]]]
 
           - type: custom:button-card
-            entity: calendar.garbage_collection
-            name: Garbage
+            entity: climate.living_room_ac
+            name: AC
             hold_action:
               #!include popup/sovrum_flakt.yaml
-              !include popup/home_calendar.yaml
+              !include popup/fan.yaml
             template:
               - base
               - icon_fan
+              - climate
              # - circle
               - loader
-            # variables:
-              # circle_input: >
-                # [[[
-                  # return entity === undefined ?
-                    # null :
-                    # parseInt(entity.attributes.percentage_step);
-                # ]]]
+            variables:
+              circle_input: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    entity.attributes.temperature;
+                ]]]
 
           - type: custom:button-card
             entity: media_player.sony_bravia_tv
@@ -588,7 +586,7 @@ views:
                       template:
                         - conditional_media
                         - icon_chromecast
-                        
+
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
@@ -642,7 +640,7 @@ views:
                     template:
                       - media
                       - icon_nest_mini
-                      
+
               - type: grid
                 columns: 2
                 cards:
@@ -668,7 +666,7 @@ views:
       #                    other                      #
       #                                               #
       #################################################
-           
+
       - type: grid
         title: Other
         view_layout:
@@ -676,11 +674,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style: 
+            style:
               swipe-card:
                 $: |
-                  .swiper-container {            
-                    padding: 0px 0px 20px 0px !important;        
+                  .swiper-container {
+                    padding: 0px 0px 20px 0px !important;
                   }
             card:
               type: custom:swipe-card
@@ -696,13 +694,11 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-                
               cards:
 
                 - type: grid
                   columns: 2
                   cards:
-                
                     - type: custom:button-card
                       entity: switch.plex
                       name: Plex
@@ -714,15 +710,25 @@ views:
                         - icon_plex
 
                     - type: custom:button-card
-                      entity: switch.tv
+                      entity: media_player.sony_bravia_tv
                       name: TV
                       tap_action:
                         action: toggle
-                        entity: entity
+                        entity: switch.tv
+                      hold_action:
+                        !include popup/vardagsrum_tv.yaml
                       template:
-                        - media
+                        - base
                         - icon_tv
                         - loader
+                        - media_source
+                      variables:
+                        circle: >
+                          [[[
+                            return entity === undefined ?
+                              null :
+                              entity.attributes.source;
+                          ]]]
 
                     - type: custom:button-card
                       entity: switch.radio
@@ -750,7 +756,6 @@ views:
                 - type: grid
                   columns: 2
                   cards:
-                
                     - type: custom:button-card
                       entity: switch.chromecast_audio
                       name: ChromecastAudio
@@ -881,6 +886,9 @@ views:
           # grid-area: footer
         # content: >
           # {{ state_attr('sensor.template_coronavirus', 'template') }}
+        # style: #force style - duplicate of themes markdown
+          #  {.: "ha-card,ha-markdown{background:0 0;padding:0!important;pointer-events:none;margin-top:-1vw}ha-markdown{overflow:hidden}\n", ha-markdown$: "ha-markdown-element{opacity:.6;font-size:1.26vw;font-weight:400;--mdc-icon-size:1.2vw;font-family:SF Display;letter-spacing:.05vw;line-height:0;white-space:nowrap}ha-icon{vertical-align:3%;opacity:.4}@media screen and (max-width:800px){ha-markdown-element{display:none}}\n"}
+
       - type: horizontal-stack
         view_layout:
           grid-area: footer

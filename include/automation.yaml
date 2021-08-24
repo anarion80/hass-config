@@ -98,41 +98,17 @@ automation:
           # - binary_sensor.monitors_mute_check
           # - sensor.imac_uptime
 
-  # - alias: tv_on_lights
-  #   id: '6657050215613'
-  #   initial_state: true
-  #   trigger:
-  #     - platform: state
-  #       entity_id: media_player.sony_bravia_tv
-  #       from: 'off'
-  #       to: 'on'
-  #   action:
-  #     - service: light.turn_on
-  #       entity_id: light.tv
-
-  - alias: hacs_version_grep
-    id: '4283610675891'
+  - alias: tv_on_lights
+    id: '6657050215613'
     initial_state: true
     trigger:
       - platform: state
-        entity_id: sensor.hacs
+        entity_id: media_player.sony_bravia_tv
+        from: 'off'
+        to: 'on'
     action:
-      - service: homeassistant.update_entity
-        entity_id: sensor.hacs_version
-
-  - alias: update_hass_release_notes
-    id: '4289040658246'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id:
-          - sensor.hass_version_latest
-          - sensor.hass_version_latest_beta
-    action:
-      - service: homeassistant.update_entity
-        entity_id:
-          - sensor.hass_release_notes
-          - sensor.hass_release_notes_rc
+      - service: light.turn_on
+        entity_id: light.tv
 
   - alias: no_motion_bathroom
     id: '9936892396917'
@@ -313,6 +289,20 @@ automation:
         data:
           topic: cmnd/tasmotas/status
           payload: 8
+
+  - alias: update_hass_release_notes
+    id: '4289040658246'
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id:
+          - sensor.hass_version_latest
+          - sensor.hass_version_latest_beta
+    action:
+      - service: homeassistant.update_entity
+        entity_id:
+          - sensor.hass_release_notes
+          - sensor.hass_release_notes_rc
 
     ####################################################
     #                                                  #
