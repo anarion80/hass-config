@@ -1,0 +1,45 @@
+action: fire-dom-event
+browser_mod:
+  command: popup
+  title: COVID-19
+  style:
+    hui-grid-card$: |
+      #root {
+        grid-gap: 0 !important;
+      }
+  card:
+    type: custom:apexcharts-card
+    graph_span: 7d
+    yaxis:
+      - id: first
+        apex_config:
+          tickAmount: 4
+      - id: second
+        opposite: true
+        apex_config:
+          tickAmount: 4
+    header:
+      show: true
+      title: COVID-19
+      show_states: true
+      colorize_states: true
+    all_series_config:
+      stroke_width: 2
+      opacity: 0.6
+      type: area
+      show:
+        legend_value: false
+    series:
+      - entity: sensor.zakazenia_covid19
+        yaxis_id: first
+      - entity: sensor.zgony_covid19
+        type: column
+        fill_raw: last
+        yaxis_id: second
+      - entity: sensor.wyleczeni_covid19
+        yaxis_id: first
+
+
+
+
+
