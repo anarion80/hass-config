@@ -1246,6 +1246,16 @@
         </svg>
 
   icon_radio:
+    styles:
+      custom_fields:
+        icon:
+          - width: 89%
+          - margin-top: -7%
+          - margin-left: 1%
+          - fill: >
+              [[[
+                return variables.state === 'on' ? '#5daeea' : '#9da0a2';
+              ]]]
     custom_fields:
       icon: >
         <svg viewBox="0 0 24 24">
@@ -1262,6 +1272,16 @@
         </svg>
         
   icon_chromecast:
+    styles:
+      custom_fields:
+        icon:
+          - width: 89%
+          - margin-top: -7%
+          - margin-left: 1%
+          - fill: >
+              [[[
+                return variables.state === 'on' ? '#5daeea' : '#9da0a2';
+              ]]]
     custom_fields:
       icon: >
         <svg viewBox="0 0 293.671 224.571">

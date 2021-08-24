@@ -71,17 +71,18 @@ views:
               # - sidebar_button
             styles:
               card:
-                - font-family: SF Text
-                - font-size: var(--markdown-sidebar-clock-font-size)
-                - font-weight: 200
-                - line-height: var(--markdown-sidebar-clock-line-height)
-                - letter-spacing: -0.05vw
-                - margin-left: -0.3vw
-                - color: var(--ha-card-header-color)
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
-                - pointer-events: none
+                # - font-family: SF Text
+                # - font-size: var(--markdown-sidebar-clock-font-size)
+                # - font-weight: 200
+                # - line-height: var(--markdown-sidebar-clock-line-height)
+                # - letter-spacing: -0.05vw
+                # - margin-left: -0.3vw
+                # - color: var(--ha-card-header-color)
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
+                # - pointer-events: none
+                - padding-top: 0px
             tap_action: none            
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -96,19 +97,20 @@ views:
             #template: icon_name_footer
             styles:
               card:
-                - font-family: SF Display
-                - font-size: var(--markdown-sidebar-font-size)
-                - line-height: var(--markdown-sidebar-line-height)
-                - font-weight: 300
-                - letter-spacing: 0.06vw
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
+                # - font-family: SF Display
+                # - font-size: var(--markdown-sidebar-font-size)
+                # - line-height: var(--markdown-sidebar-line-height)
+                # - font-weight: 300
+                # - letter-spacing: 0.06vw
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
                 - pointer-events: none
-                # - margin-block-start: 1em
-                # - margin-block-end: 1em
-                # - margin-inline-start: 0px
-                # - margin-inline-end: 0px
+                - color: "#6a7377"
+                # # - margin-block-start: 1em
+                # # - margin-block-end: 1em
+                # # - margin-inline-start: 0px
+                # # - margin-inline-end: 0px
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
@@ -121,19 +123,20 @@ views:
             tap_action: none 
             styles:
               card:
-                - font-family: SF Display
-                - font-size: var(--markdown-sidebar-font-size)
-                - line-height: var(--markdown-sidebar-line-height)
-                - font-weight: 700
-                - letter-spacing: 0.06vw
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
+                # - font-family: SF Display
+                # - font-size: var(--markdown-sidebar-font-size)
+                # - line-height: var(--markdown-sidebar-line-height)
+                # - font-weight: 300
+                # - letter-spacing: 0.06vw
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
                 - pointer-events: none
-                # - margin-block-start: 1em
-                # - margin-block-end: 1em
-                # - margin-inline-start: 0px
-                # - margin-inline-end: 0px
+                - color: var(--ha-card-header-color)
+                # # - margin-block-start: 1em
+                # # - margin-block-end: 1em
+                # # - margin-inline-start: 0px
+                # # - margin-inline-end: 0px
             #template: icon_name_footer
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -147,19 +150,20 @@ views:
             tap_action: none 
             styles:
               card:
-                - font-family: SF Display
-                - font-size: var(--markdown-sidebar-font-size)
-                - line-height: var(--markdown-sidebar-line-height)
-                - font-weight: 700
-                - letter-spacing: 0.06vw
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
+                # - font-family: SF Display
+                # - font-size: var(--markdown-sidebar-font-size)
+                # - line-height: var(--markdown-sidebar-line-height)
+                # - font-weight: 300
+                # - letter-spacing: 0.06vw
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
                 - pointer-events: none
-                # - margin-block-start: 1em
-                # - margin-block-end: 1em
-                # - margin-inline-start: 0px
-                # - margin-inline-end: 0px
+                - color: var(--ha-card-header-color)
+                # # - margin-block-start: 1em
+                # # - margin-block-end: 1em
+                # # - margin-inline-start: 0px
+                # # - margin-inline-end: 0px
             #template: icon_name_footer
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -175,19 +179,20 @@ views:
             #template: icon_name_footer
             styles:
               card:
-                - font-family: SF Display
-                - font-size: var(--markdown-sidebar-font-size)
-                - line-height: var(--markdown-sidebar-line-height)
-                - font-weight: 300
-                - letter-spacing: 0.06vw
-                - color: rgb(106, 115, 119)
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
-                # - margin-block-start: 1em
-                # - margin-block-end: 1em
-                # - margin-inline-start: 0px
-                # - margin-inline-end: 0px
+                - color: "#6a7377"
+                # - font-family: SF Display
+                # - font-size: var(--markdown-sidebar-font-size)
+                # - line-height: var(--markdown-sidebar-line-height)
+                # - font-weight: 300
+                # - letter-spacing: 0.06vw
+                # - color: rgb(106, 115, 119)
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
+                # # - margin-block-start: 1em
+                # # - margin-block-end: 1em
+                # # - margin-inline-start: 0px
+                # # - margin-inline-end: 0px
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
@@ -202,19 +207,20 @@ views:
             #template: icon_name_footer
             styles:
               card:
-                - font-family: SF Display
-                - font-size: var(--markdown-sidebar-font-size)
-                - line-height: var(--markdown-sidebar-line-height)
-                - font-weight: 300
-                - letter-spacing: 0.06vw
-                - color: rgb(106, 115, 119)
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
-                # - margin-block-start: 1em
-                # - margin-block-end: 1em
-                # - margin-inline-start: 0px
-                # - margin-inline-end: 0px
+                - color: "#6a7377"
+                # - font-family: SF Display
+                # - font-size: var(--markdown-sidebar-font-size)
+                # - line-height: var(--markdown-sidebar-line-height)
+                # - font-weight: 300
+                # - letter-spacing: 0.06vw
+                # - color: rgb(106, 115, 119)
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
+                # # - margin-block-start: 1em
+                # # - margin-block-end: 1em
+                # # - margin-inline-start: 0px
+                # # - margin-inline-end: 0px
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
@@ -227,19 +233,20 @@ views:
             #template: icon_name_footer
             styles:
               card:
-                - font-family: SF Display
-                - font-size: var(--markdown-sidebar-font-size)
-                - line-height: var(--markdown-sidebar-line-height)
-                - font-weight: 300
-                - letter-spacing: 0.06vw
-                - color: rgb(106, 115, 119)
-                - display: block !important
-                - text-align: start
-                - align-items: self-start
-                # - margin-block-start: 1em
-                # - margin-block-end: 1em
-                # - margin-inline-start: 0px
-                # - margin-inline-end: 0px
+                - color: "#6a7377"
+                # - font-family: SF Display
+                # - font-size: var(--markdown-sidebar-font-size)
+                # - line-height: var(--markdown-sidebar-line-height)
+                # - font-weight: 300
+                # - letter-spacing: 0.06vw
+                # - color: rgb(106, 115, 119)
+                # - display: block !important
+                # - text-align: start
+                # - align-items: self-start
+                # # - margin-block-start: 1em
+                # # - margin-block-end: 1em
+                # # - margin-inline-start: 0px
+                # # - margin-inline-end: 0px
 
 
       - type: conditional
@@ -468,7 +475,7 @@ views:
 
           - type: custom:button-card
             entity: calendar.garbage_collection
-            name: Calendar
+            name: Garbage
             hold_action:
               #!include popup/sovrum_flakt.yaml
               !include popup/home_calendar.yaml
@@ -691,23 +698,7 @@ views:
                   depth: 300
                 
               cards:
-              # - type: entities
-                # state_color: true
-                # entities:
-                  # - entity: sensor.stopa_bazowa_pko_bp
-                    # secondary_info: last-changed
-                  # - entity: sensor.wibor_6m
-                  # - entity: sensor.stopa_bazowa_pko_bp
-                    # secondary_info: last-changed
-                  # - entity: sensor.wibor_6m
-                  # - entity: sensor.stopa_bazowa_pko_bp
-                    # secondary_info: last-changed
-                  # - entity: sensor.wibor_6m
-                  # - entity: sensor.stopa_bazowa_pko_bp
-                    # secondary_info: last-changed
-                  # - entity: sensor.wibor_6m
-                        
-                  
+
                 - type: grid
                   columns: 2
                   cards:
@@ -715,6 +706,9 @@ views:
                     - type: custom:button-card
                       entity: switch.plex
                       name: Plex
+                      tap_action:
+                        action: toggle
+                        entity: entity
                       template:
                         - media
                         - icon_plex
@@ -722,6 +716,9 @@ views:
                     - type: custom:button-card
                       entity: switch.tv
                       name: TV
+                      tap_action:
+                        action: toggle
+                        entity: entity
                       template:
                         - media
                         - icon_tv
@@ -730,7 +727,11 @@ views:
                     - type: custom:button-card
                       entity: switch.radio
                       name: Radio
+                      tap_action:
+                        action: toggle
+                        entity: entity
                       template:
+                        - base
                         - media
                         - icon_radio
                         - loader
@@ -738,6 +739,9 @@ views:
                     - type: custom:button-card
                       entity: switch.netflix
                       name: Netflix
+                      tap_action:
+                        action: toggle
+                        entity: entity
                       template:
                         - media
                         - icon_netflix4
@@ -750,33 +754,37 @@ views:
                     - type: custom:button-card
                       entity: switch.chromecast_audio
                       name: ChromecastAudio
+                      tap_action:
+                        action: toggle
+                        entity: entity
                       template:
                         - media
                         - icon_chromecast
-
-                    - type: custom:button-card
-                      entity: switch.tv
-                      name: TV
-                      template:
-                        - media
-                        - icon_tv
                         - loader
 
-                    - type: custom:button-card
-                      entity: switch.radio
-                      name: Radio
-                      template:
-                        - media
-                        - icon_radio
-                        - loader
+                    # - type: custom:button-card
+                      # entity: switch.tv
+                      # name: TV
+                      # template:
+                        # - media
+                        # - icon_tv
+                        # - loader
 
-                    - type: custom:button-card
-                      entity: switch.netflix
-                      name: Netflix
-                      template:
-                        - media
-                        - icon_netflix4
-                        - loader 
+                    # - type: custom:button-card
+                      # entity: switch.radio
+                      # name: Radio
+                      # template:
+                        # - media
+                        # - icon_radio
+                        # - loader
+
+                    # - type: custom:button-card
+                      # entity: switch.netflix
+                      # name: Netflix
+                      # template:
+                        # - media
+                        # - icon_netflix4
+                        # - loader 
   
       #################################################
       #                                               #
@@ -788,44 +796,79 @@ views:
         title: Home
         view_layout:
           grid-area: home
-        columns: 2
+        columns: 1
         cards:
+          - type: custom:mod-card
+            style: 
+              swipe-card:
+                $: |
+                  .swiper-container {            
+                    padding: 0px 0px 20px 0px !important;        
+                  }
+            card:
+              type: custom:swipe-card
+              start_card: 1
+              parameters:
+                roundLengths: true
+                #autoHeight: false
+                #height: 424px
+                effect: coverflow
+                speed: 650
+                spaceBetween: 20
+                threshold: 7
+                coverflowEffect:
+                  rotate: 80
+                  depth: 300
+                
+              cards:               
+                - type: grid
+                  columns: 2
+                  cards:
+                    - type: custom:button-card
+                      entity: person.anarion
+                      name: Anarion
+                      tap_action:
+                        !include popup/hemma_mattias.yaml
+                      hold_action:
+                        action: none
+                      template: person
+                    - type: custom:button-card
+                      entity: person.iwona
+                      name: Iwona
+                      tap_action:
+                        !include popup/hemma_sanja.yaml
+                      hold_action:
+                        action: none
+                      template: person  
+                    - type: custom:button-card
+                      entity: person.hania
+                      name: Hania
+                      tap_action:
+                        !include popup/home_hania.yaml
+                      hold_action:
+                        action: none
+                      template: person     
+                    - type: custom:button-card
+                      entity: script.home_leave
+                      name: Close All
+                      hold_action:
+                        action: none
+                      template:
+                        - base
+                        - icon_away
+                - type: grid
+                  columns: 2
+                  cards:
+                
+                    - type: custom:button-card
+                      entity: script.home_arrive
+                      name: Back Home
+                      hold_action:
+                        action: none
+                      template:
+                        - base
+                        - icon_home
 
-          - type: custom:button-card
-            entity: person.anarion
-            name: Anarion
-            tap_action:
-              !include popup/hemma_mattias.yaml
-            hold_action:
-              action: none
-            template: person
-
-          - type: custom:button-card
-            entity: person.iwona
-            name: Iwona
-            tap_action:
-              !include popup/hemma_sanja.yaml
-            hold_action:
-              action: none
-            template: person
-
-          - type: custom:button-card
-            entity: script.home_leave
-            name: Close All
-            hold_action:
-              action: none
-            template:
-              - base
-              - icon_away
-
-          - type: custom:button-card
-            entity: script.home_arrive
-            name: Back Home
-            hold_action:
-              action: none
-            template:
-              - base
-              - icon_home
 
       #################################################
       #                                               #
@@ -870,3 +913,26 @@ views:
               icon:
                 - color: >
                      [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'red' : 'green'; ]]]
+          - type: custom:button-card
+            entity: sensor.zakazenia_covid19
+            show_name: false
+            show_state: true
+            show_icon: true
+            icon: mdi:virus
+            template: icon_name_footer
+          - type: custom:button-card
+            entity: sensor.zgony_covid19
+            show_name: false
+            show_state: true
+            show_icon: true
+            icon: mdi:grave-stone
+            template: icon_name_footer
+          - type: custom:button-card
+            entity: sensor.wyleczeni_covid19
+            show_name: false
+            show_state: true
+            show_icon: true
+            icon: mdi:emoticon-happy
+            template: icon_name_footer
+            tap_action:
+              !include popup/covid19.yaml

@@ -19,7 +19,7 @@ frontend:
       #edited
       ha-card-box-shadow: none
       ha-card-background: none
-      grid-card-gap: 5%
+      grid-card-gap: 1.1vw
       masonry-view-card-margin: 0px
       ha-card-header-color: 'rgba(255, 255, 255, 0.8)'
       ha-card-header-font-family: SF Text
@@ -114,98 +114,98 @@ frontend:
         #                                               #
         #################################################
 
-        "grid-layout$hui-markdown-card:first-of-type":
-          $: |
-            ha-card {
-              background-color: #00000010;
-              border-radius: 0;
-              min-height: 100vh;
-              animation: ha-card 1s forwards;
-            }
+        # "grid-layout$hui-markdown-card:first-of-type":
+          # $: |
+            # ha-card {
+              # background-color: #00000010;
+              # border-radius: 0;
+              # min-height: 100vh;
+              # animation: ha-card 1s forwards;
+            # }
 
-            @keyframes ha-card {
-              0%, 100% {
-                border-right: 0.1vw solid rgba(58, 69, 73, 0.2);
-              }
-            }
+            # @keyframes ha-card {
+              # 0%, 100% {
+                # border-right: 0.1vw solid rgba(58, 69, 73, 0.2);
+              # }
+            # }
 
-            /* phone */
-            @media screen and (max-width: 800px) {
-              ha-card {
-                background: none;
-                min-height: 100%;
-                animation: none;
-              }
+            # /* phone */
+            # @media screen and (max-width: 800px) {
+              # ha-card {
+                # background: none;
+                # min-height: 100%;
+                # animation: none;
+              # }
 
-          "$ha-card>ha-markdown":
-            .: |
-              ha-markdown {
-                padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
-                pointer-events: none;
-              }
+          # "$ha-card>ha-markdown":
+            # .: |
+              # ha-markdown {
+                # padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
+                # pointer-events: none;
+              # }
 
-              /* phone */
-              @media screen and (max-width: 800px) {
-                ha-markdown {
-                  padding: 0 !important;
-                }
+              # /* phone */
+              # @media screen and (max-width: 800px) {
+                # ha-markdown {
+                  # padding: 0 !important;
+                # }
 
-            $: |
-              /* clock */
-              p > span {
-                font-family: SF Text;
-                font-size: var(--markdown-sidebar-clock-font-size);
-                font-weight: 200;
-                line-height: var(--markdown-sidebar-clock-line-height);
-                letter-spacing: -0.05vw;
-                margin-left: -0.3vw;
-                color: var(--ha-card-header-color);
-              }
+            # $: |
+              # /* clock */
+              # p > span {
+                # font-family: SF Text;
+                # font-size: var(--markdown-sidebar-clock-font-size);
+                # font-weight: 200;
+                # line-height: var(--markdown-sidebar-clock-line-height);
+                # letter-spacing: -0.05vw;
+                # margin-left: -0.3vw;
+                # color: var(--ha-card-header-color);
+              # }
 
-              /* colon */
-              p > span > span {
-                position: relative;
-                top: -.09em;
-              }
+              # /* colon */
+              # p > span > span {
+                # position: relative;
+                # top: -.09em;
+              # }
 
-              /* text */
-              p {
-                font-family: SF Display;
-                font-size: var(--markdown-sidebar-font-size);
-                line-height: var(--markdown-sidebar-line-height);
-                font-weight: 300;
-                letter-spacing: 0.06vw;
-                color: #6a7377;
-              }
+              # /* text */
+              # p {
+                # font-family: SF Display;
+                # font-size: var(--markdown-sidebar-font-size);
+                # line-height: var(--markdown-sidebar-line-height);
+                # font-weight: 300;
+                # letter-spacing: 0.06vw;
+                # color: #6a7377;
+              # }
               
-              p > b {
-                color: var(--ha-card-header-color);
-              }
+              # p > b {
+                # color: var(--ha-card-header-color);
+              # }
 
-              /* portrait */
-              @media screen and (max-width: 1200px) {
-                p > span {
-                  font-size: calc(var(--markdown-sidebar-clock-font-size) * 1.4 );
-                  line-height: calc(var(--markdown-sidebar-clock-line-height) * 1.4 );
-                }
-                p {
-                  font-size: calc(var(--markdown-sidebar-font-size) * 1.4 );
-                  line-height: calc(var(--markdown-sidebar-line-height) * 1.4 );
-                }
-              }
+              # /* portrait */
+              # @media screen and (max-width: 1200px) {
+                # p > span {
+                  # font-size: calc(var(--markdown-sidebar-clock-font-size) * 1.4 );
+                  # line-height: calc(var(--markdown-sidebar-clock-line-height) * 1.4 );
+                # }
+                # p {
+                  # font-size: calc(var(--markdown-sidebar-font-size) * 1.4 );
+                  # line-height: calc(var(--markdown-sidebar-line-height) * 1.4 );
+                # }
+              # }
 
-              /* phone */
-              @media screen and (max-width: 800px) {
-                p > span {
-                  font-size: calc(var(--markdown-sidebar-clock-font-size) * 2.6 );
-                  line-height: calc(var(--markdown-sidebar-clock-line-height) * 2.6 );
-                }
-                p {
-                  font-size: calc(var(--markdown-sidebar-font-size) * 2.6 );
-                  line-height: calc(var(--markdown-sidebar-line-height) * 2.6 );
-                  letter-spacing: 0.16vw;
-                }
-              }
+              # /* phone */
+              # @media screen and (max-width: 800px) {
+                # p > span {
+                  # font-size: calc(var(--markdown-sidebar-clock-font-size) * 2.6 );
+                  # line-height: calc(var(--markdown-sidebar-clock-line-height) * 2.6 );
+                # }
+                # p {
+                  # font-size: calc(var(--markdown-sidebar-font-size) * 2.6 );
+                  # line-height: calc(var(--markdown-sidebar-line-height) * 2.6 );
+                  # letter-spacing: 0.16vw;
+                # }
+              # }
               
         #################################################
         #                                               #
@@ -229,13 +229,27 @@ frontend:
                 border-right: 0.1vw solid rgba(58, 69, 73, 0.2);
               }
             }
+            # /* text */
+            # p {
+              # font-family: SF Display;
+              # font-size: var(--markdown-sidebar-font-size);
+              # line-height: var(--markdown-sidebar-line-height);
+              # font-weight: 300;
+              # letter-spacing: 0.06vw;
+              # color: #6a7377;
+            # }
+              
+            # p > b {
+              # color: var(--ha-card-header-color);
+            # }
 
             /* phone */
             @media screen and (max-width: 800px) {
-              ha-card {
+              #root {
                 background: none;
                 min-height: 100%;
                 animation: none;
+                padding: 0 2vw 0 var(--custom-layout-card-padding) !important;
               }
 
           #"$#root>button-card:nth-child(1)$":
@@ -246,13 +260,27 @@ frontend:
           #      padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
           #      pointer-events: none;
           #    } */
-          "$#root>button-card":
-            $: |
+          "$#root>button-card$":
+            .: |          
+              ha-card {
+                text-align: left !important;
+                pointer-events: none;
+              }
               #name {
                 text-overflow: UNSET;
                 white-space: normal;
                 overflow: hidden;
-              } 
+              }
+              /* clock */
+              span {
+                font-family: SF Text;
+                font-size: var(--markdown-sidebar-clock-font-size);
+                font-weight: 200;
+                line-height: var(--markdown-sidebar-clock-line-height);
+                letter-spacing: -0.05vw;
+                margin-left: -0.3vw;
+                color: var(--ha-card-header-color);               
+              }              
               
               /* colon */
               span > span {
@@ -265,27 +293,75 @@ frontend:
                 text-align: unset !important;
                 align-items: unset !important;
               }
-              
-              /* text */
-              p {
-                font-family: SF Display;
-                font-size: var(--markdown-sidebar-font-size);
-                line-height: var(--markdown-sidebar-line-height);
-                font-weight: 300;
-                letter-spacing: 0.06vw;
-                color: #6a7377;
+
+              /* portrait */
+              @media screen and (max-width: 1200px) {
+                span {
+                  font-size: calc(var(--markdown-sidebar-clock-font-size) * 1.4 );
+                  line-height: calc(var(--markdown-sidebar-clock-line-height) * 1.4 );
+                }
               }
-              
-              p > b {
-                color: var(--ha-card-header-color);
-              }              
+              /* phone */
+              @media screen and (max-width: 800px) {
+                span {
+                  font-size: calc(var(--markdown-sidebar-clock-font-size) * 2.6 );
+                  line-height: calc(var(--markdown-sidebar-clock-line-height) * 2.6 );
+                }
+              }
 
               /* phone */
               @media screen and (max-width: 800px) {
                 ha-card {
                   padding: 0 !important;
+                  background: none;
                 }
+                
+          "$#root>button-card":
+            $: |          
+              ha-card {
+                text-align: left !important;
+              }
+              #name {
+                text-overflow: UNSET;
+                white-space: normal;
+                overflow: hidden;
+                font-family: SF Display;
+                font-size: var(--markdown-sidebar-font-size);
+                line-height: var(--markdown-sidebar-line-height);
+                font-weight: 300;
+                letter-spacing: 0.06vw;
+              }
+              /*b {
+                color: var(--ha-card-header-color);
+              } */
+              
+              #container {
+                display: block !important;
+                text-align: unset !important;
+                align-items: unset !important;
+              }                          
 
+              /* portrait */
+              @media screen and (max-width: 1200px) {
+                #name {
+                  font-size: calc(var(--markdown-sidebar-font-size) * 1.4 );
+                  line-height: calc(var(--markdown-sidebar-line-height) * 1.4 );
+                }
+              }
+              /* phone */
+              @media screen and (max-width: 800px) {
+                #name {
+                  font-size: calc(var(--markdown-sidebar-font-size) * 2.6 );
+                  line-height: calc(var(--markdown-sidebar-line-height) * 2.6 );
+                }
+              }
+
+              /* phone */
+              @media screen and (max-width: 800px) {
+                ha-card {
+                  padding: 0 !important;
+                  background: none;
+                }    
 
         #################################################
         #                                               #
@@ -346,7 +422,7 @@ frontend:
             /* phone */
             @media screen and (max-width: 800px) {
               hui-grid-card:first-of-type {
-                align-items: flex-start;
+                align-items: flex-start;                
               }
             }
 
@@ -359,7 +435,7 @@ frontend:
             /* phone */
             @media screen and (max-width: 800px) {
               #root {
-                padding: 0 0 0 60%;
+                padding: 3% 0 0 60%;
               }
             }
 
@@ -446,17 +522,25 @@ frontend:
 
         #################################################
         #                                               #
-        #           CORONAVIRUS MARKDOWN CARD           #
+        #           FOOTER BUTTON CARDs                 #
         #                                               #
         #################################################
 
-        # "grid-layout$hui-horizontal-stack-card:first-of-type$":
-          # .: |
-            # ha-card, button-card {
-              # background: none;
-              # padding: 0 !important;
-              # pointer-events: none;
-              # margin-top: -1vw;
+        "grid-layout$hui-horizontal-stack-card":
+          $: |
+            #root {
+              background: none;
+              padding: 0 !important;
+              margin-top: -3vw;
+              flex-flow: row wrap;
+            }
+
+            # /* phone */
+            # @media screen and (max-width: 800px) {
+              # #root {
+                # display: block !important;
+                # min-height: 5vw;
+              # }
             # }
 
             # ha-markdown {
@@ -482,8 +566,8 @@ frontend:
 
             # /* phone */
             # @media screen and (max-width: 800px) {
-              # ha-markdown-element {
-                # display: none;
+              # div {
+                # display: block;
               # }
             # }
 

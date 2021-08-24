@@ -98,17 +98,17 @@ automation:
           # - binary_sensor.monitors_mute_check
           # - sensor.imac_uptime
 
-  - alias: tv_on_lights
-    id: '6657050215613'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: media_player.sony_bravia_tv
-        from: 'off'
-        to: 'on'
-    action:
-      - service: light.turn_on
-        entity_id: light.tv
+  # - alias: tv_on_lights
+  #   id: '6657050215613'
+  #   initial_state: true
+  #   trigger:
+  #     - platform: state
+  #       entity_id: media_player.sony_bravia_tv
+  #       from: 'off'
+  #       to: 'on'
+  #   action:
+  #     - service: light.turn_on
+  #       entity_id: light.tv
 
   - alias: hacs_version_grep
     id: '4283610675891'
