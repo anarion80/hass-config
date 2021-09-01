@@ -318,7 +318,7 @@ views:
             template:
               - light
               - icon_shade
-
+              
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
@@ -491,14 +491,13 @@ views:
                 ]]]
 
           - type: custom:button-card
-            entity: media_player.sony_bravia_tv
-            name: TV
+            entity: sensor.temperature_living_room
+            name: Temp
             hold_action:
               !include popup/sovrum_tv2.yaml
             template:
               - base
-              - icon_tv
-              - loader
+              - icon_temperature
 
       #################################################
       #                                               #
@@ -586,7 +585,7 @@ views:
                       template:
                         - conditional_media
                         - icon_chromecast
-
+                        
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
@@ -640,7 +639,7 @@ views:
                     template:
                       - media
                       - icon_nest_mini
-
+                      
               - type: grid
                 columns: 2
                 cards:
@@ -666,7 +665,7 @@ views:
       #                    other                      #
       #                                               #
       #################################################
-
+           
       - type: grid
         title: Other
         view_layout:
@@ -674,11 +673,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style:
+            style: 
               swipe-card:
                 $: |
-                  .swiper-container {
-                    padding: 0px 0px 20px 0px !important;
+                  .swiper-container {            
+                    padding: 0px 0px 20px 0px !important;        
                   }
             card:
               type: custom:swipe-card
@@ -694,11 +693,13 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
+                
               cards:
 
                 - type: grid
                   columns: 2
                   cards:
+                
                     - type: custom:button-card
                       entity: switch.plex
                       name: Plex
@@ -756,6 +757,7 @@ views:
                 - type: grid
                   columns: 2
                   cards:
+                
                     - type: custom:button-card
                       entity: switch.chromecast_audio
                       name: ChromecastAudio
