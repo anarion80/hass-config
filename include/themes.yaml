@@ -429,7 +429,8 @@ frontend:
 
           $: |
             #root {
-              padding: 0 13% 13% 13%;
+              width: 100%;
+              padding: 0 13% 25% 13%;
               gap: 8% !important;
             }
 
@@ -598,6 +599,7 @@ frontend:
           color: rgb(255, 255, 255);
           opacity: 0.2;
           transition: 0.4s;
+          height: initial;
         }
 
         .type-button:hover {
