@@ -40,25 +40,12 @@ views:
             "sidebar  footer      footer  ."
             "sidebar  .           .       ."
     cards:
-
+      - type: custom:button-card #extra_styles fix
       #################################################
       #                                               #
       #                    SIDEBAR                    #
       #                                               #
       #################################################
-
-      # - type: markdown
-        # view_layout:
-          # grid-area: sidebar
-        # content: |
-          # {% set attributes = states.sensor.template_sidebar.attributes | default %}
-          # {% for template in attributes %}
-          # {{ state_attr('sensor.template_sidebar', template) }}
-          # {% endfor %}
-        #  style: #force style - duplicate of themes markdown
-          #  {.: "ha-card{background-color:#00000010;border-radius:0;min-height:100vh;animation:ha-card 1s forwards}@keyframes ha-card{0%,100%{border-right:.1vw solid rgba(58,69,73,.2)}}@media screen and (max-width:800px){ha-card{background:0 0;min-height:100%;animation:none}}\n", ha-markdown: {.: "ha-markdown{padding:var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding)!important;pointer-events:none}@media screen and (max-width:800px){ha-markdown{padding:0!important}}\n", $: "p>span{font-family:SF Text;font-size:var(--markdown-sidebar-clock-font-size);font-weight:200;line-height:var(--markdown-sidebar-clock-line-height);letter-spacing:-.05vw;margin-left:-.3vw;color:var(--ha-card-header-color)}p>span>span{position:relative;top:-.09em}p{font-family:SF Display;font-size:var(--markdown-sidebar-font-size);line-height:var(--markdown-sidebar-line-height);font-weight:300;letter-spacing:.06vw;color:#6a7377}p>b{color:var(--ha-card-header-color)}@media screen and (max-width:1200px){p>span{font-size:calc(var(--markdown-sidebar-clock-font-size) * 1.4);line-height:calc(var(--markdown-sidebar-clock-line-height) * 1.4)}p{font-size:calc(var(--markdown-sidebar-font-size) * 1.4);line-height:calc(var(--markdown-sidebar-line-height) * 1.4)}}@media screen and (max-width:800px){p>span{font-size:calc(var(--markdown-sidebar-clock-font-size) * 2.6);line-height:calc(var(--markdown-sidebar-clock-line-height) * 2.6)}p{font-size:calc(var(--markdown-sidebar-font-size) * 2.6);line-height:calc(var(--markdown-sidebar-line-height) * 2.6);letter-spacing:.16vw}}\n"}}
-
-          
           
       - type: vertical-stack
         view_layout:
@@ -67,237 +54,106 @@ views:
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: '[[[ return entity.attributes.time; ]]]'
-            show_name: true
-            show_state: false
-            show_icon: false
-            # template: 
-              # - sidebar_button
-            styles:
-              card:
-                # - font-family: SF Text
-                # - font-size: var(--markdown-sidebar-clock-font-size)
-                # - font-weight: 200
-                # - line-height: var(--markdown-sidebar-clock-line-height)
-                # - letter-spacing: -0.05vw
-                # - margin-left: -0.3vw
-                # - color: var(--ha-card-header-color)
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                # - pointer-events: none
-                - padding-top: 0px
-            tap_action: none            
+            template: sidebar_template         
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.date;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
-            tap_action: none 
-            #template: icon_name_footer
-            styles:
-              card:
-                # - font-family: SF Display
-                # - font-size: var(--markdown-sidebar-font-size)
-                # - line-height: var(--markdown-sidebar-line-height)
-                # - font-weight: 300
-                # - letter-spacing: 0.06vw
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                - pointer-events: none
-                - color: "#6a7377"
-                # # - margin-block-start: 1em
-                # # - margin-block-end: 1em
-                # # - margin-inline-start: 0px
-                # # - margin-inline-end: 0px
+            template: sidebar_template       
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.greet;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
-            tap_action: none 
-            styles:
-              card:
-                # - font-family: SF Display
-                # - font-size: var(--markdown-sidebar-font-size)
-                # - line-height: var(--markdown-sidebar-line-height)
-                # - font-weight: 300
-                # - letter-spacing: 0.06vw
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                - pointer-events: none
-                - color: var(--ha-card-header-color)
-                # # - margin-block-start: 1em
-                # # - margin-block-end: 1em
-                # # - margin-inline-start: 0px
-                # # - margin-inline-end: 0px
-            #template: icon_name_footer
+            template: sidebar_template  
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.active;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
-            tap_action: none 
-            styles:
-              card:
-                # - font-family: SF Display
-                # - font-size: var(--markdown-sidebar-font-size)
-                # - line-height: var(--markdown-sidebar-line-height)
-                # - font-weight: 300
-                # - letter-spacing: 0.06vw
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                - pointer-events: none
-                - color: var(--ha-card-header-color)
-                # # - margin-block-start: 1em
-                # # - margin-block-end: 1em
-                # # - margin-inline-start: 0px
-                # # - margin-inline-end: 0px
-            #template: icon_name_footer
+            template: sidebar_template  
+                
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.weather;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
+            template: sidebar_template  
             tap_action:
               !include popup/weather.yaml
-            #template: icon_name_footer
-            styles:
-              card:
-                - color: "#6a7377"
-                # - font-family: SF Display
-                # - font-size: var(--markdown-sidebar-font-size)
-                # - line-height: var(--markdown-sidebar-line-height)
-                # - font-weight: 300
-                # - letter-spacing: 0.06vw
-                # - color: rgb(106, 115, 119)
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                # # - margin-block-start: 1em
-                # # - margin-block-end: 1em
-                # # - margin-inline-start: 0px
-                # # - margin-inline-end: 0px
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.battery;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
-            styles:
-              card:
-                - color: "#6a7377"
+            template: sidebar_template  
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.calendar;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
+            template: sidebar_template  
             tap_action:
               !include popup/home_calendar.yaml
-            #template: icon_name_footer
-            styles:
-              card:
-                - color: "#6a7377"
-                # - font-family: SF Display
-                # - font-size: var(--markdown-sidebar-font-size)
-                # - line-height: var(--markdown-sidebar-line-height)
-                # - font-weight: 300
-                # - letter-spacing: 0.06vw
-                # - color: rgb(106, 115, 119)
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                # # - margin-block-start: 1em
-                # # - margin-block-end: 1em
-                # # - margin-inline-start: 0px
-                # # - margin-inline-end: 0px
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
                [[[ 
                    return entity.attributes.plex;
                    ]]]
-            show_name: true
-            show_state: false
-            show_icon: false
-            #template: icon_name_footer
-            styles:
-              card:
-                - color: "#6a7377"
-                # - font-family: SF Display
-                # - font-size: var(--markdown-sidebar-font-size)
-                # - line-height: var(--markdown-sidebar-line-height)
-                # - font-weight: 300
-                # - letter-spacing: 0.06vw
-                # - color: rgb(106, 115, 119)
-                # - display: block !important
-                # - text-align: start
-                # - align-items: self-start
-                # # - margin-block-start: 1em
-                # # - margin-block-end: 1em
-                # # - margin-inline-start: 0px
-                # # - margin-inline-end: 0px
+            template: sidebar_template  
+            
+          - type: conditional
+            view_layout:
+              grid-area: sidebar
+            conditions:
+              - entity: input_boolean.laundry_display
+                state: 'on'
+            card:
+              type: custom:button-card
+              entity: timer.laundry
+              template: laundry
 
+          - type: grid
+            view_layout:
+              grid-area: sidebar
+            cards:
+              - type: button
+                icon: mdi:robot-vacuum
+                tap_action:
+                  !include popup/sidebar_vacuum.yaml
+                hold_action:
+                  action: none
 
-      - type: conditional
-        view_layout:
-          grid-area: sidebar
-        conditions:
-          - entity: input_boolean.laundry_display
-            state: 'on'
-        card:
-          type: custom:button-card
-          entity: timer.laundry
-          template: laundry
+              - type: button
+                icon: mdi:information-outline
+                tap_action:
+                  !include popup/sidebar_information.yaml
+                hold_action:
+                  action: none
 
-      - type: grid
-        view_layout:
-          grid-area: sidebar
-        cards:
-          - type: button
-            icon: mdi:robot-vacuum
-            tap_action:
-              !include popup/sidebar_vacuum.yaml
-
-          - type: button
-            icon: mdi:information-outline
-            tap_action:
-              !include popup/sidebar_information.yaml
-
-          - type: button
-            icon: mdi:arrow-up-bold-circle-outline
-            tap_action:
-              !include popup/sidebar_update.yaml
-            hold_action:
-              action: call-service
-              service: homeassistant.update_entity
-              service_data:
-                entity_id: sensor.hacs
+              - type: button
+                icon: mdi:arrow-up-bold-circle-outline
+                tap_action:
+                  !include popup/sidebar_update.yaml
+                hold_action:
+                  action: call-service
+                  service: homeassistant.update_entity
+                  service_data:
+                    entity_id: sensor.hacs
 
       #################################################
       #                                               #
@@ -329,12 +185,15 @@ views:
               - icon_air_purifier
               - full_circle
               - loader
+            triggers_update:
+              - sensor.airpurifier_pm2_5
+              - fan.zhimi_airpurifier_v7
             variables:
               circle_input: >
                 [[[
                   return entity === undefined ?
                     null :
-                    parseInt(entity.attributes.aqi);
+                    parseInt(states['sensor.airpurifier_pm2_5'].state);
                 ]]]
 
           - type: custom:button-card
