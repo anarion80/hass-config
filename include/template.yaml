@@ -10,10 +10,12 @@ template:
     - unique_id: sidebar
       state: template
       attributes:
-        time: |
-          {%- set hours = '<span>' + now().strftime('%H') + '<span>' %}
-          {%- set minutes = '</span>' + now().strftime('%M') + '</span>' %}
-          {{ hours }}:{{ minutes }}
+        time: >
+          {% set hours = now().strftime('%H') %}
+          {% set minutes = now().strftime('%M') %}
+          <span class="time">
+            {{ hours }}<span class="time-colon">:</span>{{ minutes }}
+          </span>
         date: |
           <font color='#6a7377'><b>
           {%- if strptime(states('sensor.date'), '%Y-%m-%d').day != null %}
@@ -21,7 +23,7 @@ template:
           {%- set months = ['January', 'February', 'March', 'April', 'May', 'June', 
           'July', 'August', 'September', 'October', 'November', 'December'] %}
             {{- days[now().weekday()] }}<br>
-            {{- months[now().month-1] }} {{strptime(states('sensor.date'), '%Y-%m-%d').day }} 
+            {{- strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}
           {%- endif -%}
           </b></font>
         greet: |
@@ -163,6 +165,7 @@ template:
             'sensor.motion_sensor_1_battery',
             'sensor.nokia_8_3_5g_battery_level',
             'sensor.ta_1004_poziom_baterii',
+            'sensor.fire_tablet_battery_level',
             'sensor.redmi_note_5_battery_level' ] %}
           {%- for sensor in entities if states(sensor) | int <= 20 and states(sensor) != 'unknown' %}
             {%- if loop.first %} {{-'\u26A0\uFE0F'}} Battery: {% else %}, {% endif -%}
@@ -285,61 +288,61 @@ template:
         {{ prt('idle', 'idle') }}
         {{ prt('Off', 'Off') }}
 
-    - unique_id: roborock_filter
-      icon: custom:roborock-filter
-      unit_of_measurement: '%'
-      state: >
-        {{ (states('sensor.main_filter') | float / 60 / 150 * 100) | round }}
-
-    - unique_id: roborock_mainbrush
-      icon: custom:roborock-mainbrush
-      unit_of_measurement: '%'
-      state: >
-        {{ (states('sensor.main_brush') | float / 60 / 300 * 100) | round }}
-
-    - unique_id: roborock_sensors
-      icon: custom:roborock-sensor
-      unit_of_measurement: '%'
-      state: >
-        {{ (states('sensor.sensor_cleaning') | float / 60 / 30 * 100) | round }}
-
-    - unique_id: roborock_sidebrush
-      icon: custom:roborock-sidebrush
-      unit_of_measurement: '%'
-      state: >
-        {{ (states('sensor.right_brush') | float / 60 / 200 * 100) | round }}
-
-    - unique_id: roborock_last_clean
-      icon: mdi:calendar-clock
-      device_class: timestamp
-      state: >
-        {{ state_attr('vacuum.roborock_vacuum_s5', 'clean_stop') | replace(' ','T') }}
+    # - unique_id: vacuum_filter
+      # icon: custom:roborock-filter
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'filter_left') / 1.5) | round }}
+        
+    # - unique_id: vacuum_mainbrush
+      # icon: custom:roborock-mainbrush
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'main_brush_left') / 3) | round }}
+        
+    # - unique_id: vacuum_sensors
+      # icon: custom:roborock-sensor
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'sensor_dirty_left') / 0.3) | round }}
+        
+    # - unique_id: vacuum_sidebrush
+      # icon: custom:roborock-sidebrush
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'side_brush_left') / 2) | round }}
+        
+    # - unique_id: vacuum_lastclean
+      # icon: mdi:calendar-clock
+      # device_class: timestamp
+      # state: >
+        # {{ state_attr('vacuum.morty', 'clean_stop') | replace(' ','T') }}
 
     - unique_id: fullykiosk_storage
       icon: mdi:sd
       unit_of_measurement: '%'
       state: >
-        {% set FreeSpace = states('sensor.galaxy_tab_a_internal_storage_free_space') | float %}
-        {% set TotalSpace = states('sensor.galaxy_tab_a_internal_storage_total_space') | float %}
+        {% set FreeSpace = states('sensor.fire_tablet_internal_storage_free_space') | float %}
+        {% set TotalSpace = states('sensor.fire_tablet_internal_storage_total_space') | float %}
         {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
           {{ 100 - (FreeSpace / TotalSpace * 100) | int }}
         {% endif %}
-
+        
     - unique_id: fullykiosk_memory
       icon: mdi:memory
       unit_of_measurement: '%'
       state: >
-        {% set FreeMemory = states('sensor.galaxy_tab_a_ram_free_memory') | float %}
-        {% set TotalMemory = states('sensor.galaxy_tab_a_ram_total_memory') | float %}
+        {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') | float %}
+        {% set TotalMemory = states('sensor.fire_tablet_ram_total_memory') | float %}
         {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
           {{ 100 - (FreeMemory / TotalMemory * 100) | int }}
         {% endif %}
-
+        
     - unique_id: fullykiosk_last_app_start
       icon: mdi:update
       device_class: timestamp
       state: >
-        {{ states('sensor.galaxy_tab_a_last_app_start') | replace(' ','T') }}
+        {{ states('sensor.fire_tablet_last_app_start') }}
 
     - unique_id: nas_status
       icon: custom:synology-nas
@@ -391,7 +394,7 @@ sensor:
         value_template: ' '
         icon_template: mdi:arrow-down-bold
         friendly_name_template: >
-          {% set down = states('sensor.nas_network_down') | float %}
+          {% set down = states('sensor.nas_network_down') | float(default=0) %}
           {% if down < 1000 %} {{ down | round(0) }} kb/s
           {% elif down >= 1000 %} {{ ((down / 1000) | round(2) | string).rstrip('.0') }} Mb/s
           {% endif %}
@@ -400,7 +403,7 @@ sensor:
         value_template: ' '
         icon_template: mdi:arrow-up-bold
         friendly_name_template: >
-          {% set up = states('sensor.nas_network_up') | float %}
+          {% set up = states('sensor.nas_network_up') | float(default=0) %}
           {% if up < 1000 %} {{ up | round(0) }} kb/s
           {% elif up >= 1000 %} {{ ((up / 1000) | round(2) | string).rstrip('.0') }} Mb/s
           {% endif %}

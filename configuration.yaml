@@ -1,22 +1,18 @@
-homeassistant:
-  name: Hem
-  latitude: !secret homeassistant_latitude
-  longitude: !secret homeassistant_longitude
-  elevation: !secret homeassistant_elevation
-  unit_system: metric
-  temperature_unit: C
-  time_zone: Europe/Stockholm
-  packages: !include_dir_named include
-  allowlist_external_dirs: [/config/]
 
+# Configure a default setup of Home Assistant (frontend, api, etc)
 default_config:
-
+mobile_app:
+discovery:
+conversation:
+api:
+websocket_api:
 lovelace:
-  mode: yaml
+  mode: storage
   resources:
     [ { url: /hacsfiles/bar-card/bar-card.js,                               type: module },
       { url: /hacsfiles/button-card/button-card.js,                         type: module },
       { url: /hacsfiles/kiosk-mode/kiosk-mode.js,                           type: module },
+      { url: /hacsfiles/browser_mod/browser_mod.js,                         type: module },
       { url: /hacsfiles/light-entity-card/light-entity-card.js,             type: module },
       { url: /hacsfiles/light-popup-card/light-popup-card.js,               type: module },
       { url: /hacsfiles/lovelace-card-mod/card-mod.js,                      type: module },
@@ -28,108 +24,104 @@ lovelace:
       { url: /hacsfiles/swipe-card/swipe-card.js,                           type: module },
       { url: /hacsfiles/apexcharts-card/apexcharts-card.js,                 type: module },
       { url: /hacsfiles/zigbee2mqtt-networkmap/zigbee2mqtt-networkmap.js,   type: module },
-      { url: /hacsfiles/purifier-card/purifier-card.js,   type: module },
-      { url: /hacsfiles/home-assistant-sun-card/home-assistant-sun-card.js,   type: module },
-      { url: /hacsfiles/config-template-card/config-template-card.js,   type: module },
-      { url: /hacsfiles/lovelace-weather-card-chart/weather-card-chart.js,   type: module },
-      { url: /hacsfiles/lovelace-auto-entities/auto-entities.js,   type: module },
-      { url: /hacsfiles/air-visual-card/air-visual-card.js,   type: module },
+      { url: /hacsfiles/purifier-card/purifier-card.js,                     type: module },
+      { url: /hacsfiles/home-assistant-sun-card/home-assistant-sun-card.js, type: module },
+      { url: /hacsfiles/config-template-card/config-template-card.js,       type: module },
+      { url: /hacsfiles/lovelace-weather-card-chart/weather-card-chart.js,  type: module },
+      { url: /hacsfiles/lovelace-auto-entities/auto-entities.js,            type: module },
+      { url: /hacsfiles/air-visual-card/air-visual-card.js,                 type: module },
+      #{ url: /hacsfiles/alarmo-card/alarmo-card.js,                 type: module },
       
       { url: /hacsfiles/ha-card-weather-conditions/ha-card-weather-conditions.js,   type: module },
-      { url: /hacsfiles/ha-floorplan/floorplan.js,   type: module },
-      { url: /hacsfiles/mini-humidifier/mini-humidifier-bundle.js,   type: module },
-      { url: /hacsfiles/mini-media-player/mini-media-player-bundle.js,   type: module },
-      { url: /hacsfiles/zha-network-card/zha-network-card.js,   type: module },
+      { url: /hacsfiles/ha-floorplan/floorplan.js,                                  type: module },
+      { url: /hacsfiles/mini-humidifier/mini-humidifier-bundle.js,                  type: module },
+      { url: /hacsfiles/mini-media-player/mini-media-player-bundle.js,              type: module },
+      { url: /hacsfiles/zha-network-card/zha-network-card.js,                       type: module },
+      { url: /hacsfiles/home-feed-card/lovelace-home-feed-card.js,                  type: module },
+      { url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js,           type: module },
       
-      { url: /hacsfiles/generic-remote-control-card/generic-remote-control-card.js,   type: module },
-      { url: /hacsfiles/entity-attributes-card/entity-attributes-card.js,   type: module },
-      { url: /hacsfiles/search-card/search-card.js,   type: module },
-      { url: /hacsfiles/garbage-collection-card/garbage-collection-card.js,   type: module },
-      { url: /hacsfiles/lovelace-swipe-navigation/lovelace-swipe-navigation.js,   type: module },
+      { url: /hacsfiles/generic-remote-control-card/generic-remote-control-card.js, type: module },
+      { url: /hacsfiles/entity-attributes-card/entity-attributes-card.js,           type: module },
+      { url: /hacsfiles/search-card/search-card.js,                                 type: module },
+      { url: /hacsfiles/garbage-collection-card/garbage-collection-card.js,         type: module },
+      { url: /hacsfiles/lovelace-swipe-navigation/lovelace-swipe-navigation.js,     type: module },
       
-      { url: /hacsfiles/tv-card/tv-card.js,   type: module },
-      { url: /hacsfiles/tv-card/tv-card-editor.js,   type: module },
-      { url: /hacsfiles/lovelace-template-entity-row/template-entity-row.js,   type: module },
-      { url: /hacsfiles/simple-weather-card/simple-weather-card-bundle.js,   type: module },
-      { url: /hacsfiles/uptime-card/uptime-card.js,   type: module },
-      { url: /hacsfiles/lovelace-battery-entity-row/battery-entity-row.js,   type: module },
+      { url: /hacsfiles/tv-card/tv-card.js,                                   type: module },
+      { url: /hacsfiles/tv-card/tv-card-editor.js,                            type: module },
+      { url: /hacsfiles/lovelace-template-entity-row/template-entity-row.js,  type: module },
+      { url: /hacsfiles/simple-weather-card/simple-weather-card-bundle.js,    type: module },
+      { url: /hacsfiles/uptime-card/uptime-card.js,                           type: module },
+      { url: /hacsfiles/lovelace-battery-entity-row/battery-entity-row.js,    type: module },
+      { url: /hacsfiles/lovelace-more-info-card/more-info-card.js,            type: module },
       
-      { url: /hacsfiles/lovelace-state-switch/state-switch.js,   type: module },
-      { url: /hacsfiles/lovelace-gui-sandbox/gui-sandbox.js,   type: module },
-      { url: /hacsfiles/lovelace-multiple-entity-row/multiple-entity-row.js,   type: module },
-      { url: /hacsfiles/lovelace-weather-card-chart/weather-card-chart.js,   type: module },
-      { url: /hacsfiles/lovelace-fold-entity-row/fold-entity-row.js,   type: module },
-      { url: /hacsfiles/lovelace-swipe-navigation/swipe-navigation.js,   type: module },
-      { url: /hacsfiles/power-wheel-card/power-wheel-card.js,   type: module },
-      { url: /hacsfiles/popup-backdrop-filter/popup-backdrop-filter.js,   type: module },
+      { url: /hacsfiles/lovelace-state-switch/state-switch.js,               type: module },
+      { url: /hacsfiles/lovelace-gui-sandbox/gui-sandbox.js,                 type: module },
+      { url: /hacsfiles/lovelace-multiple-entity-row/multiple-entity-row.js, type: module },
+      { url: /hacsfiles/lovelace-weather-chart-card/weather-chart-card.js,   type: module },
+      { url: /hacsfiles/lovelace-fold-entity-row/fold-entity-row.js,         type: module },
+      { url: /hacsfiles/lovelace-swipe-navigation/swipe-navigation.js,       type: module },
+      { url: /hacsfiles/power-wheel-card/power-wheel-card.js,                type: module },
+      { url: /hacsfiles/popup-backdrop-filter/popup-backdrop-filter.js,      type: module },
+      { url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js,      type: module },
 
-      { url: '/local/calendar-card.js?v=31091',                             type: module },
-      { url: '/local/custom_icons.js?v=25052001',                           type: module },
-      { url: '/local/font.css',                                               type: css    } ] 
-
-logger:
-  default: warning
-  logs:
-    homeassistant.components.websocket_api: fatal
-    homeassistant.components.bluetooth_tracker.device_tracker: fatal
-
-recorder:
-  db_url: !secret recorder_db_url
-
-person:
-  - name: Matte
-    id: matte
-    device_trackers:
-      - device_tracker.mattias_iphone_ios
-      - device_tracker.mattias_iphonedetect
-      - device_tracker.mattias_iphone_unifi
-      - device_tracker.mattias_bluetooth
-
-  - name: Sanja
-    id: sanja
-    device_trackers:
-      - device_tracker.sanja_iphonedetect
-      - device_tracker.sanjas_iphone_unifi
-      - device_tracker.sanja_bluetooth
-
-device_tracker:
-  - platform: bluetooth_tracker
-    new_device_defaults:
-      track_new_devices: false
-
-  - platform: iphonedetect
-    consider_home: 60
-    scan_interval: 12
-    new_device_defaults:
-      track_new_devices: false
-    hosts:
-      mattias_iphonedetect: !secret iphonedetect_matte
-      sanja_iphonedetect: !secret iphonedetect_sanja
-
-wemo:
-  discovery: false
-  static: !secret wemo_static
-
+      { url: '/local/calendar-card.js',                             type: module },
+      { url: '/local/custom_icons.js',                           type: module },
+      { url: '/local/font.css',                                             type: css    } ] 
+      
+  dashboards:
+    lovelace-tablet:
+      mode: yaml
+      title: Tablet
+      icon: mdi:tablet-dashboard
+      show_in_sidebar: true
+      filename: ui-lovelace-tablet.yaml      
+      
+      
+      
+ffmpeg:
+smartir:
+  check_updates: false
+homeassistant:
+  packages: !include_dir_named include
+  allowlist_external_dirs:
+    - /config
+    - /config/www
+frontend: 
+  themes: !include_dir_merge_named themes
+http: !include http.yaml
+proximity: !include proximity.yaml
+climate: !include climate.yaml
+alarm_control_panel: !include alarm.yaml
+recorder: !include recorder.yaml
+#logger: !include logger.yaml
+tts: !include tts.yaml
+notify: !include notifications.yaml
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+sensor: !include sensors.yaml
+binary_sensor: !include binary_sensor.yaml
+switch: !include switches.yaml
+utility_meter: !include utility_meter.yaml
+media_player: !include media_player.yaml
+google_assistant: !include google_assistant.yaml
+influxdb: !include influxdb.yaml
+input_select: !include input_select.yaml
+input_boolean: !include input_boolean.yaml
+#alert: !include alerts.yaml
+# fan:
+  # - platform: xiaomi_miio
+    # name: Xiaomi Air Purifier Pro
+    # host: 192.168.2.22
+    # token: 2402adf3216fa63535d67b6390000b93
+    # model: zhimi.airpurifier.v6
+    
 spotify:
   client_id: !secret spotify_client_id
   client_secret: !secret spotify_client_secret
-
-google:
-  client_id: !secret google_client_id
-  client_secret: !secret google_client_secret
-
-browser_mod:
-  devices:
-    c2080cea-6627150a:
-      name: galaxy_tab_a
-  disable:
-    - all
-
-timer:
-  laundry:
-    duration: 01:00:00
-    icon: mdi:washing-machine
-
+  
+#camera: !include camera.yaml
 lock:
   - platform: template
     name: Dator
@@ -139,13 +131,25 @@ lock:
       entity_id: input_boolean.computer_lock
     unlock:
       service: input_boolean.turn_off
-      entity_id: input_boolean.computer_lock
+      entity_id: input_boolean.computer_lock 
 
-ios:
-  push:
-    categories:
-      - name: Home Assistant
-        identifier: ios_hass
-        actions:
-          - identifier: start_watchtower
-            title: Uppdatera
+browser_mod:
+  devices:
+    9542917b-db92ea9b:
+      name: galaxy_tab_a
+    4636b990-e668444f:
+      name: chrome_on_pc
+    f9d5577a-fbf3f1bd:
+      name: nokia_phone
+    7496f3b9-fed5d72a:
+      name: ipad
+    ec4bd273-67f527a2:
+      name: firefox_on_pc
+    ffd92947-09fd7c47:
+      name: amazon_tablet
+      #screensaver: true
+
+    
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_client_secret

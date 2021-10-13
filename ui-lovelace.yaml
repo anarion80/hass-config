@@ -173,7 +173,7 @@ views:
             name: U Hani
             template:
               - light
-              - icon_shade
+              - icon_pendants
               
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
@@ -199,6 +199,12 @@ views:
           - type: custom:button-card
             entity: media_player.sony_bravia_tv
             name: TV
+            state_display: >
+              [[[
+                if (variables.state == 'playing') {
+                  return 'On';
+                }
+              ]]]
             hold_action:
               !include popup/vardagsrum_tv.yaml
             template:

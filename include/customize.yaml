@@ -40,6 +40,8 @@ homeassistant:
       friendly_name: klädkammaren
     binary_sensor.wemo_motion:
       friendly_name: vardagsrummet
+    binary_sensor.ffd92947_09fd7c47:
+      friendly_name: tablet_motion
 
     #fan
     fan.studio_wemo:
@@ -94,17 +96,17 @@ homeassistant:
     sensor.docker_cpu:
       friendly_name: Processor
       icon: mdi:chip
-    switch.galaxy_tab_a_screensaver:
+    switch.fire_tablet_screensaver:
       friendly_name: Screensaver
       icon: mdi:power-sleep
-    light.galaxy_tab_a_screen:
+    light.fire_tablet_screen:
       friendly_name: Display
       icon: mdi:tablet
-    binary_sensor.galaxy_tab_a_plugged_in:
+    binary_sensor.fire_tablet_plugged_in:
       friendly_name: Power supply
       icon: mdi:power-plug
-    sensor.galaxy_tab_a_battery_level:
-      friendly_name: Battery
+    sensor.fire_tablet_battery_level:
+      friendly_name: Tablet Battery
     sensor.nas_volume_1_average_disk_temp:
       friendly_name: Disk Temperature
     sensor.processor_use_percent:

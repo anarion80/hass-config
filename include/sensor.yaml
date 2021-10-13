@@ -22,6 +22,10 @@ sensor:
   - platform: filesize
     file_paths:
       - /config/home-assistant.log
+      
+  - platform: filesize
+    file_paths:
+      - /config/home-assistant_v2.db
 
   # - platform: sql
     # db_url: !secret recorder_db_url
@@ -185,4 +189,4 @@ sensor:
     name: hacs_version
     scan_interval: 86400
     command: >
-      grep -oP 'INTEGRATION_VERSION = "\K[^"]+' custom_components/hacs/const.py
+      sed -nr 's/\"version\": \"([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)\"/\1/p' /config/custom_components/hacs/manifest.json

@@ -13,10 +13,10 @@ automation:
       - platform: homeassistant
         event: start
     action:
-      - service: mqtt.publish
-        data:
-          topic: cmnd/tasmotas/status
-          payload: 8
+      # - service: mqtt.publish
+        # data:
+          # topic: cmnd/tasmotas/status
+          # payload: 8
       - service: browser_mod.close_popup
       - delay:
           seconds: 1
@@ -43,15 +43,15 @@ automation:
           seconds: 10
       - service: fullykiosk.load_start_url
         data:
-          entity_id: media_player.galaxy_tab_a
-      - choose:
-        - conditions:
-            - condition: state
-              entity_id: light.hall
-              state: 'off'
-          sequence:
-            - service: switch.turn_on
-              entity_id: switch.galaxy_tab_a_screensaver
+          entity_id: media_player.fire_tablet_media_player
+      # - choose:
+        # - conditions:
+            # - condition: state
+              # entity_id: binary_sensor.ffd92947_09fd7c47
+              # state: 'off'
+          # sequence:
+            # - service: switch.turn_on
+              # entity_id: switch.fire_tablet_screensaver
 
   - alias: lovelace_updated_ignore
     id: '9381519720051'
@@ -437,30 +437,30 @@ automation:
       - service: switch.turn_off
         entity_id: fan.sovrum_anslut
 
-  - alias: sovrum_anslut_turn_on_temp
-    id: '0099808622760'
-    initial_state: true
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.sensor_hall_temperature
-        above: 24
-    condition:
-      condition: and
-      conditions:
-        - condition: time
-          after: '20:00:00'
-          before: '07:00:00'
-        - condition: state
-          entity_id:
-            - person.anarion
-            - person.iwona
-          state: home
-    action:
-      - condition: state
-        entity_id: fan.sovrum_anslut
-        state: 'off'
-      - service: fan.turn_on
-        entity_id: fan.sovrum_anslut
+  # - alias: sovrum_anslut_turn_on_temp
+    # id: '0099808622760'
+    # initial_state: true
+    # trigger:
+      # - platform: numeric_state
+        # entity_id: sensor.sensor_hall_temperature
+        # above: 24
+    # condition:
+      # condition: and
+      # conditions:
+        # - condition: time
+          # after: '20:00:00'
+          # before: '07:00:00'
+        # - condition: state
+          # entity_id:
+            # - person.anarion
+            # - person.iwona
+          # state: home
+    # action:
+      # - condition: state
+        # entity_id: fan.sovrum_anslut
+        # state: 'off'
+      # - service: fan.turn_on
+        # entity_id: fan.sovrum_anslut
 
   # - alias: sovrum_anslut_oscillate
     # id: '9897303821028'
@@ -702,33 +702,33 @@ automation:
     initial_state: true
     trigger:
       - platform: state
-        entity_id: binary_sensor.sensor_hall_motion
+        entity_id: binary_sensor.ffd92947_09fd7c47
         from: 'off'
         to: 'on'
-      - platform: state
-        entity_id: light.hall
-        from: 'on'
-        to: 'off'
+      # - platform: state
+        # entity_id: light.hall
+        # from: 'on'
+        # to: 'off'
     action:
       - choose:
         - conditions: >
-            {{ trigger.entity_id == 'binary_sensor.sensor_hall_motion' }}
+            {{ trigger.entity_id == 'binary_sensor.ffd92947_09fd7c47' }}
           sequence:
             - service: switch.turn_off
-              entity_id: switch.galaxy_tab_a_screensaver
+              entity_id: switch.fire_tablet_screensaver
             - service: light.turn_on
               data:
-                entity_id: light.galaxy_tab_a_screen
+                entity_id: light.fire_tablet_screen
                 brightness_pct: >
                   {{ 90 if is_state('sun.sun', 'above_horizon') else 60 }}
         default:
           - service: switch.turn_on
-            entity_id: switch.galaxy_tab_a_screensaver
+            entity_id: switch.fire_tablet_screensaver
           - delay:
               minutes: 15
           - service: browser_mod.close_popup
             data:
-              deviceID: galaxy_tab_a
+              deviceID: fire_tablet
 
     ####################################################
     #                                                  #
@@ -832,7 +832,7 @@ automation:
     action:
       - service: media_player.play_media
         data:
-          entity_id: media_player.galaxy_tab_a
+          entity_id: media_player.ffd92947_09fd7c47
           media_content_id: /local/sound/timer.mp3
           media_content_type: music
       - delay:

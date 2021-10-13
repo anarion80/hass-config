@@ -107,15 +107,15 @@ script:
       - choose:
         - conditions:
             - condition: state
-              entity_id: light.galaxy_tab_a_screen
+              entity_id: light.fire_tablet_screen
               state: 'on'
             - condition: state
-              entity_id: switch.galaxy_tab_a_screensaver
+              entity_id: switch.fire_tablet_screensaver
               state: 'off'
           sequence:
             - service: tts.google_cloud_say
               data:
-                entity_id: media_player.nest_mini
+                entity_id: media_player.fire_tablet_media_player
                 message: >
                   {{ ['Witaj', 'Cześć', 'Hej', 'Witaj w domu'] | random }}
       - choose:
