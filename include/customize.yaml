@@ -107,6 +107,9 @@ homeassistant:
       icon: mdi:power-plug
     sensor.fire_tablet_battery_level:
       friendly_name: Tablet Battery
+      icon: mdi:battery
+    sensor.sensor.kftrwi_battery_level:
+      friendly_name: Tablet Battery   
     sensor.nas_volume_1_average_disk_temp:
       friendly_name: Disk Temperature
     sensor.processor_use_percent:

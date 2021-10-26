@@ -22,10 +22,12 @@ sensor:
   - platform: filesize
     file_paths:
       - /config/home-assistant.log
+    scan_interval: 1800
       
   - platform: filesize
     file_paths:
       - /config/home-assistant_v2.db
+    scan_interval: 1800
 
   # - platform: sql
     # db_url: !secret recorder_db_url

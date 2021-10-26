@@ -249,9 +249,9 @@ template:
             {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
             <font color='#6a7377'>
             <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}          
-            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.zakazenia_covid19') }}</b> cases{{ break -}}
-            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.zgony_covid19') }}</b> deceased{{ break -}}
-            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.wyleczeni_covid19') }}</b> recovered
+            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.covid19_infections') }}</b> cases{{ break -}}
+            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.covid19_deaths') }}</b> deceased{{ break -}}
+            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.covid19_recovered') }}</b> recovered
             </font>
 
     # - unique_id: public_ip

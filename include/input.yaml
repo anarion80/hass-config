@@ -131,7 +131,6 @@ input_select:
       - Standard
       - Medium
       - Turbo
-      - Off
 
   sovrum_anslut_speed:
     name: Fan speed
