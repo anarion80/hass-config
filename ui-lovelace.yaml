@@ -46,7 +46,7 @@ views:
       #                    SIDEBAR                    #
       #                                               #
       #################################################
-
+          
       - type: vertical-stack
         view_layout:
           grid-area: sidebar
@@ -54,70 +54,70 @@ views:
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: '[[[ return entity.attributes.time; ]]]'
-            template: sidebar_template
-
+            template: sidebar_template         
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.date;
                    ]]]
-            template: sidebar_template
+            template: sidebar_template       
 
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.greet;
                    ]]]
-            template: sidebar_template
+            template: sidebar_template  
 
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.active;
                    ]]]
-            template: sidebar_template
-
+            template: sidebar_template  
+                
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.weather;
                    ]]]
-            template: sidebar_template
+            template: sidebar_template  
             tap_action:
               !include popup/weather.yaml
-
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.battery;
                    ]]]
-            template: sidebar_template
+            template: sidebar_template  
             tap_action:
               !include popup/batteries.yaml
-
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.calendar;
                    ]]]
-            template: sidebar_template
+            template: sidebar_template  
             tap_action:
               !include popup/home_calendar.yaml
-
+            
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[
+               [[[ 
                    return entity.attributes.plex;
                    ]]]
-            template: sidebar_template
-
+            template: sidebar_template  
+            
           - type: conditional
             view_layout:
               grid-area: sidebar
@@ -176,7 +176,7 @@ views:
             template:
               - light
               - icon_pendants
-
+              
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
@@ -452,7 +452,7 @@ views:
                       template:
                         - conditional_media
                         - icon_chromecast
-
+                        
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
@@ -506,7 +506,7 @@ views:
                     template:
                       - media
                       - icon_nest_mini
-
+                      
               - type: grid
                 columns: 2
                 cards:
@@ -532,7 +532,7 @@ views:
       #                    other                      #
       #                                               #
       #################################################
-
+           
       - type: grid
         title: Other
         view_layout:
@@ -540,11 +540,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style:
+            style: 
               swipe-card:
                 $: |
-                  .swiper-container {
-                    padding: 0px 0px 20px 0px !important;
+                  .swiper-container {            
+                    padding: 0px 0px 20px 0px !important;        
                   }
             card:
               type: custom:swipe-card
@@ -560,13 +560,13 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-
+                
               cards:
 
                 - type: grid
                   columns: 2
                   cards:
-
+                
                     - type: custom:button-card
                       entity: switch.plex
                       name: Plex
@@ -624,7 +624,7 @@ views:
                 - type: grid
                   columns: 2
                   cards:
-
+                
                     - type: custom:button-card
                       entity: switch.chromecast_audio
                       name: ChromecastAudio
@@ -658,8 +658,8 @@ views:
                       # template:
                         # - media
                         # - icon_netflix4
-                        # - loader
-
+                        # - loader 
+  
       #################################################
       #                                               #
       #                     home                      #
@@ -673,11 +673,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style:
+            style: 
               swipe-card:
                 $: |
-                  .swiper-container {
-                    padding: 0px 0px 20px 0px !important;
+                  .swiper-container {            
+                    padding: 0px 0px 20px 0px !important;        
                   }
             card:
               type: custom:swipe-card
@@ -693,8 +693,8 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-
-              cards:
+                
+              cards:               
                 - type: grid
                   columns: 2
                   cards:
@@ -713,7 +713,7 @@ views:
                         !include popup/hemma_sanja.yaml
                       hold_action:
                         action: none
-                      template: person
+                      template: person  
                     - type: custom:button-card
                       entity: person.hania
                       name: Hania
@@ -721,7 +721,7 @@ views:
                         !include popup/home_hania.yaml
                       hold_action:
                         action: none
-                      template: person
+                      template: person     
                     # - type: custom:button-card
                       # entity: script.home_leave
                       # name: Close All
@@ -733,8 +733,8 @@ views:
                     - type: custom:button-card
                       entity: sensor.u_s_air_pollution_level
                       name: Air Quality
-                      hold_action:
-                        action: none
+                      tap_action:
+                        !include popup/aqi.yaml
                       template:
                         - base
                         - icon_aqi
@@ -754,7 +754,7 @@ views:
                 - type: grid
                   columns: 2
                   cards:
-
+                
                     - type: custom:button-card
                       entity: script.home_arrive
                       name: Back Home
@@ -763,14 +763,6 @@ views:
                       template:
                         - base
                         - icon_home
-                    - type: custom:button-card
-                      entity: sensor.u_s_air_pollution_level
-                      name: Air Quality
-                      hold_action:
-                        action: none
-                      template:
-                        - base
-                        - icon_aqi
 
 
       #################################################
