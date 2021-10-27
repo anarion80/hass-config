@@ -3,6 +3,11 @@ browser_mod:
   command: popup
   title: COVID-19
   style:
+    .: |
+      :host .content {
+        width: calc(385px + 510px);
+        max-width: 90vw;
+      }
     hui-grid-card$: |
       #root {
         grid-gap: 0 !important;
