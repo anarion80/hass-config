@@ -46,7 +46,7 @@ views:
       #                    SIDEBAR                    #
       #                                               #
       #################################################
-          
+
       - type: vertical-stack
         view_layout:
           grid-area: sidebar
@@ -54,68 +54,70 @@ views:
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: '[[[ return entity.attributes.time; ]]]'
-            template: sidebar_template         
-            
+            template: sidebar_template
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.date;
                    ]]]
-            template: sidebar_template       
+            template: sidebar_template
 
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.greet;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
 
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.active;
                    ]]]
-            template: sidebar_template  
-                
+            template: sidebar_template
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.weather;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
             tap_action:
               !include popup/weather.yaml
-            
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.battery;
                    ]]]
-            template: sidebar_template  
-            
+            template: sidebar_template
+            tap_action:
+              !include popup/batteries.yaml
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.calendar;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
             tap_action:
               !include popup/home_calendar.yaml
-            
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.plex;
                    ]]]
-            template: sidebar_template  
-            
+            template: sidebar_template
+
           - type: conditional
             view_layout:
               grid-area: sidebar
@@ -174,7 +176,7 @@ views:
             template:
               - light
               - icon_pendants
-              
+
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
@@ -450,7 +452,7 @@ views:
                       template:
                         - conditional_media
                         - icon_chromecast
-                        
+
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
@@ -504,7 +506,7 @@ views:
                     template:
                       - media
                       - icon_nest_mini
-                      
+
               - type: grid
                 columns: 2
                 cards:
@@ -530,7 +532,7 @@ views:
       #                    other                      #
       #                                               #
       #################################################
-           
+
       - type: grid
         title: Other
         view_layout:
@@ -538,11 +540,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style: 
+            style:
               swipe-card:
                 $: |
-                  .swiper-container {            
-                    padding: 0px 0px 20px 0px !important;        
+                  .swiper-container {
+                    padding: 0px 0px 20px 0px !important;
                   }
             card:
               type: custom:swipe-card
@@ -558,13 +560,13 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-                
+
               cards:
 
                 - type: grid
                   columns: 2
                   cards:
-                
+
                     - type: custom:button-card
                       entity: switch.plex
                       name: Plex
@@ -622,7 +624,7 @@ views:
                 - type: grid
                   columns: 2
                   cards:
-                
+
                     - type: custom:button-card
                       entity: switch.chromecast_audio
                       name: ChromecastAudio
@@ -656,8 +658,8 @@ views:
                       # template:
                         # - media
                         # - icon_netflix4
-                        # - loader 
-  
+                        # - loader
+
       #################################################
       #                                               #
       #                     home                      #
@@ -671,11 +673,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style: 
+            style:
               swipe-card:
                 $: |
-                  .swiper-container {            
-                    padding: 0px 0px 20px 0px !important;        
+                  .swiper-container {
+                    padding: 0px 0px 20px 0px !important;
                   }
             card:
               type: custom:swipe-card
@@ -691,8 +693,8 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-                
-              cards:               
+
+              cards:
                 - type: grid
                   columns: 2
                   cards:
@@ -711,7 +713,7 @@ views:
                         !include popup/hemma_sanja.yaml
                       hold_action:
                         action: none
-                      template: person  
+                      template: person
                     - type: custom:button-card
                       entity: person.hania
                       name: Hania
@@ -719,19 +721,40 @@ views:
                         !include popup/home_hania.yaml
                       hold_action:
                         action: none
-                      template: person     
+                      template: person
+                    # - type: custom:button-card
+                      # entity: script.home_leave
+                      # name: Close All
+                      # hold_action:
+                        # action: none
+                      # template:
+                        # - base
+                        # - icon_away
                     - type: custom:button-card
-                      entity: script.home_leave
-                      name: Close All
+                      entity: sensor.u_s_air_pollution_level
+                      name: Air Quality
                       hold_action:
                         action: none
                       template:
                         - base
-                        - icon_away
+                        - icon_aqi
+                        - full_circle
+                        - loader
+                      triggers_update:
+                        - sensor.u_s_air_pollution_level
+                        - sensor.u_s_air_quality_index
+                      variables:
+                        circle_input: >
+                          [[[
+                            return entity === undefined ?
+                              null :
+                              parseInt(states['sensor.u_s_air_quality_index'].state);
+                          ]]]
+                        circle_color: rgba(0, 0, 0, 0.6)
                 - type: grid
                   columns: 2
                   cards:
-                
+
                     - type: custom:button-card
                       entity: script.home_arrive
                       name: Back Home
@@ -740,6 +763,14 @@ views:
                       template:
                         - base
                         - icon_home
+                    - type: custom:button-card
+                      entity: sensor.u_s_air_pollution_level
+                      name: Air Quality
+                      hold_action:
+                        action: none
+                      template:
+                        - base
+                        - icon_aqi
 
 
       #################################################
@@ -766,7 +797,7 @@ views:
             show_name: true
             show_state: true
             icon: >
-                [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]      
+                [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]
             tap_action:
               !include popup/finance.yaml
             template: icon_name_footer
@@ -780,7 +811,7 @@ views:
             show_name: true
             show_state: true
             icon: >
-                [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]      
+                [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]
             tap_action:
               !include popup/finance.yaml
             template: icon_name_footer
@@ -789,21 +820,21 @@ views:
                 - color: >
                      [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'red' : 'green'; ]]]
           - type: custom:button-card
-            entity: sensor.zakazenia_covid19
+            entity: sensor.covid19_infections
             show_name: false
             show_state: true
             show_icon: true
             icon: mdi:virus
             template: icon_name_footer
           - type: custom:button-card
-            entity: sensor.zgony_covid19
+            entity: sensor.covid19_deaths
             show_name: false
             show_state: true
             show_icon: true
             icon: mdi:grave-stone
             template: icon_name_footer
           - type: custom:button-card
-            entity: sensor.wyleczeni_covid19
+            entity: sensor.covid19_recovered
             show_name: false
             show_state: true
             show_icon: true
