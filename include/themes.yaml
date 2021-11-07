@@ -122,7 +122,7 @@ frontend:
         #               SWIPE CARD MARGIN               #
         #                                               #
         #################################################
-        
+
             $swipe-card$:
               .: |
                 div {
@@ -133,14 +133,14 @@ frontend:
                   hui-conditional-card {
                     margin: 0 !important;
                   }
-                            
+
         #################################################
         #                                               #
         #         SIDEBAR VERTICAL STACK CARD           #
         #                                               #
-        #################################################              
-              
-        "grid-layout$hui-vertical-stack-card":           
+        #################################################
+
+        "grid-layout$hui-vertical-stack-card":
           $: |
             #root {
               background-color: rgba(0, 0, 0, 0.06);
@@ -149,17 +149,18 @@ frontend:
               min-height: 100vh;
               /* padding: 1.8vw 2.5vw 0 var(--custom-layout-card-padding); */
             }
-          
-          
+
             /* phone */
             @media screen and (max-width: 800px) {
               #root {
                 background-color: rgba(0,0,0,0);
                 border-right: none;
                 min-height: 100%;
+                margin-left: -0.8%;
+                margin-bottom: -6%;
               }
             }
-        
+
 
           #"$#root>button-card:nth-child(1)$":
           #"$#root>button-card$":
@@ -170,18 +171,18 @@ frontend:
           #      pointer-events: none;
           #    } */
           "$#root>button-card$":
-            .: |          
+            .: |
               #name {
                 /* padding: 1.8vw 2.5vw 0 var(--custom-layout-card-padding); */
                 padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
               }
-                
+
           "$#root>button-card":
-            $: |          
+            $: |
               #name {
-                padding: 0.5vw 2vw 0.5vw var(--custom-layout-card-padding);                
+                padding: 0.5vw 2vw 0.5vw var(--custom-layout-card-padding);
               }
-     
+
 
               /* portrait */
               @media screen and (max-width: 1200px) {
@@ -203,7 +204,7 @@ frontend:
                 ha-card {
                   padding: 0 !important;
                   background: none;
-                }    
+                }
 
         #################################################
         #                                               #
@@ -253,7 +254,7 @@ frontend:
             @media screen and (max-width: 800px) {
               hui-grid-card {
                 position: absolute;
-                right: 4vw;
+                right: 5.5vw;
               }
             }
           $: |
@@ -269,8 +270,8 @@ frontend:
             }
           #conditional color
           "$hui-button-card:last-of-type$": |
-            {% if is_state('binary_sensor.sidebar_update_color', 'on') %}
-              ha-card, ha-icon {
+            {% if is_state('binary_sensor.template_sidebar_update_color', 'on') %}
+              ha-card, ha-state-icon {
                 color: rgb(35, 78 ,106) !important;
                 opacity: 1 !important;
                 animation: update 1.5s ease-out infinite;
@@ -405,7 +406,7 @@ frontend:
           line-height: initial;
           cursor: default;
         }
-        
+
         .content .card-content {
           padding: var(--card-content-padding);
         }

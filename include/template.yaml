@@ -6,6 +6,61 @@ template:
   #                                                  #
   ####################################################
 
+  select:
+    - name: hdmi_bravia
+      state: >
+        {{ state_attr('media_player.sony_bravia_tv', 'source') | default }}
+      options: >
+        {{ state_attr('media_player.sony_bravia_tv', 'source_list') | default }}
+      select_option:
+        service: media_player.select_source
+        target:
+          entity_id: media_player.sony_bravia_tv
+        data:
+          source: >
+            {{ option }}
+
+  binary_sensor:
+    - unique_id: laundry_time_trigger
+      state: >
+        {% set start_time = state_attr('calendar.tvatta', 'start_time') %}
+        {{ as_timestamp(start_time) - as_timestamp(now()) < 10 * 60 if start_time != None }}
+
+    - unique_id: sidebar_update_color
+      state: >
+        {% set installed = states('sensor.hass_version_installed') %}
+        {% set latest = states('sensor.hass_version_latest')
+        if not installed | regex_search('b') else states('sensor.hass_version_latest_beta') %}
+        {{ (installed != latest and installed != 'unknown' and latest != 'unknown')
+        or (states('sensor.hacs') != 'unknown' and states('sensor.hacs') | int(default=0) > 0) }}
+
+    # - unique_id: imac_vpn
+      # device_class: connectivity
+      # icon: >
+        # mdi:shield-{{ 'alert' if is_state('switch.computer_imac', 'on') and
+        # states('sensor.imac_ip') == states('sensor.myip') else 'check' }}
+      # state: >
+        # {{ is_state('switch.computer_imac', 'on') and
+        # states('sensor.imac_ip') != states('sensor.myip') }}
+      # attributes:
+        # friendly_name: VPN
+
+    # - unique_id: udm_internet
+      # icon: mdi:wan
+      # device_class: connectivity
+      # state: >
+        # {{ states('sensor.udm_unifios').split('|\n')[4] | default }}
+      # attributes:
+        # friendly_name: Internet
+
+    # - unique_id: udm_upgradable
+      # icon: mdi:update
+      # device_class: update
+      # state: >
+        # {{ states('sensor.udm_unifios').split('|\n')[7] | default }}
+      # attributes:
+        # friendly_name: Uppdatering
+
   sensor:
     - unique_id: sidebar
       state: template
@@ -75,11 +130,17 @@ template:
             states.fan.zhimi_airpurifier_v7
           ] %}
 
+          {%- set media_players = [
+            states.media_player.sony_bravia_tv
+          ] %}
+
           {%- set lights_on = lights | selectattr('state','eq','on') | list %}
           {%- set lights_name = lights | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
 
           {%- set switches_on = switches | selectattr('state','eq','on') | list %}
-          {%- set switches_name = switches | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
+          {%- set media_players_playing = media_players | selectattr('state','eq','playing') | list %}
+          {%- set append = switches_on + media_players_playing %}
+          {%- set switches_name = append | map(attribute='name') | join(', ') %}
 
           {%- if (lights_on | length == 0) and (switches_on | length == 1) -%}
             {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} is on
@@ -107,6 +168,25 @@ template:
 
           {%- else %}
             <font color='#6a7377'>Everything is off</font>
+          {%- endif -%}
+          </b>
+        open: |
+          <b>
+          {%- set doors = [
+            states.binary_sensor.bedroom_door_contact
+          ] %}
+
+          {%- set doors_open = doors | selectattr('state','eq','on') | list %}
+          {%- set doors_name = doors | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
+
+          {%- if (doors_open | length == 1) -%}
+            {{ doors_name }} is open
+
+          {%- elif (doors_open | length > 1) -%}
+            {{ doors_open | length }} doors are open
+
+          {%- else %}
+            <font color='#6a7377'>All doors are closed</font>
           {%- endif -%}
           </b>
         vacuum: |
@@ -185,9 +265,9 @@ template:
             'sensor.ta_1004_poziom_baterii',
             'sensor.fire_tablet_battery_level',
             'sensor.redmi_note_5_battery_level' ] %}
-          {%- for sensor in entities if states(sensor) | int <= 20 and states(sensor) != 'unknown' %}
+          {%- for sensor in entities if states(sensor) | int(default=0) <= 20 and states(sensor) != 'unknown' and states(sensor) != 'unavailable' and states(sensor) != 'None' %}
             {%- if loop.first %} {{-'\u26A0\uFE0F'}} Battery: {% else %}, {% endif -%}
-            {{ state_attr(sensor, 'friendly_name') + ' ' +  states(sensor) + '%' }}
+            {{ state_attr(sensor, 'friendly_name') }} {{ states(sensor) }}%
           {%- endfor %}
         calendar: |
           {%- set start_time = state_attr('calendar.anarion_dunedain', 'start_time') %}
@@ -259,109 +339,6 @@ template:
             {%- endif %}
           {%- endif %}
 
-    - unique_id: coronavirus
-      icon: mdi:virus
-      state: template
-      attributes:
-        template: >
-            {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
-            <font color='#6a7377'>
-            <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}
-            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.covid19_infections') }}</b> cases{{ break -}}
-            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.covid19_deaths') }}</b> deceased{{ break -}}
-            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.covid19_recovered') }}</b> recovered
-            </font>
-
-    # - unique_id: public_ip
-      # icon: mdi:ip
-      # state: !secret public_ip
-
-    # - unique_id: dockermon_mem
-      # icon: mdi:memory
-      # state: >
-        # {% set entity_id = 'sensor.docker_cpu' %}
-        # {{ (state_attr(entity_id, 'memory_stats')['usage'] /
-        # state_attr(entity_id, 'memory_stats')['limit'] * 100) | round(1) | default(0) }}
-
-    - unique_id: imac_vpn
-      state: >
-        {{ 'Not connected' if is_state('switch.computer_imac', 'on') and
-        states('sensor.imac_ip') == states('sensor.template_public_ip') else 'Connected' }}
-      icon: >
-        mdi:shield-{{ 'alert' if is_state('switch.computer_imac', 'on') and
-        states('sensor.imac_ip') == states('sensor.template_public_ip') else 'check' }}
-
-    - unique_id: printer_status
-      icon: mdi:printer-wireless
-      state: >
-        {% macro prt(state, translate) %}
-        {{ translate if states('sensor.hp_deskjet_2600_series') == state }}
-        {% endmacro %}
-        {{ prt('On', 'On') }}
-        {{ prt('Scanning', 'Scanning') }}
-        {{ prt('Copying', 'Copying') }}
-        {{ prt('Printing', 'Printing') }}
-        {{ prt('Cancelling Job', 'Cancelling Job') }}
-        {{ prt('trayEmptyOrOpen', 'trayEmptyOrOpen') }}
-        {{ prt('idle', 'idle') }}
-        {{ prt('Off', 'Off') }}
-
-    # - unique_id: vacuum_filter
-      # icon: custom:roborock-filter
-      # unit_of_measurement: '%'
-      # state: >
-        # {{ (state_attr('vacuum.morty', 'filter_left') / 1.5) | round }}
-
-    # - unique_id: vacuum_mainbrush
-      # icon: custom:roborock-mainbrush
-      # unit_of_measurement: '%'
-      # state: >
-        # {{ (state_attr('vacuum.morty', 'main_brush_left') / 3) | round }}
-
-    # - unique_id: vacuum_sensors
-      # icon: custom:roborock-sensor
-      # unit_of_measurement: '%'
-      # state: >
-        # {{ (state_attr('vacuum.morty', 'sensor_dirty_left') / 0.3) | round }}
-
-    # - unique_id: vacuum_sidebrush
-      # icon: custom:roborock-sidebrush
-      # unit_of_measurement: '%'
-      # state: >
-        # {{ (state_attr('vacuum.morty', 'side_brush_left') / 2) | round }}
-
-    # - unique_id: vacuum_lastclean
-      # icon: mdi:calendar-clock
-      # device_class: timestamp
-      # state: >
-        # {{ state_attr('vacuum.morty', 'clean_stop') | replace(' ','T') }}
-
-    - unique_id: fullykiosk_storage
-      icon: mdi:sd
-      unit_of_measurement: '%'
-      state: >
-        {% set FreeSpace = states('sensor.fire_tablet_internal_storage_free_space') | float %}
-        {% set TotalSpace = states('sensor.fire_tablet_internal_storage_total_space') | float %}
-        {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
-          {{ 100 - (FreeSpace / TotalSpace * 100) | int }}
-        {% endif %}
-
-    - unique_id: fullykiosk_memory
-      icon: mdi:memory
-      unit_of_measurement: '%'
-      state: >
-        {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') | float %}
-        {% set TotalMemory = states('sensor.fire_tablet_ram_total_memory') | float %}
-        {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
-          {{ 100 - (FreeMemory / TotalMemory * 100) | int }}
-        {% endif %}
-
-    - unique_id: fullykiosk_last_app_start
-      icon: mdi:update
-      device_class: timestamp
-      state: >
-        {{ states('sensor.fire_tablet_last_app_start') }}
-
     - unique_id: nas_status
       icon: custom:synology-nas
       state: >
@@ -380,23 +357,43 @@ template:
       icon: >
         mdi:shield-{{ 'alert' if states('sensor.myip') == states('sensor.template_public_ip') else 'check' }}
 
-#legacy
-sensor:
+    - unique_id: nas_net_down
+      icon: mdi:arrow-down-bold
+      state: ' '
+      attributes:
+        friendly_name: >
+          {% set down = states('sensor.nas_network_down') | float(default=0) %}
+          {% if down < 1000 %} {{ down | round(0) }} kb/s
+          {% elif down >= 1000 %} {{ ((down / 1000) | round(2) | string).rstrip('.0') }} Mb/s
+          {% endif %}
 
-  - platform: template
-    sensors:
-      hass_version:
-        icon_template: mdi:home-assistant
-        friendly_name_template: >
+    - unique_id: nas_net_up
+      icon: mdi:arrow-up-bold
+      state: ' '
+      attributes:
+        friendly_name: >
+          {% set up = states('sensor.nas_network_up') | float(default=0) %}
+          {% if up < 1000 %} {{ up | round(0) }} kb/s
+          {% elif up >= 1000 %} {{ ((up / 1000) | round(2) | string).rstrip('.0') }} Mb/s
+          {% endif %}
+
+    - unique_id: hass_version
+      icon: mdi:home-assistant
+      state: >
+        {{ 'Latest' if states('sensor.hass_version_installed') ==
+        states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
+      attributes:
+        friendly_name: >
           Installed {{ states('sensor.hass_version_installed') }}
-        value_template: >
-          {{ 'Latest' if states('sensor.hass_version_installed') ==
-          states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
 
-      hass_dev_release:
-        icon_template: mdi:dev-to
-        device_class: timestamp
-        friendly_name_template: >
+    - unique_id: hass_dev_release
+      icon: mdi:dev-to
+      device_class: timestamp
+      state: >
+        {{ (as_timestamp(state_attr('calendar.home_assistant_devs', 'start_time'))
+        + 60*60*18) | timestamp_custom | replace(' ', 'T') }}
+      attributes:
+        friendly_name: >
           {% set release = state_attr('calendar.home_assistant_devs','message') %}
           {% if release == 'Home Assistant Core Beta Release' %}
             Next beta
@@ -405,23 +402,142 @@ sensor:
           {% else %}
             {{ release }}
           {% endif %}
-        value_template: >
-          {{ state_attr('calendar.home_assistant_devs', 'start_time') | replace(' ','T') }}
 
-      nas_net_down:
-        value_template: ' '
-        icon_template: mdi:arrow-down-bold
-        friendly_name_template: >
-          {% set down = states('sensor.nas_network_down') | float(default=0) %}
-          {% if down < 1000 %} {{ down | round(0) }} kb/s
-          {% elif down >= 1000 %} {{ ((down / 1000) | round(2) | string).rstrip('.0') }} Mb/s
-          {% endif %}
+    - unique_id: hacs_version
+      state: >
+        {{ device_attr(device_id('sensor.hacs'), 'sw_version') }}
 
-      nas_net_up:
-        value_template: ' '
-        icon_template: mdi:arrow-up-bold
-        friendly_name_template: >
-          {% set up = states('sensor.nas_network_up') | float(default=0) %}
-          {% if up < 1000 %} {{ up | round(0) }} kb/s
-          {% elif up >= 1000 %} {{ ((up / 1000) | round(2) | string).rstrip('.0') }} Mb/s
-          {% endif %}
+    # - unique_id: dockermon_mem
+      # icon: mdi:memory
+      # state: >
+        # {% set entity_id = 'sensor.docker_cpu' %}
+        # {{ (state_attr(entity_id, 'memory_stats')['usage'] /
+        # state_attr(entity_id, 'memory_stats')['limit'] * 100) | round(1) | default(0) }}
+      # attributes:
+        # friendly_name: Memory
+
+    - unique_id: printer_status
+      icon: mdi:printer-wireless
+      state: >
+        {% macro prt(state, translate) %}
+        {{ translate if states('sensor.hp_deskjet_2600_series') == state }}
+        {% endmacro %}
+        {{ prt('On', 'On') }}
+        {{ prt('Scanning', 'Scanning') }}
+        {{ prt('Copying', 'Copying') }}
+        {{ prt('Printing', 'Printing') }}
+        {{ prt('Cancelling Job', 'Cancelling Job') }}
+        {{ prt('trayEmptyOrOpen', 'trayEmptyOrOpen') }}
+        {{ prt('idle', 'idle') }}
+        {{ prt('Off', 'Off') }}
+      attributes:
+        friendly_name: Printer
+
+    - unique_id: domain_counter
+      state: >
+        {{ states | count }}
+      attributes:
+        automation: >
+          {{ states.automation | count }}
+        binary_sensor: >
+          {{ states.binary_sensor | count }}
+        device_tracker: >
+          {{ states.device_tracker | count }}
+        light: >
+          {{ states.light | count }}
+        media_player: >
+          {{ states.media_player | count }}
+        sensor: >
+          {{ states.sensor | count }}
+        switch: >
+          {{ states.switch | count }}
+        other: >
+          {{ states.calendar | count +
+          states.camera | count +
+          states.climate | count +
+          states.fan | count +
+          states.input_boolean | count +
+          states.input_number | count +
+          states.input_select | count +
+          states.lock | count +
+          states.person | count +
+          states.remote | count +
+          states.scene | count +
+          states.script | count +
+          states.select | count +
+          states.sun | count +
+          states.timer | count +
+          states.vacuum | count +
+          states.weather | count +
+          states.zone | count }}
+
+    # - unique_id: vacuum_filter
+      # icon: custom:roborock-filter
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'filter_left') / 1.5) | round }}
+    # - unique_id: vacuum_mainbrush
+      # icon: custom:roborock-mainbrush
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'main_brush_left') / 3) | round }}
+    # - unique_id: vacuum_sensors
+      # icon: custom:roborock-sensor
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'sensor_dirty_left') / 0.3) | round }}
+    # - unique_id: vacuum_sidebrush
+      # icon: custom:roborock-sidebrush
+      # unit_of_measurement: '%'
+      # state: >
+        # {{ (state_attr('vacuum.morty', 'side_brush_left') / 2) | round }}
+    # - unique_id: vacuum_lastclean
+      # icon: mdi:calendar-clock
+      # device_class: timestamp
+      # state: >
+        # {{ state_attr('vacuum.morty', 'clean_stop') | replace(' ','T') }}
+
+    - unique_id: coronavirus
+      icon: mdi:virus
+      state: template
+      attributes:
+        template: >
+            {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
+            <font color='#6a7377'>
+            <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}
+            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.covid19_infections') }}</b> cases{{ break -}}
+            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.covid19_deaths') }}</b> deceased{{ break -}}
+            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.covid19_recovered') }}</b> recovered
+            </font>
+
+    - unique_id: fullykiosk_storage
+      icon: mdi:sd
+      unit_of_measurement: '%'
+      state: >
+        {% set FreeSpace = states('sensor.fire_tablet_internal_storage_free_space') | float(default=0) %}
+        {% set TotalSpace = states('sensor.fire_tablet_internal_storage_total_space') | float(default=0) %}
+        {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
+          {{ 100 - (FreeSpace / TotalSpace * 100) | int }}
+        {% endif %}
+      attributes:
+        friendly_name: Storage
+
+    - unique_id: fullykiosk_memory
+      icon: mdi:memory
+      unit_of_measurement: '%'
+      state: >
+        {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') | float(default=0) %}
+        {% set TotalMemory = states('sensor.fire_tablet_ram_total_memory') | float(default=0) %}
+        {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
+          {{ 100 - (FreeMemory / TotalMemory * 100) | int }}
+        {% endif %}
+      attributes:
+        friendly_name: Memory
+
+    - unique_id: fullykiosk_last_app_start
+      icon: mdi:update
+      device_class: timestamp
+      state: >
+        {{ states('sensor.fire_tablet_last_app_start') }}
+      attributes:
+        friendly_name: Last restart

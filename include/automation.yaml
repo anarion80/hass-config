@@ -183,6 +183,8 @@ automation:
             RC {{ states(trigger.entity_id) }} available
           message: Press to read version information
           data:
+            ttl: 0
+            priority: high
             url: https://rc.home-assistant.io/latest-release-notes/
 
   - alias: ios_notify_hass_update
@@ -190,15 +192,16 @@ automation:
     initial_state: true
     trigger:
       - platform: state
-        entity_id: sensor.template_hass_version
+        entity_id: sensor.hass_version_installed
+      - platform: state
+        entity_id: sensor.hass_version_latest
     condition:
-      condition: not
-      conditions:
-        - condition: state
-          entity_id: sensor.template_hass_version
-          state:
-            - Latest
-            - unknown
+      - condition: template
+        value_template: >
+          {% set installed = states('sensor.hass_version_installed') %}
+          {% set latest = states('sensor.hass_version_latest') %}
+          {{ installed != 'unknown' and installed != 'unavailable' and installed != 'none' and 
+          latest != 'unknown' and latest != 'unavailable' and latest != 'none' and installed != latest }}
     action:
       - service: notify.mobile_app_nokia_8_3_5g
         data:
@@ -303,6 +306,21 @@ automation:
         entity_id:
           - sensor.hass_release_notes
           - sensor.hass_release_notes_rc
+
+  - alias: hacs_sensor_refresh
+    id: '2001123854555'
+    initial_state: true
+    trigger:
+      - platform: event
+        event_type: hacs/repository
+        event_data:
+          action: install
+    action:
+      - delay:
+          seconds: 4
+      - service: homeassistant.update_entity
+        target:
+          entity_id: sensor.hacs
 
     ####################################################
     #                                                  #
@@ -412,7 +430,8 @@ automation:
         from: 'off'
         to: 'on'
         for:
-          hours: "{{ states('input_number.wemo_fan_timer') | int }}"
+          hours: >
+            {{ states('input_number.wemo_fan_timer') | int }}
     action:
       - service: switch.turn_off
         entity_id: switch.wemo_fan
@@ -484,8 +503,8 @@ automation:
     # action:
       # - choose:
         # - conditions: >
-            # {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'medium' or 
-            # trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'low' or 
+            # {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'medium' or
+            # trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'low' or
             # trigger.from_state.attributes.speed == 'low' and trigger.to_state.attributes.speed == 'high' }}
           # sequence:
             # - repeat:
@@ -496,8 +515,8 @@ automation:
                       # entity_id: remote.broadlink_remote
                       # command: !secret ir_fan_speed
         # - conditions: >
-            # {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'low' or 
-            # trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'high' or 
+            # {{ trigger.from_state.attributes.speed == 'high' and trigger.to_state.attributes.speed == 'low' or
+            # trigger.from_state.attributes.speed == 'medium' and trigger.to_state.attributes.speed == 'high' or
             # trigger.from_state.attributes.speed == 'low' and trigger.to_state.attributes.speed == 'medium' }}
           # sequence:
             # - service: remote.send_command
@@ -811,7 +830,7 @@ automation:
     initial_state: true
     trigger:
       - platform: state
-        entity_id: binary_sensor.laundry_time_trigger
+        entity_id: binary_sensor.template_laundry_time_trigger
         to: 'on'
     action:
       - service: input_boolean.turn_on
@@ -847,6 +866,9 @@ automation:
         data:
           message: >
             {{'\U0001F9FA'}} {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+          data:
+            ttl: 0
+            priority: high
       - service: shell_command.imac_notify_laundry
       - delay:
           seconds: 3
@@ -872,7 +894,6 @@ automation:
             {% elif is_state(trigger.entity_id, 'Standard') %} medium
             {% elif is_state(trigger.entity_id, 'Medium') %} high
             {% elif is_state(trigger.entity_id, 'Turbo') %} max
-            {% elif is_state(trigger.entity_id, 'Off') %} off
             {% endif %}
 
   - alias: roborock_speed_update
@@ -896,11 +917,11 @@ automation:
             {% elif is_state_attr(entity_id, 'fan_speed', 'off') %} Off
             {% endif %}
 
-      ####################################################
-      #                                                  #
-      #                CONDITIONAL MEDIA                 #
-      #                                                  #
-      ####################################################
+    ####################################################
+    #                                                  #
+    #                CONDITIONAL MEDIA                 #
+    #                                                  #
+    ####################################################
 
   - alias: conditional_media_playing
     id: '5557842567134'
@@ -937,7 +958,9 @@ automation:
           - media_player.sony_bravia_tv
           - media_player.chromecastaudio
         to:
-          ['off', 'idle', 'standby']
+          - 'off'
+          - idle
+          - standby
       - platform: state
         entity_id:
           - media_player.plex_plex_for_android_tv_shield_android_tv
@@ -954,12 +977,12 @@ automation:
         data:
           entity_id: input_select.conditional_media
           option: >
-            {% set media_players = 
-              [states.media_player.chromecastaudio, states.media_player.plex_plex_for_android_tv_shield_android_tv, 
+            {% set media_players =
+              [states.media_player.chromecastaudio, states.media_player.plex_plex_for_android_tv_shield_android_tv,
                states.media_player.spotify_anarion, states.media_player.nest_mini, states.media_player.kd_55xe9305, states.media_player.sony_bravia_tv] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Last downloaded 
+              Last downloaded
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -976,7 +999,7 @@ automation:
           {{ is_state('media_player.chromecastaudio', 'idle') and
           is_state('media_player.plex_plex_for_android_tv_shield_android_tv', 'idle') and
           is_state('media_player.spotify_anarion', 'idle') and
-          is_state('media_player.nest_mini', 'off') 
+          is_state('media_player.nest_mini', 'off')
           or
           is_state('media_player.sony_bravia_tv', 'off') and
           is_state('media_player.kd_55xe9305', 'off') and
@@ -993,7 +1016,7 @@ automation:
     trigger:
       - platform: template
         value_template: >
-          {{ is_state('media_player.vardagsrum', 'paused') and 
+          {{ is_state('media_player.vardagsrum', 'paused') and
           is_state_attr('media_player.vardagsrum', 'media_title', 'No title') }}
         for:
           seconds: 5
@@ -1002,15 +1025,15 @@ automation:
         data:
           entity_id: input_select.conditional_media
           option: >
-            {% set media_players = 
-              [states.media_player.vardagsrum, states.media_player.spotify_anarion, 
+            {% set media_players =
+              [states.media_player.vardagsrum, states.media_player.spotify_anarion,
                states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
               Last downloaded
-              {% elif is_state('media_player.vardagsrum', 'paused') and 
+              {% elif is_state('media_player.vardagsrum', 'paused') and
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
-              is_state('media_player.sovrum', 'paused') and 
+              is_state('media_player.sovrum', 'paused') and
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
               Last downloaded
@@ -1027,7 +1050,7 @@ automation:
     trigger:
       - platform: template
         value_template: >
-          {{ is_state('media_player.sovrum', 'paused') and 
+          {{ is_state('media_player.sovrum', 'paused') and
           is_state_attr('media_player.sovrum', 'media_title', 'No title') }}
         for:
           seconds: 5
@@ -1036,15 +1059,15 @@ automation:
         data:
           entity_id: input_select.conditional_media
           option: >
-            {% set media_players = 
-              [states.media_player.vardagsrum, states.media_player.spotify_anarion, 
+            {% set media_players =
+              [states.media_player.vardagsrum, states.media_player.spotify_anarion,
                states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
               Last downloaded
-              {% elif is_state('media_player.vardagsrum', 'paused') and 
+              {% elif is_state('media_player.vardagsrum', 'paused') and
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
-              is_state('media_player.sovrum', 'paused') and 
+              is_state('media_player.sovrum', 'paused') and
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
               Last downloaded
@@ -1054,3 +1077,42 @@ automation:
             {% else %}
             {{ media_players | selectattr('state','eq','playing') | map(attribute='name') | max }}
             {% endif %}
+
+    ####################################################
+    #                                                  #
+    #                   PERSISTENCE                    #
+    #                                                  #
+    ####################################################
+
+  - alias: person_home
+    id: '8423590985012'
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id:
+          - person.anarion
+          - person.iwona
+        from:
+          - home
+          - not_home
+        to:
+          - home
+          - not_home
+    action:
+      - choose:
+        - conditions: >
+            {{ trigger.entity_id == 'person.anarion' }}
+          sequence:
+            - service: mqtt.publish
+              data:
+                topic: homeassistant/persistence/anarion
+                payload_template: >
+                  {{ now() }}
+                retain: true
+        default:
+          - service: mqtt.publish
+            data:
+              topic: homeassistant/persistence/iwona
+              payload_template: >
+                {{ now() }}
+              retain: true

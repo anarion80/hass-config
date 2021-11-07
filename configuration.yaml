@@ -116,11 +116,11 @@ input_boolean: !include input_boolean.yaml
     # host: 192.168.2.22
     # token: 2402adf3216fa63535d67b6390000b93
     # model: zhimi.airpurifier.v6
-    
+
 spotify:
   client_id: !secret spotify_client_id
   client_secret: !secret spotify_client_secret
-  
+
 #camera: !include camera.yaml
 lock:
   - platform: template
@@ -131,7 +131,7 @@ lock:
       entity_id: input_boolean.computer_lock
     unlock:
       service: input_boolean.turn_off
-      entity_id: input_boolean.computer_lock 
+      entity_id: input_boolean.computer_lock
 
 browser_mod:
   devices:
@@ -150,7 +150,19 @@ browser_mod:
       #screensaver: true
       force_stay_awake: true
 
-    
 google:
   client_id: !secret google_client_id
   client_secret: !secret google_client_secret
+
+timer:
+  laundry:
+    duration: 01:00:00
+    icon: mdi:washing-machine
+
+device_tracker:
+  - platform: unifi_direct
+    host: !secret unifi_ap_host
+    username: !secret unifi_ap_username
+    password: !secret unifi_ap_password
+    interval_seconds: 10
+    consider_home: 180

@@ -16,7 +16,7 @@ views:
       mediaquery:
         #phone
         "(max-width: 800px)":
-          grid-gap: calc(var(--custom-layout-card-padding) * 1.5)
+          grid-gap: calc(var(--custom-layout-card-padding) * 1.7)
           grid-template-columns: 0 repeat(2, 1fr) 0
           grid-template-rows: 0 repeat(5, fit-content(100%)) 0fr
           grid-template-areas: |
@@ -46,7 +46,7 @@ views:
       #                    SIDEBAR                    #
       #                                               #
       #################################################
-          
+
       - type: vertical-stack
         view_layout:
           grid-area: sidebar
@@ -54,70 +54,80 @@ views:
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: '[[[ return entity.attributes.time; ]]]'
-            template: sidebar_template         
-            
+            template: sidebar_template
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.date;
                    ]]]
-            template: sidebar_template       
+            template: sidebar_template
 
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.greet;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
 
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.active;
                    ]]]
-            template: sidebar_template  
-                
+            template: sidebar_template
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
+                   return entity.attributes.open;
+                   ]]]
+            template: sidebar_template
+            tap_action:
+              !include popup/doors.yaml
+
+          - type: custom:button-card
+            entity: sensor.template_sidebar
+            name: >
+               [[[
                    return entity.attributes.weather;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
             tap_action:
               !include popup/weather.yaml
-            
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.battery;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
             tap_action:
               !include popup/batteries.yaml
-            
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.calendar;
                    ]]]
-            template: sidebar_template  
+            template: sidebar_template
             tap_action:
               !include popup/home_calendar.yaml
-            
+
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: >
-               [[[ 
+               [[[
                    return entity.attributes.plex;
                    ]]]
-            template: sidebar_template  
-            
+            template: sidebar_template
+
           - type: conditional
             view_layout:
               grid-area: sidebar
@@ -137,6 +147,12 @@ views:
                 icon: mdi:robot-vacuum
                 tap_action:
                   !include popup/sidebar_vacuum.yaml
+                hold_action:
+                  action: none
+              - type: button
+                icon: mdi:bell-circle-outline
+                tap_action:
+                  action: none
                 hold_action:
                   action: none
 
@@ -176,7 +192,7 @@ views:
             template:
               - light
               - icon_pendants
-              
+
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
             name: Air Purifier
@@ -282,7 +298,8 @@ views:
               - lock
 
           - type: custom:button-card
-            entity: switch.wemo_monitors
+            #entity: switch.wemo_monitors
+            entity: switch.flux
             name: Monitors
             triggers_update: sensor.monitors_volume
             hold_action:
@@ -346,7 +363,7 @@ views:
             template:
               - base
               - icon_fan
-              - climate
+              - temperature
              # - circle
               - loader
             variables:
@@ -354,17 +371,35 @@ views:
                 [[[
                   return entity === undefined ?
                     null :
-                    entity.attributes.temperature;
+                    parseFloat(entity.attributes.current_temperature);
                 ]]]
 
           - type: custom:button-card
-            entity: sensor.temperature_living_room
-            name: Temp
+            entity: sensor.airpurifier_temperature
+            name: Temperature
             hold_action:
               !include popup/sovrum_tv2.yaml
+            tap_action:
+              action: toggle
+              entity: switch.flux
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.airpurifier_temperature
             template:
               - base
               - icon_temperature
+              - humidity
+              - graph
+            variables:
+              circle_input: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    parseFloat(states['sensor.airpurifier_humidity'].state);
+                ]]]
+
 
       #################################################
       #                                               #
@@ -445,6 +480,17 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
+                        state: Sony Bravia TV
+                    card:
+                      type: custom:button-card
+                      entity: media_player.sony_bravia_tv
+                      template:
+                        - conditional_media
+                        - icon_tv
+
+                  - type: conditional
+                    conditions:
+                      - entity: input_select.conditional_media
                         state: ChromecastAudio
                     card:
                       type: custom:button-card
@@ -452,7 +498,7 @@ views:
                       template:
                         - conditional_media
                         - icon_chromecast
-                        
+
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
@@ -506,7 +552,7 @@ views:
                     template:
                       - media
                       - icon_nest_mini
-                      
+
               - type: grid
                 columns: 2
                 cards:
@@ -532,7 +578,7 @@ views:
       #                    other                      #
       #                                               #
       #################################################
-           
+
       - type: grid
         title: Other
         view_layout:
@@ -540,11 +586,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style: 
+            style:
               swipe-card:
                 $: |
-                  .swiper-container {            
-                    padding: 0px 0px 20px 0px !important;        
+                  .swiper-container {
+                    padding: 0px 0px 20px 0px !important;
                   }
             card:
               type: custom:swipe-card
@@ -560,13 +606,13 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-                
+
               cards:
 
                 - type: grid
                   columns: 2
                   cards:
-                
+
                     - type: custom:button-card
                       entity: switch.plex
                       name: Plex
@@ -624,7 +670,7 @@ views:
                 - type: grid
                   columns: 2
                   cards:
-                
+
                     - type: custom:button-card
                       entity: switch.chromecast_audio
                       name: ChromecastAudio
@@ -658,8 +704,8 @@ views:
                       # template:
                         # - media
                         # - icon_netflix4
-                        # - loader 
-  
+                        # - loader
+
       #################################################
       #                                               #
       #                     home                      #
@@ -673,11 +719,11 @@ views:
         columns: 1
         cards:
           - type: custom:mod-card
-            style: 
+            style:
               swipe-card:
                 $: |
-                  .swiper-container {            
-                    padding: 0px 0px 20px 0px !important;        
+                  .swiper-container {
+                    padding: 0px 0px 20px 0px !important;
                   }
             card:
               type: custom:swipe-card
@@ -693,14 +739,16 @@ views:
                 coverflowEffect:
                   rotate: 80
                   depth: 300
-                
-              cards:               
+
+              cards:
                 - type: grid
                   columns: 2
                   cards:
                     - type: custom:button-card
                       entity: person.anarion
                       name: Anarion
+                      triggers_update:
+                        - sensor.anarion_last_changed
                       tap_action:
                         !include popup/hemma_mattias.yaml
                       hold_action:
@@ -709,11 +757,13 @@ views:
                     - type: custom:button-card
                       entity: person.iwona
                       name: Iwona
+                      triggers_update:
+                        - sensor.iwona_last_changed
                       tap_action:
                         !include popup/hemma_sanja.yaml
                       hold_action:
                         action: none
-                      template: person  
+                      template: person
                     - type: custom:button-card
                       entity: person.hania
                       name: Hania
@@ -721,7 +771,7 @@ views:
                         !include popup/home_hania.yaml
                       hold_action:
                         action: none
-                      template: person     
+                      template: person
                     # - type: custom:button-card
                       # entity: script.home_leave
                       # name: Close All
@@ -754,7 +804,7 @@ views:
                 - type: grid
                   columns: 2
                   cards:
-                
+
                     - type: custom:button-card
                       entity: script.home_arrive
                       name: Back Home
