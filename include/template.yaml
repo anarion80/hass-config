@@ -9,9 +9,11 @@ template:
   select:
     - name: hdmi_bravia
       state: >
-        {{ state_attr('media_player.sony_bravia_tv', 'source') | default }}
+        {% set source = state_attr('media_player.sony_bravia_tv', 'source') %}
+        {{ 'HDMI3' if source == None else source }}
       options: >
-        {{ state_attr('media_player.sony_bravia_tv', 'source_list') | default }}
+        {% set source_list = state_attr('media_player.sony_bravia_tv', 'source_list') %}
+        {{ ['HDMI3'] if source_list == None else source_list }}
       select_option:
         service: media_player.select_source
         target:
@@ -219,9 +221,9 @@ template:
           {%- set apparent = states('sensor.openweathermap_feels_like_temperature') | round %}
           {%- set precip = states('sensor.openweathermap_forecast_precipitation_probability') | round %}
           {% if not is_state('sensor.openweathermap_temperature', 'unknown') %}
-            {%- if temperature | float <= 0.0 -%}
+            {%- if temperature | float(default=0) <= 0.0 -%}
               {{ weather_icon }} Feels like {{ apparent }}° with {{ precip }}% risk of snow {{'\u2744\uFE0F'}}
-            {%- elif temperature | float > 0.0 -%}
+            {%- elif temperature | float(default=0) > 0.0 -%}
               {{ weather_icon }} Feels like {{ apparent}}° with {{ precip }}% risk of rain {{ '\u2614\uFE0F' if precip > 30 }}
             {%- endif %}
           {%- else %}
@@ -234,7 +236,7 @@ template:
           {%- set start_time = state_attr('calendar.tvatta', 'start_time') %}
           {% if start_time != None %}
             {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
-            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
+            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
             | replace('Monday', 'Monday')
@@ -277,7 +279,7 @@ template:
           {% if start_time != None %}
             {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
             {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
-            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
+            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
             | replace('Monday', 'Monday')
@@ -318,7 +320,7 @@ template:
           {% if start_time != None %}
             {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
             {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
-            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
+            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
             | replace('Monday', 'Monday')
@@ -517,7 +519,7 @@ template:
         {% set FreeSpace = states('sensor.fire_tablet_internal_storage_free_space') | float(default=0) %}
         {% set TotalSpace = states('sensor.fire_tablet_internal_storage_total_space') | float(default=0) %}
         {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
-          {{ 100 - (FreeSpace / TotalSpace * 100) | int }}
+          {{ 100 - (FreeSpace / TotalSpace * 100) | int(default=0) }}
         {% endif %}
       attributes:
         friendly_name: Storage
@@ -529,7 +531,7 @@ template:
         {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') | float(default=0) %}
         {% set TotalMemory = states('sensor.fire_tablet_ram_total_memory') | float(default=0) %}
         {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
-          {{ 100 - (FreeMemory / TotalMemory * 100) | int }}
+          {{ 100 - (FreeMemory / TotalMemory * 100) | int(default=0) }}
         {% endif %}
       attributes:
         friendly_name: Memory
