@@ -158,7 +158,7 @@ browser_mod:
             if (entity) {
               let output = "";
               let attr = entity.attributes.addons;
-              attr = attr.filter(addon => addon.version !== addon.version_latest).map(addon => output += `${addon.name}</a></b> ${addon.version} \u279e ${addon.version_latest}</li>`);
+              attr = attr.filter(addon => addon.version !== addon.version_latest).map(addon => output += `<li>${addon.name}</a></b> ${addon.version} \u279e ${addon.version_latest}</li>`);
               let count = attr.length;
               let subtitle = count == 0
                   ? `No updates`
@@ -172,3 +172,37 @@ browser_mod:
             }
           ]]]
         template: updater
+
+      - type: custom:button-card
+        entity: sensor.supervisor_updates
+        triggers_update:
+          - bbinary_sensor.template_supervisor_update
+        name: Open Supervisor
+        icon: mdi:open-in-new
+        styles:
+          card:
+            - width: max-content
+            - filter: >
+                [[[
+                  return states['binary_sensor.template_supervisor_update'].state === 'off' ?
+                    'opacity(30%)' :
+                    'drop-shadow(3px 3px 5px #00000050)';
+                ]]]
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            title: Home Assistant Supervisor
+            style: >
+              :host .content {
+                width: 75em;
+              }
+            card:
+              type: iframe
+              url: /hassio
+              aspect_ratio: 65%
+              style: |
+                ha-card {
+                  border-radius: 0 0 1em 1em;
+                }
+        template: icon_name
