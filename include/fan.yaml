@@ -11,7 +11,7 @@
       # studio_wemo:
         # friendly_name: "Fan\u00B2"
         # value_template: >
-          # {{ 'off' if is_state('switch.wemo_fan', 'unavailable') 
+          # {{ 'off' if is_state('switch.wemo_fan', 'unavailable')
           # else states('switch.wemo_fan') }}
         # turn_on:
           # - service: switch.turn_on
@@ -135,3 +135,9 @@
             # data:
               # entity_id: remote.broadlink_remote
               # command: !secret ir_purifier_power
+
+  # - platform: xiaomi_miio
+    # name: Xiaomi Air Purifier Pro
+    # host: 192.168.2.22
+    # token: 2402adf3216fa63535d67b6390000b93
+    # model: zhimi.airpurifier.v6

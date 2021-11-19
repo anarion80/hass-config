@@ -1,0 +1,15 @@
+notify:
+  - platform: pushover
+    name: Pushover
+    api_key: !secret pushover_api_key
+    user_key: !secret pushover_user_key
+
+  - platform: smtp
+    name: Email
+    server: !secret smtp_server
+    port: 25
+    timeout: 15
+    sender: !secret smtp_sender
+    encryption: none
+    recipient: !secret smtp_receiver
+    sender_name: My Home Assistant

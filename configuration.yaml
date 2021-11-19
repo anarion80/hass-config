@@ -76,93 +76,21 @@ lovelace:
       show_in_sidebar: true
       filename: ui-lovelace-tablet.yaml
 
-
-
-ffmpeg:
-smartir:
-  check_updates: false
 homeassistant:
   packages: !include_dir_named include
   allowlist_external_dirs:
     - /config
     - /config/www
-frontend:
-  themes: !include_dir_merge_named themes
-http: !include http.yaml
-proximity: !include proximity.yaml
-climate: !include climate.yaml
-alarm_control_panel: !include alarm.yaml
-recorder: !include recorder.yaml
-#logger: !include logger.yaml
-tts: !include tts.yaml
-notify: !include notifications.yaml
-group: !include groups.yaml
-automation: !include automations.yaml
-script: !include scripts.yaml
-scene: !include scenes.yaml
-sensor: !include sensors.yaml
-binary_sensor: !include binary_sensor.yaml
-switch: !include switches.yaml
-utility_meter: !include utility_meter.yaml
-media_player: !include media_player.yaml
-google_assistant: !include google_assistant.yaml
-influxdb: !include influxdb.yaml
-input_select: !include input_select.yaml
-input_boolean: !include input_boolean.yaml
-#alert: !include alerts.yaml
-# fan:
-  # - platform: xiaomi_miio
-    # name: Xiaomi Air Purifier Pro
-    # host: 192.168.2.22
-    # token: 2402adf3216fa63535d67b6390000b93
-    # model: zhimi.airpurifier.v6
 
-spotify:
-  client_id: !secret spotify_client_id
-  client_secret: !secret spotify_client_secret
+#frontend:
+#  themes: !include_dir_merge_named themes
 
-#camera: !include camera.yaml
-lock:
-  - platform: template
-    name: Dator
-    value_template: "{{ states('input_boolean.computer_lock') }}"
-    lock:
-      service: input_boolean.turn_on
-      entity_id: input_boolean.computer_lock
-    unlock:
-      service: input_boolean.turn_off
-      entity_id: input_boolean.computer_lock
 
-browser_mod:
-  devices:
-    9542917b-db92ea9b:
-      name: galaxy_tab_a
-    4636b990-e668444f:
-      name: chrome_on_pc
-    f9d5577a-fbf3f1bd:
-      name: nokia_phone
-    7496f3b9-fed5d72a:
-      name: ipad
-    ec4bd273-67f527a2:
-      name: firefox_on_pc
-    ffd92947-09fd7c47:
-      name: amazon_tablet
-      #screensaver: true
-      force_stay_awake: true
 
-google:
-  client_id: !secret google_client_id
-  client_secret: !secret google_client_secret
 
-timer:
-  laundry:
-    duration: 01:00:00
-    icon: mdi:washing-machine
 
-device_tracker:
-  - platform: unifi_direct
-    host: !secret unifi_ap_host
-    username: !secret unifi_ap_username
-    password: !secret unifi_ap_password
-    interval_seconds: 10
-    consider_home: 180
+
+
+
+
+

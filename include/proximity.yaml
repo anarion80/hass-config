@@ -1,0 +1,15 @@
+proximity:
+  janek_home:
+    ignored_zones:
+      - work
+    devices:
+      - person.anarion
+    tolerance: 50
+    unit_of_measurement: km
+  iwona_home:
+    ignored_zones:
+      - work
+    devices:
+      - person.iwona
+    tolerance: 50
+    unit_of_measurement: km

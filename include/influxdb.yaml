@@ -1,0 +1,50 @@
+influxdb:
+  api_version: 2
+  ssl: false
+  host: !secret influxdb_host
+  port: 8086
+  token: !secret influx_db_token
+  organization: anarion
+  bucket: anarion
+  precision: s
+  tags:
+    source: HA
+  tags_attributes:
+    - friendly_name
+  measurement_attr: entity_id
+  exclude:
+    entity_globs:
+      - zone.home
+      - sensor.weather_*
+      - binary_sensor.nokia_*
+      - binary_sensor.ta_*
+      - binary_sensor.redmi_*
+      - binary_sensor.amazon_tablet*
+      - binary_sensor.ffd92947_09fd7c47
+      - binary_sensor.fire_tablet*
+      - binary_sensor.kftrwi*
+      - sensor.nokia_*
+      - sensor.ta_*
+      - sensor.redmi_*
+      - sensor.amazon_tablet*
+      - sensor.count*
+      - sensor.dab7da49*
+      - sensor.ffd92947_09fd7c47
+      - sensor.ff084fda_073ef5d8
+      - sensor.b955c88d_61f3339e
+      - sensor.fire_tablet*
+      - sensor.kftrwi*
+      - sensor.template_sidebar
+      - sensor.date_time
+      - sensor.time
+      - sensor.firefox_on_pc
+    domains:
+      - persistent_notification
+      - person
+  include:
+    domains:
+      - sensor
+      - binary_sensor
+      - sun
+    entities:
+      - weather.home

@@ -169,3 +169,1206 @@ script:
         entity_id: fan.zhimi_airpurifier_v7
       - delay:
           seconds: 4
+
+  aqi_level_tts:
+    alias: AQI level TTS
+    sequence:
+    - service: tts.google_say
+      data:
+        message: Poziom zanieczyszczeń w salonie to {{ state_attr('fan.zhimi_airpurifier_v7',
+          'aqi') }}
+        entity_id: media_player.chromecastaudio
+        language: pl
+    mode: single
+    icon: mdi:blur
+  iwona_odbierz_telefon:
+    alias: Iwona odbierz telefon
+    sequence:
+    - service: tts.google_say
+      data:
+        message: Iwona, odbierz telefon
+        entity_id: group.living_room_media_players
+        language: pl
+    mode: single
+    icon: mdi:blur
+  test_tts_on_mobile:
+    alias: Test TTS on mobile
+    sequence:
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: TTS
+        title: Test powiadomień
+    mode: single
+  turn_on_tv_for_shield:
+    alias: Turn on TV for Shield
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+        - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - System Power
+        - DTV
+    mode: single
+    icon: mdi:television
+  set_hdmi3:
+    alias: Turn on TV and set HDMI3 input
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+        - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+    mode: single
+  turn_on_television:
+    alias: Turn on television
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+        - Digital Analog
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - System Power
+        - DTV
+    mode: single
+    icon: mdi:television-classic
+  turn_on_tv_and_netflix:
+    alias: Turn on TV and Netflix
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+        - Netflix
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - System Power
+        - DTV
+    mode: single
+    icon: mdi:netflix
+  turn_on_radio:
+    alias: Turn on radio
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - System Power
+        - Tuner
+    - delay: 2
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Tuner
+    mode: single
+    icon: mdi:radio
+  turn_off_tv_radio:
+    alias: Turn off TV or Radio
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Standby
+    mode: single
+    icon: mdi:power-standby
+  sony_tv_turn_on:
+    alias: Sony TV Turn On
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+    mode: single
+    icon: mdi:power
+  sony_tv_turn_off:
+    alias: Sony TV Turn off
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+    mode: single
+    icon: mdi:power-off
+  sony_tv_up:
+    alias: Sony TV Up
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Up
+    mode: restart
+    icon: mdi:arrow-up-bold
+  sony_tv_down:
+    alias: Sony TV Down
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Down
+    mode: restart
+    icon: mdi:arrow-down-bold
+  sony_tv_left:
+    alias: Sony TV Left
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Left
+    mode: restart
+    icon: mdi:arrow-left-bold
+  sony_tv_right:
+    alias: Sony TV Right
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Right
+    mode: restart
+    icon: mdi:arrow-right-bold
+  sony_tv_home:
+    alias: Sony TV Home
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Home
+    mode: single
+    icon: mdi:home
+  sony_tv_input:
+    alias: Sony TV Input
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Input
+    mode: single
+    icon: mdi:video-input-hdmi
+  sony_tv_number1:
+    alias: Sony TV Number 1
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number1
+    mode: single
+    icon: mdi:numeric-1
+  sony_tv_number2:
+    alias: Sony TV Number 2
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number2
+    mode: single
+    icon: mdi:numeric-2
+  sony_tv_number3:
+    alias: Sony TV Number 3
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number3
+    mode: single
+    icon: mdi:numeric-3
+  sony_tv_number4:
+    alias: Sony TV Number 4
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number4
+    mode: single
+    icon: mdi:numeric-4
+  sony_tv_number5:
+    alias: Sony TV Number 5
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number5
+    mode: single
+    icon: mdi:numeric-5
+  sony_tv_number6:
+    alias: Sony TV Number 6
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number6
+    mode: single
+    icon: mdi:numeric-6
+  sony_tv_number7:
+    alias: Sony TV Number 7
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number7
+    mode: single
+    icon: mdi:numeric-7
+  sony_tv_number8:
+    alias: Sony TV Number 8
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number18
+    mode: single
+    icon: mdi:numeric-8
+  sony_tv_number9:
+    alias: Sony TV Number 9
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number9
+    mode: single
+    icon: mdi:numeric-9
+  sony_tv_number0:
+    alias: Sony TV Number 0
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Number0
+    mode: single
+    icon: mdi:numeric-0
+  sony_tv_google_play:
+    alias: Sony TV Google Play
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Google Play
+    mode: single
+    icon: mdi:google
+  sony_tv_netflix:
+    alias: Sony TV Netflix
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Netflix
+    mode: single
+    icon: mdi:netflix
+  sony_tv_red:
+    alias: Sony TV Red
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Red
+    mode: single
+    icon: mdi:palette
+  sony_tv_green:
+    alias: Sony TV Green
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Green
+    mode: single
+    icon: mdi:palette
+  sony_tv_yellow:
+    alias: Sony TV Yellow
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Yellow
+    mode: single
+    icon: mdi:palette
+  sony_tv_blue:
+    alias: Sony TV Blue
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Blue
+    mode: single
+    icon: mdi:palette
+  sony_tv_action_menu:
+    alias: Sony TV Action Menu
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Action Menu
+    mode: single
+    icon: mdi:dots-vertical
+  sony_tv_tv:
+    alias: Sony TV TV
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Digital Analog
+    mode: single
+    icon: mdi:television
+  sony_tv_guide:
+    alias: Sony TV Guide
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Guide
+    mode: single
+    icon: mdi:television-guide
+  sony_tv_back:
+    alias: Sony TV Back
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Back
+    mode: single
+    icon: mdi:keyboard-backspace
+  sony_tv_discover:
+    alias: Sony TV Discover
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Discover
+    mode: single
+    icon: mdi:newspaper
+  sony_tv_volume_up:
+    alias: Sony TV Volume Up
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Volume Up
+    mode: restart
+    icon: mdi:volume-plus
+  sony_tv_volume_down:
+    alias: Sony TV Volume Down
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Volume Down
+    mode: restart
+    icon: mdi:volume-minus
+  sony_tv_channel_up:
+    alias: Sony TV Channel Up
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Channel Up
+    mode: single
+    icon: mdi:arrow-up-bold-box
+  sony_tv_channel_down:
+    alias: Sony TV Channel Down
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Channel Down
+    mode: single
+    icon: mdi:arrow-down-bold-box
+  sony_tv_mute:
+    alias: Sony TV Mute
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Mute
+    mode: single
+    icon: mdi:volume-mute
+  sony_tv_exit:
+    alias: Sony TV Exit
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Exit
+    mode: single
+    icon: mdi:exit-to-app
+  sony_tv_sync_menu:
+    alias: Sony TV Sync Menu
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Sync Menu
+    mode: single
+    icon: mdi:sync-circle
+  sony_tv_radio:
+    alias: Sony TV Radio
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - TV Radio
+    mode: single
+    icon: mdi:radio
+  sony_tv_enter:
+    alias: Sony TV Enter
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Enter
+    mode: single
+    icon: mdi:location-enter
+  sony_tv_audio:
+    alias: Sony TV Audio
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Audio
+    mode: single
+    icon: mdi:audio-video
+  sony_tv_play:
+    alias: Sony TV Play
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Play
+    mode: single
+    icon: mdi:play
+  sony_tv_stop:
+    alias: Sony TV Stop
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Stop
+    mode: single
+    icon: mdi:stop
+  sony_tv_pause:
+    alias: Sony TV Pause
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Pause
+    mode: single
+    icon: mdi:pause
+  sony_tv_fast_forward:
+    alias: Sony TV Fast Forward
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Fast Forward
+    mode: single
+    icon: mdi:fast-forward
+  sony_tv_fast_backward:
+    alias: Sony TV Fast Backward
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Fast Backward
+    mode: single
+    icon: mdi:rewind
+  sony_tv_previous:
+    alias: Sony TV Previous
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Previous
+    mode: single
+    icon: mdi:skip-backward
+  sony_tv_next:
+    alias: Sony TV Next
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Next
+    mode: single
+    icon: mdi:skip-forward
+  sony_tv_record:
+    alias: Sony TV Record
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Record
+    mode: single
+    icon: mdi:record
+  sony_tv_title_list:
+    alias: Sony TV Title List
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Title List
+    mode: single
+    icon: mdi:subtitles
+  sony_tv_help:
+    alias: Sony TV Help
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Help
+    mode: single
+    icon: mdi:help
+  sony_tv_info:
+    alias: Sony TV Info
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Info
+    mode: single
+    icon: mdi:information
+  sony_tv_text:
+    alias: Sony TV Text
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Text
+    mode: single
+    icon: mdi:card-text
+  sony_tv_subtitle:
+    alias: Sony TV Subtitle
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Subtitle
+    mode: single
+    icon: mdi:subtitles
+  sony_tv_jump:
+    alias: Sony TV Jump
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - Jump
+    mode: single
+    icon: mdi:debug-step-over
+  sony_tv_hdmi1:
+    alias: Sony TV HDMI1
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUiAE8TExMnExMTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+    mode: single
+    icon: mdi:video-input-hdmi
+  sony_tv_hdmi2:
+    alias: Sony TV HDMI2
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUiAE8TJxMnExMTJxMnExMTJxMTEycTExMnEycTExMTExMAApgNBQAAAAA=
+    mode: single
+    icon: mdi:video-input-hdmi
+  sony_tv_hdmi3:
+    alias: Sony TV HDMI3
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+    mode: single
+    icon: mdi:video-input-hdmi
+  sony_tv_hdmi4:
+    alias: Sony TV HDMI4
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: television
+        command:
+        - b64:JgUiAE8TJxMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAApgNBQAAAAA=
+    mode: single
+    icon: mdi:video-input-hdmi
+  yamaha_avr_power:
+    alias: Yamaha AVR Power
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - System Power
+    mode: single
+    icon: mdi:power
+  yamaha_avr_standby:
+    alias: Yamaha AVR Standby
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Standby
+    mode: single
+    icon: mdi:power-standby
+  yamaha_avr_cd:
+    alias: Yamaha AVR CD
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - CD
+    mode: single
+    icon: mdi:disc
+  yamaha_avr_md:
+    alias: Yamaha AVR MD
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - MD
+    mode: single
+    icon: mdi:minidisc
+  yamaha_avr_tuner:
+    alias: Yamaha AVR Tuner
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Tuner
+    mode: single
+    icon: mdi:radio
+  yamaha_avr_dvd:
+    alias: Yamaha AVR DVD
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - DVD
+    mode: single
+    icon: mdi:disc-player
+  yamaha_avr_dtv:
+    alias: Yamaha AVR DTV
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - DTV
+    mode: single
+    icon: mdi:television-classic
+  yamaha_avr_vcr:
+    alias: Yamaha AVR VCR
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - VCR
+    mode: single
+    icon: mdi:vhs
+  yamaha_avr_vaux:
+    alias: Yamaha AVR VAUX
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - VAUX
+    mode: single
+    icon: mdi:video-input-svideo
+  yamaha_avr_sleep:
+    alias: Yamaha AVR Sleep
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Sleep
+    mode: single
+    icon: mdi:sleep
+  yamaha_avr_multi_ch:
+    alias: Yamaha AVR Multi Channel
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Multi Ch In
+    mode: single
+    icon: mdi:video-input-component
+  yamaha_avr_volume_up:
+    alias: Yamaha AVR Volume Up
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Volume Up
+    mode: single
+    icon: mdi:volume-plus
+  yamaha_avr_volume_down:
+    alias: Yamaha AVR Volume Down
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Volume Down
+    mode: single
+    icon: mdi:volume-minus
+  yamaha_avr_number1:
+    alias: Yamaha AVR Number 1
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number1
+    mode: single
+    icon: mdi:numeric-1
+  yamaha_avr_number2:
+    alias: Yamaha AVR Number 2
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number2
+    mode: single
+    icon: mdi:numeric-2
+  yamaha_avr_number3:
+    alias: Yamaha AVR Number 3
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number3
+    mode: single
+    icon: mdi:numeric-3
+  yamaha_avr_number4:
+    alias: Yamaha AVR Number 4
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number4
+    mode: single
+    icon: mdi:numeric-4
+  yamaha_avr_number5:
+    alias: Yamaha AVR Number 5
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number5
+    mode: single
+    icon: mdi:numeric-5
+  yamaha_avr_number6:
+    alias: Yamaha AVR Number 6
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number6
+    mode: single
+    icon: mdi:numeric-6
+  yamaha_avr_number7:
+    alias: Yamaha AVR Number 7
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number7
+    mode: single
+    icon: mdi:numeric-7
+  yamaha_avr_number8:
+    alias: Yamaha AVR Number 8
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Number8
+    mode: single
+    icon: mdi:numeric-8
+  yamaha_avr_menu:
+    alias: Yamaha AVR Menu
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Menu
+    mode: single
+    icon: mdi:menu
+  yamaha_avr_up:
+    alias: Yamaha AVR Up
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Up
+    mode: single
+    icon: mdi:arrow-up-bold
+  yamaha_avr_down:
+    alias: Yamaha AVR Down
+    sequence:
+    - service: remote.send_command
+      data:
+        entity_id: remote.rm4c_mini_remote
+        device: Yamaha AVR
+        command:
+        - Down
+    mode: single
+    icon: mdi:arrow-down-bold
+  nvidia_shield_key_power:
+    alias: Nvidia Shield Key Power
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: POWER
+    mode: single
+    icon: mdi:power
+  nvidia_shield_key_home:
+    alias: Nvidia Shield Key Home
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: HOME
+    mode: single
+    icon: mdi:home
+  nvidia_shield_key_sleep:
+    alias: Nvidia Shield Key Sleep
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: SLEEP
+    mode: single
+    icon: mdi:sleep
+  nvidia_shield_key_up:
+    alias: Nvidia Shield Key Up
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: UP
+    mode: single
+    icon: mdi:arrow-up-bold
+  nvidia_shield_key_down:
+    alias: Nvidia Shield Key Down
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: DOWN
+    mode: single
+    icon: mdi:arrow-down-bold
+  nvidia_shield_key_left:
+    alias: Nvidia Shield Key Left
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: LEFT
+    mode: single
+    icon: mdi:arrow-left-bold
+  nvidia_shield_key_right:
+    alias: Nvidia Shield Key Right
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: RIGHT
+    mode: single
+    icon: mdi:arrow-right-bold
+  nvidia_shield_key_center:
+    alias: Nvidia Shield Key Center
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: CENTER
+    mode: single
+    icon: mdi:location-enter
+  nvidia_shield_key_back:
+    alias: Nvidia Shield Key Back
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: BACK
+    mode: single
+    icon: mdi:keyboard-backspace
+  nvidia_shield_key_menu:
+    alias: Nvidia Shield Key Menu
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: MENU
+    mode: single
+    icon: mdi:menu
+  nvidia_shield_key_search:
+    alias: Nvidia Shield Key Search
+    sequence:
+    - service: androidtv.adb_command
+      data:
+        entity_id: media_player.nvidia_shield
+        command: SEARCH
+    mode: single
+    icon: mdi:magnify
+  # release_the_dog:
+    # alias: Release the virtual dog
+    # sequence:
+    # - service: media_player.play_media
+      # target:
+        # entity_id: media_player.nest_mini
+      # data:
+        # media_content_type: music
+        # media_content_id: /local/mixkit-annoyed-big-dog-barking-51.wav
+      # sequence:
+    # - service: media_player.play_media
+      # target:
+        # entity_id: media_player.nest_mini
+      # data:
+        # media_content_type: music
+        # media_content_id: /local/mixkit-giant-dog-aggressive-growl-59.wav
+  release_the_dog_2:
+    alias: Release the dog 2
+    sequence:
+      - repeat:
+          count: '10'
+          sequence:
+          - service: media_player.play_media
+            target:
+              entity_id: media_player.nest_mini
+            data:
+              media_content_id: /local/mixkit-annoyed-big-dog-barking-51.wav
+              media_content_type: music
+          - service: media_player.play_media
+            target:
+              entity_id: media_player.nest_mini
+            data:
+              media_content_id: /local/mixkit-giant-dog-aggressive-growl-59.wav
+              media_content_type: music
+    mode: queued
+  start_plex_on_nvidia_shield:
+    alias: Start Plex on nVidia Shield
+    sequence:
+      - choose:
+        #### If Plex is already open on the device, do nothing
+        - conditions:
+          - condition: template
+            value_template: >-
+              {{ states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
+                and is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.android')
+                and is_state('media_player.sony_bravia_tv', 'on') }}
+          sequence: []
+        default:
+        #### If Plex isn't open on the device, open it
+        #### You could even add a service to turn your TV on here
+        - service: remote.send_command
+          data:
+            entity_id: remote.rm4c_mini_remote
+            device: television
+            command:
+            - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+            - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+        - service: remote.send_command
+          data:
+            entity_id: remote.rm4c_mini_remote
+            device: Yamaha AVR
+            command:
+            - System Power
+        - delay:
+            milliseconds: 500
+        - service: remote.send_command
+          data:
+            entity_id: remote.rm4c_mini_remote
+            device: Yamaha AVR
+            command:
+            - DTV
+        - service: media_player.select_source
+          target:
+            entity_id: media_player.nvidia_shield
+          data:
+            source: "com.plexapp.android"
+        - service: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.radio_status
+    mode: single

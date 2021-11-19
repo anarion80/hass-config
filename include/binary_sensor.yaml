@@ -14,3 +14,32 @@ binary_sensor:
   - platform: ping
     name: nas_internet_access
     host: 8.8.8.8
+
+  - platform: burze_dzis_net
+    api_key: !secret burze_dzis_net.api_key
+    name: Storm warning
+    latitude: !secret burze_net_latitude
+    longitude: !secret burze_net_longitude
+    warnings:
+      - frost_warning
+      - heat_warning
+      - wind_warning
+      - precipitation_warning
+      - storm_warning
+      - tornado_warning
+    storms_nearby:
+      radius: 30
+
+  - platform: template
+    sensors:
+      ac:
+        friendly_name: AC
+        value_template: >
+            {{ 'on' if states('climate.living_room_ac') in ['heat_cool', 'cool', 'heat', 'dry', 'fan_only'] else 'off' }}
+
+  - platform: antistorm
+    station_id: 148
+    monitored_conditions:
+      - 'storm_alarm'
+      - 'rain_alarm'
+      - 'storm_active'

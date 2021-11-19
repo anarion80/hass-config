@@ -200,7 +200,7 @@ automation:
         value_template: >
           {% set installed = states('sensor.hass_version_installed') %}
           {% set latest = states('sensor.hass_version_latest') %}
-          {{ installed != 'unknown' and installed != 'unavailable' and installed != 'none' and 
+          {{ installed != 'unknown' and installed != 'unavailable' and installed != 'none' and
           latest != 'unknown' and latest != 'unavailable' and latest != 'none' and installed != latest }}
     action:
       - service: notify.mobile_app_nokia_8_3_5g
@@ -1116,3 +1116,614 @@ automation:
               payload_template: >
                 {{ now() }}
               retain: true
+
+  - id: '1613824435200'
+    alias: Air Purifier On
+    description: ''
+    trigger:
+    - above: '25'
+      for: 0:05:00
+      platform: numeric_state
+      entity_id: sensor.airpurifier_pm2_5
+    condition:
+    - condition: and
+      conditions:
+      - condition: time
+        after: '9:00'
+        before: '23:00'
+      - condition: zone
+        entity_id: person.anarion
+        zone: zone.home
+      - condition: state
+        entity_id: fan.zhimi_airpurifier_v7
+        state: 'off'
+    action:
+    - service: notify.pushover
+      data:
+        message: AQI is {{ states('sensor.airpurifier_pm2_5') }}, turning on the Purifier!
+    - service: fan.turn_on
+      data:
+        preset_mode: Auto
+      target:
+        entity_id: fan.zhimi_airpurifier_v7
+    mode: single
+  - id: '1613826008700'
+    alias: Air Purifier Off
+    description: ''
+    trigger:
+    - platform: numeric_state
+      below: '20'
+      for: 0:10:00
+      entity_id: sensor.airpurifier_pm2_5
+    condition:
+    - condition: state
+      entity_id: fan.zhimi_airpurifier_v7
+      state: 'on'
+    action:
+    - service: notify.pushover
+      data:
+        message: AQI is OK, turning off the Purifier!
+    - service: fan.turn_off
+      data: {}
+      entity_id: fan.zhimi_airpurifier_v7
+    mode: single
+  - id: '1613993960200'
+    alias: Anarion is out of home
+    description: ''
+    use_blueprint:
+      path: homeassistant/notify_leaving_zone.yaml
+      input:
+        person_entity: person.anarion
+        zone_entity: zone.home
+        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+  - id: '1613995690500'
+    alias: Mute Spotify Ads
+    description: ''
+    use_blueprint:
+      path: homeassistant/mute_spotify_ads.yaml
+      input:
+        mediaplayer_entity: media_player.nest_mini
+  - id: '1613996396700'
+    alias: Iwona is out
+    description: ''
+    use_blueprint:
+      path: homeassistant/notify_leaving_zone.yaml
+      input:
+        person_entity: person.iwona
+        zone_entity: zone.home
+        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+  - id: '1614021562500'
+    alias: Notify when redmi note 5 battery level is lower than 5
+    description: ''
+    trigger:
+    - platform: numeric_state
+      below: '5'
+      entity_id: sensor.redmi_note_5_battery_level
+    condition:
+    - condition: time
+      after: '8:00'
+      before: '20:00'
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Iwona, bateria w telefonie ci spadła poniżej {{ states('sensor.redmi_note_5_battery_level')
+          }} procent. Podładuj sobie
+        entity_id: media_player.nest_mini
+    - service: notify.mobile_app_redmi_note_5
+      data:
+        message: TTS
+        title: Iwona, bateria ci się kończy, podładuj sobie
+        data:
+          channel: alarm_stream_max
+    mode: single
+  - id: '1614699148700'
+    alias: Turn on Yeelight when motion detected
+    description: ''
+    use_blueprint:
+      path: homeassistant/motion_light.yaml
+      input:
+        no_motion_wait: '120'
+        motion_entity: binary_sensor.motion_sensor_1_occupancy
+        light_target:
+          entity_id: light.yeelight_hania
+  - id: '1615319114500'
+    alias: Turn on yeelight after pressing button1
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.button1_action
+      to: single
+    - platform: state
+      entity_id: sensor.switch1_action
+      to: single
+    condition: []
+    action:
+    - service: light.toggle
+      data:
+        kelvin: 4000
+        brightness_pct: 100
+      target:
+        entity_id: light.yeelight_hania
+    mode: single
+  - id: '1615402073300'
+    alias: turn on yeelight with yellow color
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.button1_action
+      to: double
+    - platform: state
+      entity_id: sensor.switch1_action
+      to: double
+    condition: []
+    action:
+    - service: yeelight.set_color_temp_scene
+      data:
+        entity_id: light.yeelight_hania
+        kelvin: 2700
+        brightness: 100
+    mode: single
+  - id: '1615402138100'
+    alias: turn on yeelight with white color
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.button1_action
+      to: triple
+    condition: []
+    action:
+    - service: yeelight.set_color_temp_scene
+      data:
+        entity_id: light.yeelight_hania
+        kelvin: 6000
+        brightness: 100
+    mode: single
+  - id: '1615402210900'
+    alias: turn yeelight with normal light
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.button1_action
+      to: hold
+    - platform: state
+      entity_id: sensor.switch1_action
+      to: hold
+    condition: []
+    action:
+    - service: yeelight.set_color_temp_scene
+      data:
+        entity_id: light.yeelight_hania
+        kelvin: 4000
+        brightness: 100
+    mode: single
+  - id: '1615402370000'
+    alias: turn on yeelight with moonlight
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.button1_action
+      to: quadruple
+    condition: []
+    action:
+    - service: yeelight.set_mode
+      data:
+        entity_id: light.yeelight_hania
+        mode: moonlight
+    mode: single
+  - id: '1617115926500'
+    alias: Powiadomienie o angielskim
+    description: ''
+    trigger:
+    - platform: time
+      at: '16:00'
+    condition: []
+    action:
+    - service: notify.mobile_app_ta_1004
+      data:
+        message: TTS
+        title: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez marudzenia!
+        data:
+          channel: alarm_stream_max
+    - service: tts.google_cloud_say
+      data:
+        entity_id: media_player.nest_mini
+        message: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
+          marudzenia!
+        language: pl
+    mode: single
+  - id: '1617358855300'
+    alias: Home Assistant Update Notification for Android
+    description: ''
+    use_blueprint:
+      path: fortepc/update-notif-for-android.yaml
+      input:
+        clickAction: https://my.home-assistant.io/redirect/supervisor/
+        delay: 0
+        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+  - id: '1617367166600'
+    alias: Motion Detected
+    description: ''
+    use_blueprint:
+      path: vorion/send-camera-snapshot-notification-on-motion.yaml
+      input:
+        notification_message: '{{ motion_sensor_name }} detected movement!'
+        motion_sensor: binary_sensor.camera1_motion
+        camera: camera.camera1
+        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+        notification_title: Motion detected!
+        delay: 2
+  - id: '1617387394300'
+    alias: Frigate person detection notification
+    description: ''
+    trigger:
+    - platform: mqtt
+      topic: frigate/events
+    condition: []
+    action:
+    - service: notify.mobile_app_nokia_8_3_5g
+      data_template:
+        message: A {{trigger.payload_json["after"]["label"]}} has entered schowek
+        data:
+          image: https://ha.anarion.pl/api/frigate/notifications/{{trigger.payload_json['after']['id']}}/snapshot.jpg
+          tag: '{{trigger.payload_json["after"]["id"]}}'
+          data:
+            ttl: 0
+            priority: high
+    mode: single
+  - id: '1618433673900'
+    alias: Notify on device unavailable
+    description: ''
+    trigger:
+    - platform: state
+      entity_id:
+      - binary_sensor.door_sensor_1_contact
+      - binary_sensor.motion_sensor_1_battery_low
+      - sensor.my_tp_switch_amps
+      to: unavailable
+      for: 0:05:00
+    condition: []
+    action:
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        title: Device unavailable!
+        data:
+          channel: Notfall
+          priority: high
+          ttl: 0
+          color: red
+        message: 📵 {{ state_attr(trigger.to_state.entity_id, 'friendly_name') }} is
+          offline more than 5 minutes!
+    mode: parallel
+    max: 10
+  - id: two_km_away
+    alias: Someone is 2 kilometers away and heading home
+    trigger:
+    - platform: numeric_state
+      entity_id:
+      - proximity.janek_home
+      - proximity.iwona_home
+      below: '2'
+    condition:
+    - condition: and
+      conditions:
+      - condition: template
+        value_template: '{{ trigger.to_state.attributes.dir_of_travel  == "towards"
+          }}'
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: '{{trigger.to_state.object_id[:-5] | capitalize}} jest już 2 kilometry
+          od domu i zaraz będzie w domu!'
+        entity_id: media_player.nest_mini
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: '{{ trigger.to_state.object_id[:-5] | capitalize}} jest już 2 kilometry
+          od domu i zaraz będzie na miejscu!'
+    mode: single
+  - id: trigger_alarm_while_armed
+    alias: Trigger alarm while armed
+    trigger:
+    - platform: state
+      entity_id: group.all_door_sensors
+      to: 'on'
+    - platform: state
+      entity_id: group.all_motion_detectors
+      to: 'on'
+    condition:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: alarm_control_panel.main_alarm
+        state: armed_away
+      - condition: state
+        entity_id: alarm_control_panel.main_alarm
+        state: armed_home
+    action:
+    - service: alarm_control_panel.alarm_trigger
+      target:
+        entity_id: alarm_control_panel.main_alarm
+    - service: tts.google_cloud_say
+      data:
+        message: Uwaga, alarm został wyzwolony!
+        entity_id: media_player.nest_mini
+    mode: single
+  - id: send_notification_when_alarm_is_disarmed
+    alias: Send notification when alarm is disarmed
+    trigger:
+    - platform: state
+      entity_id: alarm_control_panel.main_alarm
+      to: disarmed
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Uwaga, alarm został rozbrojony!
+        entity_id: media_player.nest_mini
+  - id: send_notification_when_alarm_is_in_pending_status
+    alias: Send notification when alarm is in pending status
+    trigger:
+    - platform: state
+      entity_id: alarm_control_panel.main_alarm
+      to: pending
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Uwaga, alarm się włącza! Wpisz poprawny kod!
+        entity_id: media_player.nest_mini
+  - id: send_notification_when_alarm_is_armed_in_away_mode
+    alias: Send notification when alarm is armed in away mode
+    trigger:
+    - platform: state
+      entity_id: alarm_control_panel.main_alarm
+      to: armed_away
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Uwaga, alarm uzbrojony!
+        entity_id: media_player.nest_mini
+  - id: send_notification_when_alarm_is_armed_in_home_mode
+    alias: Send notification when alarm is armed in home mode
+    trigger:
+    - platform: state
+      entity_id: alarm_control_panel.main_alarm
+      to: armed_home
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Uwaga, alarm uzbrojony!
+        entity_id: media_player.nest_mini
+  - id: send_notification_when_alarm_is_triggered
+    alias: Send notification when alarm is triggered
+    trigger:
+    - platform: state
+      entity_id: alarm_control_panel.main_alarm
+      to: triggered
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Uwaga, alarm został faktycznie wyzwolony!
+        entity_id: media_player.nest_mini
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: 'Uwaga: Alarm w domu został wyzwolony - {{ states(''sensor.date_time'')
+          }}!'
+        data:
+          ttl: 0
+          priority: high
+  - id: stopa_bazowa_change_notification_up
+    alias: Notify when stopa bazowa changes up
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.stopa_bazowa_pko_bp
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana stopy bazowej
+      message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana stopy bazowej
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.stopa_bazowa_rising
+    mode: single
+  - id: stopa_bazowa_change_notification_down
+    alias: Notify when stopa bazowa changes down
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.stopa_bazowa_pko_bp
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float < trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana stopy bazowej
+      message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana stopy bazowej
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.stopa_bazowa_rising
+    mode: single
+  - id: wibor6m_change_notification_down
+    alias: Notify when Wibor 6M changes down
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.wibor_6m
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float < trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana Wibor
+      message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana Wibor
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.wibor6m_rising
+    mode: single
+  - id: wibor6m_change_notification_up
+    alias: Notify when Wibor 6M changes up
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.wibor_6m
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana Wibor
+      message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana Wibor
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.wibor6m_rising
+    mode: single
+  - id: mute_ads
+    alias: Mute Ads
+    description: Mute ads while streaming music
+    trigger:
+    - platform: state
+      entity_id:
+      - media_player.nvidia_shield
+      - media_player.plex_plex_for_android_tv_shield_android_tv
+      - media_player.spotify_anarion
+      - media_player.nest_mini
+      - media_player.kd_55xe9305
+      - media_player.sony_bravia_tv
+      - media_player.chromecastaudio
+      attribute: media_title
+      to: Advertisement
+    action:
+    - service: media_player.volume_mute
+      target:
+        entity_id: '{{ trigger.to_state.entity_id }}
+
+          '
+      data:
+        is_volume_muted: true
+    - wait_for_trigger:
+        platform: state
+        entity_id:
+        - media_player.nvidia_shield
+        - media_player.plex_plex_for_android_tv_shield_android_tv
+        - media_player.spotify_anarion
+        - media_player.nest_mini
+        - media_player.kd_55xe9305
+        - media_player.sony_bravia_tv
+        - media_player.chromecastaudio
+        attribute: media_title
+        from: Advertisement
+    - service: media_player.volume_mute
+      target:
+        entity_id: '{{ trigger.to_state.entity_id }}
+
+          '
+      data:
+        is_volume_muted: false
+  - id: '1634040402000'
+    alias: fullykiosk_disable_screen
+    description: Turn off tablet screen after time-out
+    trigger:
+    - platform: state
+      entity_id: light.fire_tablet_screen
+      to: 'on'
+      for:
+        hours: 0
+        minutes: 2
+        seconds: 0
+        milliseconds: 0
+    condition: []
+    action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.ffd92947_09fd7c47
+      data:
+        media_content_id: /local/sound/off.m4a
+        media_content_type: music
+    - service: light.turn_off
+      target:
+        entity_id: light.fire_tablet_screen
+    mode: restart
+  - id: '1634041571300'
+    alias: fullykiosk_enable_screen
+    description: Turn on tablet screen on motion detected
+    trigger:
+    - platform: state
+      entity_id: binary_sensor.ffd92947_09fd7c47
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: light.fire_tablet_screen
+      state: 'off'
+    action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.ffd92947_09fd7c47
+      data:
+        media_content_id: /local/sound/on.m4a
+        media_content_type: music
+    - service: light.turn_on
+      data:
+        entity_id: light.fire_tablet_screen
+        brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
+    mode: restart
+  - id: '1635431265500'
+    alias: High CPU utlization
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.processor_use_percent
+      above: '99'
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+        milliseconds: 0
+    condition: []
+    action:
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: High Home Assistant CPU!
+      message: Home Assistant CPU was 100% for 10 minutes!
+    mode: single

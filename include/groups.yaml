@@ -1,0 +1,26 @@
+group:
+  living_room_media_players:
+    name: Living Room Media Players
+    entities:
+    - media_player.chromecastaudio
+    - media_player.shield
+    - media_player.nvidia_shield
+    - media_player.nest_mini
+    - media_player.kd_55xe9305
+    - media_player.sony_bravia_tv
+    - media_player.spotify_anarion
+
+  all_motion_detectors:
+    entities:
+      - binary_sensor.schowek_person_motion
+      - binary_sensor.motion_sensor_1_occupancy
+
+  all_door_sensors:
+    entities:
+      - binary_sensor.door_sensor_1_contact
+
+  people:
+    entities:
+      - person.anarion
+      - person.iwona
+      - person.hania

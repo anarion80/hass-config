@@ -1,0 +1,16 @@
+browser_mod:
+  devices:
+    9542917b-db92ea9b:
+      name: galaxy_tab_a
+    4636b990-e668444f:
+      name: chrome_on_pc
+    f9d5577a-fbf3f1bd:
+      name: nokia_phone
+    7496f3b9-fed5d72a:
+      name: ipad
+    ec4bd273-67f527a2:
+      name: firefox_on_pc
+    ffd92947-09fd7c47:
+      name: amazon_tablet
+      #screensaver: true
+      force_stay_awake: true

@@ -1,0 +1,5 @@
+http:
+  use_x_forwarded_for: true
+  ip_ban_enabled: false
+  cors_allowed_origins: !secret cors_allowed_origins
+  trusted_proxies: !secret trusted_proxies

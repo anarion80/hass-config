@@ -237,3 +237,364 @@ sensor:
     state_topic: homeassistant/persistence/hania
     value_template: >
       {{ value | replace(' ', 'T') }}
+
+  - platform: template
+    sensors:
+      smart_plug_2_current:
+        unique_id: "smart_plug_2_current"
+        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Current"
+        value_template: "{{ state_attr('switch.smart_plug_2','current') | float(default=0) }}"
+        unit_of_measurement: "mA"
+      smart_plug_2_power:
+        unique_id: "smart_plug_2_power"
+        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Power"
+        value_template: "{{ state_attr('switch.smart_plug_2','current_consumption') | float(default=0) }}"
+        unit_of_measurement: "W"
+      smart_plug_2_voltage:
+        unique_id: "smart_plug_2_voltage"
+        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Voltage"
+        value_template: "{{ state_attr('switch.smart_plug_2','voltage') | float(default=0) }}"
+        unit_of_measurement: "V"
+      room_aqi:
+        unique_id: "room_aqi"
+        value_template: "{{ states('sensor.airpurifier_pm2_5') | int(default=0) }}"
+        unit_of_measurement: "µg/m³"
+        friendly_name: Living Room AQI
+    #----- Count Automations
+      count_automations:
+        value_template: "{{ states.automation | list | length }}"
+    #----- Count Scripts
+      count_scripts:
+        value_template: "{{ states.script| list | length }}"
+    #----- Count Device Trackers
+      count_device_trackers:
+        value_template: "{{ states.device_tracker | list | length }}"
+    #----- Count Binary Sensors
+      count_binary_sensors:
+        value_template: "{{ states.binary_sensor| list | length }}"
+    #----- Count Sensors
+      count_sensors:
+        value_template: "{{ states.sensor | list | length }}"
+    #----- Count Switches
+      count_switches:
+        value_template: "{{ states.switch | list | length }}"
+    #----- Count Zones
+      count_zones:
+        value_template: "{{ states.zone | list | length }}"
+    #----- Input Booleans
+      count_input_booleans:
+        value_template: "{{ states.input_boolean | list | length }}"
+    #----- Input Numbers
+      count_input_numbers:
+        value_template: "{{ states.input_number | list | length }}"
+    #----- Input Texts
+      count_input_texts:
+        value_template: "{{ states.input_text | list | length }}"
+    #----- Input Selects
+      count_input_selects:
+        value_template: "{{ states.input_select | list | length }}"
+    #----- Input Date Times
+      count_input_datetimes:
+        value_template: "{{ states.input_datetime | list | length }}"
+
+      meteo_url:
+        value_template: >-
+          {% if now().hour >= 0 and now().hour < 10 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ (now() - timedelta( days = 1 )).strftime('%Y%m%d') }}18&row=466&col=232&lang=pl
+          {%- elif now().hour >= 10 and now().hour < 12 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}00&row=466&col=232&lang=pl
+          {%- elif now().hour >= 12 and now().hour < 19 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}06&row=466&col=232&lang=pl
+          {%- elif now().hour >= 19 and now().hour < 24 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}12&row=466&col=232&lang=pl
+          {%- endif %}
+      # temperature_living_room:
+        # unique_id: "temperature_living_room"
+        # friendly_name_template: "Living Room Temperature"
+        # value_template: "{{ states('sensor.airpurifier_temperature') | float(default=0) }}"
+        # unit_of_measurement: "°C"
+
+      # humidity_living_room:
+        # unique_id: "humidity_living_room"
+        # friendly_name_template: "Living Room Humidity"
+        # value_template: "{{ states('sensor.airpurifier_humidity') | float(default=0) }}"
+        # unit_of_measurement: "%"
+
+      # ha_uptime:
+        # friendly_name: "Home Assistant uptime"
+        # value_template: >-
+          # {% set up_time =  as_timestamp(now()) - as_timestamp(states('sensor.ha_uptime_2')) %}
+
+          # {% if up_time == 0 %}
+            # Just restarted...
+          # {% else %}
+            # {% set minutes = (up_time // 60) | int %}
+            # {% set hours = (minutes // 60) %}
+            # {% set days = (hours // 24) %}
+            # {% set weeks = (days // 7) %}
+
+            # {% set minutes = (minutes % 60) %}
+            # {% set hours =  (hours % 24) %}
+            # {% set days = (days % 7) %}
+
+            # {% macro phrase(value, name) %}
+                      # {%- set value = value %}
+                      # {%- set end = 's' if value > 1 else '' %}
+                      # {{- '{} {}{}'.format(value, name, end) if value | int > 0 else '' }}
+            # {%- endmacro %}
+
+            # {% set text = [ phrase(weeks, 'week'), phrase(days, 'day'), phrase(hours, 'hr'), phrase(minutes, 'min') ] | select('!=','') | list | join(', ') %}
+            # {% set last_comma = text.rfind(',') %}
+            # {% if last_comma != -1 %}
+              # {% set text = text[:last_comma] + ' and' + text[last_comma + 1:] %}
+            # {% endif %}
+
+          # {{ text }}
+
+          # {% endif %}
+
+      people_at_home:
+        unique_id: people_at_home
+        friendly_name: People at Home
+        value_template: >
+          {%- set people = expand('group.people') %}
+          {{ people | selectattr('state', 'in', ['home', 'on'] ) | list | count }}
+        icon_template: >
+          {%- set icons = ['account-off', 'account', 'account-multiple'] %}
+          {%- set people = expand('group.people') %}
+          {%- set cnt = people | selectattr('state', 'in', ['home', 'on'] ) | list | count %}
+          {%- if cnt >= 0 %}
+            mdi:{{ icons[cnt] if cnt in range(icons | count) else 'account-group' }}
+          {%- else %}
+            mdi:account-alert
+          {%- endif %}
+        attribute_templates:
+          people: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {{ people }}
+          and: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {%- if people | count > 0 %}
+              {{- [people[:-1] | join(', '), 'and', people[-1]] | join(' ') if people | count > 1 else people[0] }}
+            {%- else %}unknown
+            {%- endif %}
+          or: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {%- if people | count > 0 %}
+              {{- [people[:-1] | join(', '), 'or', people[-1]] | join(' ') if people | count > 1 else people[0] }}
+            {%- else %}unknown
+            {%- endif %}
+          count: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {{ people | count }}
+      tv_channel:
+        unique_id: current_tv_channel
+        friendly_name: Current TV Channel
+        value_template: >
+          {%- set all_channels = ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS 2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV', 'TOYAcyfrowaINFO'] %}
+          {{ state_attr('media_player.sony_bravia_tv','source') }}
+      czas_tv:
+        friendly_name: Czas działania TV
+        value_template: >
+          {% if (states('sensor.czas_dzialania_tv') == "unavailable") or (states('sensor.czas_dzialania_tv') == "unknown") %}
+          0
+          {% else %}
+          {{states('sensor.czas_dzialania_tv')}}
+          {% endif %}
+        unit_of_measurement: "h"
+
+      today_events:
+        friendly_name: "Today's events"
+        value_template: "{{ state_attr('calendar.anarion_dunedain', 'message') }}"
+        icon_template: mdi:calendar
+        attribute_templates:
+          location: "{{ state_attr('calendar.anarion_dunedain', 'location') }}"
+          description: "{{ state_attr('calendar.anarion_dunedain', 'description') }}"
+
+      covid19_infections:
+        value_template: "{{ state_attr('sensor.covid19','today')['tests']['infections'] | int }}"
+        unit_of_measurement: '🙍'
+        friendly_name: "Zakażenia COVID19"
+
+      covid19_deaths:
+        value_template: "{{ state_attr('sensor.covid19','today')['tests']['deaths']['deaths'] | int }}"
+        unit_of_measurement: '🙍'
+        friendly_name: "Zgony COVID19"
+
+      covid19_recovered:
+        value_template: "{{ state_attr('sensor.covid19','today')['tests']['recovered'] | int }}"
+        unit_of_measurement: '👨'
+        friendly_name: "Wyleczenia COVID19"
+
+
+  - platform: integration
+    source: sensor.smart_plug_2_power
+    name: smart_plug_2_2_energy
+    round: 2
+    unit_prefix: k
+    unit_time: h
+
+  - platform: uptime
+    name: HA Uptime
+
+  - platform: version
+    source: hassio
+
+  - platform: command_line
+    name: Supervisor updates
+    command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"addons":[.data.addons[] | select(.version != .installed)]}'''
+    value_template: "{{ value_json.addons | length }}"
+    json_attributes:
+    - newest_version
+    - current_version
+    - addons
+
+  # - platform: attributes
+    # friendly_name: "Air quality"
+    # attribute: air_quality_index
+    # unit_of_measurement: "%"
+    # entities:
+    # - air_quality.gios
+
+  # - platform: attributes
+    # friendly_name: "Cząsteczki 10"
+    # attribute: particulate_matter_10
+    # icon: 'mdi:fog'
+    # unit_of_measurement: "%"
+    # entities:
+      # - air_quality.gios
+  - platform: mqtt
+    name: Zigbee2mqtt Networkmap
+    # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
+    state_topic: zigbee2mqtt/bridge/response/networkmap
+    value_template: >-
+      {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
+    # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
+    json_attributes_topic: zigbee2mqtt/bridge/response/networkmap
+    json_attributes_template: "{{ value_json.data.value | tojson }}"
+
+  # - platform: google_travel_time
+    # api_key: !secret google_maps_api_key
+    # scan_interval: 600
+    # name: Home to Work
+    # origin: zone.home
+    # destination: zone.work
+    # options:
+      # language: pl
+      # mode: driving
+
+  # - platform: google_travel_time
+    # api_key: !secret google_maps_api_key
+    # scan_interval: 600
+    # name: Phone to Home
+    # origin: device_tracker.nokia_8_3_5g
+    # destination: zone.work
+    # options:
+      # language: pl
+      # mode: driving
+
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: '/'
+      - type: memory_use_percent
+      - type: processor_use
+      - type: last_boot
+      - type: swap_use_percent
+
+  - platform: time_date
+    display_options:
+      - 'date_time'
+
+  - platform: scrape
+    name: Stopa bazowa PKO BP
+    resource: https://www.pkobp.pl/waluty/#/base_rate/
+    select: '#base_rate > p:nth-child(3)'
+    value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
+    unit_of_measurement: '%'
+    scan_interval: 3600
+
+  - platform: scrape
+    name: Wibor 6M
+    resource: https://www.pkobp.pl/waluty/#/interbank/
+    select: 'div.course__irs-tab-box:nth-child(4) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)'
+    unit_of_measurement: '%'
+    scan_interval: 3600
+
+  - platform: history_stats
+    name: Czas działania TV
+    entity_id: media_player.sony_bravia_tv
+    state: "on"
+    type: time
+    start: "{{ now().replace(hour=0, minute=0, second=0) }}"
+    end: "{{ now() }}"
+
+  - platform: filter
+    name: "Smoothed Living Room AQI"
+    entity_id: sensor.room_aqi
+    filters:
+      - filter: outlier
+        window_size: 4
+        radius: 2.0
+      - filter: lowpass
+        time_constant: 10
+      - filter: time_simple_moving_average
+        window_size: "00:05"
+        precision: 2
+
+  - platform: filter
+    name: "Smoothed Living Room Temperature"
+    entity_id: sensor.airpurifier_temperature
+    filters:
+      # - filter: outlier
+        # window_size: 4
+        # radius: 2.0
+      # - filter: lowpass
+        # time_constant: 10
+      - filter: time_simple_moving_average
+        window_size: "00:05"
+        precision: 2
+
+  - platform: rest
+    name: COVID19
+    resource: https://koronawirus-api.herokuapp.com/api/covid-vaccinations-tests/daily
+    value_template: >
+      {{ value_json.today.infections.newInfections }}
+    json_attributes:
+      - today
+    scan_interval: 86400
+    force_update: true
+
+  - platform: antistorm
+    station_id: 148
+    monitored_conditions:
+      - 'storm_probability'
+      - 'storm_time'
+      - 'rain_probability'
+      - 'rain_time'
+
+  - platform: scrape
+    name: Tauron_energy_cost
+    resource: http://www.cena-pradu.pl/tabela.html
+    select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(10) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+    unit_of_measurement: 'PLN'
+    value_template: >
+      {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
+    scan_interval: 3600
+
+  - platform: scrape
+    name: Tauron_static_cost
+    resource: http://www.cena-pradu.pl/tabela.html
+    select: '.WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(19) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)'
+    unit_of_measurement: 'PLN'
+    value_template: >
+      {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
+    scan_interval: 3600

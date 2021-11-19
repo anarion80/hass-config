@@ -16,6 +16,22 @@ input_boolean:
     name: Shut-off lock
     icon: custom:lock
 
+  radio_status:
+    name: Radio is on
+    icon: mdi:radio
+
+  chromecast_audio_status:
+    name: Chromecast Audio is on
+    icon: mdi:cast-audio
+
+  stopa_bazowa_rising:
+    name: Stopa Bazowa is rising
+    icon: mdi:trending-up
+
+  wibor6m_rising:
+    name: Wibor6M is rising
+    icon: mdi:trending-up
+
 input_number:
 
   ####################################################
@@ -177,3 +193,42 @@ input_select:
       - Spotify
       - Google Nest Mini
       - Sony Bravia TV
+
+  tv_channels:
+    name: TV Channels
+    options:
+      - TVP1 HD
+      - TVP2 HD
+      - TVP3 Krakow
+      - Polsat
+      - TVN
+      - TV4
+      - TV Puls
+      - TVN 7
+      - PULS 2
+      - TV6
+      - Super Polsat
+      - ESKA TV
+      - TTV
+      - Polo TV
+      - SILVER TV
+      - TV Trwam
+      - Stopklatka TV
+      - Fokus TV
+      - TVP ABC
+      - TVP Kultura HD
+      - TVP Historia
+      - TVP Sport HD
+      - TVP Info
+      - TVP Kobieta
+      - Metro
+      - Zoom TV
+      - Nowa TV
+      - WP
+      - eSZKOLA DOMOWE PRZEDSZKOLE
+      - Telewizja Naziemna
+      - TVP Kultura 2
+      - EmiTV
+      - TOYAcyfrowaINFO
+    initial: TVP1 HD
+    icon: mdi:television-classic

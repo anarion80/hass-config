@@ -1,0 +1,44 @@
+recorder:
+  purge_keep_days: 10
+  auto_purge: true
+  commit_interval: 30
+  include:
+    domains:
+      - air_quality
+      - binary_sensor
+      - sensor
+      - switch
+      #- media_player
+      - person
+      - device_tracker
+  exclude:
+    entity_globs:
+      - sensor.weather_*
+      - binary_sensor.nokia_*
+      - binary_sensor.ta_*
+      - binary_sensor.redmi_*
+      - binary_sensor.amazon_tablet*
+      - binary_sensor.ffd92947_09fd7c47
+      - binary_sensor.fire_tablet*
+      - binary_sensor.kftrwi*
+      - sensor.nokia_*
+      - sensor.ta_*
+      - sensor.redmi_*
+      - sensor.amazon_tablet*
+      - sensor.count*
+      - sensor.dab7da49*
+      - sensor.ffd92947_09fd7c47
+      - sensor.ff084fda_073ef5d8
+      - sensor.b955c88d_61f3339e
+      - sensor.fire_tablet*
+      - sensor.kftrwi*
+      - sensor.template_sidebar
+      - sensor.date_time
+      - sensor.time
+      - sensor.firefox_on_pc
+      #- sensor.router*
+      - sensor.processor*
+      - switch.smart_plug_2*
+      #- sensor.pc_daily
+      - sensor.pc_monthly
+      - sensor.pc_yearly

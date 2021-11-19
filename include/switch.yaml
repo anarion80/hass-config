@@ -140,3 +140,309 @@ switch:
             # entity_id: media_player.sony_bravia_tv
           # - service: homeassistant.update_entity
             # entity_id: binary_sensor.playstation
+
+  - platform: flux
+    lights:
+      - light.yeelight_hania
+    start_time: "7:00"
+    stop_time: "21:00"
+    start_colortemp: 4000
+    sunset_colortemp: 3000
+    stop_colortemp: 2700
+    brightness: 100
+    disable_brightness_adjust: true
+    mode: xy
+    transition: 30
+    interval: 60
+
+  - platform: template
+    switches:
+      plex:
+        friendly_name: Plex
+        value_template: >
+                {% if states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
+                and is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.android')
+                and states('media_player.sony_bravia_tv') in ['on', 'playing', 'paused'] %}
+                on
+                {% else %}
+                off
+                {% endif %}
+        turn_on:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command:
+              - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+              - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - System Power
+          - delay: 1
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - DTV
+          - service: media_player.select_source
+            target:
+              entity_id: media_player.nvidia_shield
+            data:
+              source: "com.plexapp.android"
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+        turn_off:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - Standby
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+        icon_template: mdi:plex
+      netflix:
+        friendly_name: Netflix
+        value_template: >
+                {% if states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
+                and is_state_attr('media_player.nvidia_shield','app_id','com.netflix.ninja')
+                and is_state('media_player.sony_bravia_tv', 'on') %}
+                on
+                {% else %}
+                off
+                {% endif %}
+        turn_on:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command:
+              - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+              - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - System Power
+              - DTV
+          - service: media_player.select_source
+            target:
+              entity_id: media_player.nvidia_shield
+            data:
+              source: "com.netflix.ninja"
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+        turn_off:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - Standby
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+        icon_template: mdi:netflix
+      youtube:
+        friendly_name: YouTube
+        value_template: >
+                {% if states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
+                and is_state_attr('media_player.nvidia_shield','app_id','com.google.android.youtube.tv')
+                and is_state('media_player.sony_bravia_tv', 'on') %}
+                on
+                {% else %}
+                off
+                {% endif %}
+        turn_on:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command:
+              - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+              - b64:JgUiAE8TExMTEycTJxMnExMTJxMTEycTExMnEycTExMTExMAAqYNBQAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - System Power
+              - DTV
+          - service: media_player.select_source
+            target:
+              entity_id: media_player.nvidia_shield
+            data:
+              source: "com.google.android.youtube.tv"
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+        turn_off:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - Standby
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+        icon_template: mdi:youtube
+      tv:
+        friendly_name: TV
+        value_template: >
+                        {% if state_attr('media_player.sony_bravia_tv','source') in ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS 2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV', 'TOYAcyfrowaINFO'] %}
+                          on
+                          {% else %}
+                          off
+                          {% endif %}
+        turn_on:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command:
+              - b64:JgUcAE8TExMnEycTJxMTEycTExMnExMTExMTExMAA0INBQAAAAAAAAAAAAA=
+              - Digital Analog
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - System Power
+              - DTV
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+        turn_off:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - Standby
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+        icon_template: mdi:television
+      radio:
+        friendly_name: Radio
+        value_template: "{{ is_state('input_boolean.radio_status','on') }}"
+        turn_on:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+                - System Power
+          - delay: 2
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+                - Tuner
+          - service: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.radio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+        turn_off:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - Standby
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+        icon_template: mdi:radio
+
+      chromecast_audio:
+        friendly_name: Chromecast Audio
+        value_template: "{{ is_state('input_boolean.chromecast_audio_status','on') }}"
+        turn_on:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+                - System Power
+          - delay: 2
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+                - DVD
+          - service: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.radio_status
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: television
+              command: b64:JgUcAE8TJxMnEycTJxMTEycTExMnExMTExMTExMAAy8NBQAAAAAAAAAAAAA=
+        turn_off:
+          - service: remote.send_command
+            data:
+              entity_id: remote.rm4c_mini_remote
+              device: Yamaha AVR
+              command:
+              - Standby
+          - service: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.chromecast_audio_status
+        icon_template: mdi:cast-audio
