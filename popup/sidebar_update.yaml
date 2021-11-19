@@ -84,10 +84,10 @@ browser_mod:
           services: |
             [[[
               hass.callService('browser_mod', 'toast', {
-                message: 'Starting watchtower...'
+                message: 'Starting update...'
               });
-              hass.callService('switch', 'turn_on', {
-                entity_id: 'switch.watchtower'
+              hass.callService('script', 'turn_on', {
+                entity_id: 'script.homeassistant_core_update'
               });
             ]]]
         template: icon_name
@@ -177,7 +177,7 @@ browser_mod:
         entity: sensor.supervisor_updates
         triggers_update:
           - bbinary_sensor.template_supervisor_update
-        name: Open Supervisor
+        name: Update Supervisor
         icon: mdi:open-in-new
         styles:
           card:
@@ -189,20 +189,13 @@ browser_mod:
                     'drop-shadow(3px 3px 5px #00000050)';
                 ]]]
         tap_action:
-          action: fire-dom-event
-          browser_mod:
-            command: popup
-            title: Home Assistant Supervisor
-            style: >
-              :host .content {
-                width: 75em;
-              }
-            card:
-              type: iframe
-              url: /hassio
-              aspect_ratio: 65%
-              style: |
-                ha-card {
-                  border-radius: 0 0 1em 1em;
-                }
+          services: |
+            [[[
+              hass.callService('browser_mod', 'toast', {
+                message: 'Starting update...'
+              });
+              hass.callService('script', 'turn_on', {
+                entity_id: 'script.homeassistant_supervisor_update'
+              });
+            ]]]
         template: icon_name

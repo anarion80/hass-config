@@ -133,15 +133,15 @@ browser_mod:
                     ]]]
                 template: icon_name
 
-              - type: custom:button-card
-                name: Container
-                icon: mdi:reload
-                tap_action:
-                  action: call-service
-                  service: script.turn_on
-                  service_data:
-                    entity_id: script.homeassistant_restart
-                template: icon_name
+              # - type: custom:button-card
+              #   name: Container
+              #   icon: mdi:reload
+              #   tap_action:
+              #     action: call-service
+              #     service: script.turn_on
+              #     service_data:
+              #       entity_id: script.homeassistant_restart
+              #   template: icon_name
 
       #################################################
       #                                               #
