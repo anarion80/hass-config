@@ -357,6 +357,26 @@ views:
                     parseInt(entity.attributes.percentage_step);
                 ]]]
 
+          # - type: custom:button-card
+          #   entity: cover.tapparella_sala
+          #   name: Sala
+          #   template:
+          #     - base_cover
+          #     - icon_cover
+          #     - cover_circle
+          #   variables:
+          #     circle_input: >
+          #       [[[
+          #         if (entity) {
+          #           let real_position = entity.attributes.current_position*100/(100-25)-35;
+          #           return (real_position < 0) ? 0 : (real_position > 100) ? 100 : real_position;
+          #         }
+          #       ]]]
+          #     close_position: 25
+          #     quarter1_position: 50
+          #     middle_position: 70
+          #     quarter3_position: 85
+
           - type: custom:button-card
             entity: climate.living_room_ac
             name: AC

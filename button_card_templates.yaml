@@ -362,6 +362,145 @@
         }
       }
 
+  base_cover:
+    variables:
+      state: >
+        [[[ return entity === undefined || entity.state; ]]]
+      timeout: >
+        [[[ return entity === undefined || Date.now() - Date.parse(entity.last_changed); ]]]
+    aspect_ratio: 1/1
+    show_state: false
+    show_icon: false
+    show_label: true
+    label: |
+      [[[
+        if (entity.attributes.current_position <= variables.close_position)
+          return 'Chiusa';
+        return 'Aperta';
+      ]]]
+    state_display: >
+      [[[ if (variables.state === true) return 'Scono'; ]]]
+    tap_action:
+      animation_card: |
+        [[[
+          const animation_speed_ms = 900;
+          const animation = `card_bounce ${animation_speed_ms}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+          this.shadowRoot.getElementById("card").style.animation = animation;
+          window.setTimeout(() => {
+            this.shadowRoot.getElementById("card").style.animation = "none";
+          }, animation_speed_ms)
+        ]]]
+      action: call-service
+      service: cover.set_cover_position
+      service_data:
+        entity_id: entity
+        position: |
+          [[[
+            return (variables.close_position == null) ? 20 : variables.close_position;
+          ]]]
+    hold_action:
+      action: more-info
+    styles:
+      grid:
+        - grid-template-areas: |
+            "icon  circle"
+            "n     n"
+            "l     l"
+        - grid-template-columns: repeat(2, 1fr)
+        - grid-template-rows: auto repeat(2, min-content)
+        - gap: 2%
+        - align-items: start
+      name:
+        - justify-self: start
+        - line-height: 115%
+      state:
+        - justify-self: start
+        - line-height: 115%
+      label:
+        - justify-self: start
+        - line-height: 115%
+      card:
+        - font-family: Sf Display
+        - border-radius: var(--custom-button-card-border-radius)
+        - -webkit-tap-highlight-color: rgba(0,0,0,0)
+        - transition: none
+        - padding: 10%
+        - --mdc-ripple-color: >
+            [[[
+              return (variables.state === 'open') ?
+                'rgb(0, 0, 0)' :
+                'rgba(255, 255, 255, 0.3)';
+            ]]]
+        - color: >
+            [[[
+              return 'rgba(255, 255, 255, 0.3)';
+            ]]]
+        - background-color: >
+            [[[
+              return 'rgba(115, 115, 115, 0.2)';
+            ]]]
+    extra_styles: |
+      #name, #state, #label {
+        font-size: 1.2vw;
+        letter-spacing: 0.05vw;
+      }
+      /* portrait */
+      @media screen and (max-width: 1200px) {
+        #name, #state {
+          font-size: 2vw;
+          letter-spacing: 0.05vw;
+        }
+      }
+      /* phone */
+      @media screen and (max-width: 800px) {
+        #name, #state {
+          font-size: 3.1vw;
+          letter-spacing: 0.12vw;
+        }
+      }
+      @keyframes card_bounce {
+        0% {
+          transform: scale(1);
+        }
+        15% {
+          transform: scale(0.9);
+        }
+        25% {
+          transform: scale(1);
+        }
+        30% {
+          transform: scale(0.98);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+  cover_circle:
+    custom_fields:
+      circle: >
+        [[[
+          const input = variables.circle_input == null ? ' ' : `${parseInt(variables.circle_input)}<tspan font-size="12">%</tspan>`;
+          const stroke_color = (variables.state === 'open') ? 'none' : '#b2b2b2';
+          const fill_color = (variables.state === 'closed') ? 'none' : 'rgba(255,255,255,0.04)';
+          return `
+            <svg viewBox="0 0 50 50">
+              <circle cx="25" cy="25" r="23.5" stroke="${stroke_color}" stroke-width="1.5" fill="${fill_color}" />
+              <text x="50%" y="54%" fill="#8d8e90" font-size="14" text-anchor="middle" alignment-baseline="middle" dominant-baseline="middle">${input}</text>
+            </svg>
+          `;
+        ]]]
+    styles:
+      custom_fields:
+        circle:
+          - display: initial
+          - width: 90%
+          - letter-spacing: 0.03vw
+          - margin: -6% -6% 0 0
+          - justify-self: end
+          - opacity: 1
+
+
   #################################################
   #                                               #
   #                    CIRCLE                     #
@@ -662,9 +801,9 @@
                 - type: custom:button-card
                   styles:
                     card:
-                      [background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 80%), 
-                      conic-gradient(rgb(120, 39, 230), rgb(230, 34, 231), rgb(228, 5, 136), rgb(228, 25, 25), 
-                      rgb(229, 105, 30), rgb(232, 226, 46), rgb(125, 230, 41), rgb(52, 232, 40), rgb(51, 231, 92), 
+                      [background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 80%),
+                      conic-gradient(rgb(120, 39, 230), rgb(230, 34, 231), rgb(228, 5, 136), rgb(228, 25, 25),
+                      rgb(229, 105, 30), rgb(232, 226, 46), rgb(125, 230, 41), rgb(52, 232, 40), rgb(51, 231, 92),
                       rgb(52, 232, 224), rgb(32, 125, 229), rgb(18, 39, 229), rgb(120, 39, 230))']
                   tap_action:
                     action: fire-dom-event
@@ -885,8 +1024,8 @@
                 variables.state === 'unknown' || variables.state === 'unavailable' || entity === undefined) {
                 return 'linear-gradient(0deg, rgba(115, 115, 115, 0.2) 0%, rgba(115, 115, 115, 0.2) 100%)';
               }
-              return (variables.state != 'off' && variables.state != 'idle' && variables.state != 'standby') && (entity_picture == null) ? 
-                'linear-gradient(0deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%)' : 
+              return (variables.state != 'off' && variables.state != 'idle' && variables.state != 'standby') && (entity_picture == null) ?
+                'linear-gradient(0deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%)' :
                 'linear-gradient(0deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,0) 100%), url(' + entity_picture + ')';
             ]]]
 
@@ -1030,7 +1169,7 @@
           - fill: >
               [[[
                 return variables.state === 'off' || variables.state === 'idle' || variables.state === 'standby' ||
-                variables.state === 'unknown' || variables.state === 'unavailable' || entity === undefined ? 
+                variables.state === 'unknown' || variables.state === 'unavailable' || entity === undefined ?
                   '#9da0a2' :
                   'rgba(255, 255, 255, 0.8)';
               ]]]
@@ -1249,7 +1388,7 @@
                {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
                {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
                {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
-               {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A') 
+               {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
             | replace('Monday', 'Monday')
             | replace('Tuesday', 'Tuesday')
             | replace('Wednesday', 'Wednesday')
@@ -1699,7 +1838,7 @@
               100% {transform: scale(1);}}.on{animation: on 0.8s; transform-origin: center;}
               </style>
               <path fill="var(--light-color)" d="M12 17.8c-6.7 0-10.4-1.3-10.4-2 0-.5 2.2-1.4 6.3-1.8 1.7-.1 3.6-.1 5.5-.1 5.8.2 9 1.3 9 1.9 0 .7-3.7 2-10.4 2m0-2.6c-.2 0-2.1 0-2.1.8s1.9.8 2.1.8 2.2 0 2.2-.8-2-.8-2.2-.8z"/>
-              <g class="on"><path fill="#9da0a2" d="M12 8.8c-3.9 0-11.4.6-11.4 3V16c0 2 7.5 2.8 11.4 2.8s11.1-.6 11.4-2.8v-4.2c0-2.4-7.5-3-11.4-3zm0 9c-6.7 0-10.4-1.3-10.4-2 0-.5 2.2-1.4 6.3-1.8 1.7-.1 3.6-.1 5.5-.1 5.8.2 9 1.3 9 1.9 0 .7-3.7 2-10.4 2m0-2.6c-.2 0-2.1 0-2.1.8s1.9.8 2.1.8 2.2 0 2.2-.8-2-.8-2.2-.8zm-.6-8v1.6h1V7.2c1.2-.1 2.5-.4 2.5-1.3v-.4c0-1-1.6-1.3-3-1.3s-3 .3-3 1.3v.4c0 .8 1.3 1.2 2.5 1.3z"/>              
+              <g class="on"><path fill="#9da0a2" d="M12 8.8c-3.9 0-11.4.6-11.4 3V16c0 2 7.5 2.8 11.4 2.8s11.1-.6 11.4-2.8v-4.2c0-2.4-7.5-3-11.4-3zm0 9c-6.7 0-10.4-1.3-10.4-2 0-.5 2.2-1.4 6.3-1.8 1.7-.1 3.6-.1 5.5-.1 5.8.2 9 1.3 9 1.9 0 .7-3.7 2-10.4 2m0-2.6c-.2 0-2.1 0-2.1.8s1.9.8 2.1.8 2.2 0 2.2-.8-2-.8-2.2-.8zm-.6-8v1.6h1V7.2c1.2-.1 2.5-.4 2.5-1.3v-.4c0-1-1.6-1.3-3-1.3s-3 .3-3 1.3v.4c0 .8 1.3 1.2 2.5 1.3z"/>
               </svg>
             `;
           }
@@ -2700,6 +2839,43 @@
         [[[ if (entity.state === 'open') return '<svg viewBox="0 0 50 50">
         <path  d="M10 3v44.5M2 1.8v46.5M48 1.8v46.5M1 3h48m-6 44h6m-5.5-11.5v12.7M40 46h3.5m1-43v17.5M40 3v44.5M5.5 3v17.5m1 15l-.2 12.7M10 46H6.5m.5 1H1" stroke-width="2.5"/> </svg> ' ;
         else return '<svg viewBox="0 0 50 50"> <path d="M2 3v44M48 3v44M.8 2.5h48.4M38 47.5h11.2M34.5 35v12m.5-.5h3M43.5 2v18M25 3v44M7.5 2v18m9 15v12m-.5-.5h-3m0 1H.8M38.5 32v15m-26-15v15m3.5.5h19M19.5 8v18m12-18v18" stroke-width="2.5"/> </svg>'; ]]]
+
+  icon_cover:
+    styles:
+      custom_fields:
+        icon:
+          - width: 95%
+          - margin-left: 3%
+          - margin-top: 5%
+    custom_fields:
+      icon: |
+        [[[
+          const fill_color = (entity.attributes.current_position > variables.close_position) ? '#72757c' : '#00a86b';
+          let common = `<svg viewBox="0 0 50 50">
+              <g transform="matrix(0.00733309,0,0,-0.00934536,-0.00876259,42.68667)" fill="${fill_color}" stroke="none">
+              <path d="M 95,4556 C 54,4538 12,4487 5,4447 2,4429 0,4290 2,4138 c 3,-314 3,-312 88,-355 41,-21 58,-23 207,-23 H 460 V 2311 862 L 281,858 C 118,855 99,853 74,834 23,796 5,763 5,705 5,647 23,614 74,576 l 27,-21 h 2459 2459 l 27,21 c 51,38 69,71 69,129 0,58 -18,91 -69,129 -25,19 -44,21 -207,24 l -179,4 v 1449 1449 h 163 c 149,0 166,2 207,23 87,44 85,37 85,382 0,291 -1,305 -21,331 -11,15 -33,37 -48,48 l -27,21 -2447,2 C 553,4569 120,4567 95,4556 Z M 4350,2310 V 860 H 2560 770 v 1450 1450 h 1790 1790 z" />`,
+              path75 = `<path d="m 1152,3300 c -96,-59 -96,-201 0,-260 33,-20 54,-20 1408,-20 1354,0 1375,0 1408,20 96,59 96,201 0,260 -33,20 -54,20 -1408,20 -1354,0 -1375,0 -1408,-20 z" />`,
+              path50 = `<path d="m 1164,2741 c -111,-51 -114,-214 -4,-272 33,-18 90,-19 1400,-19 1310,0 1367,1 1400,19 110,58 107,221 -4,272 -39,18 -96,19 -1396,19 -1300,0 -1357,-1 -1396,-19 z" />`,
+              path25 = `<path d="m 1160,2152 c -104,-52 -109,-206 -8,-267 33,-20 51,-20 1408,-20 1357,0 1375,0 1408,20 101,61 96,215 -8,267 -33,17 -120,18 -1400,18 -1280,0 -1367,-1 -1400,-18 z" />`,
+              path0  = `<path d="m 1152,1580 c -96,-59 -96,-201 0,-260 33,-20 54,-20 1408,-20 1354,0 1375,0 1408,20 96,59 96,201 0,260 -33,20 -54,20 -1408,20 -1354,0 -1375,0 -1408,-20 z" />`;
+          if (entity.attributes.current_position <= variables.close_position) {
+            return `${common}${path75}${path50}${path25}${path0}</g></svg>`;
+          }
+          if (entity.attributes.current_position <= variables.quarter1_position) {
+            return `${common}${path75}${path50}${path25}</g></svg>`;
+          }
+          if (entity.attributes.current_position <= variables.middle_position) {
+            return `${common}${path75}${path50}</g></svg>`;
+          }
+          if (entity.attributes.current_position <= variables.quarter3_position) {
+            return `${common}${path75}</g></svg>`;
+          }
+          if (entity.attributes.current_position <= 100) {
+            return `${common}</g></svg>`;
+          }
+        ]]]
+
+
   icon_aqi:
     show_state: true
     custom_fields:
