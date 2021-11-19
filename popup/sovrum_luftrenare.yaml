@@ -1,0 +1,204 @@
+action: fire-dom-event
+browser_mod:
+  command: popup
+  title: Air Purifier
+  style:
+    .: |
+      :host .content {
+        width: calc(385px + 385px + 385px);
+        max-width: 90vw;
+      }
+    layout-card:
+      $grid-layout$:
+        hui-entities-card:
+          $: |
+            .card-content {
+              padding: 1.5em 2.7em 2.3em 2em;
+            }
+            ha-card {
+              animation: border 1s forwards;
+              border-radius: 0;
+            }
+            @keyframes border {
+              0%, 100% {
+                border-right: 1px solid rgba(0, 0, 0, 0.3);
+              }
+            }
+            /* phone */
+            @media screen and (max-width: 800px) {
+              ha-card {
+                animation: none;
+              }
+            }
+          $hui-horizontal-stack-card$: |
+            #root {
+              justify-content: space-evenly;
+              margin-top: 1.9em;
+              margin-left: 0.8em;
+            }
+  card:
+    type: custom:layout-card
+    layout_type: custom:grid-layout
+    layout:
+      grid-template-columns: repeat(2, 1fr)
+      grid-template-rows: 1fr
+      grid-template-areas: |
+        "card entities"
+      mediaquery:
+        #phone
+        "(max-width: 800px)":
+          grid-template-columns: 1fr
+          grid-template-rows: repeat(2, 1fr)
+          grid-template-areas: |
+            "card"
+            "entities"
+    cards:
+
+      #################################################
+      #                                               #
+      #                AIR PURIFIER CARD              #
+      #                                               #
+      #################################################
+
+      - type: grid
+        columns: 1
+        view_layout:
+          grid-area: card
+        square: false
+        cards:
+          - type: custom:purifier-card
+            entity: fan.zhimi_airpurifier_v7
+            aqi:
+              entity_id: sensor.airpurifier_pm2_5
+            stats:
+              - entity_id: sensor.airpurifier_filter_life_remaining
+                unit: '%'
+                subtitle: Filter Remaining
+              - entity_id: sensor.airpurifier_temperature
+                unit: °C
+                subtitle: Temperature
+              - entity_id: sensor.airpurifier_humidity
+                unit: '%'
+                subtitle: Humidity
+              - entity_id: sensor.airpurifier_motor_speed
+                unit: RPM
+                subtitle: Fan speed
+              - entity_id: sensor.airpurifier_illuminance
+                unit: lx
+                subtitle: Illuminance
+            shortcuts:
+              - name: Silent
+                icon: mdi:weather-night
+                preset_mode: Silent
+                #service: fan.set_preset_mode
+                #service_data:
+                #  preset_mode: Silent
+              - name: 25%
+                icon: mdi:circle-slice-2
+                preset_mode: Favorite
+                speed: Favorite
+                xiaomi_miio_favorite_level: 4
+                #service: fan.set_preset_mode
+                #service_data:
+                #  preset_mode: Favorite
+              - name: 50%
+                icon: mdi:circle-slice-4
+                speed: Favorite
+                #service: fan.set_preset_mode
+                #service_data:
+                #  preset_mode: Favorite
+                xiaomi_miio_favorite_level: 8
+              - name: 75%
+                icon: mdi:circle-slice-6
+                speed: Favorite
+                #service: fan.set_preset_mode
+                #service_data:
+                #  preset_mode: Favorite
+                xiaomi_miio_favorite_level: 12
+              - name: 100%
+                icon: mdi:circle-slice-8
+                speed: Favorite
+                #service: fan.set_preset_mode
+                #service_data:
+                #  preset_mode: Favorite
+                xiaomi_miio_favorite_level: 16
+              - name: Auto
+                icon: mdi:brightness-auto
+                preset_mode: Auto
+                #service: fan.set_preset_mode
+                #service_data:
+                #  preset_mode: Auto
+            show_name: true
+            show_state: true
+            show_toolbar: true
+            compact_view: false
+
+          - type: custom:mini-graph-card
+            entities:
+              #- color: '#385581'
+              - entity: sensor.room_aqi
+            line_width: 8
+            hour24: true
+            group: true
+            align_icon: left
+            align_state: right
+            align_header: left
+            hours_to_show: 24
+            show:
+              {fill: fade, icon: false, name: false, state: false,
+              name_adaptive_color: false, labels: hover, legend: false}
+            color_thresholds:
+              - value: 1
+                color: "#385581"
+              - value: 30
+                color: "#32a852"
+              - value: 60
+                color: "#c0392b"
+
+            tap_action:
+              action: non
+          # - type: custom:apexcharts-card
+            # graph_span: 48h
+            # experimental:
+              # color_threshold: true
+            # header:
+              # show: false
+              # title: ApexCharts-Card
+              # show_states: true
+              # colorize_states: true
+            # series:
+              # - entity: sensor.smoothed_living_room_aqi
+                # fill_raw: last
+                # group_by:
+                  # func: last
+                  # fill: last
+                # color_threshold:
+                  # - value: 20
+                    # color: "#385581"
+                  # - value: 40
+                    # color: "#32a852"
+                  # - value: 60
+                    # color: "#d35400"
+                  # - value: 80
+                    # color: "#c0392b"
+
+      #################################################
+      #                                               #
+      #                    AUTO-ENTITIES              #
+      #                                               #
+      #################################################
+
+      - type: custom:auto-entities
+        view_layout:
+          grid-area: entities
+        card:
+          type: entities
+          show_header_toggle: false
+          state_color: true
+        filter:
+          include:
+            - entity_id: '*airpurifier*'
+          exclude: []
+        sort:
+          method: none
+        show_empty: true
