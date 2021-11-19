@@ -30,6 +30,14 @@ script:
           message: Restarting Home Assistant container...
       - service: shell_command.ha_dockermon_restart_container
 
+  homeassistant_core_update:
+    sequence:
+      - service: shell_command.ha_core_update
+
+  homeassistant_supervisor_update:
+    sequence:
+      - service: shell_command.ha_supervisor_update
+
   zoned_cleanup:
     sequence:
       - condition: not

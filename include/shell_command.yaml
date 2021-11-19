@@ -1,4 +1,4 @@
-# shell_command:
+shell_command:
 
   # ####################################################
   # #                                                  #
@@ -25,3 +25,6 @@
   # ha_dockermon_restart_container: !secret ha_dockermon_restart_container
   # ha_purge_logs: truncate -s 0 /config/home-assistant.log
   # playstation_5_wake: !secret playstation_5_wake
+  ha_core_update: !secret ha_core_update_command
+  ha_os_update: !secret ha_os_update_command
+  ha_supervisor_update: !secret ha_supervisor_update_command

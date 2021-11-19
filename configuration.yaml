@@ -31,7 +31,7 @@ lovelace:
       { url: /hacsfiles/lovelace-auto-entities/auto-entities.js,            type: module },
       { url: /hacsfiles/air-visual-card/air-visual-card.js,                 type: module },
       #{ url: /hacsfiles/alarmo-card/alarmo-card.js,                 type: module },
-      
+
       { url: /hacsfiles/ha-card-weather-conditions/ha-card-weather-conditions.js,   type: module },
       { url: /hacsfiles/ha-floorplan/floorplan.js,                                  type: module },
       { url: /hacsfiles/mini-humidifier/mini-humidifier-bundle.js,                  type: module },
@@ -39,13 +39,13 @@ lovelace:
       { url: /hacsfiles/zha-network-card/zha-network-card.js,                       type: module },
       { url: /hacsfiles/home-feed-card/lovelace-home-feed-card.js,                  type: module },
       { url: /hacsfiles/atomic-calendar-revive/atomic-calendar-revive.js,           type: module },
-      
+
       { url: /hacsfiles/generic-remote-control-card/generic-remote-control-card.js, type: module },
       { url: /hacsfiles/entity-attributes-card/entity-attributes-card.js,           type: module },
       { url: /hacsfiles/search-card/search-card.js,                                 type: module },
       { url: /hacsfiles/garbage-collection-card/garbage-collection-card.js,         type: module },
       { url: /hacsfiles/lovelace-swipe-navigation/lovelace-swipe-navigation.js,     type: module },
-      
+
       { url: /hacsfiles/tv-card/tv-card.js,                                   type: module },
       { url: /hacsfiles/tv-card/tv-card-editor.js,                            type: module },
       { url: /hacsfiles/lovelace-template-entity-row/template-entity-row.js,  type: module },
@@ -53,7 +53,7 @@ lovelace:
       { url: /hacsfiles/uptime-card/uptime-card.js,                           type: module },
       { url: /hacsfiles/lovelace-battery-entity-row/battery-entity-row.js,    type: module },
       { url: /hacsfiles/lovelace-more-info-card/more-info-card.js,            type: module },
-      
+
       { url: /hacsfiles/lovelace-state-switch/state-switch.js,               type: module },
       { url: /hacsfiles/lovelace-gui-sandbox/gui-sandbox.js,                 type: module },
       { url: /hacsfiles/lovelace-multiple-entity-row/multiple-entity-row.js, type: module },
@@ -66,18 +66,18 @@ lovelace:
 
       { url: '/local/calendar-card.js',                             type: module },
       { url: '/local/custom_icons.js',                           type: module },
-      { url: '/local/font.css',                                             type: css    } ] 
-      
+      { url: '/local/font.css',                                             type: css    } ]
+
   dashboards:
     lovelace-tablet:
       mode: yaml
       title: Tablet
       icon: mdi:tablet-dashboard
       show_in_sidebar: true
-      filename: ui-lovelace-tablet.yaml      
-      
-      
-      
+      filename: ui-lovelace-tablet.yaml
+
+
+
 ffmpeg:
 smartir:
   check_updates: false
@@ -86,7 +86,7 @@ homeassistant:
   allowlist_external_dirs:
     - /config
     - /config/www
-frontend: 
+frontend:
   themes: !include_dir_merge_named themes
 http: !include http.yaml
 proximity: !include proximity.yaml
