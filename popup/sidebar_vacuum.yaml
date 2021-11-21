@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Vacuum cleaner
+  title: Odkurzacz
   style:
     .: |
       :host .content {
@@ -83,7 +83,7 @@ browser_mod:
           - type: entities
             view_layout:
               grid-area: info
-            title: Inställningar
+            title: Ustawienia
             card_mod:
               class: header
             entities:
@@ -166,12 +166,12 @@ browser_mod:
 
       #################################################
       #                                               #
-      #                 KARTLÄGGNING                  #
+      #                 Przegląd                      #
       #                                               #
       #################################################
 
       - type: picture-elements
-        title: Kartläggning
+        title: Przegląd
         view_layout:
           grid-area: map
         image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 45' /%3E"

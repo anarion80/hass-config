@@ -65,7 +65,7 @@ browser_mod:
         entities:
 
           - entity: device_tracker.nokia_8_3_5g
-            name: Router
+            name: Ruter
             icon: mdi:wifi
             style: &style |
               state-badge {
@@ -73,12 +73,12 @@ browser_mod:
               }
 
           - entity: device_tracker.nokia_8_3_5g
-            name: Position
+            name: Pozycja
             icon: mdi:crosshairs-gps
             style: *style
 
       - type: custom:button-card
-        name: Play sound on Phone
+        name: Graj dźwięk na telefonie
         icon: mdi:volume-high
         tap_action:
           action: call-service

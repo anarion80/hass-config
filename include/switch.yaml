@@ -84,7 +84,7 @@ switch:
                 - service: browser_mod.toast
                   data:
                     duration: 8000
-                    message: Computer is locked from shutting down...
+                    message: Komputer jest zablokowany...
             default:
               - service: shell_command.imac_off
 

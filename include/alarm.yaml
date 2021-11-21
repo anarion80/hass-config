@@ -1,6 +1,6 @@
 alarm_control_panel:
   - platform: manual
-    name: Main Alarm
+    name: Główny alarm
     code: !secret main_alarm_code
     arming_time: 30
     delay_time: 20

@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Bedroom Tv
+  title: TV w sypialni
   style:
     hui-vertical-stack-card:
       $: |

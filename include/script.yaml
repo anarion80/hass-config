@@ -27,7 +27,7 @@ script:
       - service: browser_mod.toast
         data:
           duration: 16000
-          message: Restarting Home Assistant container...
+          message: Restartuję kontener HA...
       - service: shell_command.ha_dockermon_restart_container
 
   homeassistant_core_update:
@@ -53,13 +53,13 @@ script:
             zone_ids: ["{{ states('input_select.roborock_zone') }}"]
 
   samsung_tv_energy_saving:
-    alias: Eco mode
+    alias: Tryb eco
     icon: mdi:leaf
     sequence:
       - service: browser_mod.toast
         data:
           duration: 8000
-          message: Setting Eco mode on TV in the bedroom...
+          message: Ustawiam tryb eco na telewizorze w sypialni...
       - service: media_player.play_media
         data:
           entity_id: media_player.samsung_tv
@@ -74,8 +74,8 @@ script:
           sequence:
             - service: notify.mobile_app_nokia_8_3_5g
               data:
-                title: Find my Phone
-                message: I'm here
+                title: Znajdź mój telefon
+                message: Tu jestem
                 data:
                   push:
                     sound:
@@ -92,8 +92,8 @@ script:
           sequence:
             - service: notify.mobile_app_redmi_note_5
               data:
-                title: Find my Phone
-                message: I'm here
+                title: Znajdź mój telefon
+                message: Tu jestem
                 data:
                   push:
                     sound:
@@ -134,11 +134,11 @@ script:
           sequence:
             - service: scene.turn_on
               data:
-                entity_id: scene.hemma_below_horizon
+                entity_id: scene.dom_ponizej_horyzontu
         default:
           - service: scene.turn_on
             data:
-              entity_id: scene.hemma_above_horizon
+              entity_id: scene.dom_powyzje_horyzontu
       - delay:
           seconds: 4
 

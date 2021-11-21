@@ -1,8 +1,8 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Calendar
-  style: 
+  title: Kalendarz
+  style:
     hui-grid-card$: |
       #root {
         grid-gap: 0 !important;
@@ -12,14 +12,14 @@ browser_mod:
         width: 500px !important;
         margin: 0 !important;
       }
-  
+
   card:
     type: grid
     columns: 1
     square: false
     cards:
       - type: custom:atomic-calendar-revive
-        name: Calendar Card
+        name: Kalendarz
         entities:
           - entity: calendar.anarion_dunedain
             titleColor: red

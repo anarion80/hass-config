@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Information
+  title: Info
   style:
     .: |
       :host .content {
@@ -167,7 +167,7 @@ browser_mod:
 
           - type: custom:slider-entity-row
             entity: light.fire_tablet_screen
-            name: Brightness
+            name: Jasność
             icon: mdi:brightness-6
             hide_state: false
 
@@ -205,7 +205,7 @@ browser_mod:
             entities:
 
               - entity: sensor.template_fullykiosk_memory
-                name: Memory - 2GB
+                name: Pamięć RAM - 2GB
                 icon: mdi:memory
                 tap_action:
                   action: call-service
@@ -214,7 +214,7 @@ browser_mod:
                     entity_id: sensor.template_fullykiosk_memory
 
               - entity: sensor.template_fullykiosk_storage
-                name: Storage - 32GB
+                name: Pamięć - 32GB
                 icon: mdi:sd
                 tap_action:
                   action: call-service
@@ -225,13 +225,13 @@ browser_mod:
           - type: custom:hui-horizontal-stack-card
             cards:
               - type: custom:button-card
-                name: Home page
+                name: Strona główna
                 icon: mdi:reload
                 tap_action:
                   services: |
                     [[[
                       hass.callService('browser_mod', 'toast', {
-                        message: 'Reloading the home page ...'
+                        message: 'Wczytuję stronę główną...'
                       });
                       hass.callService('fullykiosk', 'load_start_url', {
                         entity_id: 'media_player.fire_tablet_media_player'
@@ -240,13 +240,13 @@ browser_mod:
                 template: icon_name
 
               - type: custom:button-card
-                name: The whole app
+                name: Cała aplikacja
                 icon: mdi:reload
                 tap_action:
                   services: |
                     [[[
                       hass.callService('browser_mod', 'toast', {
-                        message: 'Restarting Fully Kiosk Browser...'
+                        message: 'Restartuję Fully Kiosk Browser...'
                       });
                       hass.callService('fullykiosk', 'restart', {
                         entity_id: 'media_player.fire_tablet_media_player'
@@ -305,7 +305,7 @@ browser_mod:
           - entity: sensor.router_current_consumption
 
           - entity: sensor.nas_uptime
-            name: Last restart
+            name: Ostatni restart
 
           # - entity: sensor.template_nas_vpn
             # style: |
@@ -324,7 +324,7 @@ browser_mod:
             entities:
 
               - entity: sensor.nas_cpu
-                name: Processor
+                name: Procesor
                 tap_action:
                   action: call-service
                   service: homeassistant.update_entity
@@ -332,7 +332,7 @@ browser_mod:
                     entity_id: sensor.nas_cpu
 
               - entity: sensor.nas_mem
-                name: Memory
+                name: Pamięć
                 tap_action:
                   action: call-service
                   service: homeassistant.update_entity
@@ -340,7 +340,7 @@ browser_mod:
                     entity_id: sensor.nas_mem
 
               - entity: sensor.nas_disk
-                name: Storage
+                name: Dysk
                 tap_action:
                   action: call-service
                   service: homeassistant.update_entity
@@ -413,8 +413,8 @@ browser_mod:
             fill_raw: last
           series:
             - entity: sensor.speedtest_download
-              name: Down
+              name: Download
               color: green
             - entity: sensor.speedtest_upload
-              name: Up
+              name: Upload
               color: '#385581'

@@ -375,11 +375,11 @@
     label: |
       [[[
         if (entity.attributes.current_position <= variables.close_position)
-          return 'Chiusa';
-        return 'Aperta';
+          return 'Zamknięte';
+        return 'Otwarte';
       ]]]
     state_display: >
-      [[[ if (variables.state === true) return 'Scono'; ]]]
+      [[[ if (variables.state === true) return 'Znany'; ]]]
     tap_action:
       animation_card: |
         [[[
@@ -813,10 +813,10 @@
     state_display: >
       [[[
         if (variables.state === 'home') {
-          return 'Yes';
+          return 'Tak';
         }
         if (variables.state === 'not_home') {
-          return 'No';
+          return 'Nie';
         }
         return variables.state;
       ]]]
@@ -1028,9 +1028,9 @@
     state_display: >
       [[[
         if (entity.attributes.media_title === 'Nothing playing' || entity.attributes.media_title === 'No title' && variables.state === 'paused') {
-          return 'Nothing playing';
+          return 'Nic nie gra';
         }
-        return entity.attributes.media_title === 'No title' && variables.state === 'playing' ? 'No title' : entity.attributes.media_title;
+        return entity.attributes.media_title === 'No title' && variables.state === 'playing' ? 'Brak tytułu' : entity.attributes.media_title;
       ]]]
     custom_fields:
       blur: >
@@ -1167,7 +1167,7 @@
   #################################################
 
   recently_downloaded:
-    name: Last downloaded
+    name: Ostatnio ściągnięte
     state_display: >
       [[[
         if (entity != undefined) {
@@ -1175,7 +1175,7 @@
             number = data[1].number == undefined ? '(' + data[1].aired.split('-')[0] + ')' : data[1].number;
           return `${data[1].title} ${number}`;
         }
-        return 'Unknown';
+        return 'Brak';
       ]]]
     custom_fields:
       blur: >
@@ -1221,7 +1221,7 @@
                     elt.getElementById(id).style.display = timeout
                   }, 20000))
             };
-            lloader('circle', 'none', 'initial'),
+            loader('circle', 'none', 'initial'),
             loader('loader', 'initial', 'none');
           }
         ]]]
@@ -1375,21 +1375,21 @@
                {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int / 24 %}
                {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
                {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
-            | replace('Monday', 'Monday')
-            | replace('Tuesday', 'Tuesday')
-            | replace('Wednesday', 'Wednesday')
-            | replace('Thursday', 'Thursday')
-            | replace('Friday', 'Friday')
-            | replace('Saturday', 'Saturday')
-            | replace('Sunday', 'Sunday') %}
+            | replace('Monday', 'poniedziałek')
+            | replace('Tuesday', 'wtorek')
+            | replace('Wednesday', 'środę')
+            | replace('Thursday', 'czwartek')
+            | replace('Friday', 'piątek')
+            | replace('Saturday', 'sobotę')
+            | replace('Sunday', 'niedzielę') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F4C5'}} {{ event }} today between {{ time }}-{{ time_end }}
+              {{'\U0001F4C5'}} {{ event }} dzisiaj między {{ time }}-{{ time_end }}
             {%- elif count <= 1.0 -%}
-              {{ event}} tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} jutro między {{ time }}-{{ time_end }}
             {%- elif count <= 2.0 -%}
-              {{ event}} the day after tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} pojutrze między {{ time }}-{{ time_end }}
             {%- else -%}
-              {{event }} {{ (count + hours) | round }} days on {{ day }} between {{ time }}-{{ time_end }}
+              {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
             {%- endif %}
           {%- endif %}
               }

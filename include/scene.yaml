@@ -1,6 +1,6 @@
 scene:
   - id: '1574796562965'
-    name: Hemma below horizon
+    name: Dom poniżej horyzontu
     entities:
       light.dator:
         brightness: 254
@@ -9,13 +9,13 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Datorlampa
+        friendly_name: Lampa przy kompuetrze
         max_mireds: 500
         min_mireds: 153
         state: 'on'
         supported_features: 63
       light.fonsterlampa:
-        friendly_name: Skrivbordslampa
+        friendly_name: Lampa przy biurku
         icon: mdi:lamp
         max_mireds: 500
         min_mireds: 153
@@ -28,7 +28,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Golvlampa
+        friendly_name: Lampa stojąca
         max_mireds: 500
         min_mireds: 153
         state: 'on'
@@ -54,7 +54,7 @@ scene:
       light.storlampa:
         brightness: 83
         color_temp: 454
-        friendly_name: Kök
+        friendly_name: Kuchnia
         icon: mdi:silverware-fork-knife
         max_mireds: 500
         min_mireds: 153
@@ -67,13 +67,13 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Tvlampa
+        friendly_name: Lampa TV
         max_mireds: 500
         min_mireds: 153
         state: 'on'
         supported_features: 63
   - id: '1574866958027'
-    name: Hemma above horizon
+    name: Dom powyżej horyzontu
     entities:
       light.tvlampa:
         brightness: 254
@@ -107,13 +107,13 @@ scene:
         color_temp: 443
         state: 'on'
   - id: '1580745872107'
-    name: Läggdags
+    name: Czas spać
     entities:
       light.badrum:
         effect_list:
         - colorloop
         - random
-        friendly_name: Badrum
+        friendly_name: Łazienka
         icon: mdi:toilet
         is_hue_group: true
         max_mireds: 500
@@ -124,7 +124,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Belysning
+        friendly_name: Światło
         max_mireds: 500
         min_mireds: 153
         state: 'off'
@@ -133,13 +133,13 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Datorlampa
+        friendly_name: Lampa przy komputerze
         max_mireds: 500
         min_mireds: 153
         state: 'off'
         supported_features: 63
       light.fonsterlampa:
-        friendly_name: Skrivbordslampa
+        friendly_name: Lampa przy biurku
         icon: mdi:lamp
         max_mireds: 500
         min_mireds: 153
@@ -157,7 +157,7 @@ scene:
         state: 'off'
         supported_features: 63
       light.kladkammare:
-        friendly_name: Klädkammare
+        friendly_name: Szafa
         max_mireds: 500
         min_mireds: 153
         state: 'off'
@@ -166,7 +166,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Kök
+        friendly_name: Kuchnia
         is_hue_group: true
         max_mireds: 500
         min_mireds: 153
@@ -194,7 +194,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Taklampor
+        friendly_name: Swiatła sufitowe
         icon: mdi:track-light
         max_mireds: 500
         min_mireds: 153
@@ -209,7 +209,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Datorlampa
+        friendly_name: Lampa przy komputerze
         hs_color:
         - 39.779
         - 70.98
@@ -230,7 +230,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Golvlampa
+        friendly_name: Lampa stojąca
         hs_color:
         - 12.281
         - 67.059
@@ -264,7 +264,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Kök
+        friendly_name: Kuchnia
         is_hue_group: true
         max_mireds: 500
         min_mireds: 153
@@ -294,7 +294,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Taklampa 1
+        friendly_name: Lampa sufitowa 1
         hs_color:
         - 34.648
         - 83.529
@@ -315,7 +315,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Taklampa 2
+        friendly_name: Lampa sufitowa 2
         hs_color:
         - 34.921
         - 74.118
@@ -336,7 +336,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Tvlampa
+        friendly_name: Lampa TV
         hs_color:
         - 335.349
         - 50.588
@@ -352,7 +352,7 @@ scene:
         - 0.46
         - 0.266
   - id: '1580746572051'
-    name: Filmdags
+    name: Czas na film
     entities:
       light.dator:
         brightness: 123
@@ -361,7 +361,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Datorlampa
+        friendly_name: Lampa przy komputerze
         max_mireds: 500
         min_mireds: 153
         state: 'on'
@@ -370,7 +370,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Golvlampa
+        friendly_name: Lampa stojąca
         max_mireds: 500
         min_mireds: 153
         state: 'off'
@@ -379,7 +379,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Taklampor
+        friendly_name: Światło sufitowe
         icon: mdi:track-light
         max_mireds: 500
         min_mireds: 153
@@ -391,7 +391,7 @@ scene:
         effect_list:
         - colorloop
         - random
-        friendly_name: Tvlampa
+        friendly_name: Lampa TV
         hs_color:
         - 30.667
         - 35.294

@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Air Purifier
+  title: Oczyszczacz Powietrza
   style:
     hui-grid-card$: |
       #root {
@@ -22,22 +22,22 @@ browser_mod:
         stats:
           - attribute: filter_life_remaining
             unit: '%'
-            subtitle: Filter Remaining
+            subtitle: Filtr
           - attribute: temperature
             unit: °C
-            subtitle: Temperature
+            subtitle: Temperatura
           - attribute: humidity
             unit: '%'
-            subtitle: Humidity
+            subtitle: Wilgotność
           - attribute: favorite_level
             unit: ''
-            subtitle: Level
+            subtitle: Ulubiony
           - attribute: motor_speed
             unit: RPM
-            subtitle: Fan speed
+            subtitle: Obroty wentylatora
           - attribute: speed
             unit: null
-            subtitle: Speed
+            subtitle: Prędkość
         actions:
           - name: Silent
             icon: mdi:weather-night
@@ -84,7 +84,7 @@ browser_mod:
         show_state: true
         show_toolbar: true
         compact_view: false
-      
+
       - type: custom:mini-graph-card
         entities:
           #- color: '#385581'
@@ -97,7 +97,7 @@ browser_mod:
         align_header: left
         hours_to_show: 24
         show:
-          {fill: fade, icon: false, name: false, state: false, 
+          {fill: fade, icon: false, name: false, state: false,
           name_adaptive_color: false, labels: hover, legend: false}
         color_thresholds:
           - value: 1

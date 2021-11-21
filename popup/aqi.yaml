@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Air Quality
+  title: Jakość powietrza
   style:
     hui-grid-card$: |
       #root {
@@ -30,7 +30,7 @@ browser_mod:
           color_threshold: true
         header:
           show: false
-          title: Air Quality Index
+          title: Indeks Jakości Powietrza
           show_states: true
           colorize_states: true
         series:

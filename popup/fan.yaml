@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Fan
+  title: Klimat
   style:
     hui-grid-card:
       $more-info-card$:
@@ -41,9 +41,9 @@ browser_mod:
         entities:
           - climate.living_room_ac
           - entity: sensor.airpurifier_temperature
-            name: Living Room Temperature
+            name: Temperatura Salon
           - entity: sensor.airpurifier_humidity
-            name: Living Room Humidity
+            name: Wilgotność Salon
 
       - type: custom:mini-graph-card
         entities:

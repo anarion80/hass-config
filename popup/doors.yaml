@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Doors & Windows
+  title: Drzwi i okna
   style:
     .: |
       :host .content {
@@ -71,7 +71,7 @@ browser_mod:
           method: none
         view_layout:
           grid-area: doors
-        title: Doors
+        title: Drzwi
         show_header_toggle: false
         card_mod:
           class: header
@@ -79,7 +79,7 @@ browser_mod:
             ha-card {
               margin: 0px !important;
             }
- 
+
 
       #################################################
       #                                               #
@@ -98,7 +98,7 @@ browser_mod:
           method: none
         view_layout:
           grid-area: windows
-        title: Doors
+        title: Okna
         show_header_toggle: false
         card_mod:
           class: header

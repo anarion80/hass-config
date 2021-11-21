@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Monitors
+  title: Monitory
   style:
     hui-grid-card:
       $hui-horizontal-stack-card$: |

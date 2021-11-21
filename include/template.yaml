@@ -95,9 +95,9 @@ template:
         date: |
           <font color='#6a7377'><b>
           {%- if strptime(states('sensor.date'), '%Y-%m-%d').day != null %}
-          {%- set days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %}
-          {%- set months = ['January', 'February', 'March', 'April', 'May', 'June',
-          'July', 'August', 'September', 'October', 'November', 'December'] %}
+          {%- set days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'] %}
+          {%- set months = ['Stycznia', 'Lutego', 'Marca', 'Kwietnia', 'Maja', 'Czerwca',
+          'Lipca', 'Sierpnia', 'Września', 'Października', 'Listopada', 'Grudnia'] %}
             {{- days[now().weekday()] }}<br>
             {{- strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}
           {%- endif -%}
@@ -105,19 +105,19 @@ template:
         greet: |
           <b>
           {%- set time = now().hour %}
-          {%- if time <= 1 -%} Good night {{'\U0001F611'}}
-          {%- elif time <= 3 -%} Good night{{'\U0001F62A'}}
-          {%- elif time <= 5 -%} Good night {{'\U0001F634'}}
-          {%- elif time <= 7 -%} Good morning {{'\U0001F4A9'}}
-          {%- elif time <= 9 -%} Good morning {{'\u2615\uFE0F'}}
-          {%- elif time <= 10 -%} Good morning {{'\U0001F642'}}
-          {%- elif time <= 13 -%} Good day {{'\U0001F60A'}}
-          {%- elif time <= 15 -%} Good day {{'\U0001F60E'}}
-          {%- elif time <= 17 -%} Good day {{'\U0001F44B\U0001F3FB'}}
-          {%- elif time <= 19 -%} Good evening {{'\U0001F44B\U0001F3FB'}}
-          {%- elif time <= 22 -%} Good evening {{'\U0001F60C'}}
-          {%- elif time <= 23 -%} Good evening {{'\U0001F974'}}
-          {%- else %} Good evening {{'\U0001F974'}}
+          {%- if time <= 1 -%} Dobranoc {{'\U0001F611'}}
+          {%- elif time <= 3 -%} Dobranoc {{'\U0001F62A'}}
+          {%- elif time <= 5 -%} Dobranoc {{'\U0001F634'}}
+          {%- elif time <= 7 -%} Dzień dobry {{'\U0001F4A9'}}
+          {%- elif time <= 9 -%} Dzień dobry {{'\u2615\uFE0F'}}
+          {%- elif time <= 10 -%} Dzień dobry {{'\U0001F642'}}
+          {%- elif time <= 13 -%} Dzień dobry {{'\U0001F60A'}}
+          {%- elif time <= 15 -%} Dzień dobry {{'\U0001F60E'}}
+          {%- elif time <= 17 -%} Dzień dobry {{'\U0001F44B\U0001F3FB'}}
+          {%- elif time <= 19 -%} Dobry wieczór {{'\U0001F44B\U0001F3FB'}}
+          {%- elif time <= 22 -%} Dobry wieczór {{'\U0001F60C'}}
+          {%- elif time <= 23 -%} Dobry wieczór {{'\U0001F974'}}
+          {%- else %} Dobry wieczór {{'\U0001F974'}}
           {%- endif -%}
           </b>
         active: |
@@ -164,31 +164,31 @@ template:
           {%- set switches_name = append | map(attribute='name') | join(', ') %}
 
           {%- if (lights_on | length == 0) and (switches_on | length == 1) -%}
-            {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} is on
+            {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} jest włączone
 
           {%- elif (lights_on | length == 0) and (switches_on | length > 1) -%}
-            {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} are on
+            {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} są włączone
 
           {%- elif (lights_on | length == 1) and (switches_on | length == 1) -%}
-            {{ lights_name }} and {{switches_name }} are on
+            {{ lights_name }} i {{switches_name }} są włączone
 
           {%- elif (lights_on | length == 1) and (switches_on | length > 1) -%}
-            {{ lights_name }}, {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} are on
+            {{ lights_name }}, {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} są włączone
 
           {%- elif (lights_on | length > 1) and (switches_on | length == 1) -%}
-            {{ lights_on | length }} lights and {{ switches_name }} are on
+            {{ lights_on | length }} światła i {{ switches_name }} są włączone
 
           {%- elif (lights_on | length > 1) and (switches_on | length > 1) -%}
-            {{ lights_on | length }} lights, {{ switches_name | regex_replace(',([^,]*)$',' and\\1') }} are on
+            {{ lights_on | length }} światła, {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} są włączone
 
           {%- elif (lights_on | length == 1) and (switches_on | length == 0) -%}
-            {{ lights_name }} is on
+            {{ lights_name }} jest włączony
 
           {%- elif (lights_on | length > 1) and (switches_on | length == 0) -%}
-            {{ lights_on | length }} lights are on
+            {{ lights_on | length }} światła są włączone
 
           {%- else %}
-            <font color='#6a7377'>Everything is off</font>
+            <font color='#6a7377'>Wszystko wyłączone</font>
           {%- endif -%}
           </b>
         open: |
@@ -201,21 +201,21 @@ template:
           {%- set doors_name = doors | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
 
           {%- if (doors_open | length == 1) -%}
-            {{ doors_name }} is open
+            {{ doors_name }} są otwarte
 
           {%- elif (doors_open | length > 1) -%}
-            {{ doors_open | length }} doors are open
+            {{ doors_open | length }} drzwi są otwarte
 
           {%- else %}
-            <font color='#6a7377'>All doors are closed</font>
+            <font color='#6a7377'>Wszystkie drzwi i okna zamknięte</font>
           {%- endif -%}
           </b>
         vacuum: |
           {% set entity_id = 'vacuum.valetudo_robot' %}
           {%- if is_state(entity_id, 'cleaning') -%}
-            <b>Morty is cleaning</b>
+            <b>Robot sprząta</b>
           {%- elif is_state(entity_id, 'returning') -%}
-            <b>Morty is done</b>
+            <b>Robot skończył sprzątać</b>
           {%- endif %}
         weather: |
           {%- set temperature = states('sensor.openweathermap_temperature') %}
@@ -241,12 +241,12 @@ template:
           {%- set precip = states('sensor.openweathermap_forecast_precipitation_probability') | round %}
           {% if not is_state('sensor.openweathermap_temperature', 'unknown') %}
             {%- if temperature | float(default=0) <= 0.0 -%}
-              {{ weather_icon }} Feels like {{ apparent }}° with {{ precip }}% risk of snow {{'\u2744\uFE0F'}}
+              {{ weather_icon }} Odczuwalna {{ apparent }}° z {{ precip }}% ryzykiem śniegu {{'\u2744\uFE0F'}}
             {%- elif temperature | float(default=0) > 0.0 -%}
-              {{ weather_icon }} Feels like {{ apparent}}° with {{ precip }}% risk of rain {{ '\u2614\uFE0F' if precip > 30 }}
+              {{ weather_icon }} Odczuwalna {{ apparent}}° z {{ precip }}% ryzykiem deszczu {{ '\u2614\uFE0F' if precip > 30 }}
             {%- endif %}
           {%- else %}
-            Unable to load weather information...
+            Nie można załadować prognozy pogody...
           {%- endif %}
  #       transport: |
  #         {% set entity_id = 'sensor.stopa_bazowa_pko_bp' %}
@@ -258,21 +258,21 @@ template:
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
-            | replace('Monday', 'Monday')
-            | replace('Tuesday', 'Tuesday')
-            | replace('Wednesday', 'Wednesday')
-            | replace('Thursday', 'Thursday')
-            | replace('Friday', 'Friday')
-            | replace('Saturday', 'Saturday')
-            | replace('Sunday', 'Sunday') %}
+            | replace('Monday', 'poniedziałek')
+            | replace('Tuesday', 'wtorek')
+            | replace('Wednesday', 'środę')
+            | replace('Thursday', 'czwartek')
+            | replace('Friday', 'piątek')
+            | replace('Saturday', 'sobotę')
+            | replace('Sunday', 'niedzielę') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F4A6'}} Wash today {{ time }}
+              {{'\U0001F4A6'}} Pranie dzisiaj {{ time }}
             {%- elif count <= 1.0 -%}
-              Wash tomorrow at  {{ time }}
+              Pranie jutro o  {{ time }}
             {%- elif count <= 2.0 -%}
-              Wash the day after tomorrow at  {{ time }}
+              Pranie pojutrze o  {{ time }}
             {%- else -%}
-              Wash again {{ (count + hours) | round }} days on {{ day }} at {{ time }}
+              Wypierz jszcze raz {{ (count + hours) | round }} dni w {{ day }} o {{ time }}
             {%- endif %}
           {%- endif %}
         battery: |
@@ -283,7 +283,7 @@ template:
             | rejectattr('entity_id', 'search', 'battery_temperature')
             | map(attribute = 'entity_id') | list %}
           {%- for sensor in entities if states(sensor) != 'unknown' and states(sensor) != 'unavailable' and states(sensor) != 'None' and states(sensor) | int(default=0) <= 5 %}
-            {%- if loop.first %} {{-'\u26A0\uFE0F'}} Battery: {% else %}, {% endif -%}
+            {%- if loop.first %} {{-'\u26A0\uFE0F'}} Baterie: {% else %}, {% endif -%}
             {{ state_attr(sensor, 'friendly_name') }} {{ states(sensor) }}%
           {%- endfor %}
         calendar: |
@@ -297,27 +297,27 @@ template:
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
-            | replace('Monday', 'Monday')
-            | replace('Tuesday', 'Tuesday')
-            | replace('Wednesday', 'Wednesday')
-            | replace('Thursday', 'Thursday')
-            | replace('Friday', 'Friday')
-            | replace('Saturday', 'Saturday')
-            | replace('Sunday', 'Sunday') %}
+            | replace('Monday', 'poniedziałek')
+            | replace('Tuesday', 'wtorek')
+            | replace('Wednesday', 'środę')
+            | replace('Thursday', 'czwartek')
+            | replace('Friday', 'piątek')
+            | replace('Saturday', 'sobotę')
+            | replace('Sunday', 'niedzielę') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F4C5'}} {{ event }} today between {{ time }}-{{ time_end }}
+              {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}
             {%- elif count <= 1.0 -%}
-              {{ event}} tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} jutro między {{ time }}-{{ time_end }}
             {%- elif count <= 2.0 -%}
-              {{ event}} the day after tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} pojutrze między {{ time }}-{{ time_end }}
             {%- else -%}
-              {{event }} in {{ (count + hours) | round }} days on {{ day }} between {{ time }}-{{ time_end }}
+              {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
             {%- endif %}
           {%- endif %}
 
         plex: |
           {% if is_state('binary_sensor.plex_availability', 'off') -%}
-            {{-'\u26A0\uFE0F'}} Plex is down...
+            {{-'\u26A0\uFE0F'}} Plex padł...
           {%- endif %}
         # nas: |
           # {% if is_state('binary_sensor.nas_internet_access', 'off') -%}
@@ -338,21 +338,21 @@ template:
             {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
             {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
             {%- set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
-            | replace('Monday', 'Monday')
-            | replace('Tuesday', 'Tuesday')
-            | replace('Wednesday', 'Wednesday')
-            | replace('Thursday', 'Thursday')
-            | replace('Friday', 'Friday')
-            | replace('Saturday', 'Saturday')
-            | replace('Sunday', 'Sunday') %}
+            | replace('Monday', 'poniedziałek')
+            | replace('Tuesday', 'wtorek')
+            | replace('Wednesday', 'środę')
+            | replace('Thursday', 'czwartek')
+            | replace('Friday', 'piątek')
+            | replace('Saturday', 'sobotę')
+            | replace('Sunday', 'niedzielę') %}
             {%- if count <= 0.0 -%}
-              {{'\U0001F4C5'}} {{ event }} today between {{ time }}-{{ time_end }}
+              {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}
             {%- elif count <= 1.0 -%}
-              {{ event}} tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} jutro między {{ time }}-{{ time_end }}
             {%- elif count <= 2.0 -%}
-              {{ event}} the day after tomorrow between {{ time }}-{{ time_end }}
+              {{ event}} pojutrze między {{ time }}-{{ time_end }}
             {%- else -%}
-              {{event }} {{ (count + hours) | round }} days on {{ day }} between {{ time }}-{{ time_end }}
+              {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
             {%- endif %}
           {%- endif %}
 
@@ -361,16 +361,16 @@ template:
       state: >
         {% set entity_id = 'sensor.nas_volume_1_status' %}
         {% if is_state(entity_id, 'normal') %}
-          Good
+          Działa
         {% elif is_state(entity_id, 'background') %}
-          Verifier
+          Sprawdź
         {% else %}
           {{ states(entity_id) }}
         {% endif %}
 
     - unique_id: nas_vpn
       state: >
-        {{ 'Not connected' if states('sensor.myip') == states('sensor.template_public_ip') else 'Connected' }}
+        {{ 'Nie połączony' if states('sensor.myip') == states('sensor.template_public_ip') else 'Połączony' }}
       icon: >
         mdi:shield-{{ 'alert' if states('sensor.myip') == states('sensor.template_public_ip') else 'check' }}
 
@@ -397,11 +397,11 @@ template:
     - unique_id: hass_version
       icon: mdi:home-assistant
       state: >
-        {{ 'Latest' if states('sensor.hass_version_installed') ==
+        {{ 'Najnowsza' if states('sensor.hass_version_installed') ==
         states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
       attributes:
         friendly_name: >
-          Installed {{ states('sensor.hass_version_installed') }}
+          Zainstalowana {{ states('sensor.hass_version_installed') }}
 
     - unique_id: hass_dev_release
       icon: mdi:dev-to
@@ -413,9 +413,9 @@ template:
         friendly_name: >
           {% set release = state_attr('calendar.home_assistant_devs','message') %}
           {% if release == 'Home Assistant Core Beta Release' %}
-            Next beta
+            Następna beta
           {% elif release == 'Home Assistant Core Release' %}
-            Next release
+            Następna wersja
           {% else %}
             {{ release }}
           {% endif %}
@@ -439,16 +439,16 @@ template:
         {% macro prt(state, translate) %}
         {{ translate if states('sensor.hp_deskjet_2600_series') == state }}
         {% endmacro %}
-        {{ prt('On', 'On') }}
-        {{ prt('Scanning', 'Scanning') }}
-        {{ prt('Copying', 'Copying') }}
-        {{ prt('Printing', 'Printing') }}
-        {{ prt('Cancelling Job', 'Cancelling Job') }}
+        {{ prt('On', 'Włączony') }}
+        {{ prt('Scanning', 'Skanuje') }}
+        {{ prt('Copying', 'Kopiuje') }}
+        {{ prt('Printing', 'Drukuje') }}
+        {{ prt('Cancelling Job', 'Kasuje pracę') }}
         {{ prt('trayEmptyOrOpen', 'trayEmptyOrOpen') }}
-        {{ prt('idle', 'idle') }}
-        {{ prt('Off', 'Off') }}
+        {{ prt('idle', 'bezczynny') }}
+        {{ prt('Off', 'Wyłączony') }}
       attributes:
-        friendly_name: Printer
+        friendly_name: Drukarka
 
     - unique_id: domain_counter
       state: >
@@ -522,9 +522,9 @@ template:
             {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
             <font color='#6a7377'>
             <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}
-            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.covid19_infections') }}</b> cases{{ break -}}
-            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.covid19_deaths') }}</b> deceased{{ break -}}
-            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.covid19_recovered') }}</b> recovered
+            <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.covid19_infections') }}</b> przypadków{{ break -}}
+            <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.covid19_deaths') }}</b> zgonów{{ break -}}
+            <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.covid19_recovered') }}</b> wyzdrowień
             </font>
 
     - unique_id: fullykiosk_storage
@@ -557,4 +557,4 @@ template:
       state: >
         {{ states('sensor.fire_tablet_last_app_start') }}
       attributes:
-        friendly_name: Last restart
+        friendly_name: Ostatni restart

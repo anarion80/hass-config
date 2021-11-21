@@ -183,7 +183,7 @@ views:
       #################################################
 
       - type: grid
-        title: Living Room
+        title: Salon
         view_layout:
           grid-area: living_room
         columns: 2
@@ -198,7 +198,7 @@ views:
 
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
-            name: Air Purifier
+            name: Oczyszczacz powietrza
             hold_action:
               !include popup/sovrum_luftrenare.yaml
             template:
@@ -243,7 +243,7 @@ views:
 
           - type: custom:button-card
             entity: climate.living_room_ac
-            name: A/C
+            name: Klima
             hold_action:
               !include popup/livingroom_ac.yaml
             template:
@@ -266,7 +266,7 @@ views:
       #################################################
 
       - type: grid
-        title: Studio
+        title: Gabinet
         view_layout:
           grid-area: studio
         columns: 2
@@ -303,7 +303,7 @@ views:
           - type: custom:button-card
             #entity: switch.wemo_monitors
             entity: switch.flux
-            name: Monitors
+            name: Monitory
             triggers_update: sensor.monitors_volume
             hold_action:
               !include popup/studio_monitorer.yaml
@@ -326,7 +326,7 @@ views:
       #################################################
 
       - type: grid
-        title: Bedroom
+        title: Sypialnia
         view_layout:
           grid-area: bedroom
         columns: 2
@@ -341,7 +341,7 @@ views:
 
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
-            name: Air Purifier
+            name: Oczyszczacz powietrza
             hold_action:
               !include popup/sovrum_luftrenare.yaml
             template:
@@ -379,7 +379,7 @@ views:
 
           - type: custom:button-card
             entity: climate.living_room_ac
-            name: AC
+            name: Klima
             hold_action:
               #!include popup/sovrum_flakt.yaml
               !include popup/fan.yaml
@@ -399,7 +399,7 @@ views:
 
           - type: custom:button-card
             entity: sensor.airpurifier_temperature
-            name: Temperature
+            name: Temperatura
             hold_action:
               !include popup/sovrum_tv2.yaml
             tap_action:
@@ -456,7 +456,7 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Last downloaded
+                        state: Ostatnio ściągnięte
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
@@ -603,7 +603,7 @@ views:
       #################################################
 
       - type: grid
-        title: Other
+        title: Inne
         view_layout:
           grid-area: other
         columns: 1
@@ -736,7 +736,7 @@ views:
       #################################################
 
       - type: grid
-        title: Home
+        title: Dom
         view_layout:
           grid-area: home
         columns: 1
@@ -805,7 +805,7 @@ views:
                         # - icon_away
                     - type: custom:button-card
                       entity: sensor.u_s_air_pollution_level
-                      name: Air Quality
+                      name: Powietrze
                       tap_action:
                         !include popup/aqi.yaml
                       template:
@@ -830,7 +830,7 @@ views:
 
                     - type: custom:button-card
                       entity: script.home_arrive
-                      name: Back Home
+                      name: Powrót do domu
                       hold_action:
                         action: none
                       template:

@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Batteries
+  title: Baterie
   style:
     .: |
       :host .content {
@@ -63,7 +63,7 @@ browser_mod:
       - type: entities
         view_layout:
           grid-area: sensors
-        title: Sensors
+        title: Czujniki
         show_header_toggle: false
         card_mod:
           class: header
@@ -94,7 +94,7 @@ browser_mod:
             entity_row: true
             entities:
               - entity: sensor.button1_battery
-              - entity: sensor.door_sensor_1_battery
+              - entity: sensor.bedroom_door_battery
               - entity: sensor.switch1_battery
               - entity: sensor.motion_sensor_1_battery
 
@@ -107,7 +107,7 @@ browser_mod:
       - type: entities
         view_layout:
           grid-area: devices
-        title: Devices
+        title: Urządzenia
         show_header_toggle: false
         card_mod:
           class: header

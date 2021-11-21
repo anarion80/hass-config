@@ -38,7 +38,7 @@ automation:
             - service: input_select.select_option
               data:
                 entity_id: input_select.conditional_media
-                option: Last downloaded
+                option: Ostatnio ściągnięte
       - delay:
           seconds: 10
       - service: fullykiosk.load_start_url
@@ -147,7 +147,7 @@ automation:
         data:
           duration: 8000
           message: >
-            Movement detected in {{ trigger.to_state.name }}
+            Wykryto ruch w {{ trigger.to_state.name }}
 
   - alias: macos_notification_motion_hall
     id: '4135668040301'
@@ -180,8 +180,8 @@ automation:
       - service: notify.mobile_app_nokia_8_3_5g
         data:
           title: >
-            RC {{ states(trigger.entity_id) }} available
-          message: Press to read version information
+            RC {{ states(trigger.entity_id) }} dostępny
+          message: Naciśnij, żeby przeczytać release notes
           data:
             ttl: 0
             priority: high
@@ -206,8 +206,8 @@ automation:
       - service: notify.mobile_app_nokia_8_3_5g
         data:
           title: >
-            {{ states(trigger.entity_id) }} available {{ '\U0001F389' }}
-          message: Hold to update
+            {{ states(trigger.entity_id) }} dostępny {{ '\U0001F389' }}
+          message: Przytrzymaj żeby uaktualnić
           data:
             data:
               url: https://www.home-assistant.io/latest-release-notes/
@@ -237,7 +237,7 @@ automation:
     action:
       - service: notify.mobile_app_nokia_8_3_5g
         data:
-          title: Torrent downloaded
+          title: Torrent ściągnięty
           message: >
             {{ trigger.event.data.name }}
       - service: transmission.stop_torrent
@@ -982,7 +982,7 @@ automation:
                states.media_player.spotify_anarion, states.media_player.nest_mini, states.media_player.kd_55xe9305, states.media_player.sony_bravia_tv] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Last downloaded
+              Ostatnio ściągnięte
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -1008,7 +1008,7 @@ automation:
       - service: input_select.select_option
         data:
           entity_id: input_select.conditional_media
-          option: Last downloaded
+          option: Ostatnio ściągnięte
 
   - alias: conditional_media_atv1_fix
     id: '8872219660798'
@@ -1030,13 +1030,13 @@ automation:
                states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Last downloaded
+              Ostatnio ściągnięte
               {% elif is_state('media_player.vardagsrum', 'paused') and
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
               is_state('media_player.sovrum', 'paused') and
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
-              Last downloaded
+              Ostatnio ściągnięte
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -1064,13 +1064,13 @@ automation:
                states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Last downloaded
+              Ostatnio ściągnięte
               {% elif is_state('media_player.vardagsrum', 'paused') and
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
               is_state('media_player.sovrum', 'paused') and
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
-              Last downloaded
+              Ostatnio ściągnięte
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -1140,7 +1140,7 @@ automation:
     action:
     - service: notify.pushover
       data:
-        message: AQI is {{ states('sensor.airpurifier_pm2_5') }}, turning on the Purifier!
+        message: AQI powyżej {{ states('sensor.airpurifier_pm2_5') }}, włączam oczyszczacz!
     - service: fan.turn_on
       data:
         preset_mode: Auto
@@ -1162,7 +1162,7 @@ automation:
     action:
     - service: notify.pushover
       data:
-        message: AQI is OK, turning off the Purifier!
+        message: AQI jest w normie, wyłączam oczyszczacz!
     - service: fan.turn_off
       data: {}
       entity_id: fan.zhimi_airpurifier_v7
@@ -1346,11 +1346,11 @@ automation:
     use_blueprint:
       path: vorion/send-camera-snapshot-notification-on-motion.yaml
       input:
-        notification_message: '{{ motion_sensor_name }} detected movement!'
+        notification_message: '{{ motion_sensor_name }} - wykryto ruch!'
         motion_sensor: binary_sensor.camera1_motion
         camera: camera.camera1
         notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
-        notification_title: Motion detected!
+        notification_title: Wykryto ruch!
         delay: 2
   - id: '1617387394300'
     alias: Frigate person detection notification
@@ -1362,7 +1362,7 @@ automation:
     action:
     - service: notify.mobile_app_nokia_8_3_5g
       data_template:
-        message: A {{trigger.payload_json["after"]["label"]}} has entered schowek
+        message: '{{trigger.payload_json["after"]["label"]}} wszedł do schowka'
         data:
           image: https://ha.anarion.pl/api/frigate/notifications/{{trigger.payload_json['after']['id']}}/snapshot.jpg
           tag: '{{trigger.payload_json["after"]["id"]}}'
@@ -1385,14 +1385,13 @@ automation:
     action:
     - service: notify.mobile_app_nokia_8_3_5g
       data:
-        title: Device unavailable!
+        title: Urządzenie niedostępne!
         data:
           channel: Notfall
           priority: high
           ttl: 0
           color: red
-        message: 📵 {{ state_attr(trigger.to_state.entity_id, 'friendly_name') }} is
-          offline more than 5 minutes!
+        message: 📵 {{ state_attr(trigger.to_state.entity_id, 'friendly_name') }} jest niedostępne od 5 minut!
     mode: parallel
     max: 10
   - id: two_km_away
@@ -1725,5 +1724,5 @@ automation:
       domain: mobile_app
       type: notify
       title: High Home Assistant CPU!
-      message: Home Assistant CPU was 100% for 10 minutes!
+      message: Użycie procesora w HA było 100% przez 10 minut!
     mode: single

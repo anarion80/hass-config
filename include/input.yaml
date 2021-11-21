@@ -98,7 +98,7 @@ input_select:
   ####################################################
 
   hdmi:
-    name: Source
+    name: Żródło
     options:
       - HDMI 1
       - HDMI 2/MHL
@@ -142,7 +142,7 @@ input_select:
     icon: mdi:video-input-hdmi
 
   hdmi2:
-    name: Source
+    name: Źródło
     options:
       - TV
       - HDMI
@@ -150,7 +150,7 @@ input_select:
     icon: custom:hdmi-source
 
   roborock_speed:
-    name: Cleaning mode
+    name: Tryb sprzątania
     icon: mdi:format-list-bulleted
     options:
       - Silent
@@ -159,14 +159,14 @@ input_select:
       - Turbo
 
   sovrum_anslut_speed:
-    name: Fan speed
+    name: Prędkość wentylatora
     options:
       - Silent
       - Medium
       - Max
 
   air_purifier_speed:
-    name: Speed
+    name: Prędkość
     options:
       - Auto
       - Silent
@@ -183,9 +183,9 @@ input_select:
       - Bedroom
 
   conditional_media:
-    initial: Last downloaded
+    initial: Ostatnio ściągnięte
     options:
-      - Last downloaded
+      - Ostatnio ściągnięte
       - Plex
       - TV
       - KD-55XE9305
@@ -195,7 +195,7 @@ input_select:
       - Sony Bravia TV
 
   tv_channels:
-    name: TV Channels
+    name: Kanały TV
     options:
       - TVP1 HD
       - TVP2 HD

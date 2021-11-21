@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Air Purifier
+  title: Oczyszczacz Powietrza
   style:
     .: |
       :host .content {
@@ -73,19 +73,19 @@ browser_mod:
             stats:
               - entity_id: sensor.airpurifier_filter_life_remaining
                 unit: '%'
-                subtitle: Filter Remaining
+                subtitle: Filtr
               - entity_id: sensor.airpurifier_temperature
                 unit: °C
-                subtitle: Temperature
+                subtitle: Temperatura
               - entity_id: sensor.airpurifier_humidity
                 unit: '%'
-                subtitle: Humidity
+                subtitle: Wilgotność
               - entity_id: sensor.airpurifier_motor_speed
                 unit: RPM
-                subtitle: Fan speed
+                subtitle: Obroty wentylatora
               - entity_id: sensor.airpurifier_illuminance
                 unit: lx
-                subtitle: Illuminance
+                subtitle: Jasność
             shortcuts:
               - name: Silent
                 icon: mdi:weather-night

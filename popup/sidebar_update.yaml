@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Updates
+  title: Aktualizacje
   style:
     .: |
       :host .content {
@@ -47,8 +47,8 @@ browser_mod:
                 marked.parse(states["sensor.hass_release_notes"].attributes.body);
               // return
               let subtitle = installed == latest ?
-                `No updates` :
-                `${latest} available ${String.fromCodePoint("0x1f389")}`;
+                `Brak aktualizacji` :
+                `${latest} dostępna ${String.fromCodePoint("0x1f389")}`;
               let output = installed == latest ?
                 `<ul></ul>` :
                 release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"');
@@ -68,7 +68,7 @@ browser_mod:
         triggers_update:
           - sensor.hass_version_latest
           - sensor.hass_version_latest_beta
-        name: Update HASS
+        name: Aktualizuj HASS
         icon: mdi:update
         styles:
           card:
@@ -106,8 +106,8 @@ browser_mod:
               }
               let count = arr.length;
               let subtitle = count == 0
-                  ? `No updates`
-                  : `${count} ${count == 1 ? "update available" : "updates available"}
+                  ? `Brak aktualizacji`
+                  : `${count} ${count == 1 ? "aktualizacja dostępna" : "aktualizacje dostępne"}
                     ${String.fromCodePoint("0x1f389")}`;
               return `
                 <ha-icon icon="hacs:hacs"></ha-icon> <span class="title">Community Store ${states['sensor.hacs_version'].state}</span><br>
@@ -120,7 +120,7 @@ browser_mod:
 
       - type: custom:button-card
         entity: sensor.hacs
-        name: Open HACS
+        name: Otwórz HACS
         icon: mdi:open-in-new
         styles:
           card:
@@ -161,8 +161,8 @@ browser_mod:
               attr = attr.filter(addon => addon.version !== addon.version_latest).map(addon => output += `<li>${addon.name}</a></b> ${addon.version} \u279e ${addon.version_latest}</li>`);
               let count = attr.length;
               let subtitle = count == 0
-                  ? `No updates`
-                  : `${count} ${count == 1 ? "update available" : "updates available"}
+                  ? `Brak aktualizacji`
+                  : `${count} ${count == 1 ? "aktualizacja dostępna" : "aktualizacje dostępne"}
                     ${String.fromCodePoint("0x1f389")}`;
               return `
                 <ha-icon icon="mdi:update"></ha-icon> <span class="title">Supervisor</span><br>
@@ -177,7 +177,7 @@ browser_mod:
         entity: sensor.supervisor_updates
         triggers_update:
           - bbinary_sensor.template_supervisor_update
-        name: Update Supervisor
+        name: Aktualizuj Supervisor
         icon: mdi:open-in-new
         styles:
           card:
@@ -192,7 +192,7 @@ browser_mod:
           services: |
             [[[
               hass.callService('browser_mod', 'toast', {
-                message: 'Starting update...'
+                message: 'Startuję aktualizację...'
               });
               hass.callService('script', 'turn_on', {
                 entity_id: 'script.homeassistant_supervisor_update'

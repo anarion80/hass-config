@@ -412,7 +412,7 @@ sensor:
         unit_of_measurement: "h"
 
       today_events:
-        friendly_name: "Today's events"
+        friendly_name: "Dzisiejsze wydarzenia"
         value_template: "{{ state_attr('calendar.anarion_dunedain', 'message') }}"
         icon_template: mdi:calendar
         attribute_templates:

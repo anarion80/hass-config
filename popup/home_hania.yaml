@@ -50,7 +50,7 @@ browser_mod:
         entities:
 
           - entity: device_tracker.ta_1004
-            name: Position
+            name: Pozycja
             icon: mdi:crosshairs-gps
             style: &style |
               state-badge {
@@ -58,7 +58,7 @@ browser_mod:
               }
 
       - type: custom:button-card
-        name: Play sound on Phone
+        name: Graj dźwięk na telefonie
         icon: mdi:volume-high
         tap_action:
           action: call-service

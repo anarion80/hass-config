@@ -12,4 +12,4 @@ notify:
     sender: !secret smtp_sender
     encryption: none
     recipient: !secret smtp_receiver
-    sender_name: My Home Assistant
+    sender_name: Mój Home Assistant

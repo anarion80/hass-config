@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: A/C
+  title: Klimatyzacja
   style:
     hui-vertical-stack-card:
       $hui-entities-card$ : |
@@ -19,9 +19,9 @@ browser_mod:
           class: content
         entities:
           - entity: sensor.airpurifier_temperature
-            name: Temperature
+            name: Temperatura
           - entity: sensor.airpurifier_humidity
-            name: Humidity
+            name: Wilgotność
 
       # - type: custom:mini-graph-card
         # entities:
