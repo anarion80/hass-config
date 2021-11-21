@@ -810,6 +810,17 @@
     template:
       - base
       - circle
+    state_display: >
+      [[[
+        if (variables.state === 'home') {
+          return 'Yes';
+        }
+        if (variables.state === 'not_home') {
+          return 'No';
+        }
+        return variables.state;
+      ]]]
+    triggers_update: sensor.time
     styles:
       custom_fields:
         icon:
@@ -831,7 +842,7 @@
                 ? time(Date.now() - Date.parse(states[entity.entity_id].last_changed))
                 : time(Date.now() - Date.parse(states[variables.retain].state)),
               stroke = variables.state === 'home' ? '#b2b2b2' : 'none',
-              fill = variables.state === 'not_home' ? 'rgba(255,255,255,0.04)' : 'none';
+              fill = variables.state !== 'home' ? 'rgba(255,255,255,0.04)' : 'none';
             return `
               <svg viewBox="0 0 50 50">
                 <circle cx="25" cy="25" r="20.5" stroke="${stroke}" stroke-width="1.5" fill="${fill}" />
