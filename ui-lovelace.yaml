@@ -812,7 +812,6 @@ views:
                         - base
                         - icon_aqi
                         - full_circle
-                        - loader
                       triggers_update:
                         - sensor.u_s_air_pollution_level
                         - sensor.u_s_air_quality_index
