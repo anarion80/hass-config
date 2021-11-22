@@ -608,15 +608,15 @@ views:
           grid-area: other
         columns: 1
         cards:
-          - type: custom:mod-card
-            style:
-              swipe-card:
-                $: |
-                  .swiper-container {
-                    padding: 0px 0px 20px 0px !important;
-                  }
-            card:
-              type: custom:swipe-card
+          # - type: custom:mod-card
+          #   style:
+          #     swipe-card:
+          #       $: |
+          #         .swiper-container {
+          #           padding: 0px 0px 20px 0px !important;
+          #         }
+          #   card:
+            - type: custom:swipe-card
               start_card: 1
               parameters:
                 roundLengths: true
@@ -741,15 +741,15 @@ views:
           grid-area: home
         columns: 1
         cards:
-          - type: custom:mod-card
-            style:
-              swipe-card:
-                $: |
-                  .swiper-container {
-                    padding: 0px 0px 20px 0px !important;
-                  }
-            card:
-              type: custom:swipe-card
+          # - type: custom:mod-card
+          #   style:
+          #     swipe-card:
+          #       $: |
+          #         .swiper-container {
+          #           padding: 0px 0px 20px 0px !important;
+          #         }
+          #   card:
+            - type: custom:swipe-card
               start_card: 1
               parameters:
                 roundLengths: true
