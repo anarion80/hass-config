@@ -36,6 +36,10 @@ browser_mod:
         series:
           - entity: sensor.u_s_air_quality_index
             name: AQI
+            fill_raw: last
+            group_by:
+              func: last
+              fill: last
             color_threshold:
               - value: 50
                 color: '#32a852'
