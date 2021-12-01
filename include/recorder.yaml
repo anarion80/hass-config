@@ -30,7 +30,7 @@ recorder:
       - sensor.ffd92947_09fd7c47
       - sensor.ff084fda_073ef5d8
       - sensor.b955c88d_61f3339e
-      - sensor.fire_tablet*
+      #- sensor.fire_tablet*
       - sensor.kftrwi*
       - sensor.template_sidebar
       - sensor.date_time
