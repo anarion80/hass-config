@@ -57,21 +57,38 @@ browser_mod:
           title: ApexCharts-Card
           show_states: true
           colorize_states: true
+        yaxis:
+          - id: temp # identification name of the first y-axis
+            decimals: 0
+            apex_config:
+              tickAmount: 4
+          - id: hum # identification name of the second y-axis
+            opposite: true # make it show on the right side
+            decimals: 0
+            apex_config:
+              tickAmount: 4
         series:
           - entity: sensor.airpurifier_temperature
+            yaxis_id: temp
             fill_raw: last
             group_by:
               func: last
               fill: last
             color_threshold:
               - value: 20
-                color: "#385581"
+                color: '#385581'
               - value: 22
-                color: "#32a852"
+                color: '#32a852'
               - value: 24
-                color: "#d35400"
+                color: '#d35400'
               - value: 26
-                color: "#c0392b"
+                color: '#c0392b'
+          - entity: sensor.airpurifier_humidity
+            yaxis_id: hum
+            fill_raw: last
+            group_by:
+              func: last
+              fill: last
       # - type: custom:apexcharts-card
         # layout: minimal
         # locale: en
