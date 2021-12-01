@@ -1681,6 +1681,7 @@ automation:
     - service: light.turn_off
       target:
         entity_id: light.fire_tablet_screen
+    - service: browser_mod.close_popup
     mode: restart
   - id: '1634041571300'
     alias: fullykiosk_enable_screen
@@ -1726,3 +1727,30 @@ automation:
       title: High Home Assistant CPU!
       message: Użycie procesora w HA było 100% przez 10 minut!
     mode: single
+  - id: '1637682511628'
+    alias: Bateria w tablecie
+    description: Bateria w tablecie
+    trigger:
+    - platform: state
+      entity_id: sensor.kftrwi_battery_level
+    condition: []
+    action:
+    - choose:
+      - conditions:
+        - condition: numeric_state
+          entity_id: sensor.kftrwi_battery_level
+          above: '80'
+        sequence:
+        - service: switch.turn_off
+          target:
+            entity_id: switch.sonoff_1000d4b2e1_1
+      - conditions:
+        - condition: numeric_state
+          entity_id: sensor.kftrwi_battery_level
+          below: '20'
+        sequence:
+        - service: switch.turn_on
+          target:
+            entity_id: switch.sonoff_1000d4b2e1_1
+      default: []
+    mode: restart

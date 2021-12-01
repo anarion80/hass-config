@@ -1,0 +1,6 @@
+sonoff:
+  username: !secret sonoff_username
+  password: !secret sonoff_password
+  #sensors: [power, current, voltage]
+  #mode: local
+  #reload: always
