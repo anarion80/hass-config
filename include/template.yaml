@@ -311,7 +311,11 @@ template:
             {%- elif count <= 2.0 -%}
               {{ event}} pojutrze między {{ time }}-{{ time_end }}
             {%- else -%}
-              {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
+              {%- if day == 'wtorek' -%}
+                {{event }} za {{ (count + hours) | round }} dni we {{ day }} między {{ time }}-{{ time_end }}
+              {%- else -%}
+                {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
+              {%- endif %}
             {%- endif %}
           {%- endif %}
 
@@ -352,7 +356,11 @@ template:
             {%- elif count <= 2.0 -%}
               {{ event}} pojutrze między {{ time }}-{{ time_end }}
             {%- else -%}
-              {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
+              {%- if day == 'wtorek' -%}
+                {{event }} za {{ (count + hours) | round }} dni we {{ day }} między {{ time }}-{{ time_end }}
+              {%- else -%}
+                {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
+              {%- endif %}
             {%- endif %}
           {%- endif %}
 
