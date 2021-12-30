@@ -223,7 +223,7 @@ views:
             state_display: >
               [[[
                 if (variables.state == 'playing') {
-                  return 'On';
+                  return 'wł.';
                 }
               ]]]
             hold_action:
@@ -806,6 +806,10 @@ views:
                     - type: custom:button-card
                       entity: sensor.u_s_air_pollution_level
                       name: Powietrze
+                      #name: >
+                      #  [[[ return `<marquee>${states['sensor.u_s_air_pollution_level'].state}<\marquee>`; ]]]
+                      #state_display: >
+                      #  [[[ return `<marquee behavior="scroll" scrollamount="4" hspace="5">${states['sensor.u_s_air_pollution_level'].state}<\marquee>`; ]]]
                       tap_action:
                         !include popup/aqi.yaml
                       template:
@@ -815,6 +819,9 @@ views:
                       triggers_update:
                         - sensor.u_s_air_pollution_level
                         - sensor.u_s_air_quality_index
+                      # styles:
+                      #   state:
+                      #     - font-size: 1vw
                       variables:
                         circle_input: >
                           [[[
