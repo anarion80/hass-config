@@ -116,9 +116,15 @@
                 : 'var(--state-icon-color);'
             }
           }
+          #container {
+            text-align: left !important;
+          }
           #name, #state {
             font-size: 1.34vw;
             letter-spacing: 0.05vw;
+          }
+          #state::first-letter {
+            text-transform: uppercase;
           }
           /* portrait */
           @media screen and (max-width: 1200px) {
@@ -666,7 +672,7 @@
     custom_fields:
       circle: >
         [[[
-          if (variables.state === 'on') {
+          if (variables.consider_on) {
             let input = variables.circle_input,
               radius = 20.5,
               circumference = radius * 2 * Math.PI;
@@ -948,6 +954,7 @@
                     [[[ return entity.entity_id ]]]
                   brightness: true
                   color_temp: true
+                  white_value: true
                   full_width_sliders: false
                   hide_header: true
                   show_slider_percent: true
@@ -1336,7 +1343,7 @@
             let max = states[entity.entity_id].attributes.data.length - 1;
             return Math.floor(Math.random() * max) + 1;
           }
-          ]]]
+        ]]]
     state_display: >
       [[[
         if (entity != undefined) {
