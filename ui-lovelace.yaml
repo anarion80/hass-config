@@ -456,7 +456,7 @@ views:
                   - type: conditional
                     conditions:
                       - entity: input_select.conditional_media
-                        state: Ostatnio ściągnięte
+                        state: Ostatnio dodane
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
@@ -464,7 +464,7 @@ views:
                         action: none
                       template:
                         - conditional_media
-                        - recently_downloaded
+                        - recently_added
                         - icon_plex
 
                   - type: conditional

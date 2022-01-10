@@ -1330,12 +1330,12 @@
 
   #################################################
   #                                               #
-  #              RECENTLY DOWNLOADED              #
+  #              RECENTLY ADDED                   #
   #                                               #
   #################################################
 
-  recently_downloaded:
-    name: Ostatnio ściągnięte
+  recently_added:
+    name: Ostatnio dodane
     variables:
       i: >
         [[[

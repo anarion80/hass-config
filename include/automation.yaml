@@ -38,7 +38,7 @@ automation:
             - service: input_select.select_option
               data:
                 entity_id: input_select.conditional_media
-                option: Ostatnio ściągnięte
+                option: Ostatnio dodane
       - delay:
           seconds: 10
       - service: button.press
@@ -982,7 +982,7 @@ automation:
                states.media_player.spotify_anarion, states.media_player.nest_mini, states.media_player.kd_55xe9305, states.media_player.sony_bravia_tv] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Ostatnio ściągnięte
+              Ostatnio dodane
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -1008,7 +1008,7 @@ automation:
       - service: input_select.select_option
         data:
           entity_id: input_select.conditional_media
-          option: Ostatnio ściągnięte
+          option: Ostatnio dodane
 
   - alias: conditional_media_atv1_fix
     id: '8872219660798'
@@ -1030,13 +1030,13 @@ automation:
                states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Ostatnio ściągnięte
+              Ostatnio dodane
               {% elif is_state('media_player.vardagsrum', 'paused') and
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
               is_state('media_player.sovrum', 'paused') and
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
-              Ostatnio ściągnięte
+              Ostatnio dodane
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}
@@ -1064,13 +1064,13 @@ automation:
                states.media_player.nest_mini] %}
             {% if media_players | selectattr('state','eq','playing') | list | count == 0 %}
               {% if media_players | selectattr('state','eq','paused') | list | count == 0 %}
-              Ostatnio ściągnięte
+              Ostatnio dodane
               {% elif is_state('media_player.vardagsrum', 'paused') and
               is_state_attr('media_player.vardagsrum', 'media_title', 'No title') or
               is_state('media_player.sovrum', 'paused') and
               is_state_attr('media_player.sovrum', 'media_title', 'No title')
               %}
-              Ostatnio ściągnięte
+              Ostatnio dodane
               {% else %}
               {{ media_players | selectattr('state','eq','paused') | map(attribute='name') | max }}
               {% endif %}

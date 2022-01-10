@@ -183,9 +183,9 @@ input_select:
       - Bedroom
 
   conditional_media:
-    initial: Ostatnio ściągnięte
+    initial: Ostatnio dodane
     options:
-      - Ostatnio ściągnięte
+      - Ostatnio dodane
       - Plex
       - TV
       - KD-55XE9305
