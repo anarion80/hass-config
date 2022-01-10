@@ -41,9 +41,9 @@ automation:
                 option: Ostatnio ściągnięte
       - delay:
           seconds: 10
-      - service: fullykiosk.load_start_url
+      - service: button.press
         data:
-          entity_id: media_player.fire_tablet_media_player
+          entity_id: button.fire_tablet_load_start_url
       # - choose:
         # - conditions:
             # - condition: state
@@ -1329,7 +1329,7 @@ automation:
         entity_id: media_player.nest_mini
         message: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
           marudzenia!
-        language: pl
+        #language: pl
     mode: single
   - id: '1617358855300'
     alias: Home Assistant Update Notification for Android

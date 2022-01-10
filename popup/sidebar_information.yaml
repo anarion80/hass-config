@@ -233,8 +233,8 @@ browser_mod:
                       hass.callService('browser_mod', 'toast', {
                         message: 'Wczytuję stronę główną...'
                       });
-                      hass.callService('fullykiosk', 'load_start_url', {
-                        entity_id: 'media_player.fire_tablet_media_player'
+                      hass.callService('button', 'press', {
+                        entity_id: 'button.fire_tablet_load_start_url'
                       });
                     ]]]
                 template: icon_name
@@ -248,8 +248,8 @@ browser_mod:
                       hass.callService('browser_mod', 'toast', {
                         message: 'Restartuję Fully Kiosk Browser...'
                       });
-                      hass.callService('fullykiosk', 'restart', {
-                        entity_id: 'media_player.fire_tablet_media_player'
+                      hass.callService('button', 'press', {
+                        entity_id: 'button.fire_tablet_reboot_device'
                       });
                     ]]]
                 template: icon_name
