@@ -79,7 +79,7 @@
         - justify-self: start
         - line-height: 115%
       card:
-        - font-family: Sf Display
+        - font-family: Sf Display, Roboto
         - border-radius: var(--custom-button-card-border-radius)
         - -webkit-tap-highlight-color: rgba(0,0,0,0)
         - transition: none
@@ -250,7 +250,7 @@
         - justify-self: start
         - line-height: 115%
       card:
-        - font-family: Sf Display
+        - font-family: Sf Display, Roboto
         - border-radius: var(--custom-button-card-border-radius)
         - -webkit-tap-highlight-color: rgba(0,0,0,0)
         - transition: none
@@ -368,7 +368,7 @@
         /* padding: 1.8vw 2.5vw 0 var(--custom-layout-card-padding); */
         white-space: normal;
         text-align: left;
-        font-family: SF Display;
+        font-family: SF Display, Roboto;
         font-size: var(--sidebar-font-size);
         line-height: var(--sidebar-line-height);
         font-weight: 300;
@@ -379,7 +379,7 @@
           color: rgba(255, 255, 255, 0.8);
       }
       .time {
-        font-family: SF Text;
+        font-family: SF Text, Roboto;
         font-size: var(--sidebar-time-font-size);
         font-weight: 200;
         line-height: var(--sidebar-time-line-height);
@@ -485,7 +485,7 @@
         - justify-self: start
         - line-height: 115%
       card:
-        - font-family: Sf Display
+        - font-family: Sf Display, Roboto
         - border-radius: var(--custom-button-card-border-radius)
         - -webkit-tap-highlight-color: rgba(0,0,0,0)
         - transition: none
@@ -603,7 +603,7 @@
         - justify-self: start
         - line-height: 115%
       card:
-        - font-family: Sf Display
+        - font-family: Sf Display, Roboto
         - border-radius: var(--custom-button-card-border-radius)
         - -webkit-tap-highlight-color: rgba(0,0,0,0)
         - transition: none
@@ -874,13 +874,13 @@
         padding-right: 2px;
       }
       .title {
-        font-family: SF Text;
+        font-family: SF Text, Roboto;
         font-size: 1.3em;
         font-weight: 500;
         letter-spacing: 0.5px;
       }
       .subtitle {
-        font-family: SF Text;
+        font-family: SF Text, Roboto;
         font-size: 1em;
         line-height: 0.7em;
         padding-left: 3px;
@@ -894,7 +894,7 @@
       }
       ul {
         margin-top: -0.6em;
-        font-family: SF Display;
+        font-family: SF Display, Roboto;
         font-size: 0.95em;
         letter-spacing: 0.5px;
         padding: 0 0 0 2.5em;
@@ -1562,7 +1562,7 @@
         - border: '0.2vw solid #292c2e'
       state:
         - font-size: 2.7vw
-        - font-family: SF Mono
+        - font-family: SF Mono, Roboto
         - opacity: 0.65
         - padding: 0.55vw 1.2vw 0.5vw 1.2vw
   #################################################
@@ -1670,7 +1670,7 @@
         # ]]]
     styles:
       card:
-        - font-family: SF Display;
+        - font-family: SF Display, Roboto;
         - font-size: var(--markdown-sidebar-font-size);
         - line-height: var(--markdown-sidebar-line-height);
         - font-weight: 300;
@@ -1678,7 +1678,7 @@
         - color: #6a7377;
       # state:
         # - font-size: 2.7vw
-        # - font-family: SF Mono
+        # - font-family: SF Mono, Roboto
         # - opacity: 0.65
         # - padding: 0.55vw 1.2vw 0.5vw 1.2vw
     # extra_styles: |
@@ -1706,7 +1706,7 @@
         - grid-template-areas: '"n"'
         - grid-column-gap: 0.3em
       card:
-        - font-family: SF Text
+        - font-family: SF Text, Roboto
         - font-size: var(--markdown-sidebar-clock-font-size)
         - font-weight: 200
         - line-height: var(--markdown-sidebar-clock-line-height)
