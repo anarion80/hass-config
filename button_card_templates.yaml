@@ -6,7 +6,18 @@
   #                                               #
   #################################################
 
+  settings:
+    variables:
+      entity_tablet: light.fire_tablet_screen
+      entity_browser_mod: media_player.ffd92947_09fd7c47
+
+      translate_unknown: Nieznany
+      translate_idle: Nieaktywny
+      translate_home: Yes
+      translate_not_home: No
   base:
+    template:
+      - settings
     variables:
       state: >
         [[[ return entity === undefined || entity.state; ]]]
@@ -18,23 +29,23 @@
     show_state: true
     show_icon: false
     state_display: >
-      [[[ if (variables.state === true) return 'Unknown'; ]]]
+      [[[ if (variables.state === true) return variables.translate_unknown; ]]]
     tap_action:
       ui_sound_tablet: |
         [[[
-          let screen = states['light.fire_tablet_screen'] === undefined ||
-            states['light.fire_tablet_screen'].state;
+          let screensaver = states[variables.entity_tablet] === undefined ||
+            states[variables.entity_tablet].state;
 
           if (variables.state === 'off' && screen === 'on') {
             hass.callService('media_player', 'play_media', {
-              entity_id: 'media_player.ffd92947_09fd7c47',
+              entity_id: variables.entity_browser_mod,
               media_content_id: '/local/sound/on.m4a',
               media_content_type: 'music'
             });
           }
           if (variables.consider_on && screen === 'on') {
             hass.callService('media_player', 'play_media', {
-              entity_id: 'media_player.ffd92947_09fd7c47',
+              entity_id: variables.entity_browser_mod,
               media_content_id: '/local/sound/off.m4a',
               media_content_type: 'music'
             });
@@ -155,6 +166,17 @@
             }
             100% {
               transform: scale(1);
+            }
+          }
+          .marquee {
+            animation: marquee 20s linear infinite;
+          }
+          @keyframes marquee {
+            from {
+              transform: translateX(0);
+            }
+            to {
+              transform: translateX(-50%);
             }
           }
         `
@@ -975,10 +997,10 @@
     state_display: >
       [[[
         if (variables.state === 'home') {
-          return 'Tak';
+          return variables.translate_home;
         }
         if (variables.state === 'not_home') {
-          return 'Nie';
+          return variables.translate_not_home;
         }
         return variables.state;
       ]]]
@@ -1189,16 +1211,40 @@
       - base_media
     state_display: >
       [[[
-        let media_artist = entity === undefined || entity.attributes.media_artist,
-          media_title = entity === undefined || entity.attributes.media_title;
-        if (media_title === "Nothing playing" || media_title === "No title" && variables.state === "paused") {
-          return "Nic nie gra";
+        if (entity) {
+          let elt = this.shadowRoot,
+            await = setTimeout(marquee, 0),
+            artist = entity.attributes.media_artist,
+            title = entity.attributes.media_title,
+            output = artist === undefined && title !== undefined ? title :
+            title === undefined && artist !== undefined ? artist :
+            title !== undefined && artist !== undefined ? `${artist} - ${title}` :
+            variables.translate_idle;
+          function marquee() {
+            let state = elt.getElementById("state"),
+              container = elt.getElementById("container"),
+              spacer = "&nbsp;".repeat(3);
+            if (state && container) {
+              state.innerHTML = output;
+              let ro = new ResizeObserver(entries => {
+                let s = entries[0], c = entries[1];
+                if (s && s.contentRect && c && c.contentRect
+                && s.contentRect.width < c.contentRect.width) {
+                  state.classList.remove("marquee");
+                }
+                else if (s && s.contentRect && c && c.contentRect
+                && s.contentRect.width >= c.contentRect.width) {
+                  state.innerHTML = `${output} ${spacer} ${output} ${spacer}&nbsp;`;
+                  state.classList.add("marquee");
+                }
+              });
+              ro.observe(state);
+              ro.observe(container);
+            }
+          }
+          return output;
         }
-        return media_title === "No title" && variables.state === "playing"
-          ? "Brak tytułu"
-          : media_artist === undefined
-          ? media_title
-          : `${media_artist} - ${media_title}`;
+        return variables.translate_unknown;
       ]]]
     custom_fields:
       blur: >
@@ -1259,9 +1305,12 @@
     styles:
       name:
         - z-index: 3
+        - overflow: visible
         - margin-bottom: -1%
       state:
         - z-index: 3
+        - max-width: unset
+        - overflow: visible
       card:
         - background-color: rgba(115, 115, 115, 0.2)
         - padding: 5%
@@ -1346,12 +1395,40 @@
         ]]]
     state_display: >
       [[[
-        if (entity != undefined) {
-          let data = states[entity.entity_id].attributes.data,
-            number = data[variables.i].number == undefined ? '(' + data[variables.i].aired.split('-')[0] + ')' : data[variables.i].number;
-          return `${data[variables.i].title} ${number}`;
+        if (entity) {
+          let elt = this.shadowRoot,
+            await = setTimeout(marquee,0),
+            data = entity.attributes.data,
+            number = data[variables.i].number === undefined && data[variables.i].aired !== undefined
+              ? `(${data[variables.i].aired.split("-")[0]})`
+              : data[variables.i].number === undefined && data[variables.i].aired === undefined
+              ? ' ' : data[variables.i].number,
+            output =  `${data[variables.i].title} ${number}`;
+          function marquee() {
+            let state = elt.getElementById("state"),
+              container = elt.getElementById("container"),
+              spacer = "&nbsp;".repeat(3);
+            if (state && container) {
+              state.innerHTML = output;
+              let ro = new ResizeObserver(entries => {
+                let s = entries[0], c = entries[1];
+                if (s && s.contentRect && c && c.contentRect
+                && s.contentRect.width < c.contentRect.width) {
+                  state.classList.remove("marquee");
+                }
+                else if (s && s.contentRect && c && c.contentRect
+                && s.contentRect.width >= c.contentRect.width) {
+                  state.innerHTML = `${output} ${spacer} ${output} ${spacer}&nbsp;`;
+                  state.classList.add("marquee");
+                }
+              });
+              ro.observe(state);
+              ro.observe(container);
+            }
+          }
+          return output;
         }
-        return 'Brak';
+        return variables.translate_unknown;
       ]]]
     custom_fields:
       blur: >
