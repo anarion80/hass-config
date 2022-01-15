@@ -13,8 +13,8 @@
 
       translate_unknown: Nieznany
       translate_idle: Nieaktywny
-      translate_home: Yes
-      translate_not_home: No
+      translate_home: Tak
+      translate_not_home: Nie
   base:
     template:
       - settings
