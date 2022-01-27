@@ -8,6 +8,12 @@ browser_mod:
         width: calc(385px + 385px + 385px);
         max-width: 90vw;
       }
+      /* phone */
+      @media screen and (max-width: 800px) {
+        :host .content {
+          max-width: 100vw;
+        }
+      }
     layout-card:
       $grid-layout$:
         hui-entities-card:
@@ -16,8 +22,9 @@ browser_mod:
               padding: 1.5em 2.7em 2.3em 2em;
             }
             ha-card {
-              animation: border 1s forwards;
+              border-right: 1.5px solid rgba(0, 0, 0, 0.2);
               border-radius: 0;
+              transition: none;
             }
             @keyframes border {
               0%, 100% {
@@ -27,15 +34,17 @@ browser_mod:
             /* phone */
             @media screen and (max-width: 800px) {
               ha-card {
-                animation: none;
+                border-right: none;
+                border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
               }
             }
-          $hui-horizontal-stack-card$: |
-            #root {
-              justify-content: space-evenly;
-              margin-top: 1.9em;
-              margin-left: 0.8em;
-            }
+          $hui-horizontal-stack-card:
+            $: |
+              #root {
+                justify-content: space-evenly;
+                margin-top: 1.9em;
+                max-width: 82vw; /* iphonex */
+              }
   card:
     type: custom:layout-card
     layout_type: custom:grid-layout

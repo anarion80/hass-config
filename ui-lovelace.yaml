@@ -57,7 +57,7 @@ views:
           - type: custom:button-card
             entity: sensor.template_sidebar
             name: '[[[ return entity.attributes.time; ]]]'
-            template: sidebar_template
+            template: sidebar
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -65,7 +65,7 @@ views:
                [[[
                    return entity.attributes.date;
                    ]]]
-            template: sidebar_template
+            template: sidebar
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -73,7 +73,7 @@ views:
                [[[
                    return entity.attributes.greet;
                    ]]]
-            template: sidebar_template
+            template: sidebar
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -81,7 +81,7 @@ views:
                [[[
                    return entity.attributes.active;
                    ]]]
-            template: sidebar_template
+            template: sidebar
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -89,7 +89,7 @@ views:
                [[[
                    return entity.attributes.open;
                    ]]]
-            template: sidebar_template
+            template: sidebar
             tap_action:
               !include popup/doors.yaml
 
@@ -99,7 +99,7 @@ views:
                [[[
                    return entity.attributes.weather;
                    ]]]
-            template: sidebar_template
+            template: sidebar
             tap_action:
               !include popup/weather.yaml
 
@@ -109,7 +109,7 @@ views:
                [[[
                    return entity.attributes.battery;
                    ]]]
-            template: sidebar_template
+            template: sidebar
             tap_action:
               !include popup/batteries.yaml
 
@@ -119,7 +119,7 @@ views:
                [[[
                    return entity.attributes.calendar;
                    ]]]
-            template: sidebar_template
+            template: sidebar
             tap_action:
               !include popup/home_calendar.yaml
 
@@ -129,7 +129,7 @@ views:
                [[[
                    return entity.attributes.plex;
                    ]]]
-            template: sidebar_template
+            template: sidebar
 
           - type: conditional
             view_layout:
@@ -171,10 +171,7 @@ views:
                 tap_action:
                   !include popup/sidebar_update.yaml
                 hold_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.hacs
+                  action: none
 
       #################################################
       #                                               #
@@ -222,8 +219,11 @@ views:
             name: TV
             state_display: >
               [[[
-                if (variables.state == 'playing') {
+                if (variables.state === 'playing') {
                   return 'wł.';
+                }
+                if (variables.state === true) {
+                  return variables.translate_unknown;
                 }
               ]]]
             hold_action:
@@ -289,9 +289,6 @@ views:
           - type: custom:button-card
             entity: switch.radio
             name: Radio
-            triggers_update:
-              - lock.dator
-              - script.home_leave
             hold_action:
               !include popup/studio_dator.yaml
             template:
@@ -299,6 +296,17 @@ views:
               - icon_imac
               - loader
               - lock
+            variables:
+              lock: >
+                [[[
+                  let lock = states['lock.dator'];
+                  return lock === undefined || lock.state;
+                ]]]
+              trigger: >
+                [[[
+                  let trigger = states['script.home_leave'];
+                  return trigger === undefined || trigger;
+                ]]]
 
           - type: custom:button-card
             #entity: switch.wemo_monitors
@@ -315,8 +323,8 @@ views:
             variables:
               circle_input: >
                 [[[
-                  var entity_id = 'sensor.monitors_volume';
-                  return states[entity_id] === undefined ? null : states[entity_id].state;
+                  let sensor = states['sensor.monitors_volume'];
+                  return sensor === undefined || sensor.state;
                 ]]]
 
       #################################################
@@ -455,8 +463,20 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
-                        state: Ostatnio dodane
+                      - entity: select.conditional_media
+                        state_not: Plex
+                      - entity: select.conditional_media
+                        state_not: TV
+                      - entity: select.conditional_media
+                        state_not: KD-55XE9305
+                      - entity: select.conditional_media
+                        state_not: Sony Bravia TV
+                      - entity: select.conditional_media
+                        state_not: ChromecastAudio
+                      - entity: select.conditional_media
+                        state_not: Spotify
+                      - entity: select.conditional_media
+                        state_not: Google Nest Mini
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
@@ -469,7 +489,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: Plex
                     card:
                       type: custom:button-card
@@ -480,7 +500,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: TV
                     card:
                       type: custom:button-card
@@ -491,7 +511,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: KD-55XE9305
                     card:
                       type: custom:button-card
@@ -502,7 +522,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: Sony Bravia TV
                     card:
                       type: custom:button-card
@@ -513,7 +533,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: ChromecastAudio
                     card:
                       type: custom:button-card
@@ -524,7 +544,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: Spotify
                     card:
                       type: custom:button-card
@@ -535,7 +555,7 @@ views:
 
                   - type: conditional
                     conditions:
-                      - entity: input_select.conditional_media
+                      - entity: select.conditional_media
                         state: Google Nest Mini
                     card:
                       type: custom:button-card
@@ -774,8 +794,6 @@ views:
                         - sensor.anarion_last_changed
                       tap_action:
                         !include popup/hemma_mattias.yaml
-                      hold_action:
-                        action: none
                       template: person
                     - type: custom:button-card
                       entity: person.iwona
@@ -784,16 +802,12 @@ views:
                         - sensor.iwona_last_changed
                       tap_action:
                         !include popup/hemma_sanja.yaml
-                      hold_action:
-                        action: none
                       template: person
                     - type: custom:button-card
                       entity: person.hania
                       name: Hania
                       tap_action:
                         !include popup/home_hania.yaml
-                      hold_action:
-                        action: none
                       template: person
                     # - type: custom:button-card
                       # entity: script.home_leave

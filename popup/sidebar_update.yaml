@@ -34,24 +34,21 @@ browser_mod:
         state_display: |
           [[[
             if (entity) {
-              // markdown parser
               variables.markedjs;
               let links = new RegExp('<a href="([^"]+)"', "g");
-              // states
               let installed = entity.state;
-              let latest = installed.includes('b') ?
-                states["sensor.hass_version_latest_beta"].state :
-                states["sensor.hass_version_latest"].state;
-              let release_notes = installed.includes('b') ?
-                marked.parse(states["sensor.hass_release_notes_rc"].attributes.body) :
-                marked.parse(states["sensor.hass_release_notes"].attributes.body);
-              // return
-              let subtitle = installed == latest ?
-                `Brak aktualizacji` :
-                `${latest} dostępna ${String.fromCodePoint("0x1f389")}`;
-              let output = installed == latest ?
-                `<ul></ul>` :
-                release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"');
+              let latest = installed.includes('b')
+                ? states['sensor.hass_version_latest_beta'].state
+                : states['sensor.hass_version_latest'].state;
+              let release_notes = installed.includes('b')
+                ? marked.parse(states['sensor.hass_release_notes_rc'].attributes.body)
+                : marked.parse(states['sensor.hass_release_notes'].attributes.body);
+              let subtitle = installed == latest
+                ? 'Brak aktualizacji'
+                : `${latest} tillgänglig ${String.fromCodePoint("0x1f389")}`;
+              let output = installed == latest
+                ? '<ul></ul>'
+                : release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"');
               return `
                 <ha-icon icon="mdi:home-assistant"></ha-icon> <span class="title">Home Assistant ${installed}</span><br>
                 <p class="subtitle">${subtitle}</p>
@@ -75,10 +72,18 @@ browser_mod:
             - width: max-content
             - filter: >
                 [[[
-                  return entity.state === (states['sensor.hass_version_latest'].state ||
-                  states['sensor.hass_version_latest_beta'].state) ?
-                    'opacity(30%)' :
-                    'drop-shadow(3px 3px 5px #00000050)';
+                  if (entity) {
+                    return entity.state === states['sensor.hass_version_latest'].state ||
+                      entity.state === states['sensor.hass_version_latest_beta'].state
+                        ? 'opacity(30%)'
+                        : 'drop-shadow(3px 3px 5px #00000050)';
+                  }
+                ]]]
+            - display: >
+                [[[
+                  return entity
+                    ? 'flex'
+                    : 'none';
                 ]]]
         tap_action:
           services: |
@@ -98,19 +103,22 @@ browser_mod:
         state_display: |
           [[[
             if (entity) {
-              let output = '';
-              var arr = entity.attributes.repositories;
+              let output = '',
+                hacs_version = states['sensor.template_hacs_version'] || undefined;
+              var arr = entity.attributes.repositories === undefined
+                ? []
+                : entity.attributes.repositories;
               for (var i = 0; i < arr.length; i++) {
                 output += `<li><b><a href="#" onclick="window.open('https://github.com/${arr[i].name}/releases');">
                   ${arr[i].display_name}</a></b> ${arr[i].installed_version} \u279e ${arr[i].available_version}</li>`
               }
               let count = arr.length;
               let subtitle = count == 0
-                  ? `Brak aktualizacji`
-                  : `${count} ${count == 1 ? "aktualizacja dostępna" : "aktualizacje dostępne"}
-                    ${String.fromCodePoint("0x1f389")}`;
+                  ? 'Brak aktualizacji'
+                : `${count} ${count == 1 ? 'uppdatering tillgänglig' : 'uppdateringar tillgängliga'} ${String.fromCodePoint('0x1f389')}`;
               return `
-                <ha-icon icon="hacs:hacs"></ha-icon> <span class="title">Community Store ${states['sensor.hacs_version'].state}</span><br>
+                <ha-icon icon="hacs:hacs"></ha-icon> <span class="title">Community Store ${hacs_version === undefined
+                || hacs_version.state === 'unknown' ? ' ' : hacs_version.state}</span><br>
                 <p class="subtitle">${subtitle}</p>
                 <ul>${output}</ul>
               `;
@@ -127,9 +135,17 @@ browser_mod:
             - width: max-content
             - filter: >
                 [[[
-                  return entity.state === '0' ?
-                    'opacity(30%)' :
-                    'drop-shadow(3px 3px 5px #00000050)';
+                  if (entity) {
+                    return entity.state === '0'
+                      ? 'opacity(30%)'
+                      : 'drop-shadow(3px 3px 5px #00000050)';
+                  }
+                ]]]
+            - display: >
+                [[[
+                  return entity && entity.state !== 'unknown'
+                    ? 'flex'
+                    : 'none';
                 ]]]
         tap_action:
           action: fire-dom-event
@@ -176,7 +192,7 @@ browser_mod:
       - type: custom:button-card
         entity: sensor.supervisor_updates
         triggers_update:
-          - bbinary_sensor.template_supervisor_update
+          - binary_sensor.template_supervisor_update
         name: Aktualizuj Supervisor
         icon: mdi:open-in-new
         styles:

@@ -182,18 +182,6 @@ input_select:
       - Studio
       - Bedroom
 
-  conditional_media:
-    initial: Ostatnio dodane
-    options:
-      - Ostatnio dodane
-      - Plex
-      - TV
-      - KD-55XE9305
-      - ChromecastAudio
-      - Spotify
-      - Google Nest Mini
-      - Sony Bravia TV
-
   tv_channels:
     name: Kanały TV
     options:
