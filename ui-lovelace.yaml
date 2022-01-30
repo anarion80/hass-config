@@ -818,7 +818,7 @@ views:
                         # - base
                         # - icon_away
                     - type: custom:button-card
-                      entity: sensor.u_s_air_pollution_level
+                      entity: sensor.air_quality_level
                       name: Powietrze
                       #name: >
                       #  [[[ return `<marquee>${states['sensor.u_s_air_pollution_level'].state}<\marquee>`; ]]]
@@ -828,10 +828,11 @@ views:
                         !include popup/aqi.yaml
                       template:
                         - base
+                        - marquee_state
                         - icon_aqi
                         - full_circle
                       triggers_update:
-                        - sensor.u_s_air_pollution_level
+                        - sensor.air_quality_level
                         - sensor.u_s_air_quality_index
                       # styles:
                       #   state:

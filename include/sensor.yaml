@@ -434,6 +434,17 @@ sensor:
         unit_of_measurement: '👨'
         friendly_name: "Wyleczenia COVID19"
 
+      air_quality_level:
+        friendly_name: Poziom Jakości Powietrza
+        value_template: >-
+          {%- if (states('sensor.u_s_air_pollution_level') == "good") -%} dobry
+          {%- elif (states('sensor.u_s_air_pollution_level') == "hazardous") -%} niebezpieczny
+          {%- elif (states('sensor.u_s_air_pollution_level') == "moderate") -%} umiarkowany
+          {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy") -%} niezdrowy
+          {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy_sensitive") -%} niezdrowy dla grup wrażliwych
+          {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
+          {%- endif %}
+
 
   - platform: integration
     source: sensor.smart_plug_2_power
