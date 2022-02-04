@@ -15,10 +15,8 @@ template:
             states.media_player.chromecastaudio,
             states.media_player.kd_55xe9305,
             states.media_player.nest_mini,
-            states.media_player.nvidia_shield,
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
             states.media_player.plex_plexamp_android,
-            states.media_player.shield,
             states.media_player.sony_bravia_tv,
             states.media_player.spotify_anarion ] %}
           {% macro media(state) %}
@@ -45,10 +43,8 @@ template:
             states.media_player.chromecastaudio,
             states.media_player.kd_55xe9305,
             states.media_player.nest_mini,
-            states.media_player.nvidia_shield,
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
             states.media_player.plex_plexamp_android,
-            states.media_player.shield,
             states.media_player.sony_bravia_tv,
             states.media_player.spotify_anarion ] %}
           {{ recently_added + media_players | map(attribute='name') | list }}
