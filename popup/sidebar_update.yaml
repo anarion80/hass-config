@@ -45,7 +45,7 @@ browser_mod:
                 : marked.parse(states['sensor.hass_release_notes'].attributes.body);
               let subtitle = installed == latest
                 ? 'Brak aktualizacji'
-                : `${latest} tillgänglig ${String.fromCodePoint("0x1f389")}`;
+                : `${latest} dostępny ${String.fromCodePoint("0x1f389")}`;
               let output = installed == latest
                 ? '<ul></ul>'
                 : release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"');
