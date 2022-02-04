@@ -6,18 +6,18 @@ sensor:
     #                                                  #
     ####################################################
 
-  - platform: version
-    name: hass_version_installed
-    source: local
+  # - platform: version
+  #   name: hass_version_installed
+  #   source: local
 
-  - platform: version
-    name: hass_version_latest
-    source: container
+  # - platform: version
+  #   name: hass_version_latest
+  #   source: container
 
-  - platform: version
-    name: hass_version_latest_beta
-    beta: true
-    source: container
+  # - platform: version
+  #   name: hass_version_latest_beta
+  #   beta: true
+  #   source: container
 
   - platform: filesize
     file_paths:
