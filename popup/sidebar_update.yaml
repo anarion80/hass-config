@@ -224,7 +224,7 @@ browser_mod:
               }
             card:
               type: iframe
-              url: /config/server_control
+              url: /config/dashboard
               aspect_ratio: 65%
               style: |
                 ha-card {
