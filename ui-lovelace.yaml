@@ -40,10 +40,8 @@ views:
             "sidebar  footer      footer  ."
             "sidebar  .           .       ."
     cards:
-      - type: custom:button-card
-        styles: #extra_styles fix
-          card:
-            - display: none
+      - type: custom:button-card #extra_styles fix
+        styles: {card: [display: none]}
       #################################################
       #                                               #
       #                    SIDEBAR                    #
