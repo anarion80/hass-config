@@ -31,7 +31,7 @@ lovelace:
       { url: /hacsfiles/lovelace-auto-entities/auto-entities.js,            type: module },
       { url: /hacsfiles/air-visual-card/air-visual-card.js,                 type: module },
       #{ url: /hacsfiles/alarmo-card/alarmo-card.js,                 type: module },
-      { url: '/local/hold_action_fix.js?v=1',                               type: module },
+      #{ url: '/local/hold_action_fix.js?v=1',                               type: module },
 
       { url: /hacsfiles/ha-card-weather-conditions/ha-card-weather-conditions.js,   type: module },
       { url: /hacsfiles/ha-floorplan/floorplan.js,                                  type: module },
