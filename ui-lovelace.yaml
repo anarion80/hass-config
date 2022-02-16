@@ -40,8 +40,10 @@ views:
             "sidebar  footer      footer  ."
             "sidebar  .           .       ."
     cards:
-      - type: custom:button-card #extra_styles fix
-        styles: {card: [display: none]}
+      - type: custom:button-card
+        styles: #extra_styles fix
+          card:
+            - display: none
       #################################################
       #                                               #
       #                    SIDEBAR                    #
@@ -167,9 +169,27 @@ views:
               - type: button
                 icon: mdi:arrow-up-bold-circle-outline
                 tap_action:
-                  !include popup/sidebar_update.yaml
+                  !include popup/sidebar_update2.yaml
                 hold_action:
                   action: none
+                variables:
+                  notify: >
+                    [[[
+                      let hass_installed = hass.config.version,
+                        hass_version_latest = states['sensor.hass_version_latest'],
+                        hass_version_latest_beta = states['sensor.hass_version_latest_beta'],
+                        hacs = states['sensor.hacs'];
+                      if (hass_version_latest && hass_version_latest.state.includes('.')
+                        && hass_version_latest_beta && hass_version_latest_beta.state.includes('.')
+                        && hacs && Number.isInteger(parseInt(hacs.state))) {
+                        let hass_latest = hass_installed.includes('b')
+                            ? hass_version_latest_beta.state
+                            : hass_version_latest.state,
+                          hass_count = hass_installed !== hass_latest ? 1 : 0;
+                        return hass_count + parseInt(hacs.state);
+                      }
+                      return 0;
+                    ]]]
 
       #################################################
       #                                               #
@@ -291,7 +311,7 @@ views:
               !include popup/studio_dator.yaml
             template:
               - base
-              - icon_imac
+              - icon_radio
               - loader
               - lock
             variables:
@@ -791,7 +811,7 @@ views:
                       triggers_update:
                         - sensor.anarion_last_changed
                       tap_action:
-                        !include popup/hemma_mattias.yaml
+                        !include popup/home_anarion.yaml
                       template: person
                     - type: custom:button-card
                       entity: person.iwona
@@ -799,7 +819,7 @@ views:
                       triggers_update:
                         - sensor.iwona_last_changed
                       tap_action:
-                        !include popup/hemma_sanja.yaml
+                        !include popup/home_iwona.yaml
                       template: person
                     - type: custom:button-card
                       entity: person.hania

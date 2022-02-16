@@ -1,7 +1,7 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Hania
+  title: Iwona
   style:
     hui-vertical-stack-card:
       $: |
@@ -47,12 +47,12 @@ browser_mod:
         card_mod:
           class: content
         entities:
-          - entity: person.hania
+          - entity: person.iwona
             secondary_info: last-changed
 
       - type: history-graph
         entities:
-          - entity: person.hania
+          - entity: person.iwona
         hours_to_show: 24
         refresh_interval: 0
 
@@ -60,7 +60,7 @@ browser_mod:
         show_state: false
         entities:
 
-          - entity: device_tracker.cc_9f_7a_a8_1e_27
+          - entity: device_tracker.80_35_c1_59_ed_48
             name: Ruter
             icon: mdi:wifi
             style: &style |
@@ -68,7 +68,7 @@ browser_mod:
                 color: {{ '#3182b7' if is_state(config.entity, 'home') else '#3c3f3f' }};
               }
 
-          - entity: device_tracker.ta_1004
+          - entity: device_tracker.redmi_note_5
             name: Pozycja
             icon: mdi:crosshairs-gps
             style: *style
@@ -83,6 +83,6 @@ browser_mod:
 
       - type: map
         entities:
-          - device_tracker.ta_1004
+          - device_tracker.redmi_note_5
         default_zoom: 16
         dark_mode: true
