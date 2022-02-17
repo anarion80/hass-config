@@ -64,15 +64,17 @@ browser_mod:
           - entity: device_tracker.a2_2b_19_c3_2b_cd
             name: Ruter
             icon: mdi:wifi
-            style: &style |
-              state-badge {
-                color: {{ '#3182b7' if is_state(config.entity, 'home') else '#3c3f3f' }};
-              }
+            card_mod:
+              style: &state |
+                state-badge {
+                  color: {{ '#3182b7' if is_state(config.entity, 'home') else '#3c3f3f' }};
+                }
 
           - entity: device_tracker.nokia_8_3_5g
             name: Pozycja
             icon: mdi:crosshairs-gps
-            style: *style
+            card_mod:
+              style: *state
 
       - type: custom:button-card
         name: Graj dźwięk na telefonie
