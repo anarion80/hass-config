@@ -464,13 +464,12 @@ frontend:
           padding-left: 0.23em;
         }
         .type-custom-bar-card bar-card-value {
-          font-size: 1em;
+          font-size: 0.9em;
           font-weight: 400;
           color: #e0e1e1;
           letter-spacing: 0.01em;
           text-shadow: none;
           margin-right: auto;
-          margin-top: 5px;
         }
         .type-custom-bar-card bar-card-backgroundbar {
           background: none;
