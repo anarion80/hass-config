@@ -8,24 +8,19 @@ automation:
 
   - alias: homeassistant_start
     id: '7426848686945'
-    initial_state: true
     trigger:
       - platform: homeassistant
         event: start
     action:
-      # - service: mqtt.publish
-        # data:
-          # topic: cmnd/tasmotas/status
-          # payload: 8
       - service: browser_mod.close_popup
       - delay:
-          seconds: 1
-      - service: frontend.reload_themes
-      - delay:
-          seconds: 10
-      - service: button.press
-        data:
-          entity_id: button.fire_tablet_load_start_url
+          minutes: 1
+      # - service: frontend.reload_themes
+      # - delay:
+      #     seconds: 10
+      # - service: button.press
+      #   data:
+      #     entity_id: button.fire_tablet_load_start_url
       # - choose:
         # - conditions:
             # - condition: state
@@ -38,7 +33,6 @@ automation:
   - alias: lovelace_updated_ignore
     id: '9381519720051'
     mode: restart
-    initial_state: true
     trigger:
       - platform: event
         event_type: lovelace_updated
@@ -50,7 +44,6 @@ automation:
 
   - alias: clear_log_filesize
     id: '3331821824310'
-    initial_state: true
     trigger:
       - platform: numeric_state
         entity_id: sensor.home_assistant_log
@@ -60,7 +53,6 @@ automation:
 
   # - alias: imac_update
     # id: '3673314240807'
-    # initial_state: true
     # trigger:
       # - platform: state
         # entity_id: switch.computer_imac
@@ -82,7 +74,6 @@ automation:
 
   - alias: tv_on_lights
     id: '6657050215613'
-    initial_state: true
     trigger:
       - platform: state
         entity_id: media_player.sony_bravia_tv
@@ -94,7 +85,6 @@ automation:
 
   - alias: no_motion_bathroom
     id: '9936892396917'
-    initial_state: true
     trigger:
       - platform: state
         entity_id: binary_sensor.sensor_badrum_motion
@@ -115,7 +105,6 @@ automation:
   - alias: toast
     id: '3900676590344'
     mode: parallel
-    initial_state: true
     trigger:
       - platform: state
         entity_id:
@@ -127,13 +116,12 @@ automation:
     action:
       - service: browser_mod.toast
         data:
-          duration: 8000
+          duration: 3000
           message: >
             Wykryto ruch w {{ trigger.to_state.name }}
 
   - alias: macos_notification_motion_hall
     id: '4135668040301'
-    initial_state: false
     trigger:
       - platform: state
         entity_id: binary_sensor.sensor_hall_motion
@@ -144,11 +132,13 @@ automation:
         entity_id: switch.computer_imac
         state: 'on'
     action:
-      - service: shell_command.imac_notify_motion_hall
+      - service: notify.mobile_app_mattias_imac
+        data:
+          message: Rörelse i hallen detekterat
+          title: Home Assistant
 
   - alias: ios_notify_hass_rc
     id: '3984233949106'
-    initial_state: true
     trigger:
       - platform: state
         entity_id: sensor.hass_version_latest_beta
@@ -171,34 +161,27 @@ automation:
 
   - alias: ios_notify_hass_update
     id: '7958228563778'
-    initial_state: true
+    variables:
+      latest: >
+        {{ states(trigger.entity_id) }}
     trigger:
       - platform: state
-        entity_id: sensor.hass_version_installed
-      - platform: state
         entity_id: sensor.hass_version_latest
-    condition:
-      - condition: template
-        value_template: >
-          {% set installed = states('sensor.hass_version_installed') %}
-          {% set latest = states('sensor.hass_version_latest') %}
-          {{ installed != 'unknown' and installed != 'unavailable' and installed != 'none' and
-          latest != 'unknown' and latest != 'unavailable' and latest != 'none' and installed != latest }}
+    condition: >
+      {% set installed = states('sensor.hass_version_installed') %}
+      {{ installed != latest if '.' in installed and '.' in latest else false }}
     action:
       - service: notify.mobile_app_nokia_8_3_5g
         data:
           title: >
-            {{ states(trigger.entity_id) }} dostępny {{ '\U0001F389' }}
+           {{ latest }} dostępny {{ '\U0001F389' }}
           message: Przytrzymaj żeby uaktualnić
           data:
             data:
               url: https://www.home-assistant.io/latest-release-notes/
-            push:
-              category: ios_hass
 
   - alias: ios_notify_hass_update_action
     id: '0694774018396'
-    initial_state: true
     trigger:
       - platform: event
         event_type: ios.notification_action_fired
@@ -212,7 +195,6 @@ automation:
     id: '7876919385611'
     mode: parallel
     max: 25
-    initial_state: true
     trigger:
       - platform: event
         event_type: transmission_downloaded_torrent
@@ -228,7 +210,7 @@ automation:
           id: >
             {{ trigger.event.data.id | int }}
       - delay:
-          minutes: 15
+          minutes: 10
       - service: transmission.remove_torrent
         data:
           name: Transmission
@@ -243,7 +225,6 @@ automation:
 
   # - alias: conditional_scan_interval
     # id: '0007659752611'
-    # initial_state: true
     # trigger:
       # - platform: time_pattern
         # minutes: /5
@@ -265,7 +246,6 @@ automation:
 
   - alias: tasmota_scan_interval
     id: '2405277038357'
-    initial_state: true
     trigger:
       - platform: time_pattern
         minutes: /5
@@ -277,7 +257,6 @@ automation:
 
   - alias: update_hass_release_notes
     id: '4289040658246'
-    initial_state: true
     trigger:
       - platform: state
         entity_id:
@@ -291,15 +270,14 @@ automation:
 
   - alias: hacs_sensor_refresh
     id: '2001123854555'
-    initial_state: true
     trigger:
       - platform: event
         event_type: hacs/repository
         event_data:
           action: install
     action:
-      - delay:
-          seconds: 4
+      #- delay:
+      #    seconds: 4
       - service: homeassistant.update_entity
         target:
           entity_id: sensor.hacs
@@ -312,7 +290,6 @@ automation:
 
   # - alias: monitors_volume_slider
     # id: '0022255594357'
-    # initial_state: true
     # trigger:
       # - platform: state
         # entity_id: input_number.monitors_volume
@@ -329,7 +306,11 @@ automation:
 
   # - alias: monitors_volume_update
     # id: '1275485733091'
-    # initial_state: true
+    # variables:
+    #   min: 7
+    #   max: 75
+    #   volume: >
+    #     {{ states(trigger.entity_id) | int }}
     # trigger:
       # - platform: state
         # entity_id: sensor.monitors_volume
@@ -344,19 +325,11 @@ automation:
         # data:
           # entity_id: input_number.monitors_volume
           # value: >
-            # {% set max_volume = 75 %} {% set min_volume = 7 %}
-            # {% if states(trigger.entity_id) | int > max_volume %}
-              # {{ max_volume }}
-            # {% elif states(trigger.entity_id) | int < min_volume %}
-              # {{ min_volume }}
-            # {% else %}
-              # {{ states(trigger.entity_id) }}
-            # {% endif %}
+            # {{ max if volume > max else iif(volume < min, min, volume) }}
 
   - alias: eq_calibration
     id: '7780410156815'
     mode: queued
-    initial_state: true
     trigger:
       - platform: state
         entity_id: switch.wemo_monitors
@@ -385,7 +358,6 @@ automation:
 
   - alias: turn_off_monitors
     id: '9863921240123'
-    initial_state: true
     trigger:
       - platform: state
         entity_id: switch.computer_imac
@@ -405,7 +377,6 @@ automation:
 
   - alias: wemo_fan_turn_off
     id: '0568618309657'
-    initial_state: true
     trigger:
       - platform: state
         entity_id: switch.wemo_fan
@@ -426,7 +397,6 @@ automation:
 
   - alias: sovrum_anslut_turn_off
     id: '1050805589188'
-    initial_state: true
     trigger:
       - platform: state
         entity_id: fan.sovrum_anslut
@@ -440,7 +410,6 @@ automation:
 
   # - alias: sovrum_anslut_turn_on_temp
     # id: '0099808622760'
-    # initial_state: true
     # trigger:
       # - platform: numeric_state
         # entity_id: sensor.sensor_hall_temperature
@@ -465,7 +434,6 @@ automation:
 
   # - alias: sovrum_anslut_oscillate
     # id: '9897303821028'
-    # initial_state: true
     # trigger:
       # - platform: state
         # entity_id: input_boolean.sovrum_anslut_oscillate
@@ -478,7 +446,6 @@ automation:
   # - alias: sovrum_anslut_speed
     # id: '9292376382008'
     # mode: queued
-    # initial_state: true
     # trigger:
       # - platform: state
         # entity_id: fan.sovrum_anslut
@@ -509,7 +476,6 @@ automation:
   # ###temp
   # - alias: sovrum_anslut_speed_fix1_sync
   #   mode: queued
-  #   initial_state: true
   #   trigger:
   #     - platform: template
   #       value_template: >
@@ -528,7 +494,6 @@ automation:
 
   # - alias: sovrum_anslut_speed_fix2_restore
   #   mode: queued
-  #   initial_state: true
   #   trigger:
   #     - platform: template
   #       value_template: >
@@ -554,7 +519,6 @@ automation:
   # - alias: air_purifier_speed
     # id: '3692857919366'
     # mode: queued
-    # initial_state: true
     # trigger:
       # - platform: state
         # entity_id: input_number.air_purifier_speed
@@ -654,7 +618,6 @@ automation:
   # ###temp
   # - alias: air_purifier_speed_fix1_sync
   #   mode: queued
-  #   initial_state: true
   #   trigger:
   #     - platform: template
   #       value_template: >
@@ -673,7 +636,6 @@ automation:
 
   # - alias: air_purifier_speed_fix2_restore
   #   mode: queued
-  #   initial_state: true
   #   trigger:
   #     - platform: template
   #       value_template: >
@@ -700,7 +662,6 @@ automation:
   - alias: fullykiosk_screensaver
     id: '9452750674803'
     mode: restart
-    initial_state: true
     trigger:
       - platform: state
         entity_id: binary_sensor.ffd92947_09fd7c47
@@ -721,7 +682,7 @@ automation:
               data:
                 entity_id: light.fire_tablet_screen
                 brightness_pct: >
-                  {{ 90 if is_state('sun.sun', 'above_horizon') else 60 }}
+                  {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
         default:
           - service: switch.turn_on
             entity_id: switch.fire_tablet_screensaver
@@ -740,7 +701,6 @@ automation:
   - alias: hdmi_input_select
     id: '9559814521978'
     mode: parallel
-    initial_state: true
     trigger:
       - platform: state
         entity_id: input_select.hdmi
@@ -761,7 +721,6 @@ automation:
   - alias: turn_on_tv_fail_safe
     id: '0703991107325'
     mode: parallel
-    initial_state: true
     trigger:
       - platform: event
         event_type: call_service
@@ -809,11 +768,12 @@ automation:
   - alias: laundry_display
     id: '4792508317061'
     mode: restart
-    initial_state: true
     trigger:
-      - platform: state
-        entity_id: binary_sensor.template_laundry_time_trigger
-        to: 'on'
+      - platform: time_pattern
+        minutes: /5
+    condition: >
+      {% set start_time = state_attr('calendar.tvatta', 'start_time') %}
+      {{ as_timestamp(start_time) - as_timestamp(now()) < 10 * 60 if start_time != None else false }}
     action:
       - service: input_boolean.turn_on
         entity_id: input_boolean.laundry_display
@@ -824,7 +784,6 @@ automation:
 
   - alias: laundry_alert
     id: '3403466403120'
-    initial_state: true
     trigger:
       - platform: event
         event_type: timer.finished
@@ -844,16 +803,13 @@ automation:
           message: >
             {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
           language: sv-SE
-      - service: notify.mobile_app_nokia_8_3_5g
+      - service: notify.all_devices
         data:
           message: >
             {{'\U0001F9FA'}} {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
           data:
             ttl: 0
             priority: high
-      - service: shell_command.imac_notify_laundry
-      - delay:
-          seconds: 3
 
     ####################################################
     #                                                  #
@@ -861,43 +817,41 @@ automation:
     #                                                  #
     ####################################################
 
-  - alias: roborock_speed
-    id: '0054872718027'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: input_select.roborock_speed
-    action:
-      - service: vacuum.set_fan_speed
-        data:
-          entity_id: vacuum.valetudo_robot
-          fan_speed: >
-            {% if is_state(trigger.entity_id, 'Silent') %} low
-            {% elif is_state(trigger.entity_id, 'Standard') %} medium
-            {% elif is_state(trigger.entity_id, 'Medium') %} high
-            {% elif is_state(trigger.entity_id, 'Turbo') %} max
-            {% endif %}
+  # - alias: roborock_speed
+  #   id: '0054872718027'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: input_select.roborock_speed
+  #   action:
+  #     - service: vacuum.set_fan_speed
+  #       data:
+  #         entity_id: vacuum.valetudo_robot
+  #         fan_speed: >
+  #           {% if is_state(trigger.entity_id, 'Silent') %} low
+  #           {% elif is_state(trigger.entity_id, 'Standard') %} medium
+  #           {% elif is_state(trigger.entity_id, 'Medium') %} high
+  #           {% elif is_state(trigger.entity_id, 'Turbo') %} max
+  #           {% endif %}
 
-  - alias: roborock_speed_update
-    id: '3154087574817'
-    initial_state: true
-    trigger:
-      - platform: state
-        entity_id: vacuum.valetudo_robot
-      - platform: homeassistant
-        event: start
-    action:
-      - service: input_select.select_option
-        data:
-          entity_id: input_select.roborock_speed
-          option: >
-            {% set entity_id = 'vacuum.valetudo_robot' %}
-            {% if is_state_attr(entity_id, 'fan_speed', 'low') %} Sil;ent
-            {% elif is_state_attr(entity_id, 'fan_speed', 'medium') %} Standard
-            {% elif is_state_attr(entity_id, 'fan_speed', 'high') %} Medium
-            {% elif is_state_attr(entity_id, 'fan_speed', 'max') %} Turbo
-            {% elif is_state_attr(entity_id, 'fan_speed', 'off') %} Off
-            {% endif %}
+  # - alias: roborock_speed_update
+  #   id: '3154087574817'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: vacuum.valetudo_robot
+  #     - platform: homeassistant
+  #       event: start
+  #   action:
+  #     - service: input_select.select_option
+  #       data:
+  #         entity_id: input_select.roborock_speed
+  #         option: >
+  #           {% set entity_id = 'vacuum.valetudo_robot' %}
+  #           {% if is_state_attr(entity_id, 'fan_speed', 'low') %} Sil;ent
+  #           {% elif is_state_attr(entity_id, 'fan_speed', 'medium') %} Standard
+  #           {% elif is_state_attr(entity_id, 'fan_speed', 'high') %} Medium
+  #           {% elif is_state_attr(entity_id, 'fan_speed', 'max') %} Turbo
+  #           {% elif is_state_attr(entity_id, 'fan_speed', 'off') %} Off
+  #           {% endif %}
 
     ####################################################
     #                                                  #
@@ -907,7 +861,6 @@ automation:
 
   - alias: person_home
     id: '8423590985012'
-    initial_state: true
     trigger:
       - platform: state
         entity_id:
