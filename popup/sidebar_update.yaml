@@ -5,14 +5,14 @@ browser_mod:
   style:
     .: |
       :host .content {
-        width: 60em;
+        width: 98%;
         height: 100%;
         padding: 2.1em 1.9em 1.9em 2.7em;
       }
     hui-grid-card:
       $: |
         button-card:nth-child(2), button-card:nth-child(4) {
-          margin: 0.6em 0 2.1em 0.8em;
+          margin: 0.5em 0 3em 0.4em;
         }
         #root {
           grid-gap: 0 !important;
@@ -22,9 +22,43 @@ browser_mod:
     columns: 1
     square: false
     cards:
+
+      ### hass
       - type: custom:button-card
         entity: sensor.hass_version_installed
-        template: updater_hass
+        triggers_update:
+          - sensor.hass_version_latest_beta
+          - sensor.hass_version_latest
+          - sensor.hass_release_notes_rc
+          - sensor.hass_release_notes
+        state_display: |
+          [[[
+            if (entity) {
+              variables.markedjs;
+              let links = new RegExp('<a href="([^"]+)"', "g");
+              let installed = entity.state;
+              let latest = installed.includes('b')
+                ? states['sensor.hass_version_latest_beta'].state
+                : states['sensor.hass_version_latest'].state;
+              let release_notes = installed.includes('b')
+                ? marked.parse(states['sensor.hass_release_notes_rc'].attributes.body)
+                : marked.parse(states['sensor.hass_release_notes'].attributes.body);
+              let subtitle = installed == latest
+                ? 'Brak aktualizacji'
+                : `${latest} dostępny ${String.fromCodePoint("0x1f389")}`;
+              let output = installed == latest
+                ? '<ul></ul>'
+                : release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"');
+              return `
+                <ha-icon icon="mdi:home-assistant"></ha-icon> <span class="title">Home Assistant ${installed}</span><br>
+                <p class="subtitle">${subtitle}</p>
+                ${output}
+              `;
+            }
+          ]]]
+        template:
+          - updater
+          - marked.js
 
       - type: custom:button-card
         entity: sensor.hass_version_installed
@@ -38,22 +72,18 @@ browser_mod:
             - width: max-content
             - filter: >
                 [[[
-                  return `[[[
-                    if (entity) {
-                      return entity.state === states['sensor.hass_version_latest'].state ||
-                        entity.state === states['sensor.hass_version_latest_beta'].state
-                          ? 'opacity(30%)'
-                          : 'drop-shadow(3px 3px 5px #00000050)';
-                    }
-                  ]]]`
+                  if (entity) {
+                    return entity.state === states['sensor.hass_version_latest'].state ||
+                      entity.state === states['sensor.hass_version_latest_beta'].state
+                        ? 'opacity(30%)'
+                        : 'drop-shadow(3px 3px 5px #00000050)';
+                  }
                 ]]]
             - display: >
                 [[[
-                  return `[[[
-                    return entity
-                      ? 'flex'
-                      : 'none';
-                  ]]]`
+                  return entity
+                    ? 'flex'
+                    : 'none';
                 ]]]
         tap_action:
           services: |
@@ -67,9 +97,34 @@ browser_mod:
             ]]]
         template: icon_name
 
+      ### hacs
       - type: custom:button-card
         entity: sensor.hacs
-        template: updater_hacs
+        state_display: |
+          [[[
+            if (entity) {
+              let output = '',
+                hacs_version = states['sensor.template_hacs_version'] || undefined;
+              var arr = entity.attributes.repositories === undefined
+                ? []
+                : entity.attributes.repositories;
+              for (var i = 0; i < arr.length; i++) {
+                output += `<li><b><a href="#" onclick="window.open('https://github.com/${arr[i].name}/releases');">
+                  ${arr[i].display_name}</a></b> ${arr[i].installed_version} \u279e ${arr[i].available_version}</li>`
+              }
+              let count = arr.length;
+              let subtitle = count == 0
+                  ? 'Brak aktualizacji'
+                : `${count} ${count == 1 ? 'aktualizacja dostępna' : 'aktualizacje dostępne'} ${String.fromCodePoint('0x1f389')}`;
+              return `
+                <ha-icon icon="hacs:hacs"></ha-icon> <span class="title">Community Store ${hacs_version === undefined
+                || hacs_version.state === 'unknown' ? ' ' : hacs_version.state}</span><br>
+                <p class="subtitle">${subtitle}</p>
+                <ul>${output}</ul>
+              `;
+            }
+          ]]]
+        template: updater
 
       - type: custom:button-card
         entity: sensor.hacs
@@ -80,32 +135,59 @@ browser_mod:
             - width: max-content
             - filter: >
                 [[[
-                  return `[[[
-                    if (entity) {
-                      return entity.state === '0'
-                        ? 'opacity(30%)'
-                        : 'drop-shadow(3px 3px 5px #00000050)';
-                    }
-                  ]]]`
+                  if (entity) {
+                    return entity.state === '0'
+                      ? 'opacity(30%)'
+                      : 'drop-shadow(3px 3px 5px #00000050)';
+                  }
                 ]]]
             - display: >
                 [[[
-                  return `[[[
-                    return entity && entity.state !== 'unknown'
-                      ? 'flex'
-                      : 'none';
-                  ]]]`
+                  return entity && entity.state !== 'unknown'
+                    ? 'flex'
+                    : 'none';
                 ]]]
-        template: hacs_iframe
-
-      - type: custom:button-card
-        entity: sensor.template_updates
-        template: updater_other
+        tap_action:
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            title: Home Assistant Community Store
+            style: >
+              :host .content {
+                width: 75em;
+              }
+            card:
+              type: iframe
+              url: /hacs
+              aspect_ratio: 65%
+              style: |
+                ha-card {
+                  border-radius: 0 0 1em 1em;
+                }
+        template: icon_name
 
       ### supervisor
       - type: custom:button-card
         entity: sensor.supervisor_updates
-        template: updater_supervisor
+        state_display: |
+          [[[
+            if (entity) {
+              let output = "";
+              let attr = entity.attributes.addons;
+              attr = attr.filter(addon => addon.version !== addon.version_latest).map(addon => output += `<li>${addon.name}</a></b> ${addon.version} \u279e ${addon.version_latest}</li>`);
+              let count = attr.length;
+              let subtitle = count == 0
+                  ? `Brak aktualizacji`
+                  : `${count} ${count == 1 ? "aktualizacja dostępna" : "aktualizacje dostępne"}
+                    ${String.fromCodePoint("0x1f389")}`;
+              return `
+                <ha-icon icon="mdi:update"></ha-icon> <span class="title">Supervisor</span><br>
+                <p class="subtitle">${subtitle}</p>
+                <ul>${output}</ul>
+              `;
+            }
+          ]]]
+        template: updater
 
       - type: custom:button-card
         entity: sensor.supervisor_updates
@@ -122,4 +204,30 @@ browser_mod:
                     'opacity(30%)' :
                     'drop-shadow(3px 3px 5px #00000050)';
                 ]]]
-        template: supervisor_iframe
+        tap_action:
+          # services: |
+          #   [[[
+          #     hass.callService('browser_mod', 'toast', {
+          #       message: 'Startuję aktualizację...'
+          #     });
+          #     hass.callService('script', 'turn_on', {
+          #       entity_id: 'script.homeassistant_supervisor_update'
+          #     });
+          #   ]]]
+          action: fire-dom-event
+          browser_mod:
+            command: popup
+            title: Home Assistant Server Control
+            style: >
+              :host .content {
+                width: 75em;
+              }
+            card:
+              type: iframe
+              url: /config/dashboard
+              aspect_ratio: 65%
+              style: |
+                ha-card {
+                  border-radius: 0 0 1em 1em;
+                }
+        template: icon_name

@@ -1,4 +1,21 @@
 sensor:
+  - platform: time_date
+    display_options:
+      - 'date_time'
+      - 'date'
+      - 'time'
+
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: '/'
+      - type: memory_use_percent
+      - type: processor_use
+      - type: last_boot
+      - type: swap_use_percent
+    scan_interval: 120
+
+
 
     ####################################################
     #                                                  #
@@ -511,19 +528,6 @@ sensor:
     # options:
       # language: pl
       # mode: driving
-
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: '/'
-      - type: memory_use_percent
-      - type: processor_use
-      - type: last_boot
-      - type: swap_use_percent
-
-  - platform: time_date
-    display_options:
-      - 'date_time'
 
   - platform: scrape
     name: Stopa bazowa PKO BP
