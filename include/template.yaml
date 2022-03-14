@@ -105,6 +105,41 @@ template:
             {% endfor %}
           {{ ns.update }}
 
+      - name: "Komfovent status Starting"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(1) > 0 }}"
+      - name: "Komfovent status Stopping"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(2) > 0 }}"
+      - name: "Komfovent status Fan"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(4) > 0 }}"
+      - name: "Komfovent status Rotor"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(8) > 0 }}"
+      - name: "Komfovent status Heating"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(16) > 0 }}"
+      - name: "Komfovent status Cooling"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(32) > 0 }}"
+      - name: "Komfovent status Heating denied"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(64) > 0 }}"
+      - name: "Komfovent status Cooling denied"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(128) > 0 }}"
+      - name: "Komfovent status Flow down"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(256) > 0 }}"
+      - name: "Komfovent status Free heating"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(512) > 0 }}"
+      - name: "Komfovent status Free cooling"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(1024) > 0 }}"
+      - name: "Komfovent status Alarm fail"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(2048) > 0 }}"
+      - name: "Komfovent status Alarm warning"
+        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(4096) > 0 }}"
+      - name: "Komfovent mode is Away"
+        state: "{{ states.sensor.komfovent_mode.state | int == 1 }}"
+      - name: "Komfovent mode is Normal"
+        state: "{{ states.sensor.komfovent_mode.state | int == 2 }}"
+      - name: "Komfovent mode is Intensive"
+        state: "{{ states.sensor.komfovent_mode.state | int == 3 }}"
+      - name: "Komfovent mode is Boost"
+        state: "{{ states.sensor.komfovent_mode.state | int == 4 }}"
+
       # - unique_id: imac_vpn
         # state: >
           # {{ is_state('switch.computer_imac', 'on') and
@@ -620,3 +655,37 @@ template:
           friendly_name: Ostatni restart
           icon: mdi:update
           device_class: timestamp
+
+      - name: "Komfovent Mode Text"
+        state: >
+          {%- if states.sensor.komfovent_mode.state | int == 0 %}
+            Standby
+          {%- elif states.sensor.komfovent_mode.state | int == 1 %}
+            Away
+          {%- elif states.sensor.komfovent_mode.state | int == 2 %}
+            Normal
+          {%- elif states.sensor.komfovent_mode.state | int == 3 %}
+            Intensive
+          {%- elif states.sensor.komfovent_mode.state | int == 4 %}
+            Boost
+          {%- elif states.sensor.komfovent_mode.state | int == 5 %}
+            Kitchen
+          {%- elif states.sensor.komfovent_mode.state | int == 6 %}
+            Fireplace
+          {%- elif states.sensor.komfovent_mode.state | int == 7 %}
+            Override
+          {%- elif states.sensor.komfovent_mode.state | int == 8 %}
+            Holiday
+          {%- elif states.sensor.komfovent_mode.state | int == 9 %}
+            Air quality
+          {%- elif states.sensor.komfovent_mode.state | int == 10 %}
+            Off
+          {% else %}
+            fail
+          {%- endif %}
+        icon: hass:account-cog
+      - name: "Ventilation info"
+        state: "{{ states.sensor.komfovent_mode_text.state }}"
+        attributes:
+          heat: "{{ states.sensor.komfovent_heating_power_w.state }}"
+          outside: "{{ states.sensor.komfovent_outdoor_temperature_c.state }}"

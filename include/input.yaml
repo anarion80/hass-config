@@ -32,6 +32,39 @@ input_boolean:
     name: Wibor6M is rising
     icon: mdi:trending-up
 
+  ventilation_auto_away:
+    name: Komfovent auto away
+    icon: mdi:calendar-clock
+
+input_datetime:
+
+  ####################################################
+  #                                                  #
+  #                     DATETIME                     #
+  #                                                  #
+  ####################################################
+
+  ventilation_set_away_time:
+    name: Komfovent away time
+    has_date: false
+    has_time: true
+    icon: mdi:home-export-outline
+  ventilation_set_normal_time:
+    name: Komfovent normal time
+    has_date: false
+    has_time: true
+    icon: mdi:home-account
+  ventilation_set_night_time:
+    name: Komfovent night time
+    has_date: false
+    has_time: true
+    icon: mdi:weather-night
+  ventilation_set_day_time:
+    name: Komfovent day time
+    has_date: false
+    has_time: true
+    icon: mdi:weather-sunny
+
 input_number:
 
   ####################################################
@@ -87,6 +120,21 @@ input_number:
     mode: box
     unit_of_measurement: 'PLN/kWh'
     icon: mdi:currency-usd
+
+  ventilation_set_night_temp:
+    name: Komfovent temperature night time
+    min: 15
+    max: 25
+    step: 0.1
+    unit_of_measurement: °C
+    icon: mdi:weather-night
+  ventilation_set_day_temp:
+    name: Komfovent temperature day time
+    min: 15
+    max: 25
+    step: 0.1
+    icon: mdi:weather-sunny
+    unit_of_measurement: °C
 
 
 input_select:

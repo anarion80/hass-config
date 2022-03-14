@@ -1372,3 +1372,90 @@ script:
           target:
             entity_id: input_boolean.radio_status
     mode: single
+  komfovent_set_away:
+    alias: Komfovent mode Away
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 4
+          hub: komfovent
+          unit: 1
+          value: 1
+  komfovent_set_normal:
+    alias: Komfovent mode Normal
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 4
+          hub: komfovent
+          unit: 1
+          value: 2
+  komfovent_set_intensive:
+    alias: Komfovent mode Intensive
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 4
+          hub: komfovent
+          unit: 1
+          value: 3
+  komfovent_set_boost:
+    alias: Komfovent mode Boost
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 4
+          hub: komfovent
+          unit: 1
+          value: 4
+
+  komfovent_set_night_temp:
+    alias: Komfovent temperature night time
+    variables:
+      temperature: "{{ ((states.input_number.ventilation_set_night_temp.state | float) * 10) | int }}"
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 109 # Normal
+          hub: komfovent
+          unit: 1
+          value: "{{ temperature }}"
+      - delay: 1
+      - service: modbus.write_register
+        data:
+          address: 115 # Intensive
+          hub: komfovent
+          unit: 1
+          value: "{{ temperature }}"
+      - delay: 1
+      - service: modbus.write_register
+        data:
+          address: 134 # Fireplace
+          hub: komfovent
+          unit: 1
+          value: "{{ temperature }}"
+  komfovent_set_day_temp:
+    alias: Komfovent temperature day time
+    variables:
+      temperature: "{{ ((states.input_number.ventilation_set_day_temp.state | float) * 10) | int }}"
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 109 # Normal
+          hub: komfovent
+          unit: 1
+          value: "{{ temperature }}"
+      - delay: 1
+      - service: modbus.write_register
+        data:
+          address: 115 # Intensive
+          hub: komfovent
+          unit: 1
+          value: "{{ temperature }}"
+      - delay: 1
+      - service: modbus.write_register
+        data:
+          address: 134 # Fireplace
+          hub: komfovent
+          unit: 1
+          value: "{{ temperature }}"

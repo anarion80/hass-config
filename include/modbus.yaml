@@ -1,0 +1,99 @@
+modbus:
+  - name: komfovent
+    type: tcp
+    host: 192.168.2.49
+    port: 502
+
+    switches:
+      - name: "Komfovent Eco Mode"
+        address: 2
+        command_on: 1
+        command_off: 0
+        verify:
+
+    sensors:
+      - name: "Komfovent Power"
+        address: 0
+        scan_interval: 30
+      - name: "Komfovent Eco"
+        address: 2
+        scan_interval: 30
+      - name: "Komfovent Auto"
+        address: 3
+        scan_interval: 30
+      - name: "Komfovent Mode"
+        address: 4
+        scan_interval: 30
+      - name: "Komfovent Status bit mask"
+        address: 899
+        scan_interval: 30
+      - name: "Komfovent Supply temperature 'C"
+        address: 901
+        scan_interval: 30
+        unit_of_measurement: °C
+        scale: 0.1
+        precision: 1
+      - name: "Komfovent Extract temperature 'C"
+        address: 902
+        scan_interval: 30
+        unit_of_measurement: °C
+        scale: 0.1
+        precision: 1
+      - name: "Komfovent Supply Fan Intensivity '%"
+        address: 909
+        scan_interval: 30
+        unit_of_measurement: '%'
+        scale: 0.1
+        precision: 1
+      - name: "Komfovent Extract Fan Intensivity '%"
+        address: 910
+        scan_interval: 30
+        unit_of_measurement: '%'
+        scale: 0.1
+        precision: 1
+      - name: "Komfovent Outdoor temperature 'C"
+        address: 903
+        scan_interval: 30
+        unit_of_measurement: °C
+        scale: 0.1
+        precision: 1
+      - name: "Komfovent Filter Impurity, %"
+        address: 916
+        scan_interval: 300
+        unit_of_measurement: '%'
+      - name: "Komfovent Heating power, W"
+        address: 912
+        scan_interval: 30
+        unit_of_measurement: W
+      - name: "Komfovent Power consumption, W"
+        address: 920
+        scan_interval: 30
+        unit_of_measurement: W
+      - name: "Komfovent Power consumption Month, kWh"
+        address: 928
+        scan_interval: 300
+        unit_of_measurement: kWh
+        count: 2
+        precision: 0
+        scale: 0.001
+      - name: "Komfovent Heating Recovery Month, kWh"
+        address: 940
+        scan_interval: 300
+        unit_of_measurement: kWh
+        count: 2
+        precision: 0
+        scale: 0.001
+      - name: "Komfovent Heat Recovery, W"
+        address: 922
+        scan_interval: 30
+        unit_of_measurement: W
+      - name: "Komfovent Heat exchanger efficiency, %"
+        address: 923
+        scan_interval: 30
+        scale: 1
+        precision: 0
+        unit_of_measurement: '%'
+      - name: "Komfovent Energy saving, %"
+        address: 924
+        scan_interval: 30
+        unit_of_measurement: '%'
