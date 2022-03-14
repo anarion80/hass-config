@@ -1528,3 +1528,228 @@ automation:
             entity_id: switch.sonoff_1000d4b2e1_1
       default: []
     mode: restart
+  - id: 'sync_alarm_status'
+    alias: sync_alarm_status
+    description: Synchronize alarm status with keypad
+    variables:
+      pin_var: !secret main_alarm_code
+    trigger:
+    - platform: state
+      entity_id: alarm_control_panel.glowny_alarm
+      to: arming
+      id: panel_arming
+    - platform: state
+      entity_id: alarm_control_panel.glowny_alarm
+      to: armed_home
+      id: panel_armed_home
+    - platform: state
+      entity_id: alarm_control_panel.glowny_alarm
+      to: disarmed
+      id: panel_disarmed
+    - platform: state
+      entity_id: alarm_control_panel.glowny_alarm
+      to: armed_away
+      id: panel_armed_away
+    - platform: state
+      entity_id: alarm_control_panel.glowny_alarm
+      to: pending
+      id: panel_pending
+    - platform: mqtt
+      topic: zigbee2mqtt/alarm_keypad
+      id: keypad_mqtt
+    condition: []
+    action:
+    - choose:
+      - conditions:
+        - condition: trigger
+          id: panel_arming
+        sequence:
+        - choose:
+          - conditions:
+            - condition: state
+              entity_id: alarm_control_panel.glowny_alarm
+              state: armed_home
+              attribute: next_state
+            sequence:
+            - service: mqtt.publish
+              data_template:
+                topic: zigbee2mqtt/alarm_keypad/set
+                payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_day_zones\"\n  }\n\
+                  }"
+          - conditions:
+            - condition: state
+              entity_id: alarm_control_panel.glowny_alarm
+              state: armed_away
+              attribute: next_state
+            sequence:
+            - service: mqtt.publish
+              data_template:
+                topic: zigbee2mqtt/alarm_keypad/set
+                payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"exit_delay\"\n  }\n}"
+          default: []
+        # - choose:
+        #   default: !input 'action_arming'
+      - conditions:
+        - condition: trigger
+          id: panel_armed_away
+        sequence:
+        - service: mqtt.publish
+          data_template:
+            topic: zigbee2mqtt/alarm_keypad/set
+            payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_all_zones\"\n  }\n}"
+        # - choose:
+        #   default: !input 'action_armed_away'
+      - conditions:
+        - condition: trigger
+          id: panel_disarmed
+        sequence:
+        - service: mqtt.publish
+          data_template:
+            topic: zigbee2mqtt/alarm_keypad/set
+            payload: "{\n \"arm_mode\": \n  {\n    \"mode\": \"disarm\"\n  }\n}"
+        # - choose:
+        #   default: send_notification_when_alarm_is_disarmed
+      - conditions:
+        - condition: trigger
+          id: panel_armed_home
+        sequence:
+        - service: mqtt.publish
+          data_template:
+            topic: zigbee2mqtt/alarm_keypad/set
+            payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_day_zones\"\n  }\n}"
+        # - choose:
+        #   default: send_notification_when_alarm_is_armed_in_home_mode
+      - conditions:
+        - condition: trigger
+          id: panel_pending
+        sequence:
+        # - choose:
+        #   default: send_notification_when_alarm_is_in_pending_status
+      - conditions:
+        - condition: trigger
+          id: keypad_mqtt
+        sequence:
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload_json.action_transaction != null and
+                trigger.payload_json.action_code == pin_var }}'
+            sequence:
+            - service: mqtt.publish
+              data_template:
+                topic: zigbee2mqtt/alarm_keypad/set
+                payload: "{\n \"arm_mode\": \n  {\n    \"transaction\": \"{{ trigger.payload_json.action_transaction\
+                  \ }}\",\n    \"mode\": \"{{ trigger.payload_json.action }}\"\n  }\n}"
+        - choose:
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload_json.action_code == pin_var and trigger.payload_json.action
+                == "arm_all_zones" }}'
+            sequence:
+            - service: alarm_control_panel.alarm_arm_away
+              target:
+                entity_id: alarm_control_panel.glowny_alarm
+              data:
+                code: !secret main_alarm_code
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload_json.action_code == pin_var and trigger.payload_json.action
+                == "arm_day_zones" }}'
+            sequence:
+            - service: alarm_control_panel.alarm_arm_home
+              target:
+                entity_id: alarm_control_panel.glowny_alarm
+              data:
+                code: !secret main_alarm_code
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload_json.action_code == pin_var and trigger.payload_json.action
+                == "disarm" }}'
+            sequence:
+            - service: alarm_control_panel.alarm_disarm
+              target:
+                entity_id: alarm_control_panel.glowny_alarm
+              data:
+                code: !secret main_alarm_code
+          # - conditions:
+          #   - condition: template
+          #     value_template: '{{ trigger.payload_json.action == "panic" }}'
+          #   sequence:
+          #   - choose:
+          #     default: !input 'action_panic'
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload_json.action_code != pin_var and trigger.payload_json.action_code
+                | int(-1) != -1 }}'
+            sequence:
+            - service: mqtt.publish
+              data_template:
+                topic: zigbee2mqtt/alarm_keypad/set
+                payload: "{\n \"arm_mode\": \n  {\n   \"transaction\": \"{{ trigger.payload_json.action_transaction\
+                  \ }}\",\n   \"mode\": \"invalid_code\"\n  }\n}"
+          - conditions:
+            - condition: template
+              value_template: '{{ trigger.payload_json.action == None }}'
+            sequence:
+            - choose:
+              - conditions:
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: armed_away
+                sequence:
+                - service: mqtt.publish
+                  data_template:
+                    topic: zigbee2mqtt/alarm_keypad/set
+                    payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_all_zones\"\n\
+                      \  }\n}"
+              - conditions:
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: armed_home
+                sequence:
+                - service: mqtt.publish
+                  data_template:
+                    topic: zigbee2mqtt/alarm_keypad/set
+                    payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_day_zones\"\n\
+                      \  }\n}"
+              - conditions:
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: disarmed
+                sequence:
+                - service: mqtt.publish
+                  data_template:
+                    topic: zigbee2mqtt/alarm_keypad/set
+                    payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"disarm\"\n  }\n}"
+              - conditions:
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: arming
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: armed_home
+                  attribute: next_state
+                sequence:
+                - service: mqtt.publish
+                  data_template:
+                    topic: zigbee2mqtt/alarm_keypad/set
+                    payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_day_zones\"\n\
+                      \  }\n}"
+              - conditions:
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: arming
+                - condition: state
+                  entity_id: alarm_control_panel.glowny_alarm
+                  state: armed_away
+                  attribute: next_state
+                sequence:
+                - service: mqtt.publish
+                  data_template:
+                    topic: zigbee2mqtt/alarm_keypad/set
+                    payload: "{\n \"arm_mode\": \n  {\n   \"mode\": \"arm_all_zones\"\n\
+                      \  }\n}"
+          default: []
+      default: []
+    mode: parallel
+    max: 10
