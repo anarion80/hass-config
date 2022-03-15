@@ -532,7 +532,7 @@ sensor:
   - platform: scrape
     name: Stopa bazowa PKO BP
     resource: https://www.pkobp.pl/waluty/#/base_rate/
-    select: '#base_rate > p:nth-child(3)'
+    select: '#base_rate p'
     value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
     unit_of_measurement: '%'
     scan_interval: 3600
@@ -599,8 +599,9 @@ sensor:
   - platform: scrape
     name: Tauron_energy_cost
     resource: http://www.cena-pradu.pl/tabela.html
-    select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(10) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
-    unit_of_measurement: 'PLN'
+    select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div > table > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+    index: 0
+    unit_of_measurement: 'PLN/kWh'
     value_template: >
       {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
     scan_interval: 3600
@@ -608,7 +609,8 @@ sensor:
   - platform: scrape
     name: Tauron_static_cost
     resource: http://www.cena-pradu.pl/tabela.html
-    select: '.WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(19) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(6) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)'
+    select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div > table > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+    index: 1
     unit_of_measurement: 'PLN'
     value_template: >
       {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
