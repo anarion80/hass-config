@@ -106,39 +106,39 @@ template:
           {{ ns.update }}
 
       - name: "Komfovent status Starting"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(1) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(1) > 0 }}"
       - name: "Komfovent status Stopping"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(2) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(2) > 0 }}"
       - name: "Komfovent status Fan"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(4) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(4) > 0 }}"
       - name: "Komfovent status Rotor"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(8) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(8) > 0 }}"
       - name: "Komfovent status Heating"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(16) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(16) > 0 }}"
       - name: "Komfovent status Cooling"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(32) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(32) > 0 }}"
       - name: "Komfovent status Heating denied"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(64) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(64) > 0 }}"
       - name: "Komfovent status Cooling denied"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(128) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(128) > 0 }}"
       - name: "Komfovent status Flow down"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(256) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(256) > 0 }}"
       - name: "Komfovent status Free heating"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(512) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(512) > 0 }}"
       - name: "Komfovent status Free cooling"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(1024) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(1024) > 0 }}"
       - name: "Komfovent status Alarm fail"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(2048) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(2048) > 0 }}"
       - name: "Komfovent status Alarm warning"
-        state: "{{ states.sensor.komfovent_status_bit_mask.state | int | bitwise_and(4096) > 0 }}"
+        state: "{{ states('sensor.komfovent_status_bit_mask') | int | bitwise_and(4096) > 0 }}"
       - name: "Komfovent mode is Away"
-        state: "{{ states.sensor.komfovent_mode.state | int == 1 }}"
+        state: "{{ states('sensor.komfovent_mode') | int == 1 }}"
       - name: "Komfovent mode is Normal"
-        state: "{{ states.sensor.komfovent_mode.state | int == 2 }}"
+        state: "{{ states('sensor.komfovent_mode') | int == 2 }}"
       - name: "Komfovent mode is Intensive"
-        state: "{{ states.sensor.komfovent_mode.state | int == 3 }}"
+        state: "{{ states('sensor.komfovent_mode') | int == 3 }}"
       - name: "Komfovent mode is Boost"
-        state: "{{ states.sensor.komfovent_mode.state | int == 4 }}"
+        state: "{{ states('sensor.komfovent_mode') | int == 4 }}"
 
       # - unique_id: imac_vpn
         # state: >
@@ -658,34 +658,45 @@ template:
 
       - name: "Komfovent Mode Text"
         state: >
-          {%- if states.sensor.komfovent_mode.state | int == 0 %}
+          {%- if states('sensor.komfovent_mode') | int == 0 %}
             Standby
-          {%- elif states.sensor.komfovent_mode.state | int == 1 %}
-            Away
-          {%- elif states.sensor.komfovent_mode.state | int == 2 %}
-            Normal
-          {%- elif states.sensor.komfovent_mode.state | int == 3 %}
-            Intensive
-          {%- elif states.sensor.komfovent_mode.state | int == 4 %}
-            Boost
-          {%- elif states.sensor.komfovent_mode.state | int == 5 %}
-            Kitchen
-          {%- elif states.sensor.komfovent_mode.state | int == 6 %}
-            Fireplace
-          {%- elif states.sensor.komfovent_mode.state | int == 7 %}
-            Override
-          {%- elif states.sensor.komfovent_mode.state | int == 8 %}
-            Holiday
-          {%- elif states.sensor.komfovent_mode.state | int == 9 %}
-            Air quality
-          {%- elif states.sensor.komfovent_mode.state | int == 10 %}
-            Off
+          {%- elif states('sensor.komfovent_mode') | int == 1 %}
+            Poza Domem
+          {%- elif states('sensor.komfovent_mode') | int == 2 %}
+            Normalny
+          {%- elif states('sensor.komfovent_mode') | int == 3 %}
+            Intensywny
+          {%- elif states('sensor.komfovent_mode') | int == 4 %}
+            Turbo
+          {%- elif states('sensor.komfovent_mode') | int == 5 %}
+            Okap
+          {%- elif states('sensor.komfovent_mode') | int == 6 %}
+            Kominek
+          {%- elif states('sensor.komfovent_mode') | int == 7 %}
+            Nadrzędny
+          {%- elif states('sensor.komfovent_mode') | int == 8 %}
+            Urlop
+          {%- elif states('sensor.komfovent_mode') | int == 9 %}
+            Jakość powietrza
+          {%- elif states('sensor.komfovent_mode') | int == 10 %}
+            wyłączony
           {% else %}
             fail
           {%- endif %}
         icon: hass:account-cog
       - name: "Ventilation info"
-        state: "{{ states.sensor.komfovent_mode_text.state }}"
+        state: "{{ states('sensor.komfovent_mode_text') }}"
         attributes:
-          heat: "{{ states.sensor.komfovent_heating_power_w.state }}"
-          outside: "{{ states.sensor.komfovent_outdoor_temperature_c.state }}"
+          moc_grzewcza: "{{ states('sensor.komfovent_heating_power_w') }}"
+          temperatura_na_zewnatrz: "{{ states('sensor.komfovent_outdoor_temperature_c') }}"
+          efektywnosc_wymiennika: "{{ states('sensor.komfovent_energy_saving') }}"
+          przeplyw_wywiewu: "{{ states('sensor.komfovent_extract_fan_intensivity') }}"
+          temperatura_wyciagu: "{{ states('sensor.komfovent_extract_temperature_c') }}"
+          zabrudzenie_filtra: "{{ states('sensor.komfovent_filter_impurity') }}"
+          odzyskana_energia_miesiac: "{{ states('sensor.komfovent_heat_recovery_w') }}"
+          odzysk_ciepla: "{{ states('sensor.komfovent_heating_recovery_month_kwh') }}"
+          zuzyta_energia: "{{ states('sensor.komfovent_power_consumption_month_kwh') }}"
+          przeplyw_nawiewu: "{{ states('sensor.komfovent_supply_fan_intensivity') }}"
+          temperatura_nawiewu: "{{ states('sensor.komfovent_supply_temperature_c') }}"
+          temperatura: "{{ states('sensor.komfovent_panel_temperature_c') }}"
+          wilgotnosc: "{{ states('sensor.komfovent_panel_humidity') }}"

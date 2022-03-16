@@ -210,11 +210,21 @@ views:
         cards:
 
           - type: custom:button-card
-            entity: light.yeelight_hania #hue_group
-            name: U Hani
+            entity: sensor.komfovent_mode_text
+            name: Wentylacja
+            tap_action:
+              !include popup/sovrum_luftrenare.yaml
             template:
-              - light
-              - icon_pendants
+              - base
+              - icon_fan
+              - full_circle
+            variables:
+              circle_input: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    `${parseInt(states['sensor.komfovent_extract_temperature_c'].state)}<tspan font-size="10">°C</tspan>`;
+                ]]]
 
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7

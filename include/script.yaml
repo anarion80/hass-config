@@ -1408,6 +1408,15 @@ script:
           hub: komfovent
           unit: 1
           value: 4
+  komfovent_set_off:
+    alias: Komfovent mode Off
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 4
+          hub: komfovent
+          unit: 1
+          value: 10
 
   komfovent_set_night_temp:
     alias: Komfovent temperature night time

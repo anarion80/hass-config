@@ -97,3 +97,13 @@ modbus:
         address: 924
         scan_interval: 30
         unit_of_measurement: '%'
+      - name: "Komfovent Panel Temperature, C"
+        address: 948
+        scan_interval: 30
+        scale: 0.1
+        precision: 1
+        unit_of_measurement: °C
+      - name: "Komfovent Panel Humidity, %"
+        address: 949
+        scan_interval: 30
+        unit_of_measurement: '%'
