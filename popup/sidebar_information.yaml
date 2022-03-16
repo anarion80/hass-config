@@ -5,7 +5,7 @@ browser_mod:
   style:
     .: |
       :host .content {
-        width: calc(385px + 385px + 385px);
+        width: calc(400px + 400px + 400px);
         max-width: 90vw;
       }
       /* phone */
