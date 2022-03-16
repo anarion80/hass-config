@@ -36,6 +36,7 @@ browser_mod:
         $hui-entities-card$: |
           .card-content {
             padding: var(--card-content-padding);
+            letter-spacing: normal;
           }
         $hui-horizontal-stack-card$: |
           #root {
@@ -48,7 +49,6 @@ browser_mod:
             padding: var(--card-content-padding);
             padding-top: 0;
             padding-bottom: 0;
-            font-family: SF Text, Roboto;
             letter-spacing: normal;
           }
           div.tiles-wrapper, div.vacuum-controls, #map-zoomer-overlay {
@@ -94,7 +94,7 @@ browser_mod:
 
       #################################################
       #                                               #
-      #                 INSTÄLLNINGAR                 #
+      #                 SETTINGS                      #
       #                                               #
       #################################################
 
@@ -103,7 +103,7 @@ browser_mod:
           grid-area: info
         cards:
         - type: entities
-          title: Översikt
+          title: Przegląd
           card_mod:
             class: header
           entities:
@@ -199,7 +199,7 @@ browser_mod:
 
       #################################################
       #                                               #
-      #                 KARTLÄGGNING                  #
+      #                 SURVEY                        #
       #                                               #
       #################################################
 

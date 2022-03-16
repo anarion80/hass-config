@@ -20,11 +20,7 @@ frontend:
       ha-card-box-shadow: none
       ha-card-background: none
       grid-card-gap: 5%
-      #grid-card-gap: 1.1vw
       masonry-view-card-margin: 0px
-      ha-card-header-color: 'rgba(255, 255, 255, 0.8)'
-      ha-card-header-font-family: SF Text
-      ha-card-header-font-size: 2.4vw
       state-icon-color: '#9da0a2'
       state-icon-active-color: '#3182b7'
       switch-checked-color: '#7a7d7f'
@@ -40,21 +36,29 @@ frontend:
       paper-toast-background-color: '#1b1b1bf2'
       vertical-stack-card-margin: 0
 
+      #font
+      primary-font-family: SF Text, Roboto, system-ui
+      paper-font-common-base_-_font-family: var(--primary-font-family)
+      paper-font-common-code_-_font-family: var(--primary-font-family)
+      paper-font-body1_-_font-family: var(--primary-font-family)
+      paper-font-subhead_-_font-family: var(--primary-font-family)
+      paper-font-headline_-_font-family: var(--primary-font-family)
+      paper-font-caption_-_font-family: var(--primary-font-family)
+      paper-font-title_-_font-family: var(--primary-font-family)
+      ha-card-header-font-family: var(--primary-font-family)
+      mdc-typography-body1-font-family: var(--primary-font-family)
+      mdc-typography-font-family: var(--primary-font-family)
+
       #custom variables
       ha-card-background-color: rgba(34,38,39,0.9)
       ha-card-header-background-color: rgba(48,52,52,0.8)
       custom-layout-card-padding: 3.3vw
-      custom-button-card-border-radius: 8%
-      #markdown-sidebar-clock-font-size: 5vw
-      #markdown-sidebar-clock-line-height: 4vw
-      #markdown-sidebar-font-size: 1.5vw
-      #markdown-sidebar-line-height: 2.1vw
-      sidebar-time-font-size: 5vw
-      sidebar-time-line-height: 4vw
-      sidebar-font-size: 1.5vw
-      sidebar-line-height: 2.1vw
-      media-blur-height: 24.5%
-      card-content-padding: 1.8em 2.2em 1.8em 2em
+      custom-button-card-border-radius: 9.5%
+      sidebar-time-font-size: 5.2vw
+      sidebar-time-line-height: 4.3vw
+      sidebar-font-size: 1.42vw
+      sidebar-line-height: 2vw
+      card-content-padding: 1.4em 2.2em 1.6em 1.5em
       bar-card-color: '#303435'
 
     ####################################################
@@ -97,10 +101,10 @@ frontend:
               h1 {
                 font-size: 2.4vw !important;
                 line-height: 0 !important;
-                font-family: SF Text !important;
                 font-weight: 500 !important;
                 color: rgba(255, 255, 255, 0.8) !important;
                 padding: 1vw 0 2vw 0 !important;
+                letter-spacing: 0.006vw !important;
               }
 
               /* portrait */
@@ -400,7 +404,7 @@ frontend:
 
       card-mod-card: |
         .header .card-header {
-          font-family: SF Text;
+          #font-family: SF Text;
           letter-spacing: 0.005em;
           font-size: 1.6em;
           font-weight: 500;
@@ -512,8 +516,7 @@ frontend:
 
           .main-title {
             margin-top: 5px;
-            font-family: SF Text;
-            letter-spacing: 0.005em;
+            font-family: var(--primary-font-family);
           }
 
           mwc-icon-button {
@@ -615,8 +618,7 @@ frontend:
             font-weight: 400;
             position: absolute;
             z-index: 1;
-            font-family: SF Display;
-            letter-spacing: 0.02em;
+            letter-spacing: -0.01em;
             pointer-events: none;
             mix-blend-mode: difference;
             text-align: center;
