@@ -164,13 +164,21 @@ automation:
     variables:
       latest: >
         {{ states(trigger.entity_id) }}
+      installed: >
+        {{ states('sensor.hass_version_installed') }}
     trigger:
       - platform: state
         entity_id: sensor.hass_version_latest
     condition: >
-      {% set installed = states('sensor.hass_version_installed') %}
       {{ installed != latest if '.' in installed and '.' in latest else false }}
     action:
+      - service: homeassistant.update_entity
+        target:
+          entity_id:
+            - sensor.hass_release_notes
+            - sensor.hass_release_notes_rc
+      - delay:
+          minutes: 30
       - service: notify.mobile_app_nokia_8_3_5g
         data:
           title: >

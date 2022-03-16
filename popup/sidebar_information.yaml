@@ -385,15 +385,13 @@ browser_mod:
               itemMargin:
                 horizontal: 25
               # formatter: |
-                # EVAL:(seriesName, opts) => {
+                #  EVAL: (seriesName, opts) => {
                   # var arr = opts.w.globals.series[opts.seriesIndex],
-                    # value = arr[arr.length - 1],
-                    # convert = (value / 1024).toFixed(2);
-                  # if (value == null) {
-                    # return seriesName;
-                  # } else {
-                    # return value < 1024 ? `${Math.round(value)} kB/s` : `${convert} MB/s`;
-                  # }
+                  #   value = arr[arr.length - 1],
+                  #   convert = (value/1024).toFixed(2);
+                  # return value == null
+                  #   ? seriesName : value < 1024 ? `${Math.round(value)} kB/s`
+                  #   : `${convert} MB/s`;
                 # }
               markers:
                 width: 26

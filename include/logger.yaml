@@ -1,23 +1,6 @@
-# Example configuration.yaml entry
-#
-#default: critical
-#logs:
-#  # log level for HA core
-#  homeassistant.core: debug
-#  homeassistant.auth: debug
-#
-#  # log level for MQTT integration
-#  homeassistant.components.auth: debug
-#  homeassistant.components.frontend: debug
-#  homeassistant.components.http: debug
-#
-#  # log level for all python scripts
-#  homeassistant.components.python_script: warning
-#
-# # individual log level for this python script
-#  homeassistant.components.python_script.my_new_script.py: debug
-#
-#  # log level for SmartThings lights
-#  homeassistant.components.smartthings.light: info
-#  #http: debug
-#  #homeassistant.components.websocket_api: debug
+logger:
+  default: warning
+  logs:
+    homeassistant.components.websocket_api: fatal
+    homeassistant.components.camera: fatal
+    homeassistant.helpers.entity: fatal

@@ -213,7 +213,7 @@ views:
             entity: sensor.komfovent_mode_text
             name: Wentylacja
             tap_action:
-              !include popup/sovrum_luftrenare.yaml
+              !include popup/ventilation.yaml
             template:
               - base
               - icon_fan
@@ -479,16 +479,10 @@ views:
         cards:
 
           - type: custom:swipe-card
-            start_card: 1
             parameters:
-              roundLengths: true
-              effect: coverflow
-              speed: 650
-              spaceBetween: 20
-              threshold: 7
-              coverflowEffect:
-                rotate: 80
-                depth: 300
+              speed: 550
+              spaceBetween: 40
+              threshold: 5
             cards:
 
               - type: vertical-stack
