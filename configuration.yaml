@@ -6,6 +6,7 @@ discovery:
 conversation:
 api:
 websocket_api:
+stream:
 lovelace:
   mode: storage
   resources:
@@ -68,6 +69,7 @@ lovelace:
       { url: '/local/calendar-card.js',                                     type: module },
       { url: '/local/custom_icons.js',                                      type: module },
       { url: '/local/marked.min.js?v=4.0.12',                               type: module },
+      { url: '/local/vanilla-tilt.min.js?v=1.7.2',                          type: module },
       { url: '/local/font.css',                                             type: css    } ]
 
   dashboards:
@@ -83,8 +85,6 @@ homeassistant:
   allowlist_external_dirs:
     - /config
     - /config/www
-
-
 
 
 

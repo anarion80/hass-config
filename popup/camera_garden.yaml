@@ -1,0 +1,44 @@
+action: fire-dom-event
+browser_mod:
+  command: popup
+  title: Ogród
+  style:
+    .: |
+      :host .content {
+        width: 1400px;
+      }
+      /* phone */
+      @media screen and (max-width: 800px) {
+        :host .content {
+          max-width: 100vw;
+        }
+      }
+  card:
+    type: grid
+    columns: 1
+    square: false
+    cards:
+      - type: 'custom:webrtc-camera'
+        url: !secret camera_garden_url
+        #title: Ogród  # optional card title
+        #poster: https://home-assistant.io/images/cast/splash.png  # still image when stream is loading
+        intersection: 0.75  # auto pause stream when less than 75% of video element is in the screen, 50% by default
+        muted: false  # disable sound, default true
+        ui: true  # custom video controls, default false
+        # shortcuts: # custom shortcuts, default none
+        #   top: 0 # top margin in pixels, default 0
+        #   left: 0 # left margin in pixels, default 0
+        #   orientation: vertical # orientation (horizontal or vertical), default horizontal
+        #   services:
+        #       - name: Record
+        #         icon: mdi:record-circle-outline
+        #         service: switch.toggle
+        #         service_data:
+        #           entity_id: switch.camera_record
+
+        background: true  # run stream when not displayed (ex. for quick video loading), default false
+
+        # ptz:  # check full examples in wiki
+
+        # mse: false  # disable MSE mode, if you want save NabuCasa traffic
+        # webrtc: false  # disable WebRTC mode, if you want stream with AAC sound
