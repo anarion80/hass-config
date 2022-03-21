@@ -462,6 +462,64 @@ sensor:
           {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
           {%- endif %}
 
+      komfovent_on_off:
+        friendly_name: "Komfovent On Off"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'Off',
+              '1' : 'On'} %}
+          {% set state =  states.sensor.komfovent_on_off_num.state %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+      komfovent_eco_mode:
+        friendly_name: "Komfovent Eco Mode"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'Off',
+              '1' : 'On'} %}
+          {% set state =  states.sensor.komfovent_eco_num.state %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+      komfovent_auto_mode:
+        friendly_name: "Komfovent Auto Mode"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'Off',
+              '1' : 'On'} %}
+          {% set state =  states.sensor.komfovent_auto_num.state %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+      komfovent_operation_mode:
+        friendly_name: "Komfovent Operation Mode"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'Standby',
+              '1' : 'Away',
+              '2' : 'Normal',
+              '3' : 'Intensive',
+              '4' : 'Boost',
+              '5' : 'Kitchen',
+              '6' : 'Fireplace',
+              '7' : 'Overide',
+              '8' : 'Holiday',
+              '9' : 'Air Quality',
+              '10' : 'Off' } %}
+          {% set state =  states.sensor.komfovent_mode_num.state %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+      komfovent_scheduler_mode:
+        friendly_name: "Komfovent Scheduler Mode"
+        unit_of_measurement: "State"
+        value_template: >-
+          {% set mapper =  {
+              '0' : 'StayAtHome',
+              '1' : 'WorkingWeek',
+              '2' : 'Office',
+              '3' : 'Custom'} %}
+          {% set state =  states.sensor.komfovent_scheduler_num.state %}
+          {{ mapper[state] if state in mapper else 'Unknown' }}
+
+
 
   - platform: integration
     source: sensor.smart_plug_2_power

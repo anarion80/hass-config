@@ -28,3 +28,13 @@ shell_command:
   ha_core_update: !secret ha_core_update_command
   ha_os_update: !secret ha_os_update_command
   ha_supervisor_update: !secret ha_supervisor_update_command
+
+  komfovent_kitchen_mode: >-
+    curl 'http://192.168.7.32/' --data-raw '1=user&2=user' &&
+    curl 'http://192.168.7.32/ajax.xml' --data-raw '282=20'
+  komfovent_fireplace_mode: >-
+    curl 'http://192.168.7.32/' --data-raw '1=user&2=user' &&
+    curl 'http://192.168.7.32/ajax.xml' --data-raw '283=20'
+  komfovent_overide_mode: >-
+    curl 'http://192.168.7.32/' --data-raw '1=user&2=user' &&
+    curl 'http://192.168.7.32/ajax.xml' --data-raw '284=20'

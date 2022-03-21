@@ -136,6 +136,20 @@ input_number:
     icon: mdi:weather-sunny
     unit_of_measurement: °C
 
+  komfovent_set_fan:
+    name: "Komfovent Set Fan"
+    unit_of_measurement: '%'
+    min: 0
+    max: 100
+    step: 5
+
+  komfovent_set_temp:
+    name: "Komfovent Set Temp"
+    unit_of_measurement: °C
+    min: 15.0
+    max: 22.0
+    step: 0.1
+
 
 input_select:
 

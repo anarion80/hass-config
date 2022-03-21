@@ -1413,10 +1413,19 @@ script:
     sequence:
       - service: modbus.write_register
         data:
-          address: 4
+          address: 0
           hub: komfovent
           unit: 1
-          value: 10
+          value: 0
+  komfovent_set_on:
+    alias: Komfovent mode On
+    sequence:
+      - service: modbus.write_register
+        data:
+          address: 0
+          hub: komfovent
+          unit: 1
+          value: 1
 
   komfovent_set_night_temp:
     alias: Komfovent temperature night time
@@ -1468,3 +1477,53 @@ script:
           hub: komfovent
           unit: 1
           value: "{{ temperature }}"
+
+  komfovent_write_temp_setpoint_normal:
+    alias: Komfovent Write Temp Setpoint Normal
+    variables:
+      valuetosend: 45
+    fields:
+      komfovent_temp_setpoint:
+        name: Komfovent Temp Setpoint Value
+        example: '195'
+        description: Actual value is * 10; 19.5°C = 195
+    sequence:
+      - service: modbus.write_register
+        data_template:
+          hub: "Komfovent"
+          address: 109
+          unit: 1
+          value: '{{ komfovent_temp_setpoint }}'
+    mode: single
+
+  komfovent_write_fan_intensity_normal:
+    alias: Komfovent Write Fan Intensity Normal
+    variables:
+      valuetosend: 45
+    fields:
+      komfovent_fan_intensity:
+        name: Komfovent Fan Intensity Value
+        example: '[0,40]'
+        description: Writes same value to both fans and assumes intensity is set as a %
+        selector:
+          number:
+            min: 0
+            max: 100
+            unit_of_measurement: "%"
+    sequence:
+      - service: modbus.write_register
+        data_template:
+          hub: "Komfovent"
+          address: 105
+          unit: 2
+          value: '{{ komfovent_fan_intensity }}'
+      - service: modbus.write_register
+        data_template:
+          hub: "Komfovent"
+          address: 107
+          unit: 2
+          value: '{{ komfovent_fan_intensity }}'
+    mode: single
+  komfovent_dummy:
+    alias: 'Komfovent Dummy script'
+    sequence:

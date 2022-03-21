@@ -104,6 +104,10 @@ homeassistant:
     sensor.router_current_consumption:
       friendly_name: Pobór mocy NAS
 
+    sensor.komfovent_current_energy:
+      state_class: total_increasing
+      device_class: energy
+
     # vardagsrum_tv.yaml
     automation.tv_on_lights:
       friendly_name: TV Lamp

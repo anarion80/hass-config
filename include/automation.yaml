@@ -1761,3 +1761,70 @@ automation:
       default: []
     mode: parallel
     max: 10
+  # - alias: Komfovent Set Normal Temperature Input Number
+  #   description: 'Set the input number to the Normal Setpoint value on HA start and if changed elsewhere (app or web)'
+  #   trigger:
+  #     - platform: homeassistant
+  #       event: start
+  #     - platform: state
+  #       entity_id: sensor.komfovent_status_normal_setpoint_c
+  #   condition: []
+  #   action:
+  #     - service: input_number.set_value
+  #       data:
+  #         value: '{{states.sensor.komfovent_status_normal_setpoint_c.state}}'
+  #       target:
+  #         entity_id: input_number.komfovent_set_temp
+  #   mode: single
+
+  - alias: Komfovent Write Normal Temp Setpoint on Input change
+    description: 'Write Normal Setpoint when input_number changes'
+    trigger:
+      - platform: state
+        entity_id: input_number.komfovent_set_temp
+    condition: []
+    action:
+      - service: script.komfovent_write_temp_setpoint_normal
+        data:
+          komfovent_temp_setpoint: '{{(states.input_number.komfovent_set_temp.state | float(0.0) * 10) | int(0)}}'
+    mode: single
+
+  # - alias: Komfovent Set Normal Fan Input Number
+  #   description: 'Set the input number to the Extract Normal Fan Setpoint value on HA start and if changed elsewhere (app or web)'
+  #   trigger:
+  #     - platform: homeassistant
+  #       event: start
+  #     - platform: state
+  #       entity_id: sensor.komfovent_status_normal_setpoint_c
+  #   condition: []
+  #   action:
+  #     - service: input_number.set_value
+  #       data:
+  #         value: '{{(states.sensor.komfovent_extract_fan_intensivity.state | round(0))}}'
+  #       target:
+  #         entity_id: input_number.komfovent_set_fan
+  #   mode: single
+
+  - alias: Komfovent Write Normal Fan Setpoint on Input change
+    description: 'Write Normal Fan Setpoint (Sup & Extract) when input_number changes'
+    trigger:
+      - platform: state
+        entity_id: input_number.komfovent_set_fan
+    condition: []
+    action:
+      - service: script.komfovent_write_fan_intensity_normal
+        data:
+          komfovent_fan_intensity: ["0","{{states.input_number.komfovent_set_fan.state}}"]
+    mode: single
+
+  - alias: Komfovent Record daily Heater consumption kWh
+    description: ''
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: sensor.komfovent_heater_consumption_day_kwh
+        to: '0'
+    condition: []
+    action:
+      - service: number.set_value
+        data: {}
