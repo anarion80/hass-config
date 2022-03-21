@@ -208,9 +208,8 @@ views:
           grid-area: living_room
         columns: 2
         cards:
-
           - type: custom:button-card
-            entity: sensor.komfovent_mode_text
+            entity: sensor.ventilation_info
             name: Wentylacja
             tap_action:
               !include popup/ventilation.yaml
@@ -362,81 +361,46 @@ views:
 
       #################################################
       #                                               #
-      #                    bedroom                    #
+      #                    SECURITY                   #
       #                                               #
       #################################################
 
       - type: grid
-        title: Sypialnia
+        title: Ochrona
         view_layout:
           grid-area: bedroom
         columns: 2
         cards:
 
           - type: custom:button-card
-            entity: light.yeelight_hania #hue_group
-            name: U Hani
-            template:
-              - light
-              - icon_lamp
-
-          - type: custom:button-card
-            entity: fan.zhimi_airpurifier_v7
-            name: Oczyszczacz powietrza
-            hold_action:
-              !include popup/sovrum_luftrenare.yaml
+            entity: camera.main
+            name: Wejście
+            show_state: false
             template:
               - base
-              - icon_air_purifier
-              - circle
-              - loader
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    parseInt(entity.attributes.percentage_step);
-                ]]]
-
-          # - type: custom:button-card
-          #   entity: cover.tapparella_sala
-          #   name: Sala
-          #   template:
-          #     - base_cover
-          #     - icon_cover
-          #     - cover_circle
-          #   variables:
-          #     circle_input: >
-          #       [[[
-          #         if (entity) {
-          #           let real_position = entity.attributes.current_position*100/(100-25)-35;
-          #           return (real_position < 0) ? 0 : (real_position > 100) ? 100 : real_position;
-          #         }
-          #       ]]]
-          #     close_position: 25
-          #     quarter1_position: 50
-          #     middle_position: 70
-          #     quarter3_position: 85
+              - camera
+            tap_action:
+              !include popup/camera_main.yaml
 
           - type: custom:button-card
-            entity: climate.living_room_ac
-            name: Klima
-            hold_action:
-              #!include popup/sovrum_flakt.yaml
-              !include popup/fan.yaml
+            entity: camera.garage
+            name: Garaż
+            show_state: false
             template:
               - base
-              - icon_fan
-              - temperature
-             # - circle
-              - loader
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    parseFloat(entity.attributes.current_temperature);
-                ]]]
+              - camera
+            tap_action:
+              !include popup/camera_garage.yaml
+
+          - type: custom:button-card
+            entity: camera.garden
+            name: Ogród
+            show_state: false
+            template:
+              - base
+              - camera
+            tap_action:
+              !include popup/camera_garden.yaml
 
           - type: custom:button-card
             entity: sensor.airpurifier_temperature
@@ -664,19 +628,10 @@ views:
           #         }
           #   card:
             - type: custom:swipe-card
-              start_card: 1
               parameters:
-                roundLengths: true
-                #autoHeight: false
-                #height: 424px
-                effect: coverflow
-                speed: 650
-                spaceBetween: 20
-                threshold: 7
-                coverflowEffect:
-                  rotate: 80
-                  depth: 300
-
+                speed: 550
+                spaceBetween: 40
+                threshold: 5
               cards:
 
                 - type: grid
