@@ -28,6 +28,8 @@
   base:
     template:
       - settings
+      - tilt
+      - extra_styles
     variables:
       state_on: >
         [[[ return ['wł.','on', 'home', 'cool', 'fan_only', 'playing', 'Normalny', 'Intensywny', 'Poza Domem', 'Turbo'].indexOf(entity === undefined || entity.state) !== -1; ]]]
@@ -43,6 +45,24 @@
         [[[ return entity === undefined || entity.attributes.entity_picture; ]]]
       timeout: >
         [[[ return entity === undefined || Date.now() - Date.parse(entity.last_changed); ]]]
+      tilt_options: >
+        [[[
+          let options = {
+            max: 5,
+            scale: 1.06,
+            glare: true,
+            'max-glare': 0.15,
+            perspective: 800,
+            speed: 800,
+            parallax: '25px'
+          }
+          if (this._config.template.includes('conditional_media')) {
+            options.scale = options.scale % parseInt(options.scale) / 2 + parseInt(options.scale);
+            options.perspective = options.perspective * 2;
+            return options;
+          }
+          return options;
+        ]]]
     aspect_ratio: 1/1
     show_state: true
     show_icon: false
@@ -121,7 +141,8 @@
                 ? 'rgba(255, 255, 255, 0.8)'
                 : 'rgba(115, 115, 115, 0.2)';
             ]]]
-    extra_styles: |
+  extra_styles:
+    extra_styles: >
       [[[
         if (entity) {
           let hs = entity.attributes.hs_color === undefined,
@@ -154,60 +175,145 @@
           #state::first-letter {
             text-transform: uppercase;
           }
-          #blur, #overlayx {
-            top: calc((100% - var(--media-blur-height)) + 0.5%);
-            height: var(--media-blur-height);
-          }
           /* portrait */
           @media screen and (max-width: 1200px) {
             #name, #state {
               font-size: 2vw;
-              letter-spacing: 0.05vw;
-            }
-            #blur, #overlayx {
-              top: calc((100% - (var(--media-blur-height) + 1.5%)) + 0.5%);
-              height: calc(var(--media-blur-height) + 1.5%);
             }
           }
           /* phone */
           @media screen and (max-width: 800px) {
             #name, #state {
-              font-size: 3.1vw;
-              letter-spacing: 0.12vw;
-            }
-            #blur, #overlayx {
-              top: calc((100% - (var(--media-blur-height) + 3%)) + 0.5%);
-              height: calc(var(--media-blur-height) + 3%);
+              font-size: 3vw;
             }
           }
-          @keyframes card_bounce {
-            0% {
-              transform: scale(1);
-            }
-            15% {
-              transform: scale(0.9);
-            }
-            25% {
-              transform: scale(1);
-            }
-            30% {
-              transform: scale(0.98);
-            }
-            100% {
-              transform: scale(1);
-            }
+          /* tilt */
+          #ripple, .js-tilt-glare {
+            clip-path: inset(0 round var(--custom-button-card-border-radius));
+            overflow: hidden;
           }
-          .marquee {
-            animation: marquee 20s linear infinite;
+          .js-tilt-glare {
+            z-index: 1;
           }
-          @keyframes marquee {
-            from {
-              transform: translateX(0);
-            }
-            to {
-              transform: translateX(-50%);
-            }
+          .js-tilt-glare-inner {
+            background-color: rgba(0,0,0,0.9);
           }
+          #container {
+            transform: translateZ(${variables.tilt_options.parallax});
+          }
+          #card {
+            transform-style: preserve-3d;
+            overflow: visible;
+          }
+          ${this._config.template.includes('conditional_media') ? `
+            :host {
+              --blur-intensity: blur(4.5px) brightness(0.8);
+            }
+            /* phone */
+            @media screen and (max-width: 800px) {
+              :host {
+                --blur-intensity: blur(2.5px) brightness(0.8);
+              }
+            }
+            #ripple, .js-tilt-glare {
+              clip-path: inset(0 round calc(var(--custom-button-card-border-radius) / 2));
+            }
+            #container {
+              overflow: hidden;
+            }
+            .marquee {
+              animation: marquee 20s linear infinite;
+            }
+            @keyframes marquee {
+              from {
+                transform: translateX(0%);
+              }
+              to {
+                transform: translateX(-50%);
+              }
+            }
+          `:''}
+          ${this._config.template.includes('footer') ? `
+            :host {
+              --name-font-size: 1.22vw;
+              --name-icon-size: 1.5vw;
+              --notify-font-size: 0.9vw;
+              --notify-box-size: 1.8vw;
+              --name-padding-v: 0.7vw;
+              --name-padding-h: 1.1vw;
+              --card-border-radius: 0.6vw;
+            }
+            #ripple, .js-tilt-glare {
+              border-radius: calc(var(--card-border-radius) - 0.1vw);
+              clip-path: inset(0 round calc( var(--custom-button-card-border-radius) - 0.1vw ));
+            }
+            #name {
+              font-size: var(--name-font-size);
+              padding: var(--name-padding-v) var(--name-padding-h);
+              letter-spacing: 0.012vw;
+            }
+            ha-icon {
+              width: var(--name-icon-size);
+              vertical-align: 7%;
+              padding-right: 0.1vw;
+              opacity: 0.4;
+            }
+            #card {
+              border-radius: var(--card-border-radius);
+              background: rgba(115, 115, 115, 0.04);
+            }
+            #notify {
+              font-size: var(--notify-font-size);
+              width: var(--notify-box-size);
+              height: var(--notify-box-size);
+              line-height: var(--notify-box-size);
+              padding-right: 0.5px;
+              padding-top: 0.5px;
+            }
+            /* portrait */
+            @media screen and (max-width: 1200px) {
+              #name {
+                font-size: calc(var(--name-font-size) * 1.4);
+                padding: calc(var(--name-padding-v) * 1.4) calc(var(--name-padding-h) * 1.4);
+              }
+              ha-icon {
+                width: calc(var(--name-icon-size) * 1.4);
+              }
+              #card {
+                border-radius: calc(var(--card-border-radius) * 1.4);
+                margin: 0 0.5vw;
+              }
+              #notify {
+                font-size: calc(var(--notify-font-size) * 1.4);
+                width: calc(var(--notify-box-size) * 1.4);
+                height: calc(var(--notify-box-size) * 1.4);
+                line-height: calc(var(--notify-box-size) * 1.4);
+              }
+            }
+            /* phone */
+            @media screen and (max-width: 800px) {
+              #name {
+                font-size: calc(var(--name-font-size) * 2.7);
+                padding: calc(var(--name-padding-v) * 2.7) calc(var(--name-padding-h) * 2.7);
+                letter-spacing: 0.12vw;
+              }
+              ha-icon {
+                width: calc(var(--name-icon-size) * 2.7);
+              }
+              #card {
+                border-radius: calc(var(--card-border-radius) * 2.7);
+                background: rgba(115, 115, 115, 0.08);
+                margin: 0 0.5vw;
+              }
+              #notify {
+                font-size: calc(var(--notify-font-size) * 2.7);
+                width: calc(var(--notify-box-size) * 2.7);
+                height: calc(var(--notify-box-size) * 2.7);
+                line-height: calc(var(--notify-box-size) * 2.7);
+                padding: 0;
+              }
+            }
+          `:''}
         `
       ]]]
 
@@ -871,6 +977,27 @@
 
   #################################################
   #                                               #
+  #                     TILT                      #
+  #                                               #
+  #################################################
+
+  tilt:
+    custom_fields:
+      tilt: >
+        [[[
+          setTimeout(() => {
+            let elt = this.shadowRoot,
+              card = elt.getElementById('card'),
+              ignore = window.navigator.userAgent;
+            if (elt && card && VanillaTilt.init !== undefined
+              && !ignore.match(/iPhone/i) && !ignore.match(/Android/i)) {
+              VanillaTilt.init(card, variables.tilt_options);
+            }
+          }, 0);
+        ]]]
+
+  #################################################
+  #                                               #
   #                    CLIMATE                    #
   #                                               #
   #################################################
@@ -1450,12 +1577,13 @@
       custom_fields:
         icon:
           - width: 70%
+          - margin-left: 2%
           - fill: '#9da0a2'
-          - opacity: >
+          - display: >
               [[[
                 return variables.media_off || variables.entity_picture === undefined
-                  ? '1'
-                  : '0';
+                  ? 'initial'
+                  : 'none';
               ]]]
       card:
         - background-color: none
@@ -1469,30 +1597,50 @@
                   : `linear-gradient(0deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,0) 100%), url(${variables.entity_picture})`;
             ]]]
 
-  #################################################
+    #################################################
   #                                               #
   #               CONDITIONAL MEDIA               #
   #                                               #
   #################################################
 
   conditional_media:
+    aspect_ratio: 1000/996
     template:
       - base
-      - base_media
+      #- media_youtube
+      - icon_play_pause
+    variables:
+      i: >
+        [[[
+          let data = entity.attributes.data;
+          if (entity && data) {
+            return Math.floor(Math.random() * (data.length - 1)) + 1;
+          }
+        ]]]
     state_display: >
       [[[
         if (entity) {
           let elt = this.shadowRoot,
-            await = setTimeout(marquee, 0),
+            await = setTimeout(marquee,0),
+            data = entity.attributes.data,
             artist = entity.attributes.media_artist,
-            title = entity.attributes.media_title,
-            output = artist === undefined && title !== undefined
-              ? title
-              : title === undefined && artist !== undefined
-                ? artist
-                : title !== undefined && artist !== undefined
-                  ? `${artist} - ${title}`
-                  : variables.translate_idle;
+            title = entity.attributes.media_title;
+            if (data !== undefined) {
+              var number = data[variables.i].number === undefined && data[variables.i].aired !== undefined
+                ? `(${data[variables.i].aired.split("-")[0]})`
+                : data[variables.i].number === undefined && data[variables.i].aired === undefined
+                  ? ' '
+                  : data[variables.i].number,
+                output = `${data[variables.i].title} ${number}`;
+            } else {
+              var output = artist === undefined && title !== undefined
+                ? title
+                : title === undefined && artist !== undefined
+                  ? artist
+                  : title !== undefined && artist !== undefined
+                    ? `${artist} - ${title}`
+                    : variables.translate_idle;
+            }
           function marquee() {
             let state = elt.getElementById("state"),
               container = elt.getElementById("container");
@@ -1522,132 +1670,80 @@
         }
         return variables.translate_unknown;
       ]]]
-    custom_fields:
-      blur: >
-        [[[
-          if (entity && variables.entity_picture && variables.media_on) return '<div></div>';
-        ]]]
-      overlayx: >
-        [[[
-          if (entity && variables.entity_picture === undefined && variables.media_on) return '<div></div>';
-        ]]]
-      media_image: >
-        <div></div>
-      play_pause: >
-        [[[
-          let style = `
-            <style>
-              .scale-up {
-                animation: scale-up 1s forwards;
-                cubic-bezier(.05, .5, .3, 1);
-                transform-origin: center center;
-              }
-
-              @keyframes scale-up {
-                0% {
-                  opacity: 0;
-                  transform: scale(0);
-                }
-                20% {
-                  transform: scale(1);
-                }
-                30% {
-                  opacity: 1;
-                }
-                80% {
-                  opacity: 1;
-                }
-                100% {
-                  opacity: 0;
-                }
-              }
-            </style>
-          `;
-          if (variables.state === 'paused' && variables.timeout < 2000) {
-            return `
-              <svg viewBox="0 0 166 166">${style}
-                <path class="scale-up" d="M0 0h59.9v166H0zm106.1 0H166v166h-59.9z"/>
-              </svg>
-            `;
-          }
-          if (variables.state === 'playing' && variables.timeout < 2000) {
-            return `
-              <svg viewBox="0 0 166 166">${style}
-                <path class="scale-up" d="M0 0l166 83L0 166z"/>
-              </svg>
-            `;
-          }
-        ]]]
+    tap_action:
+      action: call-service
+      service: media_player.media_play_pause
+      service_data:
+        entity_id: >
+          [[[ return variables.entity_id; ]]]
     styles:
+      grid:
+        - gap: 0.65%
       name:
-        - z-index: 3
-        - overflow: visible
-        - margin-bottom: -0.75%
+        - padding: 0.2vw
+        - margin: -0.2vw
+        - width: 100%
       state:
-        - z-index: 3
+        - padding-bottom: 5.25%
         - max-width: unset
         - overflow: visible
-        - margin-bottom: -0.5%
       card:
-        - background-color: rgba(115, 115, 115, 0.2)
-        - padding: 5%
+        - padding: 5.75% 5.25% 0 5.75%
         - border-radius: calc(var(--custom-button-card-border-radius) / 2)
-        - backdrop-filter: blur(0) #fix chrome bug
-        - -webkit-clip-path: inset(0) #fix safari bug
+        - background: rgba(115, 115, 115, 0.2) center center/cover no-repeat
+        - background-image: &media_background_image >
+            [[[
+              return entity.attributes.data !== undefined
+                ? `url("${entity.attributes.data[variables.i].fanart}"), url("${entity.attributes.data[variables.i].poster}")`
+                : `url("${variables.entity_picture}")`;
+            ]]]
+        - color: >
+            [[[
+              return entity === undefined
+                ? 'rgba(255, 255, 255, 0.3)'
+                : '#efefef';
+            ]]]
+        - text-shadow: >
+            [[[
+              return entity === undefined
+                ? 'none'
+                : '1px 1px 5px rgba(18, 22, 23, 0.9)';
+            ]]]
       custom_fields:
-        blur:
-          - z-index: 1
-          - left: 0%
-          - width: 100%
-          - position: absolute
-          - background-color: rgba(0, 0, 0, 0.2)
-          - backdrop-filter: blur(0.4em)
-          - -webkit-backdrop-filter: blur(0.4em)
-        overlayx:
-          - left: 0%
-          - width: 100%
-          - position: absolute
-          - background-color: rgba(255, 255, 255, 0.8)
-        media_image:
-          - top: 0
-          - left: 0
-          - width: 100%
-          - height: 100%
-          - position: absolute
-          - background-size: cover
-          - background-image: >
-              [[[
-                return entity && variables.entity_picture
-                  ? `url(${entity.attributes.entity_picture})`
-                  : 'none';
-              ]]]
-        play_pause:
-          - z-index: 2
-          - top: 0
-          - right: 0
-          - bottom: 0
-          - left: 0
-          - margin: auto
-          - width: 21%
-          - height: 21%
-          - position: absolute
-          - fill: '#dedede'
-          - overflow: visible
-          - filter: >
-              [[[
-                return entity && variables.entity_picture
-                  ? 'drop-shadow(0 0 1.3vw rgba(0,0,0,0.7))'
-                  : 'none';
-              ]]]
         icon:
-          - z-index: 2
-          - width: 29%
+          - width: 30%
           - fill: >
               [[[
                 return entity && variables.media_on
                   ? 'rgba(255, 255, 255, 0.8)'
                   : '#9da0a2';
               ]]]
+        blur_overlay:
+          - display: block
+          - position: absolute
+          - width: 103.1%
+          - height: 103.1%
+          - filter: var(--blur-intensity)
+          - clip-path: >
+              inset(74.5% 1.45% 1.45% 1.45% round 0 0 calc(var(--custom-button-card-border-radius) / 2) calc(var(--custom-button-card-border-radius) / 2))
+          - background: center center/cover no-repeat
+          - background-image: *media_background_image
+          - left: -1.5%
+          - bottom: -1.6%
+    custom_fields:
+      blur_overlay: >
+        [[[
+          setTimeout(() => {
+            let elt = this.shadowRoot,
+              card = elt.getElementById('card'),
+              container = elt.getElementById('container'),
+              blur_overlay = elt.getElementById('blur_overlay');
+            if (elt && card && container && blur_overlay) {
+              card.insertBefore(blur_overlay, container);
+            }
+          }, 0);
+          return ' ';
+        ]]]
 
   #################################################
   #                                               #
@@ -1942,7 +2038,42 @@
                   'rgba(255, 255, 255, 0.8)';
               ]]]
 
+  #################################################
+  #                                               #
+  #                 MEDIA YOUTUBE                 #
+  #                                               #
+  #################################################
 
+  media_youtube:
+    variables:
+      token:
+        !include .youtube_token.txt
+    custom_fields:
+      youtube: >
+        [[[
+          let elt = this.shadowRoot;
+          if (entity && elt && entity.attributes.app_name === 'YouTube') {
+            let api = 'https://www.googleapis.com/youtube/v3/search',
+              artist = entity.attributes.media_artist,
+              title = entity.attributes.media_title,
+              options = 'type=video&part=snippet&maxResults=1',
+              token = variables.token.split('|'),
+              random = Math.floor(Math.random() * token.length),
+              url = `${api}?q="${artist}%20${title}"&${options}&key=${token[random]}`;
+            fetch(url).then(e => e.json()).then(e => {
+              let json = e.items[0].snippet.thumbnails,
+                hq = json[Object.keys(json).pop()].url,
+                card = elt.getElementById('card'),
+                blur_overlay = elt.getElementById('blur_overlay');
+              if (entity.state !== 'idle' && artist !== undefined && title !== undefined) {
+                card.style.backgroundImage = `url("${hq}")`;
+                blur_overlay.style.backgroundImage = `url("${hq}")`;
+                card.style.backgroundSize = '178%';
+                blur_overlay.style.backgroundSize = '178%';
+              }
+            });
+          }
+        ]]]
 
   #################################################
   #                                               #
@@ -2446,6 +2577,72 @@
         <svg viewBox="0 0 50 50">
           <path d="M49.7 25c0 13.6-11.1 24.7-24.8 24.7C11.3 49.7.3 38.6.3 25S11.4.3 25 .3 49.7 11.4 49.7 25zm-33.9 0a2.22 2.22 0 0 0-2.2-2.2c-1.2 0-2.3 1-2.3 2.2a2.22 2.22 0 0 0 2.2 2.2c1.3.1 2.3-.9 2.3-2.2h0zm10.8 0c0 1.2.9 2.2 2.2 2.3 1.3 0 2.3-1 2.3-2.2 0-1.3-1-2.3-2.2-2.3-1.3 0-2.3.9-2.3 2.2zm-3.2 0a2.22 2.22 0 0 0-2.2-2.2c-1.2 0-2.3 1-2.3 2.2a2.22 2.22 0 0 0 2.2 2.2c1.3 0 2.3-.9 2.3-2.2h0zm13 2.2a2.22 2.22 0 0 0 2.2-2.2c0-1.2-1-2.3-2.2-2.3a2.22 2.22 0 0 0-2.2 2.2c0 1.3 1 2.3 2.2 2.3z" />
         </svg>
+
+  icon_play_pause:
+    styles:
+      custom_fields:
+        play_pause:
+          - top: 0
+          - right: 0
+          - bottom: 0
+          - left: 0
+          - margin: auto
+          - width: 21%
+          - height: 21%
+          - position: absolute
+          - fill: '#dedede'
+          - overflow: visible
+          - filter: >
+              [[[
+                return entity && variables.entity_picture
+                  ? 'drop-shadow(0 0 1.3vw rgba(0,0,0,0.7))'
+                  : 'none';
+              ]]]
+    custom_fields:
+      play_pause: >
+        [[[
+          let style = `
+            <style>
+              .scale-up {
+                animation: scale-up 1s forwards;
+                cubic-bezier(.05, .5, .3, 1);
+                transform-origin: center center;
+              }
+              @keyframes scale-up {
+                0% {
+                  opacity: 0;
+                  transform: scale(0);
+                }
+                20% {
+                  transform: scale(1);
+                }
+                30% {
+                  opacity: 1;
+                }
+                80% {
+                  opacity: 1;
+                }
+                100% {
+                  opacity: 0;
+                }
+              }
+            </style>
+          `;
+          if (variables.state === 'paused' && variables.timeout < 2000) {
+            return `
+              <svg viewBox="0 0 166 166">${style}
+                <path class="scale-up" d="M0 0h59.9v166H0zm106.1 0H166v166h-59.9z"/>
+              </svg>
+            `;
+          }
+          if (variables.state === 'playing' && variables.timeout < 2000) {
+            return `
+              <svg viewBox="0 0 166 166">${style}
+                <path class="scale-up" d="M0 0l166 83L0 166z"/>
+              </svg>
+            `;
+          }
+        ]]]
 
   icon_hue:
     styles:
