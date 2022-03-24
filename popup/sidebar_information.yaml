@@ -310,7 +310,8 @@ browser_mod:
         entities:
           #- entity: sensor.template_nas_status
 
-          - entity: sensor.router_current_consumption
+          - entity: sensor.server_power_power
+            name: Pobór mocy serwera
 
           - entity: sensor.nas_uptime
             name: Ostatni restart
