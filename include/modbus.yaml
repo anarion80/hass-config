@@ -206,7 +206,7 @@ modbus:
       #   state_class: measurement
       #   scan_interval: 10
       - name: "Komfovent Status"
-        address: 900
+        address: 899
         data_type: uint16
         input_type: holding
         scan_interval: 10
