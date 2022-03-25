@@ -25,36 +25,36 @@ modbus:
       # Logic
       # Away,Intensive or Boost off, switch to Normal
       # Switch Normal Off go to Away
-      - name: "Komfovent Switch Away"
-        # slave: 2
-        address: 4
-        command_on: 1
-        command_off: 2
-        verify:
-      - name: "Komfovent Switch Normal"
-        # slave: 2
-        address: 4
-        command_on: 2
-        command_off: 1
-        verify:
-      - name: "Komfovent Switch Intensive"
-        # slave: 2
-        address: 4
-        command_on: 3
-        command_off: 2
-        verify:
-      - name: "Komfovent Switch Boost"
-        # slave: 2
-        address: 4
-        command_on: 4
-        command_off: 2
-        verify:
-      - name: "Komfovent Switch Kitchen"
-        # slave: 2
-        address: 4
-        command_on: 5
-        command_off: 2
-        verify:
+      # - name: "Komfovent Switch Away"
+      #   # slave: 2
+      #   address: 4
+      #   command_on: 1
+      #   command_off: 2
+      #   verify:
+      # - name: "Komfovent Switch Normal"
+      #   # slave: 2
+      #   address: 4
+      #   command_on: 2
+      #   command_off: 1
+      #   verify:
+      # - name: "Komfovent Switch Intensive"
+      #   # slave: 2
+      #   address: 4
+      #   command_on: 3
+      #   command_off: 2
+      #   verify:
+      # - name: "Komfovent Switch Boost"
+      #   # slave: 2
+      #   address: 4
+      #   command_on: 4
+      #   command_off: 2
+      #   verify:
+      # - name: "Komfovent Switch Kitchen"
+      #   # slave: 2
+      #   address: 4
+      #   command_on: 5
+      #   command_off: 2
+      #   verify:
 
     sensors:
       - name: "Komfovent on off num"
