@@ -225,6 +225,12 @@ views:
                     null :
                     `${parseInt(states['sensor.komfovent_extract_temperature_c'].state)}<tspan font-size="10">°C</tspan>`;
                 ]]]
+              speed: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    entity.state;
+                ]]]
 
           - type: custom:button-card
             entity: fan.zhimi_airpurifier_v7
