@@ -435,6 +435,7 @@
     styles:
       icon:
         - width: 100%
+        - color: var(--state-icon-color)
       card:
         - border-radius: var(--custom-button-card-border-radius)
         - -webkit-tap-highlight-color: rgba(0,0,0,0)

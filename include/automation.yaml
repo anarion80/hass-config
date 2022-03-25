@@ -1214,15 +1214,15 @@ automation:
     - condition: or
       conditions:
       - condition: state
-        entity_id: alarm_control_panel.main_alarm
+        entity_id: alarm_control_panel.glowny_alarm
         state: armed_away
       - condition: state
-        entity_id: alarm_control_panel.main_alarm
+        entity_id: alarm_control_panel.glowny_alarm
         state: armed_home
     action:
     - service: alarm_control_panel.alarm_trigger
       target:
-        entity_id: alarm_control_panel.main_alarm
+        entity_id: alarm_control_panel.glowny_alarm
     - service: tts.google_cloud_say
       data:
         message: Uwaga, alarm został wyzwolony!
@@ -1232,7 +1232,7 @@ automation:
     alias: Send notification when alarm is disarmed
     trigger:
     - platform: state
-      entity_id: alarm_control_panel.main_alarm
+      entity_id: alarm_control_panel.glowny_alarm
       to: disarmed
     action:
     - service: tts.google_cloud_say
@@ -1243,7 +1243,7 @@ automation:
     alias: Send notification when alarm is in pending status
     trigger:
     - platform: state
-      entity_id: alarm_control_panel.main_alarm
+      entity_id: alarm_control_panel.glowny_alarm
       to: pending
     action:
     - service: tts.google_cloud_say
@@ -1254,7 +1254,7 @@ automation:
     alias: Send notification when alarm is armed in away mode
     trigger:
     - platform: state
-      entity_id: alarm_control_panel.main_alarm
+      entity_id: alarm_control_panel.glowny_alarm
       to: armed_away
     action:
     - service: tts.google_cloud_say
@@ -1265,7 +1265,7 @@ automation:
     alias: Send notification when alarm is armed in home mode
     trigger:
     - platform: state
-      entity_id: alarm_control_panel.main_alarm
+      entity_id: alarm_control_panel.glowny_alarm
       to: armed_home
     action:
     - service: tts.google_cloud_say
@@ -1276,7 +1276,7 @@ automation:
     alias: Send notification when alarm is triggered
     trigger:
     - platform: state
-      entity_id: alarm_control_panel.main_alarm
+      entity_id: alarm_control_panel.glowny_alarm
       to: triggered
     action:
     - service: tts.google_cloud_say

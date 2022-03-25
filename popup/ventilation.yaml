@@ -85,37 +85,83 @@ browser_mod:
             cards:
 
               - type: custom:button-card
-                entity: switch.komfovent_switch_away
+                entity: sensor.komfovent_operation_mode
                 name: Poza Domem
                 icon: hass:home-export-outline
                 show_state: false
+                tap_action:
+                  action: call-service
+                  service: script.komfovent_set_away
                 template:
                   - basic
+                state:
+                  - value: Away
+                    styles:
+                      icon:
+                        - color: var(--state-icon-active-color)
+                      card:
+                        - color: rgba(0, 0, 0, 0.6)
+                        - background-color: rgba(255, 255, 255, 0.8)
 
               - type: custom:button-card
-                entity: switch.komfovent_switch_normal
+                entity: sensor.komfovent_operation_mode
                 name: Normalny
                 show_icon: true
                 icon: hass:home-account
                 show_state: false
+                tap_action:
+                  action: call-service
+                  service: script.komfovent_set_normal
                 template:
                   - basic
+                state:
+                  - value: Normal
+                    styles:
+                      icon:
+                        - color: var(--state-icon-active-color)
+                      card:
+                        - color: rgba(0, 0, 0, 0.6)
+                        - background-color: rgba(255, 255, 255, 0.8)
 
               - type: custom:button-card
-                entity: switch.komfovent_switch_intensive
+                entity: sensor.komfovent_operation_mode
                 name: Intensywny
                 show_icon: true
                 icon: hass:weather-windy
+                show_state: false
+                tap_action:
+                  action: call-service
+                  service: script.komfovent_set_intensive
                 template:
                   - basic
-
+                state:
+                  - value: Intensive
+                    styles:
+                      icon:
+                        - color: var(--state-icon-active-color)
+                      card:
+                        - color: rgba(0, 0, 0, 0.6)
+                        - background-color: rgba(255, 255, 255, 0.8)
               - type: custom:button-card
-                entity: switch.komfovent_switch_boost
+                entity: sensor.komfovent_operation_mode
                 name: Turbo
                 show_icon: true
                 icon: hass:fan
+                show_state: false
+                tap_action:
+                  action: call-service
+                  service: script.komfovent_set_boost
                 template:
                   - basic
+                state:
+                  - value: Boost
+                    styles:
+                      icon:
+                        - color: var(--state-icon-active-color)
+                      card:
+                        - color: rgba(0, 0, 0, 0.6)
+                        - background-color: rgba(255, 255, 255, 0.8)
+
               - type: custom:button-card
                 entity: switch.komfovent_switch_power
                 name: Zasilanie
@@ -124,13 +170,16 @@ browser_mod:
                 template:
                   - basic
 
-              - type: custom:button-card
-                entity: switch.komfovent_switch_kitchen
-                name: Okap
-                icon: hass:pot-steam
-                show_state: false
-                template:
-                  - basic
+              # - type: custom:button-card
+              #   entity: sensor.komfovent_operation_mode
+              #   name: Wyłącz
+              #   icon: hass:power-cycle
+              #   show_state: false
+              #   tap_action:
+              #     action: call-service
+              #     service: script.komfovent_set_off
+              #   template:
+              #     - basic
 
           # - type: horizontal-stack
           #   cards:
