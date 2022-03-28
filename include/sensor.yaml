@@ -462,6 +462,19 @@ sensor:
           {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
           {%- endif %}
 
+      alarm_status:
+        friendly_name: Status alarmu
+        value_template: >-
+          {%- if (states('alarm_control_panel.glowny_alarm') == "disarmed") -%} rozbrojony
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "arming") -%} uzbrajanie
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "armed_home") -%} w domu
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "armed_away") -%} poza domem
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "armed_night") -%} nocny
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "armed_custom_bypass") -%} custom
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "pending") -%} w trakcie
+          {%- elif (states('alarm_control_panel.glowny_alarm') == "triggered") -%} wyzwolony
+          {%- endif %}
+
       komfovent_on_off:
         friendly_name: "Komfovent On Off"
         unit_of_measurement: "State"

@@ -1225,8 +1225,12 @@ automation:
         entity_id: alarm_control_panel.glowny_alarm
     - service: tts.google_cloud_say
       data:
-        message: Uwaga, alarm został wyzwolony!
+        message: Uwaga, alarm został wyzwolony! Wpisz poprawny kod!
         entity_id: media_player.nest_mini
+    - service: light.turn_on
+      data:
+        entity_id: light.fire_tablet_screen
+        brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
     mode: single
   - id: send_notification_when_alarm_is_disarmed
     alias: Send notification when alarm is disarmed
@@ -1250,6 +1254,10 @@ automation:
       data:
         message: Uwaga, alarm się włącza! Wpisz poprawny kod!
         entity_id: media_player.nest_mini
+    - service: light.turn_on
+      data:
+        entity_id: light.fire_tablet_screen
+        brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
   - id: send_notification_when_alarm_is_armed_in_away_mode
     alias: Send notification when alarm is armed in away mode
     trigger:
@@ -1290,6 +1298,10 @@ automation:
         data:
           ttl: 0
           priority: high
+    - service: light.turn_on
+      data:
+        entity_id: light.fire_tablet_screen
+        brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
   - id: stopa_bazowa_change_notification_up
     alias: Notify when stopa bazowa changes up
     description: ''
