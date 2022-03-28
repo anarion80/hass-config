@@ -122,7 +122,7 @@
         - border-radius: var(--custom-button-card-border-radius)
         - -webkit-tap-highlight-color: rgba(0,0,0,0)
         - transition: none
-        - padding: 10% 9% 9% 10%
+        - padding: 11.5% 10.5% 10.5% 11.5%
         - --mdc-ripple-color: >
             [[[
               return variables.state_on
@@ -205,34 +205,32 @@
             transform-style: preserve-3d;
             overflow: visible;
           }
-          ${this._config.template.includes('conditional_media') ? `
+          :host {
+            --blur-intensity: blur(4.5px) brightness(0.8);
+          }
+          /* phone */
+          @media screen and (max-width: 800px) {
             :host {
-              --blur-intensity: blur(4.5px) brightness(0.8);
+              --blur-intensity: blur(2.5px) brightness(0.8);
             }
-            /* phone */
-            @media screen and (max-width: 800px) {
-              :host {
-                --blur-intensity: blur(2.5px) brightness(0.8);
-              }
+          }
+          #ripple, .js-tilt-glare {
+            clip-path: inset(0 round calc(var(--custom-button-card-border-radius) / 2));
+          }
+          #container {
+            overflow: hidden;
+          }
+          .marquee {
+            animation: marquee 20s linear infinite;
+          }
+          @keyframes marquee {
+            from {
+              transform: translateX(0%);
             }
-            #ripple, .js-tilt-glare {
-              clip-path: inset(0 round calc(var(--custom-button-card-border-radius) / 2));
+            to {
+              transform: translateX(-50%);
             }
-            #container {
-              overflow: hidden;
-            }
-            .marquee {
-              animation: marquee 20s linear infinite;
-            }
-            @keyframes marquee {
-              from {
-                transform: translateX(0%);
-              }
-              to {
-                transform: translateX(-50%);
-              }
-            }
-          `:''}
+          }
           ${this._config.template.includes('footer') ? `
             :host {
               --name-font-size: 1.22vw;
@@ -1598,7 +1596,7 @@
                   : `linear-gradient(0deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,0) 100%), url(${variables.entity_picture})`;
             ]]]
 
-    #################################################
+  #################################################
   #                                               #
   #               CONDITIONAL MEDIA               #
   #                                               #
@@ -2201,6 +2199,20 @@
     # template:
       # - base
     show_state: true
+    styles:
+      #name: [top: 57%, left: 0%, width: 100%, position: absolute]
+      grid:
+        - grid-template-areas: |
+            "icon  circle"
+            "n     n"
+            "s     s"
+            "graph     graph"
+        - grid-template-columns: repeat(2, 1fr)
+        - grid-template-rows: auto repeat(3, min-content)
+        - gap: 1.3%
+        - align-items: start
+      custom_fields:
+        graph: [bottom: 0%, left: 0%, width: 100%, position: absolute]
     custom_fields:
       graph:
         card:
@@ -2226,10 +2238,11 @@
               color: "#c0392b"
           tap_action:
             action: none
-    styles:
-      #name: [top: 57%, left: 0%, width: 100%, position: absolute]
-      custom_fields:
-        graph: [bottom: 0%, left: 0%, width: 100%, position: absolute]
+          style: |
+            ha-card {
+              box-shadow: none;
+              border-radius: var(--border-radius);
+            }
 
   #################################################
   #                                               #
@@ -3716,16 +3729,118 @@
           } else if(entity.state >= '35' && entity.state < 40) {
             temp_color = "#FE0002";
           }
-          return `<svg viewBox="-949 951 100 125"><style>@keyframes animate{0%{transform: scale(0.85);}20%{transform: scale(1.1);}40%{transform: scale(0.95);}60%{transform: scale(1.03);}80%{transform: scale(0.97);}100%{transform: scale(1);}}.animate{animation: animate 0.8s; transform-origin: center;}</style>
-          <path fill="#9da0a2" d="M-895.9,1020.1v-56.7c0-5.5-4.5-10-10-10c-5.5,0-10,4.5-10,10v56.7c-3.7,3-6,7.6-6,12.4c0,8.8,7.2,16,16,16 c8.8,0,15.9-7.2,15.9-16C-890,1027.7-892.2,1023.1-895.9,1020.1z M-905.9,1045.1c-6.9,0-12.5-5.6-12.5-12.5c0-4.4,2.3-8.4,6-10.7 v-58.4c0-3.6,2.9-6.6,6.6-6.6c3.6,0,6.6,2.9,6.6,6.6v58.4c3.6,2.3,6,6.3,6,10.7C-893.4,1039.5-899,1045.1-905.9,1045.1z"/>
-          <path fill="${temp_color}" d="M-902.8,1024v-22.9c0-1.7-1.4-3.1-3.1-3.1c-1.7,0-3.1,1.4-3.1,3.1v22.9c-3.5,1.3-6,4.6-6,8.5c0,5,4.1,9.1,9.1,9.1 c5,0,9.1-4.1,9.1-9.1C-896.8,1028.6-899.3,1025.3-902.8,1024z"/>
-          <rect fill="#9da0a2" x="-892.4" y="963.6" width="16.3" height="3.4"/>
-          <rect fill="#9da0a2" x="-892.4" y="974.9" width="7.7" height="3.4"/>
-          <rect fill="#9da0a2" x="-892.4" y="986.3" width="16.3" height="3.4"/>
-          <rect fill="#9da0a2" x="-892.4" y="997.6" width="7.7" height="3.4"/>
-          <rect fill="#9da0a2"v x="-892.4" y="1008.9" width="16.3" height="3.4"/>
+          return `<svg viewBox="0 0 50 50" >
+          <path fill="#9da0a2" d="M16.3,33.6V6.4c0-2.6-2.2-4.8-4.8-4.8S6.7,3.8,6.7,6.4v27.1c-1.8,1.4-2.9,3.6-2.9,5.9c0,4.2,3.4,7.7,7.7,7.7
+            s7.6-3.4,7.6-7.7C19.1,37.2,18.1,35,16.3,33.6z M11.5,45.5c-3.3,0-6-2.7-6-6c0-2.1,1.1-4,2.9-5.1v-28c0-1.7,1.4-3.2,3.2-3.2
+            c1.7,0,3.2,1.4,3.2,3.2v28c1.7,1.1,2.9,3,2.9,5.1C17.5,42.9,14.8,45.5,11.5,45.5z"/>
+          <path fill="${temp_color}" d="M13,35.5v-11c0-0.8-0.7-1.5-1.5-1.5c-0.8,0-1.5,0.7-1.5,1.5v11c-1.7,0.6-2.9,2.2-2.9,4.1c0,2.4,2,4.4,4.4,4.4
+            s4.4-2,4.4-4.4C15.9,37.7,14.7,36.1,13,35.5z"/>
+          <rect fill="#9da0a2" x="18" y="6.5" width="7.8" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="12" width="3.7" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="17.4" width="7.8" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="22.8" width="3.7" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="28.2" width="7.8" height="1.6"/>
           </svg>`;
         } ]]]
+
+  icon_alarm:
+    show_state: true
+    styles:
+      card:
+        - --mdc-ripple-color: >
+            [[[
+              return variables.state_on
+                ? 'rgb(0, 0, 0)'
+                : 'rgba(255, 255, 255, 0.3)';
+            ]]]
+        - color: >
+            [[[
+              if (entity.state != 'unavailable')
+              {
+                let color = 'rgba(255, 255, 255, 0.3)';
+                if (entity.state == 'disarmed' || entity.state == 'rozbrojony') {
+                  color = 'rgba(255, 255, 255, 0.3)';
+                } else if(entity.state == 'arming' || entity.state == 'uzbrajanie') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                } else if(entity.state == 'armed_home' || entity.state == 'w domu') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                } else if(entity.state == 'armed_away' || entity.state == 'poza domem') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                } else if(entity.state == 'armed_night' || entity.state == 'nocny') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                } else if(entity.state == 'armed_custom_bypass' || entity.state == 'custom') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                } else if(entity.state == 'pending' || entity.state == 'w trakcie') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                } else if(entity.state == 'triggered' || entity.state == 'wyzwolony') {
+                  color = 'rgba(0, 0, 0, 0.6)';
+                }
+                return color;
+              }
+            ]]]
+
+        - background-color: >
+            [[[
+              if (entity.state != 'unavailable')
+              {
+                let backgroundcolor = 'rgba(115, 115, 115, 0.2)';
+                if (entity.state == 'disarmed' || entity.state == 'rozbrojony') {
+                  backgroundcolor = 'rgba(115, 115, 115, 0.2)';
+                } else if(entity.state == 'arming' || entity.state == 'uzbrajanie') {
+                  backgroundcolor = 'rgba(255, 255, 0, 0.6)';
+                } else if(entity.state == 'armed_home' || entity.state == 'w domu') {
+                  backgroundcolor = 'rgba(0, 255, 0, 0.2)';
+                } else if(entity.state == 'armed_away' || entity.state == 'poza domem') {
+                  backgroundcolor = 'rgba(0, 255, 0, 0.2)';
+                } else if(entity.state == 'armed_night' || entity.state == 'nocny') {
+                  backgroundcolor = 'rgba(0, 255, 0, 0.2)';
+                } else if(entity.state == 'armed_custom_bypass' || entity.state == 'custom') {
+                  backgroundcolor = 'rgba(0, 255, 0, 0.2)';
+                } else if(entity.state == 'pending' || entity.state == 'w trakcie') {
+                  backgroundcolor = 'rgba(255, 255, 0, 0.6)';
+                } else if(entity.state == 'triggered' || entity.state == 'wyzwolony') {
+                  backgroundcolor = 'rgba(255, 0, 0, 0.6)';
+                }
+                return backgroundcolor;
+              }
+            ]]]
+    custom_fields:
+      icon: >
+        [[[
+        if (entity.state != 'unavailable')
+        {
+          let temp_color ="#9da0a2";
+          let path = "M1,4.27L2.28,3L20.5,21.22L19.23,22.5L17,20.25C15.57,21.57 13.87,22.54 12,23C6.84,21.74 3,16.55 3,11V6.27L1,4.27M12,1L21,5V11C21,13.28 20.35,15.5 19.23,17.41L5.65,3.82L12,1Z"
+          if (entity.state == 'disarmed') {
+            temp_color = "#9da0a2";
+            path = "M1,4.27L2.28,3L20.5,21.22L19.23,22.5L17,20.25C15.57,21.57 13.87,22.54 12,23C6.84,21.74 3,16.55 3,11V6.27L1,4.27M12,1L21,5V11C21,13.28 20.35,15.5 19.23,17.41L5.65,3.82L12,1Z";
+          } else if(entity.state == 'armed_home') {
+            temp_color = "#9da0a2";
+            path = "M11,13H13V16H16V11H18L12,6L6,11H8V16H11V13M12,1L21,5V11C21,16.55 17.16,21.74 12,23C6.84,21.74 3,16.55 3,11V5L12,1Z";
+          } else if(entity.state == 'arming') {
+            temp_color = 'rgba(255, 255, 255, 0.3)';
+            path = "M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1Z";
+          } else if(entity.state == 'armed_away') {
+            temp_color = "#9da0a2";
+            path = "M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.1 14.8,9.5V11C15.4,11 16,11.6 16,12.3V15.8C16,16.4 15.4,17 14.7,17H9.2C8.6,17 8,16.4 8,15.7V12.2C8,11.6 8.6,11 9.2,11V9.5C9.2,8.1 10.6,7 12,7M12,8.2C11.2,8.2 10.5,8.7 10.5,9.5V11H13.5V9.5C13.5,8.7 12.8,8.2 12,8.2Z";
+          } else if(entity.state == 'armed_night') {
+            temp_color = "#9da0a2";
+            path = "M12 1L3 5V11C3 16.55 6.84 21.74 12 23C17.16 21.74 21 16.55 21 11V5L12 1M15.97 14.41C14.13 16.58 10.76 16.5 9 14.34C6.82 11.62 8.36 7.62 11.7 7C12.04 6.95 12.33 7.28 12.21 7.61C11.75 8.84 11.82 10.25 12.53 11.47C13.24 12.69 14.42 13.46 15.71 13.67C16.05 13.72 16.2 14.14 15.97 14.41Z";
+          } else if(entity.state == 'armed_custom_bypass') {
+            temp_color = "#9da0a2";
+            path = "M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,5A3,3 0 0,1 15,8A3,3 0 0,1 12,11A3,3 0 0,1 9,8A3,3 0 0,1 12,5M17.13,17C15.92,18.85 14.11,20.24 12,20.92C9.89,20.24 8.08,18.85 6.87,17C6.53,16.5 6.24,16 6,15.47C6,13.82 8.71,12.47 12,12.47C15.29,12.47 18,13.79 18,15.47C17.76,16 17.47,16.5 17.13,17Z";
+          } else if(entity.state == 'pending') {
+            temp_color = 'rgba(255, 255, 255, 0.3)';
+            path = "M6,6.9L3.87,4.78L5.28,3.37L7.4,5.5L6,6.9M13,1V4H11V1H13M20.13,4.78L18,6.9L16.6,5.5L18.72,3.37L20.13,4.78M4.5,10.5V12.5H1.5V10.5H4.5M19.5,10.5H22.5V12.5H19.5V10.5M6,20H18A2,2 0 0,1 20,22H4A2,2 0 0,1 6,20M12,5A6,6 0 0,1 18,11V19H6V11A6,6 0 0,1 12,5M12,7A4,4 0 0,0 8,11V17H16V11A4,4 0 0,0 12,7Z";
+          } else if(entity.state == 'triggered') {
+            temp_color = "#9da0a2";
+            path = "M6,6.9L3.87,4.78L5.28,3.37L7.4,5.5L6,6.9M13,1V4H11V1H13M20.13,4.78L18,6.9L16.6,5.5L18.72,3.37L20.13,4.78M4.5,10.5V12.5H1.5V10.5H4.5M19.5,10.5H22.5V12.5H19.5V10.5M6,20H18A2,2 0 0,1 20,22H4A2,2 0 0,1 6,20M12,5A6,6 0 0,1 18,11V19H6V11A6,6 0 0,1 12,5Z";
+          }
+          return `<svg viewBox="0 0 24 24">
+              <path fill="${temp_color}" d="${path}" />
+          </svg>`;
+        } ]]]
+
   icon_washer:
     styles:
       custom_fields:
