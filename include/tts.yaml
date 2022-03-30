@@ -13,5 +13,6 @@ tts:
     voice: pl-PL-Wavenet-A
     encoding: linear16
     text_type: ssml
+    service_name: google_cloud_say
     profiles:
       - large-home-entertainment-class-device

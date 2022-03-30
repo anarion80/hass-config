@@ -13,3 +13,8 @@ notify:
     encryption: none
     recipient: !secret smtp_receiver
     sender_name: Mój Home Assistant
+
+  - platform: tts
+    name: salon
+    tts_service: tts.google_cloud_say
+    media_player: media_player.nest_mini
