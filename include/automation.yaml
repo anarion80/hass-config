@@ -1103,7 +1103,7 @@ automation:
     - service: notify.mobile_app_ta_1004
       data:
         message: TTS
-        title: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez marudzenia!
+        title: Kochani Hanusiu i Wojtusiu, czas na angielski! Zróbcie proszę lekcje ładnie, bez marudzenia!
         data:
           channel: alarm_stream_max
     - service: tts.google_cloud_say
