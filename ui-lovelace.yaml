@@ -118,6 +118,16 @@ views:
             entity: sensor.template_sidebar
             name: >
                [[[
+                   return entity.attributes.garbage;
+                   ]]]
+            template: sidebar
+            tap_action:
+              !include popup/garbage.yaml
+
+          - type: custom:button-card
+            entity: sensor.template_sidebar
+            name: >
+               [[[
                    return entity.attributes.calendar;
                    ]]]
             template: sidebar
@@ -819,7 +829,7 @@ views:
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
-                      name: Recently added
+                      name: Ostatnio dodane
                       tap_action:
                         action: none
                       template:

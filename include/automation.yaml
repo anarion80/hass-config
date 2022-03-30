@@ -810,7 +810,7 @@ automation:
           entity_id: media_player.nest_mini
           message: >
             {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
-          language: sv-SE
+          language: pl-PL
       - service: notify.all_devices
         data:
           message: >
@@ -1840,3 +1840,270 @@ automation:
     action:
       - service: number.set_value
         data: {}
+
+  - id: 'Garbage Load'
+    alias: Import dat do integracji garbage
+    description: Import dat do integracji garbage
+    trigger:
+      - platform: webhook
+        webhook_id: "garbage"
+    condition: []
+    action:
+    - variables:
+        include: >
+          "2021-01-04
+          2021-01-18
+          2021-02-01
+          2021-02-15
+          2021-03-01
+          2021-03-15
+          2021-03-29
+          2021-04-12
+          2021-04-26
+          2021-05-10
+          2021-05-24
+          2021-06-07
+          2021-06-21
+          2021-07-05
+          2021-07-19
+          2021-08-02
+          2021-08-16
+          2021-08-30
+          2021-09-13
+          2021-09-27
+          2021-10-11
+          2021-10-25
+          2021-11-08
+          2021-11-22
+          2021-12-06
+          2021-12-20"
+    - alias: "Iterate through the lines to include"
+      repeat:
+        count: "{{ include.split('\n') | count }}"
+        sequence:
+          - alias: "Add the date"
+            service: garbage_collection.add_date
+            data:
+              entity_id: sensor.smieci_zmieszane
+              date: "{{ include.split('\n')[repeat.index-1] }}"
+    - alias: "Update the garbage_collection entity"
+      service: garbage_collection.update_state
+      data:
+        entity_id: sensor.smieci_zmieszane
+    mode: parallel
+
+  - id: 'powiadomnie o smieciach bio'
+    alias: Powiadomienie o śmieciach BIO
+    description: 'Powiadomienie o śmieciach BIO'
+    trigger:
+    - platform: time
+      at: '19:00'
+    condition:
+      - condition: state
+        entity_id: sensor.smieci_bio
+        attribute: days
+        state: 1
+    action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.garbage_reminder
+    - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
+      repeat:
+        while:
+          - condition: state
+            entity_id: input_boolean.garbage_reminder
+            state: "on"
+        sequence:
+          - service: logbook.log
+            data:
+              name: Powiadomienie o śmieciach
+              message: Powiadomienie wysłane
+              entity_id: input_boolean.garbage_reminder
+          - service: tts.google_cloud_say
+            data:
+              entity_id: media_player.nest_mini
+              message: Trzeba wystawić śmieci BIO, jutro odbiór!
+          - service: notify.mobile_app_nokia_8_3_5g
+            data:
+              message: Trzeba wystawić śmieci BIO!
+              data:
+                actions:
+                  - title: "Śmieci wystawione"
+                    action: "wystawione"
+                tag: input_boolean.garbage_reminder
+          - wait_for_trigger:
+              - platform: event
+                event_type: mobile_app_notification_action
+                event_data:
+                  action: "wystawione"
+              - platform: state
+                entity_id: input_boolean.garbage_reminder
+                to: "off"
+            timeout:
+              minutes: 30
+          - choose:
+              - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
+                sequence:
+                  - service: input_boolean.turn_off
+                    target:
+                      entity_id: input_boolean.garbage_reminder
+                  - service: logbook.log
+                    data:
+                      name: "Śmieci wystawione"
+                      message: "Śmieci wystawione"
+                      entity_id: input_boolean.garbage_reminder
+            default:
+              - service: notify.mobile_app_nokia_8_3_5g
+                data:
+                  message: "clear_notification"
+                  data:
+                    tag: input_boolean.garbage_reminder
+              - service: logbook.log
+                data:
+                  name: "Śmieci wystawione"
+                  message: "Śmieci wystawione"
+                  entity_id: input_boolean.garbage_reminder
+
+  - id: 'powiadomnie o smieciach zmieszanych'
+    alias: Powiadomienie o śmieciach zmieszanych
+    description: 'Powiadomienie o śmieciach zmieszanych'
+    trigger:
+    - platform: time
+      at: '19:00'
+    condition:
+      - condition: state
+        entity_id: sensor.zmieszane
+        attribute: days
+        state: 1
+    action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.garbage_reminder
+    - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
+      repeat:
+        while:
+          - condition: state
+            entity_id: input_boolean.garbage_reminder
+            state: "on"
+        sequence:
+          - service: logbook.log
+            data:
+              name: Powiadomienie o śmieciach
+              message: Powiadomienie wysłane
+              entity_id: input_boolean.garbage_reminder
+          - service: tts.google_cloud_say
+            data:
+              entity_id: media_player.nest_mini
+              message: Trzeba wystawić śmieci zmieszane, jutro odbiór!
+          - service: notify.mobile_app_nokia_8_3_5g
+            data:
+              message: Trzeba wystawić śmieci zmieszane!
+              data:
+                actions:
+                  - title: "Śmieci wystawione"
+                    action: "wystawione"
+                tag: input_boolean.garbage_reminder
+          - wait_for_trigger:
+              - platform: event
+                event_type: mobile_app_notification_action
+                event_data:
+                  action: "wystawione"
+              - platform: state
+                entity_id: input_boolean.garbage_reminder
+                to: "off"
+            timeout:
+              minutes: 30
+          - choose:
+              - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
+                sequence:
+                  - service: input_boolean.turn_off
+                    target:
+                      entity_id: input_boolean.garbage_reminder
+                  - service: logbook.log
+                    data:
+                      name: "Śmieci wystawione"
+                      message: "Śmieci wystawione"
+                      entity_id: input_boolean.garbage_reminder
+            default:
+              - service: notify.mobile_app_nokia_8_3_5g
+                data:
+                  message: "clear_notification"
+                  data:
+                    tag: input_boolean.garbage_reminder
+              - service: logbook.log
+                data:
+                  name: "Śmieci wystawione"
+                  message: "Śmieci wystawione"
+                  entity_id: input_boolean.garbage_reminder
+
+  - id: 'powiadomnie o smieciach segregowanych'
+    alias: Powiadomienie o śmieciach segregowanych
+    description: 'Powiadomienie o śmieciach segregowanych'
+    trigger:
+    - platform: time
+      at: '19:00'
+    condition:
+      - condition: state
+        entity_id: sensor.smieci_segregowane
+        attribute: days
+        state: 1
+    action:
+    - service: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.garbage_reminder
+    - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
+      repeat:
+        while:
+          - condition: state
+            entity_id: input_boolean.garbage_reminder
+            state: "on"
+        sequence:
+          - service: logbook.log
+            data:
+              name: Powiadomienie o śmieciach
+              message: Powiadomienie wysłane
+              entity_id: input_boolean.garbage_reminder
+          - service: tts.google_cloud_say
+            data:
+              entity_id: media_player.nest_mini
+              message: Trzeba wystawić śmieci segregowane, jutro odbiór!
+          - service: notify.mobile_app_nokia_8_3_5g
+            data:
+              message: Trzeba wystawić śmieci segregowane!
+              data:
+                actions:
+                  - title: "Śmieci wystawione"
+                    action: "wystawione"
+                tag: input_boolean.garbage_reminder
+          - wait_for_trigger:
+              - platform: event
+                event_type: mobile_app_notification_action
+                event_data:
+                  action: "wystawione"
+              - platform: state
+                entity_id: input_boolean.garbage_reminder
+                to: "off"
+            timeout:
+              minutes: 30
+          - choose:
+              - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
+                sequence:
+                  - service: input_boolean.turn_off
+                    target:
+                      entity_id: input_boolean.garbage_reminder
+                  - service: logbook.log
+                    data:
+                      name: "Śmieci wystawione"
+                      message: "Śmieci wystawione"
+                      entity_id: input_boolean.garbage_reminder
+            default:
+              - service: notify.mobile_app_nokia_8_3_5g
+                data:
+                  message: "clear_notification"
+                  data:
+                    tag: input_boolean.garbage_reminder
+              - service: logbook.log
+                data:
+                  name: "Śmieci wystawione"
+                  message: "Śmieci wystawione"
+                  entity_id: input_boolean.garbage_reminder

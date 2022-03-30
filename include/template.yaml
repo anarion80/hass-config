@@ -339,9 +339,10 @@ template:
             {% else %}
               Nie można załadować prognozy pogody...
             {% endif %}
-          laundry: >
-            {% set start_time = state_attr('calendar.tvatta', 'start_time') %}
+          garbage: >
+            {% set start_time = state_attr('calendar.garbage_collection', 'start_time') %}
             {% if start_time != None %}
+              {% set type = state_attr('calendar.garbage_collection', 'message') %}
               {% set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
               {% set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
               {% set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
@@ -354,13 +355,13 @@ template:
               | replace('Saturday', 'sobotę')
               | replace('Sunday', 'niedzielę') %}
               {% if count <= 0.0 %}
-                {{'\U0001F4A6'}} Pranie dzisiaj {{ time }}
+                🗑️ {{'\U0001F4A6'}} {{ type }} dzisiaj ({{ day }})
               {% elif count <= 1.0 %}
-                Pranie jutro o  {{ time }}
+                🗑️ {{ type }} jutro ({{ day }})
               {% elif count <= 2.0 %}
-                Pranie pojutrze o  {{ time }}
+                🗑️ {{ type }} pojutrze ({{ day }})
               {% else %}
-                Wypierz jszcze raz {{ (count + hours) | round }} dni w {{ day }} o {{ time }}
+                🗑️ {{ type }} za {{ (count + hours) | round }} dni w {{ day }}
               {% endif %}
             {% endif %}
           battery: >

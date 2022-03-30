@@ -239,6 +239,24 @@ sensor:
       {{ value | replace(' ', 'T') }}
     scan_interval: 300
 
+  # - platform: command_line
+  #   name: smieci_zmieszane_import
+  #   scan_interval: 86400
+  #   command: >
+  #     cat /config/smieci_zmieszane.txt
+
+  # - platform: command_line
+  #   name: smieci_segregowane_import
+  #   scan_interval: 86400
+  #   command: >
+  #     cat /config/smieci_segregowane.txt
+
+  # - platform: command_line
+  #   name: smieci_bio_import
+  #   scan_interval: 86400
+  #   command: >
+  #     cat /config/smieci_bio.txt
+
   - platform: mqtt
     name: anarion_last_changed
     state_topic: homeassistant/persistence/anarion

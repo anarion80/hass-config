@@ -36,6 +36,10 @@ input_boolean:
     name: Komfovent auto away
     icon: mdi:calendar-clock
 
+  garbage_reminder:
+    name: Przypomnienie o śmieciach
+    icon: mdi:trash-can
+
 input_datetime:
 
   ####################################################
