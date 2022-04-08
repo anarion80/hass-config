@@ -562,8 +562,8 @@ sensor:
   - platform: uptime
     name: HA Uptime
 
-  - platform: version
-    source: hassio
+  # - platform: version
+  #   source: hassio
 
   - platform: command_line
     name: Supervisor updates
