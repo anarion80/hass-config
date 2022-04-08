@@ -18,3 +18,9 @@ notify:
     name: salon
     tts_service: tts.google_cloud_say
     media_player: media_player.nest_mini
+
+  - platform: group
+    name: anarion_iwona_phones
+    services:
+      - service: mobile_app_nokia_8_3_5g
+      - service: mobile_app_nokia_x20

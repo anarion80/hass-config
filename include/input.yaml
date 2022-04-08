@@ -286,3 +286,17 @@ input_select:
       - TOYAcyfrowaINFO
     initial: TVP1 HD
     icon: mdi:television-classic
+
+  radio_station:
+    initial: RMF Classic
+    options:
+      - Rock Radio
+      - Antyradio
+      - RMF Classic
+      - RMF FM
+
+  player:
+    initial: Google Nest
+    options:
+      - Google Nest
+      - Chromecast Audio
