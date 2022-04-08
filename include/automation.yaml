@@ -1103,14 +1103,14 @@ automation:
     - service: notify.mobile_app_ta_1004
       data:
         message: TTS
-        title: Kochani Hanusiu i Wojtusiu, czas na angielski! Zróbcie proszę lekcje ładnie, bez marudzenia!
+        title: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
+          marudzenia!
         data:
           channel: alarm_stream_max
     - service: tts.google_cloud_say
       data:
         entity_id: media_player.nest_mini
-        message: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
-          marudzenia!
+        message: Kochani Hanusiu i Wojtusiu, czas na angielski! Zróbcie proszę lekcje ładnie, bez marudzenia!
         #language: pl
     mode: single
   - id: '1617358855300'
@@ -1144,10 +1144,11 @@ automation:
     action:
     - service: notify.mobile_app_nokia_8_3_5g
       data_template:
-        message: '{{trigger.payload_json["after"]["label"]}} wszedł do schowka'
+        message: '{{trigger.payload_json["after"]["label"]}} wykryty w {{trigger.payload_json["after"]["camera"]}}'
         data:
-          image: https://ha.anarion.pl/api/frigate/notifications/{{trigger.payload_json['after']['id']}}/snapshot.jpg
+          image: https://ha.anarion.pl/api/frigate/frigate/notifications/{{trigger.payload_json['after']['id']}}/snapshot.jpg
           tag: '{{trigger.payload_json["after"]["id"]}}'
+          when: '{{trigger.payload_json["after"]["start_time"]|int}}'
           data:
             ttl: 0
             priority: high
@@ -1923,7 +1924,7 @@ automation:
             data:
               entity_id: media_player.nest_mini
               message: Trzeba wystawić śmieci BIO, jutro odbiór!
-          - service: notify.mobile_app_nokia_8_3_5g
+          - service: notify.anarion_iwona_phones
             data:
               message: Trzeba wystawić śmieci BIO!
               data:
@@ -1953,7 +1954,7 @@ automation:
                       message: "Śmieci wystawione"
                       entity_id: input_boolean.garbage_reminder
             default:
-              - service: notify.mobile_app_nokia_8_3_5g
+              - service: notify.anarion_iwona_phones
                 data:
                   message: "clear_notification"
                   data:
@@ -1995,7 +1996,7 @@ automation:
             data:
               entity_id: media_player.nest_mini
               message: Trzeba wystawić śmieci zmieszane, jutro odbiór!
-          - service: notify.mobile_app_nokia_8_3_5g
+          - service: notify.anarion_iwona_phones
             data:
               message: Trzeba wystawić śmieci zmieszane!
               data:
@@ -2025,7 +2026,7 @@ automation:
                       message: "Śmieci wystawione"
                       entity_id: input_boolean.garbage_reminder
             default:
-              - service: notify.mobile_app_nokia_8_3_5g
+              - service: notify.anarion_iwona_phones
                 data:
                   message: "clear_notification"
                   data:
@@ -2067,7 +2068,7 @@ automation:
             data:
               entity_id: media_player.nest_mini
               message: Trzeba wystawić śmieci segregowane, jutro odbiór!
-          - service: notify.mobile_app_nokia_8_3_5g
+          - service: notify.anarion_iwona_phones
             data:
               message: Trzeba wystawić śmieci segregowane!
               data:
@@ -2097,7 +2098,7 @@ automation:
                       message: "Śmieci wystawione"
                       entity_id: input_boolean.garbage_reminder
             default:
-              - service: notify.mobile_app_nokia_8_3_5g
+              - service: notify.anarion_iwona_phones
                 data:
                   message: "clear_notification"
                   data:
