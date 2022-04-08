@@ -235,9 +235,6 @@ template:
             {% set switches = [
               states.switch.router,
               states.switch.tv,
-              states.switch.smart_plug_2,
-              states.switch.playstation_5,
-              states.switch.wemo_monitors,
               states.binary_sensor.ac,
               states.fan.zhimi_airpurifier_v7
             ] %}
@@ -355,13 +352,13 @@ template:
               | replace('Saturday', 'sobotę')
               | replace('Sunday', 'niedzielę') %}
               {% if count <= 0.0 %}
-                🗑️ {{'\U0001F4A6'}} {{ type }} dzisiaj ({{ day }})
+                🗑️ {{ type }} dzisiaj ({{ day }})
               {% elif count <= 1.0 %}
                 🗑️ {{ type }} jutro ({{ day }})
               {% elif count <= 2.0 %}
-                🗑️ {{ type }} pojutrze ({{ day }})
+                {{ type }} pojutrze ({{ day }})
               {% else %}
-                🗑️ {{ type }} za {{ (count + hours) | round }} dni w {{ day }}
+                {{ type }} za {{ (count + hours) | round }} dni w {{ day }}
               {% endif %}
             {% endif %}
           battery: >
@@ -659,27 +656,27 @@ template:
 
       - name: "Komfovent Mode Text"
         state: >
-          {%- if states('sensor.komfovent_mode_num') | int == 0 %}
+          {%- if states('sensor.komfovent_mode_num') | int(default=0) == 0 %}
             Standby
-          {%- elif states('sensor.komfovent_mode_num') | int == 1 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 1 %}
             Poza Domem
-          {%- elif states('sensor.komfovent_mode_num') | int == 2 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 2 %}
             Normalny
-          {%- elif states('sensor.komfovent_mode_num') | int == 3 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 3 %}
             Intensywny
-          {%- elif states('sensor.komfovent_mode_num') | int == 4 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 4 %}
             Turbo
-          {%- elif states('sensor.komfovent_mode_num') | int == 5 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 5 %}
             Okap
-          {%- elif states('sensor.komfovent_mode_num') | int == 6 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 6 %}
             Kominek
-          {%- elif states('sensor.komfovent_mode_num') | int == 7 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 7 %}
             Nadrzędny
-          {%- elif states('sensor.komfovent_mode_num') | int == 8 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 8 %}
             Urlop
-          {%- elif states('sensor.komfovent_mode_num') | int == 9 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 9 %}
             Jakość powietrza
-          {%- elif states('sensor.komfovent_mode_num') | int == 10 %}
+          {%- elif states('sensor.komfovent_mode_num') | int(default=0) == 10 %}
             wyłączony
           {% else %}
             fail
