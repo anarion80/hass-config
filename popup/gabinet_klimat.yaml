@@ -21,11 +21,11 @@ browser_mod:
               fontSize: 14px
             x:
               show: true
-              formatter: |
-                EVAL:(timestamp) => {
-                  let date = new Date(timestamp).toLocaleString('pl-PL',{year: 'numeric', month:'long'}).toString()
-                  return date.charAt(0).toUpperCase() + date.slice(1);
-                }
+              # formatter: |
+              #   EVAL:(timestamp) => {
+              #     let date = new Date(timestamp).toLocaleString('pl-PL',{year: 'numeric', month:'long'}).toString()
+              #     return date.charAt(0).toUpperCase() + date.slice(1);
+              #   }
           title:
             text: 🌡️ Temperatura [°C]
             style:
