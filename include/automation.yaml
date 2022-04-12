@@ -24,7 +24,7 @@ automation:
       # - choose:
         # - conditions:
             # - condition: state
-              # entity_id: binary_sensor.ffd92947_09fd7c47
+              # entity_id: binary_sensor.b42378aa_f099108d
               # state: 'off'
           # sequence:
             # - service: switch.turn_on
@@ -672,7 +672,7 @@ automation:
     mode: restart
     trigger:
       - platform: state
-        entity_id: binary_sensor.ffd92947_09fd7c47
+        entity_id: binary_sensor.b42378aa_f099108d
         from: 'off'
         to: 'on'
       # - platform: state
@@ -682,7 +682,7 @@ automation:
     action:
       - choose:
         - conditions: >
-            {{ trigger.entity_id == 'binary_sensor.ffd92947_09fd7c47' }}
+            {{ trigger.entity_id == 'binary_sensor.b42378aa_f099108d' }}
           sequence:
             - service: switch.turn_off
               entity_id: switch.fire_tablet_screensaver
@@ -800,7 +800,7 @@ automation:
     action:
       - service: media_player.play_media
         data:
-          entity_id: media_player.ffd92947_09fd7c47
+          entity_id: media_player.b42378aa_f099108d
           media_content_id: /local/sound/timer.mp3
           media_content_type: music
       - delay:
@@ -1391,7 +1391,7 @@ automation:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.ffd92947_09fd7c47
+        entity_id: media_player.b42378aa_f099108d
       data:
         media_content_id: /local/sound/off.m4a
         media_content_type: music
@@ -1405,7 +1405,7 @@ automation:
     description: Turn on tablet screen on motion detected
     trigger:
     - platform: state
-      entity_id: binary_sensor.ffd92947_09fd7c47
+      entity_id: binary_sensor.b42378aa_f099108d
       from: 'off'
       to: 'on'
     condition:
@@ -1415,7 +1415,7 @@ automation:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.ffd92947_09fd7c47
+        entity_id: media_player.b42378aa_f099108d
       data:
         media_content_id: /local/sound/on.m4a
         media_content_type: music
