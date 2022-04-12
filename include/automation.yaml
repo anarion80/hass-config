@@ -46,7 +46,7 @@ automation:
     id: '3331821824310'
     trigger:
       - platform: numeric_state
-        entity_id: sensor.home_assistant_log
+        entity_id: sensor.home_assistant_log_size
         above: 50
     action:
       - service: shell_command.ha_purge_logs
@@ -998,18 +998,8 @@ automation:
         data:
           channel: alarm_stream_max
     mode: single
-  - id: '1614699148700'
-    alias: Turn on Yeelight when motion detected
-    description: ''
-    use_blueprint:
-      path: homeassistant/motion_light.yaml
-      input:
-        no_motion_wait: '120'
-        motion_entity: binary_sensor.motion_sensor_1_occupancy
-        light_target:
-          entity_id: light.yeelight_hania
   - id: '1615319114500'
-    alias: Turn on yeelight after pressing button1
+    alias: Turn on lampka u Hani after pressing button1
     description: ''
     trigger:
     - platform: state
@@ -1021,76 +1011,8 @@ automation:
     condition: []
     action:
     - service: light.toggle
-      data:
-        kelvin: 4000
-        brightness_pct: 100
       target:
-        entity_id: light.yeelight_hania
-    mode: single
-  - id: '1615402073300'
-    alias: turn on yeelight with yellow color
-    description: ''
-    trigger:
-    - platform: state
-      entity_id: sensor.button1_action
-      to: double
-    - platform: state
-      entity_id: sensor.switch1_action
-      to: double
-    condition: []
-    action:
-    - service: yeelight.set_color_temp_scene
-      data:
-        entity_id: light.yeelight_hania
-        kelvin: 2700
-        brightness: 100
-    mode: single
-  - id: '1615402138100'
-    alias: turn on yeelight with white color
-    description: ''
-    trigger:
-    - platform: state
-      entity_id: sensor.button1_action
-      to: triple
-    condition: []
-    action:
-    - service: yeelight.set_color_temp_scene
-      data:
-        entity_id: light.yeelight_hania
-        kelvin: 6000
-        brightness: 100
-    mode: single
-  - id: '1615402210900'
-    alias: turn yeelight with normal light
-    description: ''
-    trigger:
-    - platform: state
-      entity_id: sensor.button1_action
-      to: hold
-    - platform: state
-      entity_id: sensor.switch1_action
-      to: hold
-    condition: []
-    action:
-    - service: yeelight.set_color_temp_scene
-      data:
-        entity_id: light.yeelight_hania
-        kelvin: 4000
-        brightness: 100
-    mode: single
-  - id: '1615402370000'
-    alias: turn on yeelight with moonlight
-    description: ''
-    trigger:
-    - platform: state
-      entity_id: sensor.button1_action
-      to: quadruple
-    condition: []
-    action:
-    - service: yeelight.set_mode
-      data:
-        entity_id: light.yeelight_hania
-        mode: moonlight
+        entity_id: light.lampka_u_hani
     mode: single
   - id: '1617115926500'
     alias: Powiadomienie o angielskim
@@ -1893,161 +1815,243 @@ automation:
         entity_id: sensor.smieci_zmieszane
     mode: parallel
 
-  - id: 'powiadomnie o smieciach bio'
-    alias: Powiadomienie o śmieciach BIO
-    description: 'Powiadomienie o śmieciach BIO'
-    trigger:
-    - platform: time
-      at: '19:00'
-    condition:
-      - condition: state
-        entity_id: sensor.smieci_bio
-        attribute: days
-        state: 1
-    action:
-    - service: input_boolean.turn_on
-      target:
-        entity_id: input_boolean.garbage_reminder
-    - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
-      repeat:
-        while:
-          - condition: state
-            entity_id: input_boolean.garbage_reminder
-            state: "on"
-        sequence:
-          - service: logbook.log
-            data:
-              name: Powiadomienie o śmieciach
-              message: Powiadomienie wysłane
-              entity_id: input_boolean.garbage_reminder
-          - service: tts.google_cloud_say
-            data:
-              entity_id: media_player.nest_mini
-              message: Trzeba wystawić śmieci BIO, jutro odbiór!
-          - service: notify.anarion_iwona_phones
-            data:
-              message: Trzeba wystawić śmieci BIO!
-              data:
-                actions:
-                  - title: "Śmieci wystawione"
-                    action: "wystawione"
-                tag: input_boolean.garbage_reminder
-          - wait_for_trigger:
-              - platform: event
-                event_type: mobile_app_notification_action
-                event_data:
-                  action: "wystawione"
-              - platform: state
-                entity_id: input_boolean.garbage_reminder
-                to: "off"
-            timeout:
-              minutes: 30
-          - choose:
-              - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
-                sequence:
-                  - service: input_boolean.turn_off
-                    target:
-                      entity_id: input_boolean.garbage_reminder
-                  - service: logbook.log
-                    data:
-                      name: "Śmieci wystawione"
-                      message: "Śmieci wystawione"
-                      entity_id: input_boolean.garbage_reminder
-            default:
-              - service: notify.anarion_iwona_phones
-                data:
-                  message: "clear_notification"
-                  data:
-                    tag: input_boolean.garbage_reminder
-              - service: logbook.log
-                data:
-                  name: "Śmieci wystawione"
-                  message: "Śmieci wystawione"
-                  entity_id: input_boolean.garbage_reminder
+  # - id: 'powiadomnie o smieciach bio'
+  #   alias: Powiadomienie o śmieciach BIO
+  #   description: 'Powiadomienie o śmieciach BIO'
+  #   trigger:
+  #   - platform: time
+  #     at: '19:00'
+  #   condition:
+  #     - condition: state
+  #       entity_id: sensor.smieci_bio
+  #       attribute: days
+  #       state: 1
+  #   action:
+  #   - service: input_boolean.turn_on
+  #     target:
+  #       entity_id: input_boolean.garbage_reminder
+  #   - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
+  #     repeat:
+  #       while:
+  #         - condition: state
+  #           entity_id: input_boolean.garbage_reminder
+  #           state: "on"
+  #       sequence:
+  #         - service: logbook.log
+  #           data:
+  #             name: Powiadomienie o śmieciach
+  #             message: Powiadomienie wysłane
+  #             entity_id: input_boolean.garbage_reminder
+  #         - service: tts.google_cloud_say
+  #           data:
+  #             entity_id: media_player.nest_mini
+  #             message: Trzeba wystawić śmieci BIO, jutro odbiór!
+  #         - service: notify.anarion_iwona_phones
+  #           data:
+  #             message: Trzeba wystawić śmieci BIO!
+  #             data:
+  #               actions:
+  #                 - title: "Śmieci wystawione"
+  #                   action: "wystawione"
+  #               tag: input_boolean.garbage_reminder
+  #         - wait_for_trigger:
+  #             - platform: event
+  #               event_type: mobile_app_notification_action
+  #               event_data:
+  #                 action: "wystawione"
+  #             - platform: state
+  #               entity_id: input_boolean.garbage_reminder
+  #               to: "off"
+  #           timeout:
+  #             minutes: 30
+  #         - choose:
+  #             - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
+  #               sequence:
+  #                 - service: input_boolean.turn_off
+  #                   target:
+  #                     entity_id: input_boolean.garbage_reminder
+  #                 - service: logbook.log
+  #                   data:
+  #                     name: "Śmieci wystawione"
+  #                     message: "Śmieci wystawione"
+  #                     entity_id: input_boolean.garbage_reminder
+  #           default:
+  #             - service: notify.anarion_iwona_phones
+  #               data:
+  #                 message: "clear_notification"
+  #                 data:
+  #                   tag: input_boolean.garbage_reminder
+  #             - service: logbook.log
+  #               data:
+  #                 name: "Śmieci wystawione"
+  #                 message: "Śmieci wystawione"
+  #                 entity_id: input_boolean.garbage_reminder
 
-  - id: 'powiadomnie o smieciach zmieszanych'
-    alias: Powiadomienie o śmieciach zmieszanych
-    description: 'Powiadomienie o śmieciach zmieszanych'
-    trigger:
-    - platform: time
-      at: '19:00'
-    condition:
-      - condition: state
-        entity_id: sensor.zmieszane
-        attribute: days
-        state: 1
-    action:
-    - service: input_boolean.turn_on
-      target:
-        entity_id: input_boolean.garbage_reminder
-    - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
-      repeat:
-        while:
-          - condition: state
-            entity_id: input_boolean.garbage_reminder
-            state: "on"
-        sequence:
-          - service: logbook.log
-            data:
-              name: Powiadomienie o śmieciach
-              message: Powiadomienie wysłane
-              entity_id: input_boolean.garbage_reminder
-          - service: tts.google_cloud_say
-            data:
-              entity_id: media_player.nest_mini
-              message: Trzeba wystawić śmieci zmieszane, jutro odbiór!
-          - service: notify.anarion_iwona_phones
-            data:
-              message: Trzeba wystawić śmieci zmieszane!
-              data:
-                actions:
-                  - title: "Śmieci wystawione"
-                    action: "wystawione"
-                tag: input_boolean.garbage_reminder
-          - wait_for_trigger:
-              - platform: event
-                event_type: mobile_app_notification_action
-                event_data:
-                  action: "wystawione"
-              - platform: state
-                entity_id: input_boolean.garbage_reminder
-                to: "off"
-            timeout:
-              minutes: 30
-          - choose:
-              - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
-                sequence:
-                  - service: input_boolean.turn_off
-                    target:
-                      entity_id: input_boolean.garbage_reminder
-                  - service: logbook.log
-                    data:
-                      name: "Śmieci wystawione"
-                      message: "Śmieci wystawione"
-                      entity_id: input_boolean.garbage_reminder
-            default:
-              - service: notify.anarion_iwona_phones
-                data:
-                  message: "clear_notification"
-                  data:
-                    tag: input_boolean.garbage_reminder
-              - service: logbook.log
-                data:
-                  name: "Śmieci wystawione"
-                  message: "Śmieci wystawione"
-                  entity_id: input_boolean.garbage_reminder
+  # - id: 'powiadomnie o smieciach zmieszanych'
+  #   alias: Powiadomienie o śmieciach zmieszanych
+  #   description: 'Powiadomienie o śmieciach zmieszanych'
+  #   trigger:
+  #   - platform: time
+  #     at: '19:00'
+  #   condition:
+  #     - condition: state
+  #       entity_id: sensor.zmieszane
+  #       attribute: days
+  #       state: 1
+  #   action:
+  #   - service: input_boolean.turn_on
+  #     target:
+  #       entity_id: input_boolean.garbage_reminder
+  #   - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
+  #     repeat:
+  #       while:
+  #         - condition: state
+  #           entity_id: input_boolean.garbage_reminder
+  #           state: "on"
+  #       sequence:
+  #         - service: logbook.log
+  #           data:
+  #             name: Powiadomienie o śmieciach
+  #             message: Powiadomienie wysłane
+  #             entity_id: input_boolean.garbage_reminder
+  #         - service: tts.google_cloud_say
+  #           data:
+  #             entity_id: media_player.nest_mini
+  #             message: Trzeba wystawić śmieci zmieszane, jutro odbiór!
+  #         - service: notify.anarion_iwona_phones
+  #           data:
+  #             message: Trzeba wystawić śmieci zmieszane!
+  #             data:
+  #               actions:
+  #                 - title: "Śmieci wystawione"
+  #                   action: "wystawione"
+  #               tag: input_boolean.garbage_reminder
+  #         - wait_for_trigger:
+  #             - platform: event
+  #               event_type: mobile_app_notification_action
+  #               event_data:
+  #                 action: "wystawione"
+  #             - platform: state
+  #               entity_id: input_boolean.garbage_reminder
+  #               to: "off"
+  #           timeout:
+  #             minutes: 30
+  #         - choose:
+  #             - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
+  #               sequence:
+  #                 - service: input_boolean.turn_off
+  #                   target:
+  #                     entity_id: input_boolean.garbage_reminder
+  #                 - service: logbook.log
+  #                   data:
+  #                     name: "Śmieci wystawione"
+  #                     message: "Śmieci wystawione"
+  #                     entity_id: input_boolean.garbage_reminder
+  #           default:
+  #             - service: notify.anarion_iwona_phones
+  #               data:
+  #                 message: "clear_notification"
+  #                 data:
+  #                   tag: input_boolean.garbage_reminder
+  #             - service: logbook.log
+  #               data:
+  #                 name: "Śmieci wystawione"
+  #                 message: "Śmieci wystawione"
+  #                 entity_id: input_boolean.garbage_reminder
 
-  - id: 'powiadomnie o smieciach segregowanych'
-    alias: Powiadomienie o śmieciach segregowanych
-    description: 'Powiadomienie o śmieciach segregowanych'
+  # - id: 'powiadomnie o smieciach segregowanych'
+  #   alias: Powiadomienie o śmieciach segregowanych
+  #   description: 'Powiadomienie o śmieciach segregowanych'
+  #   trigger:
+  #   - platform: time
+  #     at: '19:00'
+  #   condition:
+  #     - condition: state
+  #       entity_id: sensor.smieci_segregowane
+  #       attribute: days
+  #       state: 1
+  #   action:
+  #   - service: input_boolean.turn_on
+  #     target:
+  #       entity_id: input_boolean.garbage_reminder
+  #   - alias: "Powiadamiaj dopóki śmieci nie wyniesione"
+  #     repeat:
+  #       while:
+  #         - condition: state
+  #           entity_id: input_boolean.garbage_reminder
+  #           state: "on"
+  #       sequence:
+  #         - service: logbook.log
+  #           data:
+  #             name: Powiadomienie o śmieciach
+  #             message: Powiadomienie wysłane
+  #             entity_id: input_boolean.garbage_reminder
+  #         - service: tts.google_cloud_say
+  #           data:
+  #             entity_id: media_player.nest_mini
+  #             message: Trzeba wystawić śmieci segregowane, jutro odbiór!
+  #         - service: notify.anarion_iwona_phones
+  #           data:
+  #             message: Trzeba wystawić śmieci segregowane!
+  #             data:
+  #               actions:
+  #                 - title: "Śmieci wystawione"
+  #                   action: "wystawione"
+  #               tag: input_boolean.garbage_reminder
+  #         - wait_for_trigger:
+  #             - platform: event
+  #               event_type: mobile_app_notification_action
+  #               event_data:
+  #                 action: "wystawione"
+  #             - platform: state
+  #               entity_id: input_boolean.garbage_reminder
+  #               to: "off"
+  #           timeout:
+  #             minutes: 30
+  #         - choose:
+  #             - conditions: "{{ wait.trigger.event.data.action == 'wystawione' }}"
+  #               sequence:
+  #                 - service: input_boolean.turn_off
+  #                   target:
+  #                     entity_id: input_boolean.garbage_reminder
+  #                 - service: logbook.log
+  #                   data:
+  #                     name: "Śmieci wystawione"
+  #                     message: "Śmieci wystawione"
+  #                     entity_id: input_boolean.garbage_reminder
+  #           default:
+  #             - service: notify.anarion_iwona_phones
+  #               data:
+  #                 message: "clear_notification"
+  #                 data:
+  #                   tag: input_boolean.garbage_reminder
+  #             - service: logbook.log
+  #               data:
+  #                 name: "Śmieci wystawione"
+  #                 message: "Śmieci wystawione"
+  #                 entity_id: input_boolean.garbage_reminder
+
+  - id: 'powiadomnie o smieciach'
+    alias: Powiadomienie o śmieciach
+    description: 'Powiadomienie o śmieciach'
     trigger:
     - platform: time
       at: '19:00'
     condition:
-      - condition: state
-        entity_id: sensor.smieci_segregowane
-        attribute: days
-        state: 1
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: sensor.smieci_bio
+            attribute: days
+            state: 1
+          - condition: state
+            entity_id: sensor.zmieszane
+            attribute: days
+            state: 1
+          - condition: state
+            entity_id: sensor.smieci_segregowane
+            attribute: days
+            state: 1
     action:
     - service: input_boolean.turn_on
       target:
@@ -2067,10 +2071,30 @@ automation:
           - service: tts.google_cloud_say
             data:
               entity_id: media_player.nest_mini
-              message: Trzeba wystawić śmieci segregowane, jutro odbiór!
+              message:
+                Trzeba wystawić śmieci
+                {% if state_attr('sensor.smieci_bio', 'days') == 0 -%}
+                  {{ "bio, " }}
+                {% endif %}
+                {% if state_attr('sensor.smieci_segregowane', 'days') == 0 %}
+                  {{ "segregowane, " }}
+                {% endif %}
+                {% if state_attr('sensor.zmieszane', 'days') == 0 %}
+                  {{ "zmieszane "}}
+                {%- endif %}
           - service: notify.anarion_iwona_phones
             data:
-              message: Trzeba wystawić śmieci segregowane!
+              message:
+                Trzeba wystawić śmieci
+                {% if state_attr('sensor.smieci_bio', 'days') == 0 -%}
+                  {{ "bio, " }}
+                {% endif %}
+                {% if state_attr('sensor.smieci_segregowane', 'days') == 0 %}
+                  {{ "segregowane, " }}
+                {% endif %}
+                {% if state_attr('sensor.zmieszane', 'days') == 0 %}
+                  {{ "zmieszane "}}
+                {%- endif %}
               data:
                 actions:
                   - title: "Śmieci wystawione"
