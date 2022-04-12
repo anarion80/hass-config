@@ -24,7 +24,7 @@ browser_mod:
       - type: custom:mini-graph-card
         entities:
           - color: '#385581'
-            entity: sensor.temperature_living_room
+            entity: sensor.airpurifier_temperature
         line_width: 8
         hour24: true
         group: true
