@@ -1,19 +1,19 @@
-utility_meter:
-  server_daily:
-    source: sensor.router_total_consumption
-    cycle: daily
-  server_monthly:
-    source: sensor.router_total_consumption
-    cycle: monthly
-  server_yearly:
-    source: sensor.router_total_consumption
-    cycle: yearly
-  pc_daily:
-    source: sensor.smart_plug_2_2_energy
-    cycle: daily
-  pc_monthly:
-    source: sensor.smart_plug_2_2_energy
-    cycle: monthly
-  pc_yearly:
-    source: sensor.smart_plug_2_2_energy
-    cycle: yearly
+# utility_meter:
+#   server_daily:
+#     source: sensor.router_total_consumption
+#     cycle: daily
+#   server_monthly:
+#     source: sensor.router_total_consumption
+#     cycle: monthly
+#   server_yearly:
+#     source: sensor.router_total_consumption
+#     cycle: yearly
+#   pc_daily:
+#     source: sensor.smart_plug_2_2_energy
+#     cycle: daily
+#   pc_monthly:
+#     source: sensor.smart_plug_2_2_energy
+#     cycle: monthly
+#   pc_yearly:
+#     source: sensor.smart_plug_2_2_energy
+#     cycle: yearly
