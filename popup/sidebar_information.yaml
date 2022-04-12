@@ -90,9 +90,9 @@ browser_mod:
 
           #- entity: sensor.database
 
-          - entity: sensor.home_assistant_v2_db
+          - entity: sensor.home_assistant_v2_db_size
 
-          - entity: sensor.ha_uptime
+          - entity: sensor.uptime
 
           - type: custom:bar-card
             width: 55%

@@ -67,7 +67,7 @@ homeassistant:
       icon: custom:docker-watchtower
     sensor.databas:
       icon: mdi:database
-    sensor.home_assistant_log:
+    sensor.home_assistant_log_size:
       friendly_name: Plik z logami
       icon: mdi:file-document
     sensor.ha_uptime:

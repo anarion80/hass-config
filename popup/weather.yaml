@@ -77,7 +77,7 @@ browser_mod:
 
           # #- entity: sensor.database
 
-          # - entity: sensor.home_assistant_log
+          # - entity: sensor.home_assistant_log_size
 
           # - entity: sensor.ha_uptime
 

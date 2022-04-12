@@ -36,15 +36,15 @@ sensor:
   #   beta: true
   #   source: container
 
-  - platform: filesize
-    file_paths:
-      - /config/home-assistant.log
-    scan_interval: 1800
+  # - platform: filesize
+  #   file_paths:
+  #     - /config/home-assistant.log
+  #   scan_interval: 1800
 
-  - platform: filesize
-    file_paths:
-      - /config/home-assistant_v2.db
-    scan_interval: 1800
+  # - platform: filesize
+  #   file_paths:
+  #     - /config/home-assistant_v2.db
+  #   scan_interval: 1800
 
   # - platform: sql
     # db_url: !secret recorder_db_url
@@ -552,12 +552,12 @@ sensor:
 
 
 
-  - platform: integration
-    source: sensor.smart_plug_2_power
-    name: smart_plug_2_2_energy
-    round: 2
-    unit_prefix: k
-    unit_time: h
+  # - platform: integration
+  #   source: sensor.smart_plug_2_power
+  #   name: smart_plug_2_2_energy
+  #   round: 2
+  #   unit_prefix: k
+  #   unit_time: h
 
   - platform: uptime
     name: HA Uptime
