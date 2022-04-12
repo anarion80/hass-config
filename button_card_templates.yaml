@@ -9,7 +9,7 @@
   settings:
     variables:
       entity_tablet: light.fire_tablet_screen
-      entity_browser_mod: media_player.ffd92947_09fd7c47
+      entity_browser_mod: media_player.b42378aa_f099108d
 
       translate_unknown: Nieznany
       translate_idle: Nieaktywny
