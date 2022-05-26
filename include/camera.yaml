@@ -1,5 +1,15 @@
-#camera:
-#  - platform: generic
-#    name: Schowek
-#    still_image_url: !secret still_image_url
-#    stream_source: !stream_source
+# camera:
+#   - platform: generic
+#     name: Main
+#     still_image_url: !secret camera_main_still_image_url
+#     stream_source: !secret camera_main_url
+
+#   - platform: generic
+#     name: Garage
+#     still_image_url: !secret camera_garage_still_image_url
+#     stream_source: !secret camera_garage_url
+
+#   - platform: generic
+#     name: Garden
+#     still_image_url: !secret camera_garden_still_image_url
+#     stream_source: !secret camera_garden_url
