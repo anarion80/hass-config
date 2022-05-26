@@ -282,7 +282,8 @@ template:
           open: >
             <b>
             {% set doors = [
-              states.binary_sensor.bedroom_door_contact
+              states.binary_sensor.drzwi_wejsciowe_contact,
+              states.binary_sensor.drzwi_do_ogrodu_contact
             ] %}
 
             {% set doors_open = doors | selectattr('state','eq','on') | list %}

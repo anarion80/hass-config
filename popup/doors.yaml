@@ -65,7 +65,7 @@ browser_mod:
           type: entities
         filter:
           include:
-            - entity_id: '*.*door*_contact'
+            - entity_id: '*.*drzwi*_contact'
           exclude: []
         sort:
           method: none
