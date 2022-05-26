@@ -9,7 +9,7 @@
   settings:
     variables:
       entity_tablet: light.fire_tablet_screen
-      entity_browser_mod: media_player.b42378aa_f099108d
+      entity_browser_mod: media_player.ffd92947_09fd7c47
 
       translate_unknown: Nieznany
       translate_idle: Nieaktywny
@@ -205,32 +205,34 @@
             transform-style: preserve-3d;
             overflow: visible;
           }
-          :host {
-            --blur-intensity: blur(4.5px) brightness(0.8);
-          }
-          /* phone */
-          @media screen and (max-width: 800px) {
+          ${this._config.template.includes('conditional_media') ? `
             :host {
-              --blur-intensity: blur(2.5px) brightness(0.8);
+              --blur-intensity: blur(4.5px) brightness(0.8);
             }
-          }
-          #ripple, .js-tilt-glare {
-            clip-path: inset(0 round calc(var(--custom-button-card-border-radius) / 2));
-          }
-          #container {
-            overflow: hidden;
-          }
-          .marquee {
-            animation: marquee 20s linear infinite;
-          }
-          @keyframes marquee {
-            from {
-              transform: translateX(0%);
+            /* phone */
+            @media screen and (max-width: 800px) {
+              :host {
+                --blur-intensity: blur(2.5px) brightness(0.8);
+              }
             }
-            to {
-              transform: translateX(-50%);
+            #ripple, .js-tilt-glare {
+              clip-path: inset(0 round calc(var(--custom-button-card-border-radius) / 2));
             }
-          }
+            #container {
+              overflow: hidden;
+            }
+            .marquee {
+              animation: marquee 20s linear infinite;
+            }
+            @keyframes marquee {
+              from {
+                transform: translateX(0%);
+              }
+              to {
+                transform: translateX(-50%);
+              }
+            }
+          `:''}
           ${this._config.template.includes('footer') ? `
             :host {
               --name-font-size: 1.22vw;
@@ -627,6 +629,75 @@
           padding: 0 0 0 1vw;
         }
       }
+
+  #################################################
+  #                                               #
+  #                    FOOTER                     #
+  #                                               #
+  #################################################
+
+  footer:
+    template:
+      - settings
+      - tilt
+      - extra_styles
+    variables:
+      notify: >
+        [[[
+          return false;
+        ]]]
+      tilt_options: >
+        [[[ return { max: 5, scale: 1.1, glare: true, 'max-glare': 0.07, perspective: 1000, speed: 800, parallax: '10px' }; ]]]
+    size: 2vw
+    show_icon: false
+    color: '#9da0a2'
+    custom_fields:
+      notify: >
+        [[[
+          if (Number.isInteger(variables.notify)) {
+            return variables.notify;
+          } else if (variables.notify) {
+            return `<span style="font-weight: 900;">!</span>`;
+          }
+        ]]]
+    styles:
+      card:
+        - color: rgba(157,160,162, 0.55)
+        - width: fit-content
+        - border: 0.12vw solid rgba(58, 69, 73, 0.2)
+        - transition: none
+        - padding: 0 0 0.05vw 0
+        - overflow: visible
+        - --mdc-ripple-color: rgba(0, 0, 0, 0.8)
+      custom_fields:
+        notify:
+          - display: >
+              [[[
+                if (Number.isInteger(variables.notify)) {
+                  return variables.notify > 0
+                    ? 'initial'
+                    : 'none';
+                } else if (variables.notify) {
+                  return variables.notify
+                    ? 'initial'
+                    : 'none';
+                }
+              ]]]
+          - position: absolute
+          - top: -0.9vw
+          - right: -1vw
+          - font-weight: 700
+          - color: '#d6d6d6'
+          - background: '#8b3333'
+          - border-radius: 50%
+          - text-align: center
+          - text-overflow: unset
+          - z-index: 1
+    hold_action:
+      action: none
+    tap_action:
+      haptic: medium
+
 
   #################################################
   #                                               #
@@ -2717,7 +2788,7 @@
       custom_fields:
         icon:
           - width: 77%
-          - margin-left: -15%
+          #- margin-left: 15%
           - margin-top: 1%
     custom_fields:
       icon: >

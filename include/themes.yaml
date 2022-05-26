@@ -185,15 +185,6 @@ frontend:
               }
             }
 
-
-          #"$#root>button-card:nth-child(1)$":
-          #"$#root>button-card$":
-          #ha-card$:
-          #  .: |
-          #   /* ha-card {
-          #      padding: var(--custom-layout-card-padding) 2vw 0 var(--custom-layout-card-padding) !important;
-          #      pointer-events: none;
-          #    } */
           "$#root>button-card$":
             .: |
               #name {
@@ -263,162 +254,27 @@ frontend:
 
         #################################################
         #                                               #
-        #             SIDEBAR BOTTOM ICONS              #
+        #                    FOOTER                     #
         #                                               #
         #################################################
 
-        "grid-layout$hui-vertical-stack-card$hui-grid-card":
-          .: |
-            hui-grid-card {
-              display: flex;
-              flex: auto;
-              align-items: flex-end;
-            }
-            /* phone */
-            @media screen and (max-width: 800px) {
-              hui-grid-card {
-                position: absolute;
-                right: 5.5vw;
-              }
-            }
+        grid-layout$hui-horizontal-stack-card:
           $: |
             #root {
-              width: 100%;
-              padding: 0 13% 25% 13%;
+              flex-wrap: wrap;
+              justify-content: center;
+              overflow: visible;
+              margin-top: 1vh;
+              padding-bottom: 2.5em;
             }
-            /* phone */
-            @media screen and (max-width: 800px) {
+            @media screen and (min-width: 1200px) {
               #root {
-                padding: 0 0 0 55%;
+                flex-wrap: nowrap;
+                justify-content: space-between;
+                margin-top: -1.6vh;
+                padding-bottom: 0;
               }
             }
-          #conditional color
-          "$hui-button-card:last-of-type$": |
-            {% if is_state('binary_sensor.template_sidebar_update_color', 'on') %}
-              ha-card, ha-state-icon {
-                color: rgb(35, 78 ,106) !important;
-                opacity: 1 !important;
-                animation: update 1.5s ease-out infinite;
-              }
-              ha-card:hover {
-                filter: brightness(130%);
-                animation-play-state: paused;
-              }
-            {% endif %}
-              @keyframes update {
-                0% {
-                  transform: scale(1);
-                }
-                40% {
-                  transform: scale(1.08);
-                }
-                50% {
-                  transform: scale(0.98);
-                }
-                55% {
-                  transform: scale(1.02);
-                }
-                60% {
-                  transform: scale(0.98);
-                }
-                100% {
-                  transform: scale(1);
-                }
-              }
-
-        #################################################
-        #                                               #
-        #           CORONAVIRUS MARKDOWN CARD           #
-        #                                               #
-        #################################################
-
-        # "grid-layout$hui-markdown-card:last-of-type$":
-          # .: |
-            # ha-card, ha-markdown {
-              # background: none;
-              # padding: 0 !important;
-              # pointer-events: none;
-              # margin-top: -1vw;
-            # }
-
-            # ha-markdown {
-              # overflow: hidden;
-            # }
-
-          # ha-card>ha-markdown$: |
-            # ha-markdown-element {
-              # opacity: 0.6;
-              # font-size: 1.26vw;
-              # font-weight: 400;
-              # --mdc-icon-size: 1.2vw;
-              # font-family: SF Display;
-              # letter-spacing: 0.05vw;
-              # line-height: 0px;
-              # white-space: nowrap;
-            # }
-
-            # ha-icon {
-              # vertical-align: 3%;
-              # opacity: 0.4;
-            # }
-
-            # /* phone */
-            # @media screen and (max-width: 800px) {
-              # ha-markdown-element {
-                # display: none;
-              # }
-            # }
-
-        #################################################
-        #                                               #
-        #           FOOTER BUTTON CARDs                 #
-        #                                               #
-        #################################################
-
-        "grid-layout$hui-horizontal-stack-card":
-          $: |
-            #root {
-              background: none;
-              padding: 0 !important;
-              margin-top: -3vw;
-              flex-flow: row wrap;
-            }
-
-            # /* phone */
-            # @media screen and (max-width: 800px) {
-              # #root {
-                # display: block !important;
-                # min-height: 5vw;
-              # }
-            # }
-
-            # ha-markdown {
-              # overflow: hidden;
-            # }
-
-          # button-card$: |
-            # ha-card {
-              # opacity: 0.6;
-              # font-size: 1.26vw;
-              # font-weight: 400;
-              # --mdc-icon-size: 1.2vw;
-              # font-family: SF Display;
-              # letter-spacing: 0.05vw;
-              # line-height: 0px;
-              # white-space: nowrap;
-            # }
-
-            # ha-icon {
-              # vertical-align: 3%;
-              # opacity: 0.4;
-            # }
-
-            # /* phone */
-            # @media screen and (max-width: 800px) {
-              # div {
-                # display: block;
-              # }
-            # }
 
       card-mod-card: |
         .header .card-header {

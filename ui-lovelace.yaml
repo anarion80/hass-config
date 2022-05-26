@@ -158,54 +158,54 @@ views:
                   entity_id: input_boolean.laundry_display
               template: laundry
 
-          - type: grid
-            view_layout:
-              grid-area: sidebar
-            cards:
-              - type: button
-                icon: mdi:robot-vacuum
-                tap_action:
-                  !include popup/sidebar_vacuum.yaml
-                hold_action:
-                  action: none
-              - type: button
-                icon: mdi:bell-circle-outline
-                tap_action:
-                  !include popup/history.yaml
-                hold_action:
-                  action: none
+          # - type: grid
+          #   view_layout:
+          #     grid-area: sidebar
+          #   cards:
+          #     - type: button
+          #       icon: mdi:robot-vacuum
+          #       tap_action:
+          #         !include popup/sidebar_vacuum.yaml
+          #       hold_action:
+          #         action: none
+          #     - type: button
+          #       icon: mdi:bell-circle-outline
+          #       tap_action:
+          #         !include popup/history.yaml
+          #       hold_action:
+          #         action: none
 
-              - type: button
-                icon: mdi:information-outline
-                tap_action:
-                  !include popup/sidebar_information.yaml
-                hold_action:
-                  action: none
+          #     - type: button
+          #       icon: mdi:information-outline
+          #       tap_action:
+          #         !include popup/sidebar_information.yaml
+          #       hold_action:
+          #         action: none
 
-              - type: button
-                icon: mdi:arrow-up-bold-circle-outline
-                tap_action:
-                  !include popup/sidebar_update2.yaml
-                hold_action:
-                  action: none
-                variables:
-                  notify: >
-                    [[[
-                      let hass_installed = hass.config.version,
-                        hass_version_latest = states['sensor.hass_version_latest'],
-                        hass_version_latest_beta = states['sensor.hass_version_latest_beta'],
-                        hacs = states['sensor.hacs'];
-                      if (hass_version_latest && hass_version_latest.state.includes('.')
-                        && hass_version_latest_beta && hass_version_latest_beta.state.includes('.')
-                        && hacs && Number.isInteger(parseInt(hacs.state))) {
-                        let hass_latest = hass_installed.includes('b')
-                            ? hass_version_latest_beta.state
-                            : hass_version_latest.state,
-                          hass_count = hass_installed !== hass_latest ? 1 : 0;
-                        return hass_count + parseInt(hacs.state);
-                      }
-                      return 0;
-                    ]]]
+          #     - type: button
+          #       icon: mdi:arrow-up-bold-circle-outline
+          #       tap_action:
+          #         !include popup/sidebar_update2.yaml
+          #       hold_action:
+          #         action: none
+          #       variables:
+          #         notify: >
+          #           [[[
+          #             let hass_installed = hass.config.version,
+          #               hass_version_latest = states['sensor.hass_version_latest'],
+          #               hass_version_latest_beta = states['sensor.hass_version_latest_beta'],
+          #               hacs = states['sensor.hacs'];
+          #             if (hass_version_latest && hass_version_latest.state.includes('.')
+          #               && hass_version_latest_beta && hass_version_latest_beta.state.includes('.')
+          #               && hacs && Number.isInteger(parseInt(hacs.state))) {
+          #               let hass_latest = hass_installed.includes('b')
+          #                   ? hass_version_latest_beta.state
+          #                   : hass_version_latest.state,
+          #                 hass_count = hass_installed !== hass_latest ? 1 : 0;
+          #               return hass_count + parseInt(hacs.state);
+          #             }
+          #             return 0;
+          #           ]]]
 
       #################################################
       #                                               #
@@ -470,11 +470,11 @@ views:
         cards:
 
           - type: custom:button-card
-            entity: light.yeelight_hania
+            entity: light.lampka_u_hani
             name: U Hani
             template:
-              - light
-              - icon_hue
+              - base
+              - icon_shade
 
           - type: custom:button-card
             entity: sensor.gabinet_temperature
@@ -877,7 +877,7 @@ views:
         cards:
 
           - type: custom:button-card
-            entity: camera.main
+            entity: camera.main_3
             name: Wejście
             show_state: false
             template:
@@ -887,7 +887,7 @@ views:
               !include popup/camera_main.yaml
 
           - type: custom:button-card
-            entity: camera.garage
+            entity: camera.garage_3
             name: Garaż
             show_state: false
             template:
@@ -897,7 +897,7 @@ views:
               !include popup/camera_garage.yaml
 
           - type: custom:button-card
-            entity: camera.garden
+            entity: camera.garden_3
             name: Ogród
             show_state: false
             template:
@@ -1349,66 +1349,173 @@ views:
       #                                               #
       #################################################
 
-      # - type: markdown
-        # view_layout:
-          # grid-area: footer
-        # content: >
-          # {{ state_attr('sensor.template_coronavirus', 'template') }}
-        # style: #force style - duplicate of themes markdown
-          #  {.: "ha-card,ha-markdown{background:0 0;padding:0!important;pointer-events:none;margin-top:-1vw}ha-markdown{overflow:hidden}\n", ha-markdown$: "ha-markdown-element{opacity:.6;font-size:1.26vw;font-weight:400;--mdc-icon-size:1.2vw;font-family:SF Display;letter-spacing:.05vw;line-height:0;white-space:nowrap}ha-icon{vertical-align:3%;opacity:.4}@media screen and (max-width:800px){ha-markdown-element{display:none}}\n"}
+      # - type: horizontal-stack
+      #   view_layout:
+      #     grid-area: footer
+      #   cards:
+      #     - type: custom:button-card
+      #       entity: sensor.stopa_bazowa_pko_bp
+      #       name: "Stopa bazowa:"
+      #       show_name: true
+      #       show_state: true
+      #       icon: >
+      #           [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]
+      #       tap_action:
+      #         !include popup/finance.yaml
+      #       template: icon_name_footer
+      #       styles:
+      #         icon:
+      #           - color: >
+      #                [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'red' : 'green'; ]]]
+      #     - type: custom:button-card
+      #       entity: sensor.wibor_6m
+      #       name: "Wibor 6M:"
+      #       show_name: true
+      #       show_state: true
+      #       icon: >
+      #           [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]
+      #       tap_action:
+      #         !include popup/finance.yaml
+      #       template: icon_name_footer
+      #       styles:
+      #         icon:
+      #           - color: >
+      #                [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'red' : 'green'; ]]]
+      #     - type: custom:button-card
+      #       entity: sensor.covid19_infections
+      #       show_name: false
+      #       show_state: true
+      #       show_icon: true
+      #       icon: mdi:virus
+      #       template: icon_name_footer
+      #     - type: custom:button-card
+      #       entity: sensor.covid19_deaths
+      #       show_name: false
+      #       show_state: true
+      #       show_icon: true
+      #       icon: mdi:grave-stone
+      #       template: icon_name_footer
+      #     - type: custom:button-card
+      #       entity: sensor.covid19_recovered
+      #       show_name: false
+      #       show_state: true
+      #       show_icon: true
+      #       icon: mdi:emoticon-happy
+      #       template: icon_name_footer
+      #       tap_action:
+      #         !include popup/covid19.yaml
 
       - type: horizontal-stack
         view_layout:
           grid-area: footer
         cards:
+
           - type: custom:button-card
-            entity: sensor.stopa_bazowa_pko_bp
-            name: "Stopa bazowa:"
-            show_name: true
-            show_state: true
-            icon: >
-                [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]
+            name: >
+              <ha-icon icon="mdi:nas"></ha-icon> Info
             tap_action:
-              !include popup/finance.yaml
-            template: icon_name_footer
-            styles:
-              icon:
-                - color: >
-                     [[[ return (states['input_boolean.stopa_bazowa_rising'].state === 'on') ? 'red' : 'green'; ]]]
+              !include popup/footer/nas.yaml
+            variables:
+              notify: >
+                [[[
+                  let status = states['sensor.nas_volume_1_status'],
+                    security = states['binary_sensor.nas_security_status'],
+                    disk_use = states['sensor.disk_use_percent'],
+                    nas_update = states['binary_sensor.nas_update_available'];
+                  if (status && security && disk_use && nas_update) {
+                    return nas_update.state === 'on'
+                      ? 1
+                      : status.state === 'background_scrubbing' ||
+                        security.state === 'on' ||
+                        parseFloat(disk_use.state) >= 85;
+                  }
+                ]]]
+            template: footer
+
           - type: custom:button-card
-            entity: sensor.wibor_6m
-            name: "Wibor 6M:"
-            show_name: true
-            show_state: true
-            icon: >
-                [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'mdi:trending-up' : 'mdi:trending-down'; ]]]
+            name: >
+              <ha-icon icon="mdi:arrow-up-bold-circle-outline"></ha-icon> Update
             tap_action:
-              !include popup/finance.yaml
-            template: icon_name_footer
-            styles:
-              icon:
-                - color: >
-                     [[[ return (states['input_boolean.wibor6m_rising'].state === 'on') ? 'red' : 'green'; ]]]
+              !include popup/footer/updater.yaml
+            variables:
+              notify: >
+                [[[
+                  let hass_installed = hass.config.version,
+                    hass_version_latest = states['sensor.hass_version_latest'],
+                    hass_version_latest_beta = states['sensor.hass_version_latest_beta'],
+                    hacs = states['sensor.hacs'];
+                  if (hass_version_latest && hass_version_latest.state.includes('.')
+                    && hass_version_latest_beta && hass_version_latest_beta.state.includes('.')
+                    && hacs && Number.isInteger(parseInt(hacs.state))) {
+                    let hass_latest = hass_installed.includes('b')
+                        ? hass_version_latest_beta.state
+                        : hass_version_latest.state,
+                      hass_count = hass_installed !== hass_latest ? 1 : 0;
+                    return hass_count + parseInt(hacs.state);
+                  }
+                  return 0;
+                ]]]
+            template: footer
+
           - type: custom:button-card
-            entity: sensor.covid19_infections
-            show_name: false
-            show_state: true
-            show_icon: true
-            icon: mdi:virus
-            template: icon_name_footer
-          - type: custom:button-card
-            entity: sensor.covid19_deaths
-            show_name: false
-            show_state: true
-            show_icon: true
-            icon: mdi:grave-stone
-            template: icon_name_footer
-          - type: custom:button-card
-            entity: sensor.covid19_recovered
-            show_name: false
-            show_state: true
-            show_icon: true
-            icon: mdi:emoticon-happy
-            template: icon_name_footer
+            name: >
+              <ha-icon icon="mdi:robot-vacuum-variant"></ha-icon> Odkurzacz
             tap_action:
-              !include popup/covid19.yaml
+              !include popup/footer/vacuum.yaml
+            variables:
+              notify: >
+                [[[
+                  let last_clean = states['sensor.morty_last_clean_end'],
+                    week_ms = 6048e5;
+                  if (last_clean) {
+                    return (Date.now() - Date.parse(last_clean.state)) > week_ms;
+                  }
+                ]]]
+            template: footer
+
+          - type: custom:button-card
+            name: >
+              <ha-icon icon="mdi:chart-line-variant"></ha-icon> Historia
+            tap_action:
+              !include popup/footer/history.yaml
+            template: footer
+
+          - type: custom:button-card
+            name: >
+              <ha-icon icon="mdi:tablet"></ha-icon> Tablet
+            tap_action:
+              !include popup/footer/tablet.yaml
+            variables:
+              notify: >
+                [[[
+                  let plugged_in = states['binary_sensor.fire_tablet_plugged_in'];
+                  if (plugged_in) {
+                    return plugged_in.state === 'off';
+                  }
+                ]]]
+            template: footer
+
+          - type: custom:button-card
+            name: >
+              <ha-icon icon="mdi:router-wireless"></ha-icon> Router
+            tap_action:
+              !include popup/footer/router.yaml
+            variables:
+              notify: >
+                [[[
+                  let internet = states['binary_sensor.template_udm_internet'],
+                    upgradable = states['binary_sensor.template_udm_upgradable'];
+                  if (internet && upgradable) {
+                    return upgradable.state === 'on'
+                      ? 1
+                      : internet.state === 'off';
+                  }
+                ]]]
+            template: footer
+
+          - type: custom:button-card
+            name: >
+              <ha-icon icon="mdi:raspberry-pi"></ha-icon> Finanse
+            tap_action:
+              !include popup/footer/finance.yaml
+            template: footer
