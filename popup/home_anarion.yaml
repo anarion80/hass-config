@@ -56,7 +56,6 @@ browser_mod:
           .leaflet-pane.leaflet-tile-pane {
             filter: contrast(85%);
           }
-
   card:
     type: vertical-stack
     cards:
@@ -97,7 +96,7 @@ browser_mod:
         icon: mdi:volume-high
         tap_action:
           action: call-service
-          service: script.mattias_find_my_iphone
+          service: script.anarion_find_my_iphone
         template: icon_name
 
       - type: map

@@ -23,6 +23,10 @@ browser_mod:
         }
       $hui-map-card:
         $: |
+          #root {
+            height: 27em;
+            padding-bottom: 0 !important;
+          }
           ha-icon-button {
             color: var(--primary-color);
             zoom: 112%;
@@ -92,7 +96,7 @@ browser_mod:
         icon: mdi:volume-high
         tap_action:
           action: call-service
-          service: script.sanja_find_my_iphone
+          service: script.hania_find_my_iphone
         template: icon_name
 
       - type: map
