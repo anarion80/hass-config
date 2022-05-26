@@ -294,6 +294,7 @@ input_select:
       - Antyradio
       - RMF Classic
       - RMF FM
+      - Nowy Świat
 
   player:
     initial: Google Nest
