@@ -262,19 +262,6 @@ automation:
           - sensor.hass_release_notes
           - sensor.hass_release_notes_rc
 
-  - alias: hacs_sensor_refresh
-    id: '2001123854555'
-    trigger:
-      - platform: event
-        event_type: hacs/repository
-        event_data:
-          action: install
-    action:
-      #- delay:
-      #    seconds: 4
-      - service: homeassistant.update_entity
-        target:
-          entity_id: sensor.hacs
 
     ####################################################
     #                                                  #
@@ -655,10 +642,8 @@ automation:
       from: 'off'
       to: 'on'
     action:
-      if:
-        condition: template
-        value_template: >
-          {{ trigger.entity_id == 'binary_sensor.ffd92947_09fd7c47' }}
+      if: >
+        {{ 'binary_sensor.ffd92947_09fd7c47' in trigger.entity_id }}
       then:
         - service: switch.turn_off
           entity_id: switch.fire_tablet_screensaver

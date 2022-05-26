@@ -502,7 +502,8 @@ template:
 
       - unique_id: hass_dev_release
         state: >
-          {{ (as_timestamp(state_attr('calendar.home_assistant_devs', 'start_time'), default=0) + 60*60*18) | timestamp_local(default) }}
+          {% set start_time = state_attr('calendar.home_assistant_devs', 'start_time') %}
+          {{ (as_timestamp(start_time, default=0) + 60*60*20.5) | timestamp_local(default) }}
         attributes:
           friendly_name: >
             {% set release = state_attr('calendar.home_assistant_devs','message') %}
@@ -515,19 +516,6 @@ template:
             {% endif %}
           icon: mdi:dev-to
           device_class: timestamp
-
-      - unique_id: hacs_version
-        state: >
-          {{ device_attr(device_id('sensor.hacs'), 'sw_version') }}
-
-      # - unique_id: dockermon_mem
-        # icon: mdi:memory
-        # state: >
-          # {% set entity_id = 'sensor.docker_cpu' %}
-          # {{ (state_attr(entity_id, 'memory_stats')['usage'] /
-          # state_attr(entity_id, 'memory_stats')['limit'] * 100) | round(1) | default(0) }}
-        # attributes:
-          # friendly_name: Memory
 
       - unique_id: printer_status
         state: >
