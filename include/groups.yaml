@@ -2,13 +2,13 @@ group:
   living_room_media_players:
     name: Living Room Media Players
     entities:
-    - media_player.chromecastaudio
-    - media_player.shield
-    - media_player.nvidia_shield
-    - media_player.nest_mini
-    - media_player.kd_55xe9305
-    - media_player.sony_bravia_tv
-    - media_player.spotify_anarion
+      - media_player.chromecastaudio
+      - media_player.shield
+      - media_player.nvidia_shield
+      - media_player.nest_mini
+      - media_player.kd_55xe9305
+      - media_player.sony_bravia_tv
+      - media_player.spotify_anarion
 
   all_motion_detectors:
     entities:
@@ -24,3 +24,9 @@ group:
       - person.anarion
       - person.iwona
       - person.hania
+
+  smieci:
+    entities:
+      - sensor.smieci_bio
+      - sensor.zmieszane
+      - sensor.smieci_segregowane
