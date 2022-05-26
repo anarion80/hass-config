@@ -12,23 +12,9 @@ automation:
       - platform: homeassistant
         event: start
     action:
-      - service: browser_mod.close_popup
-      - delay:
-          minutes: 1
-      # - service: frontend.reload_themes
-      # - delay:
-      #     seconds: 10
-      # - service: button.press
-      #   data:
-      #     entity_id: button.fire_tablet_load_start_url
-      # - choose:
-        # - conditions:
-            # - condition: state
-              # entity_id: binary_sensor.b42378aa_f099108d
-              # state: 'off'
-          # sequence:
-            # - service: switch.turn_on
-              # entity_id: switch.fire_tablet_screensaver
+      - service: button.press
+        target:
+          entity_id: button.fire_tablet_restart_browser
 
   - alias: lovelace_updated_ignore
     id: '9381519720051'
@@ -348,21 +334,14 @@ automation:
           - 'on'
           - 'off'
     action:
-      - service: shell_command.reference_click
-      - delay:
-          milliseconds: 100
-      - service: shell_command.reference_kill
-      - delay:
-          milliseconds: 100
-      - choose:
-        - conditions:
-            - condition: state
-              entity_id: switch.wemo_monitors
-              state: 'on'
-          sequence:
-            - service: shell_command.reference_monitors
-        default:
-          - service: shell_command.reference_headphones
+      if:
+        condition: state
+        entity_id: switch.gosund_monitors_switch
+        state: 'on'
+      then:
+        service: shell_command.reference_monitors
+      else:
+        service: shell_command.reference_headphones
 
   - alias: turn_off_monitors
     id: '9863921240123'
@@ -671,34 +650,31 @@ automation:
     id: '9452750674803'
     mode: restart
     trigger:
-      - platform: state
-        entity_id: binary_sensor.b42378aa_f099108d
-        from: 'off'
-        to: 'on'
-      # - platform: state
-        # entity_id: light.hall
-        # from: 'on'
-        # to: 'off'
+      platform: state
+      entity_id: binary_sensor.ffd92947_09fd7c47
+      from: 'off'
+      to: 'on'
     action:
-      - choose:
-        - conditions: >
-            {{ trigger.entity_id == 'binary_sensor.b42378aa_f099108d' }}
-          sequence:
-            - service: switch.turn_off
-              entity_id: switch.fire_tablet_screensaver
-            - service: light.turn_on
-              data:
-                entity_id: light.fire_tablet_screen
-                brightness_pct: >
-                  {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
-        default:
-          - service: switch.turn_on
-            entity_id: switch.fire_tablet_screensaver
-          - delay:
-              minutes: 15
-          - service: browser_mod.close_popup
-            data:
-              deviceID: fire_tablet
+      if:
+        condition: template
+        value_template: >
+          {{ trigger.entity_id == 'binary_sensor.ffd92947_09fd7c47' }}
+      then:
+        - service: switch.turn_off
+          entity_id: switch.fire_tablet_screensaver
+        - service: light.turn_on
+          data:
+            entity_id: light.fire_tablet_screen
+            brightness_pct: >
+              {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
+      else:
+        - service: switch.turn_on
+          entity_id: switch.fire_tablet_screensaver
+        - delay:
+            minutes: 15
+        - service: browser_mod.close_popup
+          data:
+            deviceID: fire_tablet
 
     ####################################################
     #                                                  #
@@ -800,7 +776,7 @@ automation:
     action:
       - service: media_player.play_media
         data:
-          entity_id: media_player.b42378aa_f099108d
+          entity_id: media_player.ffd92947_09fd7c47
           media_content_id: /local/sound/timer.mp3
           media_content_type: music
       - delay:
@@ -869,6 +845,7 @@ automation:
 
   - alias: person_home
     id: '8423590985012'
+    mode: parallel
     trigger:
       - platform: state
         entity_id:
@@ -881,23 +858,13 @@ automation:
           - home
           - not_home
     action:
-      - choose:
-        - conditions: >
-            {{ trigger.entity_id == 'person.anarion' }}
-          sequence:
-            - service: mqtt.publish
-              data:
-                topic: homeassistant/persistence/anarion
-                payload_template: >
-                  {{ now() }}
-                retain: true
-        default:
-          - service: mqtt.publish
-            data:
-              topic: homeassistant/persistence/iwona
-              payload_template: >
-                {{ now() }}
-              retain: true
+      service: mqtt.publish
+      data:
+        topic_template: >
+          homeassistant/persistence/{{ trigger.to_state.name | lower }}
+        payload_template: >
+          {{ now() }}
+        retain: true
 
   - id: '1613824435200'
     alias: Air Purifier On
@@ -908,17 +875,16 @@ automation:
       platform: numeric_state
       entity_id: sensor.airpurifier_pm2_5
     condition:
-    - condition: and
-      conditions:
-      - condition: time
-        after: '9:00'
-        before: '23:00'
-      - condition: zone
-        entity_id: person.anarion
-        zone: zone.home
-      - condition: state
-        entity_id: fan.zhimi_airpurifier_v7
-        state: 'off'
+      and:
+        - condition: time
+          after: '9:00'
+          before: '23:00'
+        - condition: zone
+          entity_id: person.anarion
+          zone: zone.home
+        - condition: state
+          entity_id: fan.zhimi_airpurifier_v7
+          state: 'off'
     action:
     - service: notify.pushover
       data:
@@ -1022,13 +988,13 @@ automation:
       at: '16:00'
     condition: []
     action:
-    - service: notify.mobile_app_ta_1004
-      data:
-        message: TTS
-        title: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
-          marudzenia!
-        data:
-          channel: alarm_stream_max
+    # - service: notify.mobile_app_ta_1004
+    #   data:
+    #     message: TTS
+    #     title: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
+    #       marudzenia!
+    #     data:
+    #       channel: alarm_stream_max
     - service: tts.google_cloud_say
       data:
         entity_id: media_player.nest_mini
@@ -1062,7 +1028,10 @@ automation:
     trigger:
     - platform: mqtt
       topic: frigate/events
-    condition: []
+    condition:
+      - condition: state
+        entity_id: person.anarion
+        state: "not_home"
     action:
     - service: notify.mobile_app_nokia_8_3_5g
       data_template:
@@ -1108,11 +1077,10 @@ automation:
       - proximity.iwona_home
       below: '2'
     condition:
-    - condition: and
-      conditions:
-      - condition: template
-        value_template: '{{ trigger.to_state.attributes.dir_of_travel  == "towards"
-          }}'
+      and:
+        - condition: template
+          value_template: '{{ trigger.to_state.attributes.dir_of_travel  == "towards"
+            }}'
     action:
     - service: tts.google_cloud_say
       data:
@@ -1391,7 +1359,7 @@ automation:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.b42378aa_f099108d
+        entity_id: media_player.ffd92947_09fd7c47
       data:
         media_content_id: /local/sound/off.m4a
         media_content_type: music
@@ -1405,7 +1373,7 @@ automation:
     description: Turn on tablet screen on motion detected
     trigger:
     - platform: state
-      entity_id: binary_sensor.b42378aa_f099108d
+      entity_id: binary_sensor.ffd92947_09fd7c47
       from: 'off'
       to: 'on'
     condition:
@@ -1415,7 +1383,7 @@ automation:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.b42378aa_f099108d
+        entity_id: media_player.ffd92947_09fd7c47
       data:
         media_content_id: /local/sound/on.m4a
         media_content_type: music
@@ -2073,26 +2041,26 @@ automation:
               entity_id: media_player.nest_mini
               message:
                 Trzeba wystawić śmieci
-                {% if state_attr('sensor.smieci_bio', 'days') == 0 -%}
+                {% if state_attr('sensor.smieci_bio', 'days') == 1 -%}
                   {{ "bio, " }}
                 {% endif %}
-                {% if state_attr('sensor.smieci_segregowane', 'days') == 0 %}
+                {% if state_attr('sensor.smieci_segregowane', 'days') == 1 %}
                   {{ "segregowane, " }}
                 {% endif %}
-                {% if state_attr('sensor.zmieszane', 'days') == 0 %}
+                {% if state_attr('sensor.zmieszane', 'days') == 1 %}
                   {{ "zmieszane "}}
                 {%- endif %}
           - service: notify.anarion_iwona_phones
             data:
               message:
                 Trzeba wystawić śmieci
-                {% if state_attr('sensor.smieci_bio', 'days') == 0 -%}
+                {% if state_attr('sensor.smieci_bio', 'days') == 1 -%}
                   {{ "bio, " }}
                 {% endif %}
-                {% if state_attr('sensor.smieci_segregowane', 'days') == 0 %}
+                {% if state_attr('sensor.smieci_segregowane', 'days') == 1 %}
                   {{ "segregowane, " }}
                 {% endif %}
-                {% if state_attr('sensor.zmieszane', 'days') == 0 %}
+                {% if state_attr('sensor.zmieszane', 'days') == 1 %}
                   {{ "zmieszane "}}
                 {%- endif %}
               data:
