@@ -12,7 +12,7 @@ notify:
     sender: !secret smtp_sender
     encryption: none
     recipient: !secret smtp_receiver
-    sender_name: Mój Home Assistant
+    sender_name: Home Assistant
 
   - platform: tts
     name: salon
