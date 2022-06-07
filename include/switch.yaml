@@ -19,44 +19,44 @@ switch:
     # body_off: '{"state": "stop"}'
     # is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
 
-  - platform: mqtt
-    name: Switch
-    icon: mdi:power-socket-de
-    command_topic: cmnd/gosund1/POWER1
-    payload_on: 'ON'
-    payload_off: 'OFF'
-    availability_topic: tele/gosund1/LWT
-    payload_available: Online
-    payload_not_available: Offline
-    state_topic: stat/gosund1/POWER1
-    qos: 1
-    retain: false
+  # - platform: mqtt
+  #   name: Switch
+  #   icon: mdi:power-socket-de
+  #   command_topic: cmnd/gosund1/POWER1
+  #   payload_on: 'ON'
+  #   payload_off: 'OFF'
+  #   availability_topic: tele/gosund1/LWT
+  #   payload_available: Online
+  #   payload_not_available: Offline
+  #   state_topic: stat/gosund1/POWER1
+  #   qos: 1
+  #   retain: false
 
-  - platform: mqtt
-    name: Switch
-    icon: mdi:power-socket-de
-    command_topic: cmnd/gosund2/POWER1
-    payload_on: 'ON'
-    payload_off: 'OFF'
-    availability_topic: tele/gosund2/LWT
-    payload_available: Online
-    payload_not_available: Offline
-    state_topic: stat/gosund2/POWER1
-    qos: 1
-    retain: false
+  # - platform: mqtt
+  #   name: Switch
+  #   icon: mdi:power-socket-de
+  #   command_topic: cmnd/gosund2/POWER1
+  #   payload_on: 'ON'
+  #   payload_off: 'OFF'
+  #   availability_topic: tele/gosund2/LWT
+  #   payload_available: Online
+  #   payload_not_available: Offline
+  #   state_topic: stat/gosund2/POWER1
+  #   qos: 1
+  #   retain: false
 
-  - platform: mqtt
-    name: Balcony
-    icon: mdi:power-socket-de
-    command_topic: cmnd/gosund3/POWER1
-    payload_on: 'ON'
-    payload_off: 'OFF'
-    availability_topic: tele/gosund3/LWT
-    payload_available: Online
-    payload_not_available: Offline
-    state_topic: stat/gosund3/POWER1
-    qos: 1
-    retain: false
+  # - platform: mqtt
+  #   name: Balcony
+  #   icon: mdi:power-socket-de
+  #   command_topic: cmnd/gosund3/POWER1
+  #   payload_on: 'ON'
+  #   payload_off: 'OFF'
+  #   availability_topic: tele/gosund3/LWT
+  #   payload_available: Online
+  #   payload_not_available: Offline
+  #   state_topic: stat/gosund3/POWER1
+  #   qos: 1
+  #   retain: false
 
     ####################################################
     #                                                  #

@@ -257,22 +257,6 @@ sensor:
   #   command: >
   #     cat /config/smieci_bio.txt
 
-  - platform: mqtt
-    name: anarion_last_changed
-    state_topic: homeassistant/persistence/anarion
-    value_template: >
-      {{ value | replace(' ', 'T') }}
-  - platform: mqtt
-    name: iwona_last_changed
-    state_topic: homeassistant/persistence/iwona
-    value_template: >
-      {{ value | replace(' ', 'T') }}
-  - platform: mqtt
-    name: hania_last_changed
-    state_topic: homeassistant/persistence/hania
-    value_template: >
-      {{ value | replace(' ', 'T') }}
-
   - platform: template
     sensors:
       smart_plug_2_current:
@@ -588,15 +572,7 @@ sensor:
     # unit_of_measurement: "%"
     # entities:
       # - air_quality.gios
-  - platform: mqtt
-    name: Zigbee2mqtt Networkmap
-    # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
-    state_topic: zigbee2mqtt/bridge/response/networkmap
-    value_template: >-
-      {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
-    # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
-    json_attributes_topic: zigbee2mqtt/bridge/response/networkmap
-    json_attributes_template: "{{ value_json.data.value | tojson }}"
+
 
   # - platform: google_travel_time
     # api_key: !secret google_maps_api_key
