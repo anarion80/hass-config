@@ -680,3 +680,7 @@ sensor:
     value_template: >
       {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
     scan_interval: 3600
+
+  - platform: pgnig_gas_sensor
+    username: !secret pgnig_username
+    password: !secret pgnig_password
