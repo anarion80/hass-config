@@ -10,7 +10,7 @@ browser_mod:
       name: ipad
     ec4bd273-67f527a2:
       name: firefox_on_pc
-    ffd92947_09fd7c47:
+    ffd92947-09fd7c47:
       name: amazon_tablet
       #screensaver: true
       force_stay_awake: true
