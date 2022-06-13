@@ -94,9 +94,7 @@ automation:
     trigger:
       - platform: state
         entity_id:
-          - binary_sensor.sensor_garderob_motion
-          - binary_sensor.sensor_badrum_motion
-          - binary_sensor.wemo_motion
+          - binary_sensor.motion_sensor_1_occupancy
         from: 'off'
         to: 'on'
     action:
@@ -659,7 +657,7 @@ automation:
             minutes: 15
         - service: browser_mod.close_popup
           data:
-            deviceID: fire_tablet
+            deviceID: amazon_tablet
 
     ####################################################
     #                                                  #
@@ -1029,6 +1027,48 @@ automation:
             ttl: 0
             priority: high
     mode: single
+  - id: '1617387394301'
+    alias: Frigate person detection notification - popup
+    description: 'Frigate person detection notification - popup'
+    trigger:
+    - platform: mqtt
+      topic: frigate/events
+    action:
+      # - service: switch.turn_off
+      #   entity_id: switch.fire_tablet_screensaver
+      - service: light.turn_on
+        data:
+          entity_id: light.fire_tablet_screen
+          brightness_pct: >
+            {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
+      - service: browser_mod.more_info
+        data:
+          entity_id: >
+            camera.{{trigger.payload_json["after"]["camera"]}}_2
+          deviceID:
+            - amazon_tablet
+      - delay:
+          minutes: 1
+      # - service: switch.turn_on
+      #   entity_id: switch.fire_tablet_screensaver
+      - service: browser_mod.close_popup
+        data:
+          deviceID: amazon_tablet
+      - service: light.turn_off
+        data:
+          entity_id: light.fire_tablet_screen
+    # - service: notify.mobile_app_nokia_8_3_5g
+    #   data_template:
+    #     message: '{{trigger.payload_json["after"]["label"]}} wykryty w {{trigger.payload_json["after"]["camera"]}}'
+    #     data:
+    #       image: https://ha.anarion.pl/api/frigate/frigate/notifications/{{trigger.payload_json['after']['id']}}/snapshot.jpg
+    #       tag: '{{trigger.payload_json["after"]["id"]}}'
+    #       when: '{{trigger.payload_json["after"]["start_time"]|int}}'
+    #       data:
+    #         ttl: 0
+    #         priority: high
+    mode: single
+
   - id: '1618433673900'
     alias: Notify on device unavailable
     description: ''
