@@ -43,7 +43,7 @@ browser_mod:
       #   # mse: false  # disable MSE mode, if you want save NabuCasa traffic
       #   # webrtc: false  # disable WebRTC mode, if you want stream with AAC sound
       - type: picture-glance
-        title: Ogród
+        title: Wejście
         camera_view: live
         entities:
           - entity: sensor.main_camera_fps
@@ -51,4 +51,4 @@ browser_mod:
           - entity: switch.main_recordings
           - entity: switch.main_snapshots
         camera_image: camera.main_3
-        entity: camera.main_3
+        entity: camera.main_2

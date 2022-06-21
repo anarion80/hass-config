@@ -5,14 +5,22 @@ browser_mod:
   style:
     .: |
       :host .content {
-        width: 1400px;
-      }
+        width: 80vw;
       /* phone */
       @media screen and (max-width: 800px) {
         :host .content {
           max-width: 100vw;
         }
       }
+    layout-card:
+      $grid-layout$:
+        hui-grid-card:
+          $: |
+            ha-camera-stream {
+              aspect-ratio: 16/9;
+            }
+
+
   card:
     type: grid
     columns: 1
@@ -50,5 +58,5 @@ browser_mod:
           - entity: switch.garage_detect
           - entity: switch.garage_recordings
           - entity: switch.garage_snapshots
-        camera_image: camera.garage_2
+        camera_image: camera.garage_3
         entity: camera.garage_2
