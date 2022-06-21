@@ -2066,28 +2066,27 @@ automation:
               entity_id: media_player.nest_mini
               message:
                 Trzeba wystawić śmieci
-                {% if state_attr('sensor.smieci_bio', 'days') == 1 -%}
-                  {{ "bio, " }}
-                {% endif %}
-                {% if state_attr('sensor.smieci_segregowane', 'days') == 1 %}
-                  {{ "segregowane, " }}
-                {% endif %}
-                {% if state_attr('sensor.zmieszane', 'days') == 1 %}
-                  {{ "zmieszane "}}
-                {%- endif %}
+                {% set entities = states.sensor | selectattr('attributes.device_class', 'defined')
+                  | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
+                  | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
+                  | rejectattr('entity_id', 'search', 'garbage')
+                  | list %}
+
+                {% for sensor in entities if sensor.attributes.days == 1 -%}
+                  {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+                {%- endfor %}
           - service: notify.anarion_iwona_phones
             data:
               message:
                 Trzeba wystawić śmieci
-                {% if state_attr('sensor.smieci_bio', 'days') == 1 -%}
-                  {{ "bio, " }}
-                {% endif %}
-                {% if state_attr('sensor.smieci_segregowane', 'days') == 1 %}
-                  {{ "segregowane, " }}
-                {% endif %}
-                {% if state_attr('sensor.zmieszane', 'days') == 1 %}
-                  {{ "zmieszane "}}
-                {%- endif %}
+                {% set entities = states.sensor | selectattr('attributes.device_class', 'defined')
+                  | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
+                  | rejectattr('entity_id', 'search', 'garbage')
+                  | list %}
+
+                {% for sensor in entities if sensor.attributes.days == 1 -%}
+                  {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+                {%- endfor %}
               data:
                 actions:
                   - title: "Śmieci wystawione"

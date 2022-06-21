@@ -338,30 +338,57 @@ template:
               Nie można załadować prognozy pogody...
             {% endif %}
           garbage: >
-            {% set start_time = state_attr('calendar.garbage_collection', 'start_time') %}
-            {% if start_time != None %}
-              {% set type = state_attr('calendar.garbage_collection', 'message') %}
-              {% set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
-              {% set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
-              {% set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
-              {% set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
-              | replace('Monday', 'poniedziałek')
-              | replace('Tuesday', 'wtorek')
-              | replace('Wednesday', 'środę')
-              | replace('Thursday', 'czwartek')
-              | replace('Friday', 'piątek')
-              | replace('Saturday', 'sobotę')
-              | replace('Sunday', 'niedzielę') %}
-              {% if count <= 0.0 %}
-                🗑️ {{ type }} dzisiaj ({{ day }})
-              {% elif count <= 1.0 %}
-                🗑️ {{ type }} jutro ({{ day }})
-              {% elif count <= 2.0 %}
-                {{ type }} pojutrze ({{ day }})
-              {% else %}
-                {{ type }} za {{ (count + hours) | round }} dni w {{ day }}
+            {% set entities = states.sensor | selectattr('attributes.device_class', 'defined')
+              | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
+              | rejectattr('entity_id', 'search', 'garbage')
+              | list %}
+              {% if entities %}
+                {% if entities | selectattr('attributes.days','eq', 0) | list | count > 0 -%}
+
+              🗑️ Śmieci {% for sensor in entities if sensor.attributes.days == 0 -%}
+                {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+              {%- endfor %} dzisiaj ({{ now().strftime('%A') | replace('Monday', 'poniedziałek')
+                            | replace('Tuesday', 'wtorek')
+                            | replace('Wednesday', 'środę')
+                            | replace('Thursday', 'czwartek')
+                            | replace('Friday', 'piątek')
+                            | replace('Saturday', 'sobotę')
+                            | replace('Sunday', 'niedzielę') }})
+
+              {% elif entities | selectattr('attributes.days','eq', 1) | list | count > 0 -%}
+              🗑️ Śmieci {% for sensor in entities if sensor.attributes.days == 1 -%}
+                {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+              {%- endfor %} jutro ({{ (now() + timedelta(days=1)).strftime('%A') | replace('Monday', 'poniedziałek')
+                            | replace('Tuesday', 'wtorek')
+                            | replace('Wednesday', 'środę')
+                            | replace('Thursday', 'czwartek')
+                            | replace('Friday', 'piątek')
+                            | replace('Saturday', 'sobotę')
+                            | replace('Sunday', 'niedzielę') }})
+
+              {% elif entities | selectattr('attributes.days','eq', 2) | list | count > 0 -%}
+              Śmieci {% for sensor in entities if sensor.attributes.days == 2 -%}
+                {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+              {%- endfor %} pojutrze ({{ (now() + timedelta(days=2)).strftime('%A') | replace('Monday', 'poniedziałek')
+                            | replace('Tuesday', 'wtorek')
+                            | replace('Wednesday', 'środę')
+                            | replace('Thursday', 'czwartek')
+                            | replace('Friday', 'piątek')
+                            | replace('Saturday', 'sobotę')
+                            | replace('Sunday', 'niedzielę') }})
+
+              {% elif entities | selectattr('attributes.days','gt', 2) | list | count > 0 -%}
+              Śmieci {% for sensor in entities  if sensor.attributes.days == entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min -%}
+                  {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+              {%- endfor %} za {{ entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min }} dni w {{ (now() + timedelta(days=entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min)).strftime('%A') | replace('Monday', 'poniedziałek')
+                            | replace('Tuesday', 'wtorek')
+                            | replace('Wednesday', 'środę')
+                            | replace('Thursday', 'czwartek')
+                            | replace('Friday', 'piątek')
+                            | replace('Saturday', 'sobotę')
+                            | replace('Sunday', 'niedzielę') }}  {% endif %}
               {% endif %}
-            {% endif %}
+
           battery: >
             {% set entities = states.sensor
               | selectattr('entity_id', 'search', 'battery' or 'bateri')
