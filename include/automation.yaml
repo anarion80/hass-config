@@ -2124,3 +2124,61 @@ automation:
                   name: "Śmieci wystawione"
                   message: "Śmieci wystawione"
                   entity_id: input_boolean.garbage_reminder
+
+    - id: '1635431265502'
+      alias: Set Washing Machine Status to Running
+      description: ''
+      trigger:
+      - platform: numeric_state
+        entity_id: sensor.pralka_power
+        above: '200'
+        for:
+          hours: 0
+          minutes: 2
+          seconds: 0
+          milliseconds: 0
+      condition:
+        - condition: state
+          entity_id: input_select.washing_machine
+          state: 'Off'
+      action:
+      - service: notify.anarion_iwona_phones
+        data:
+          message: 💚 Washing Machine has started
+      - service: input_select.select_option
+        data:
+          option: Washing
+        target:
+          entity_id: input_select.washing_machine
+      mode: single
+
+    - id: '1635431265503'
+      alias: Set Washing Machine Status to Done
+      description: ''
+      trigger:
+      - platform: numeric_state
+        entity_id: sensor.pralka_power
+        below: '0.1'
+        for:
+          hours: 0
+          minutes: 1
+          seconds: 0
+          milliseconds: 0
+      condition:
+        - condition: state
+          entity_id: input_select.washing_machine
+          state: 'Washing'
+      action:
+      - service: notify.anarion_iwona_phones
+        data:
+          message: 🏁 Washing machine is done
+      - service: input_select.select_option
+        data:
+          option: 'Off'
+        target:
+          entity_id: input_select.washing_machine
+      - service: tts.google_cloud_say
+        data:
+          entity_id: media_player.nest_mini
+          message: Pranie się skończyło!
+      mode: single

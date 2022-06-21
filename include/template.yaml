@@ -299,6 +299,11 @@ template:
               <font color='#6a7377'>Wszystkie drzwi i okna zamknięte</font>
             {% endif %}
             </b>
+          laundry: >
+            {% set entity_id = 'input_select.washing_machine' %}
+            {% if is_state(entity_id, 'Washing') %}
+              <b>Pralka pierze</b>
+            {% endif %}
           vacuum: >
             {% set entity_id = 'vacuum.valetudo_robot' %}
             {% if is_state(entity_id, 'cleaning') %}

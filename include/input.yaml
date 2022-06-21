@@ -301,3 +301,10 @@ input_select:
     options:
       - Google Nest
       - Chromecast Audio
+
+  washing_machine:
+    initial: 'Off'
+    options:
+      - 'Off'
+      - Washing
+      - Unemptied
