@@ -11,6 +11,7 @@ recorder:
       #- media_player
       - person
       - device_tracker
+      - input_select
   exclude:
     entity_globs:
       - sensor.weather_*
