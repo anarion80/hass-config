@@ -1,4 +1,4 @@
-automation:
+automation ui:
 
     ####################################################
     #                                                  #
@@ -1008,6 +1008,8 @@ automation:
   - id: '1617387394300'
     alias: Frigate person detection notification
     description: ''
+    trace:
+      stored_traces: 10
     trigger:
     - platform: mqtt
       topic: frigate/events
@@ -2125,60 +2127,98 @@ automation:
                   message: "Śmieci wystawione"
                   entity_id: input_boolean.garbage_reminder
 
-    - id: '1635431265502'
-      alias: Set Washing Machine Status to Running
-      description: ''
-      trigger:
-      - platform: numeric_state
-        entity_id: sensor.pralka_power
-        above: '200'
-        for:
-          hours: 0
-          minutes: 2
-          seconds: 0
-          milliseconds: 0
-      condition:
-        - condition: state
-          entity_id: input_select.washing_machine
-          state: 'Off'
-      action:
-      - service: notify.anarion_iwona_phones
-        data:
-          message: 💚 Washing Machine has started
-      - service: input_select.select_option
-        data:
-          option: Washing
-        target:
-          entity_id: input_select.washing_machine
-      mode: single
+  - id: '1635431265502'
+    alias: Set Washing Machine Status to Running
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.pralka_power
+      above: '200'
+      for:
+        hours: 0
+        minutes: 2
+        seconds: 0
+        milliseconds: 0
+    condition:
+      - condition: state
+        entity_id: input_select.washing_machine
+        state: 'Off'
+    action:
+    - service: notify.anarion_iwona_phones
+      data:
+        message: 💚 Washing Machine has started
+    - service: input_select.select_option
+      data:
+        option: Washing
+      target:
+        entity_id: input_select.washing_machine
+    mode: single
 
-    - id: '1635431265503'
-      alias: Set Washing Machine Status to Done
-      description: ''
-      trigger:
-      - platform: numeric_state
-        entity_id: sensor.pralka_power
-        below: '0.1'
-        for:
-          hours: 0
-          minutes: 1
-          seconds: 0
-          milliseconds: 0
-      condition:
-        - condition: state
-          entity_id: input_select.washing_machine
-          state: 'Washing'
-      action:
-      - service: notify.anarion_iwona_phones
-        data:
-          message: 🏁 Washing machine is done
-      - service: input_select.select_option
-        data:
-          option: 'Off'
-        target:
-          entity_id: input_select.washing_machine
-      - service: tts.google_cloud_say
-        data:
-          entity_id: media_player.nest_mini
-          message: Pranie się skończyło!
-      mode: single
+  - id: '1635431265503'
+    alias: Set Washing Machine Status to Done
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.pralka_power
+      below: '0.1'
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+        milliseconds: 0
+    condition:
+      - condition: state
+        entity_id: input_select.washing_machine
+        state: 'Washing'
+    action:
+    - service: notify.anarion_iwona_phones
+      data:
+        message: >
+          {{ '🏁 ' + ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+    - service: input_select.select_option
+      data:
+        option: 'Off'
+      target:
+        entity_id: input_select.washing_machine
+    - service: tts.google_cloud_say
+      data:
+        entity_id: media_player.nest_mini
+        message: >
+            {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+    mode: single
+
+  - id: '1635431265504'
+    alias: Turn on sprinkler
+    trigger:
+    - platform: time
+      at: '19:30'
+    condition:
+      # - alias: "Brak alarmu opadów"
+      #   condition: state
+      #   entity_id: binary_sensor.antistorm_148_rain_alarm
+      #   state: "off"
+      - alias: "Prawdopodobieństwo deszczu poniżej 100"
+        condition: numeric_state
+        entity_id: sensor.antistorm_148_rain_probability
+        below: 100
+    action:
+    - service: switch.turn_on
+      entity_id: switch.zraszacz
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: '🏁 Zraszacz włączony'
+
+  - id: '1635431265505'
+    alias: Turn off sprinkler
+    trigger:
+    - platform: state
+      entity_id: switch.zraszacz
+      to: 'on'
+      for:
+        minutes: 15
+    action:
+    - service: switch.turn_off
+      entity_id: switch.zraszacz
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: '🛑 Zraszacz wyłączony'
