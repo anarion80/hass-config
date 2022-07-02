@@ -214,29 +214,19 @@ template:
           active: >
             <b>
             {% set lights = [
-              states.light.tv,
-              states.light.yeelight_hania,
-              states.light.horna,
-              states.light.dator,
-              states.light.vask_hoger,
-              states.light.vask_vanster,
-              states.light.byra,
-              states.light.garderob,
-              states.light.hall_1,
-              states.light.hall_2,
-              states.light.hall_3,
-              states.light.mattias,
-              states.light.sanja,
-              states.light.spot_1,
-              states.light.spot_2,
-              states.switch.balkong
+              states.light.lampka_u_hani,
+              states.light.kotlownia
             ] %}
 
             {% set switches = [
-              states.switch.router,
+              states.switch.chromecast_audio,
+              states.switch.netflix,
+              states.switch.plex,
+              states.switch.radio,
+              states.switch.server_power,
               states.switch.tv,
-              states.binary_sensor.ac,
-              states.fan.zhimi_airpurifier_v7
+              states.switch.youtube,
+              states.switch.zraszacz
             ] %}
 
             {% set media_players = [
