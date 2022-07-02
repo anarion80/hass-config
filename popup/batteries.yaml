@@ -94,9 +94,13 @@ browser_mod:
             entity_row: true
             entities:
               - entity: sensor.button1_battery
-              - entity: sensor.bedroom_door_battery
               - entity: sensor.switch1_battery
               - entity: sensor.motion_sensor_1_battery
+              - entity: sensor.alarm_keypad_battery
+              - entity: sensor.drzwi_do_ogrodu_battery
+              - entity: sensor.drzwi_wejsciowe_battery
+              - entity: sensor.gabinet_battery
+              - entity: sensor.server_room_battery
 
       #################################################
       #                                               #
@@ -130,4 +134,5 @@ browser_mod:
               - entity: sensor.nokia_8_3_5g_battery_level
               - entity: sensor.ta_1004_poziom_baterii
               - entity: sensor.kftrwi_battery_level
-              - entity: sensor.redmi_note_5_battery_level
+              #- entity: sensor.redmi_note_5_battery_level
+              - entity: sensor.nokia_x20_battery_level
