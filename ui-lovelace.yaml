@@ -98,6 +98,14 @@ views:
             entity: sensor.template_sidebar
             name: >
                [[[
+                   return entity.attributes.laundry;
+                   ]]]
+            template: sidebar
+
+          - type: custom:button-card
+            entity: sensor.template_sidebar
+            name: >
+               [[[
                    return entity.attributes.weather;
                    ]]]
             template: sidebar
@@ -1205,7 +1213,8 @@ views:
                         action: toggle
                         entity: entity
                       template:
-                        - media
+                        - base
+                        #- media
                         - icon_chromecast
                         - loader
 
@@ -1497,19 +1506,24 @@ views:
 
           - type: custom:button-card
             name: >
-              <ha-icon icon="mdi:router-wireless"></ha-icon> Router
+              <ha-icon icon="mdi:battery-charging-high"></ha-icon> Baterie
             tap_action:
-              !include popup/footer/router.yaml
+              !include popup/batteries.yaml
             variables:
               notify: >
                 [[[
-                  let internet = states['binary_sensor.template_udm_internet'],
-                    upgradable = states['binary_sensor.template_udm_upgradable'];
-                  if (internet && upgradable) {
-                    return upgradable.state === 'on'
-                      ? 1
-                      : internet.state === 'off';
-                  }
+                  let count = 0;
+                  Object.keys(states).forEach(key => {
+                    let s = states[key],
+                        e = s.entity_id,
+                        a = s.attributes;
+                    if ((e.includes('battery') && a.state_class === 'measurement' && a.device_class === 'battery' ||
+                        (e.includes('battery_level') || e.includes('poziom_baterii')) && a.device_class === 'battery')
+                        && parseInt(s.state) < 50) {
+                        count += 1;
+                    }
+                  })
+                  return count;
                 ]]]
             template: footer
 
