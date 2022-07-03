@@ -684,192 +684,180 @@ views:
                   let trigger = states['script.home_leave'];
                   return trigger === undefined || trigger;
                 ]]]
-          - type: custom:button-card
-            entity: sensor.gabinet_temperature
-            graph:
-            template:
-              - base
-              - icon_temperature
-              - full_circle
-            show_name: true
-            show_state: false
-            custom_fields:
-              graph:
-                card:
-                  type: 'custom:mini-graph-card'
-                  color_thresholds:
-                  - value: 21.5
-                    color: "#307FFD"
-                  - value: 22.5
-                    color: "#018001"
-                  - value: 23.5
-                    color: "#FF9801"
-                  entities:
-                    - "[[[ return variables.entity_id; ]]]"
-                  line_width: 4
-                  animate: true
-                  hours_to_show: 24
-                  points_per_hour: 1
-                  height: 140
-                  align_icon: left
-                  align_header: left
-                  show:
-                    name: false
-                    icon: false
-                    state: false
-                    legend: false
-                    labels: false
-            tap_action:
-              action: call-service
-              service: browser_mod.popup
-              service_data:
-                title: '[[[ return "Klimat " + variables.title ]]]'
-                style:
-                  .: |
-                    :host .content {
-                      width: calc(385px + 385px);
-                      max-width: 90vw;
-                    }
-                card:
-                  type: custom:layout-card
-                  layout_type: custom:grid-layout
-                  layout:
-                    grid-template-columns: repeat(2, 1fr)
-                    grid-template-rows: 1fr
-                    grid-template-areas: |
-                      "temperature  humidity"
-                    mediaquery:
-                      #phone
-                      "(max-width: 800px)":
-                        grid-template-columns: 1fr
-                        grid-template-rows: repeat(3, 1fr)
-                        grid-template-areas: |
-                          "temperature"
-                          "humidity"
-                  cards:
-                  - type: entities
-                    view_layout:
-                      grid-area: temperature
-                    title: Temperatura
-                    show_header_toggle: false
-                    card_mod:
-                      class: header
-                      style: |
-                        ha-card {
-                          margin: 0px !important;
-                        }
-                        h1 {
-                          padding: 1em 0 0 1.3em !important;
-                        }
-                    entities:
-                      - type: custom:mini-graph-card
-                        entities:
-                          - "[[[ return variables.entity_id; ]]]"
-                        animate: true
-                        hours_to_show: 24
-                        points_per_hour: 1
-                        height: 200
-                        hour24: true
-                        action: none
-                        color_thresholds:
-                        - value: 21.5
-                          color: "#307FFD"
-                        - value: 22.5
-                          color: "#018001"
-                        - value: 23.5
-                          color: "#FF9801"
-                        show:
-                          graph: line
-                          icon: false
-                          name: false
-                          labels: false
-                          points: hover
-                          extrema: true
-                          average: true
-                          labels_secondary: false
-
-                  - type: entities
-                    view_layout:
-                      grid-area: humidity
-                    title: Wilgotność
-                    show_header_toggle: false
-                    card_mod:
-                      class: header
-                      style: |
-                        ha-card {
-                          margin: 0px !important;
-                        }
-                        h1 {
-                          padding: 1em 0 0 1.3em !important;
-                        }
-                    entities:
-                    - type: custom:mini-graph-card
-                      entities:
-                        - sensor.gabinet_humidity
-                      animate: true
-                      hours_to_show: 24
-                      points_per_hour: 1
-                      height: 200
-                      hour24: true
-                      action: none
-                      color_thresholds:
-                      - value: 40
-                        color: "#307FFD"
-                      - value: 50
-                        color: "#018001"
-                      - value: 60
-                        color: "#FF9801"
-                      show:
-                        graph: line
-                        icon: false
-                        name: false
-                        labels: false
-                        points: hover
-                        extrema: true
-                        average: true
-                        labels_secondary: false
-            variables:
-              title: Gabinet
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    `${Math.round(parseFloat(entity.state))}<tspan font-size="10">°C</tspan>`;
-                ]]]
-            styles:
-              name:
-                - margin-bottom: 2.1vw
-                - color: rgb(239, 239, 239)
-                - text-shadow: rgb(18 22 23 / 90%) 1px 1px 5px
-
-              custom_fields:
-                graph:
-                  [
-                    position: absolute,
-                    bottom: 0,
-                    left: 0,
-                    width: 100%,
-                    padding-top: 0,
-                  ]
-
           # - type: custom:button-card
-          #   #entity: switch.wemo_monitors
-          #   entity: switch.flux
-          #   name: Monitory
-          #   triggers_update: sensor.monitors_volume
-          #   hold_action:
-          #     !include popup/studio_monitorer.yaml
+          #   entity: sensor.gabinet_temperature
+          #   graph:
           #   template:
           #     - base
-          #     - icon_monitors
-          #     - circle
-          #     - loader
+          #     - icon_temperature
+          #     - full_circle
+          #   show_name: true
+          #   show_state: false
+          #   custom_fields:
+          #     graph:
+          #       card:
+          #         type: 'custom:mini-graph-card'
+          #         color_thresholds:
+          #         - value: 21.5
+          #           color: "#307FFD"
+          #         - value: 22.5
+          #           color: "#018001"
+          #         - value: 23.5
+          #           color: "#FF9801"
+          #         entities:
+          #           - "[[[ return variables.entity_id; ]]]"
+          #         line_width: 4
+          #         animate: true
+          #         hours_to_show: 24
+          #         points_per_hour: 1
+          #         height: 140
+          #         align_icon: left
+          #         align_header: left
+          #         show:
+          #           name: false
+          #           icon: false
+          #           state: false
+          #           legend: false
+          #           labels: false
+          #   tap_action:
+          #     action: call-service
+          #     service: browser_mod.popup
+          #     service_data:
+          #       title: '[[[ return "Klimat " + variables.title ]]]'
+          #       style:
+          #         .: |
+          #           :host .content {
+          #             width: calc(385px + 385px);
+          #             max-width: 90vw;
+          #           }
+          #       card:
+          #         type: custom:layout-card
+          #         layout_type: custom:grid-layout
+          #         layout:
+          #           grid-template-columns: repeat(2, 1fr)
+          #           grid-template-rows: 1fr
+          #           grid-template-areas: |
+          #             "temperature  humidity"
+          #           mediaquery:
+          #             #phone
+          #             "(max-width: 800px)":
+          #               grid-template-columns: 1fr
+          #               grid-template-rows: repeat(3, 1fr)
+          #               grid-template-areas: |
+          #                 "temperature"
+          #                 "humidity"
+          #         cards:
+          #         - type: entities
+          #           view_layout:
+          #             grid-area: temperature
+          #           title: Temperatura
+          #           show_header_toggle: false
+          #           card_mod:
+          #             class: header
+          #             style: |
+          #               ha-card {
+          #                 margin: 0px !important;
+          #               }
+          #               h1 {
+          #                 padding: 1em 0 0 1.3em !important;
+          #               }
+          #           entities:
+          #             - type: custom:mini-graph-card
+          #               entities:
+          #                 - "[[[ return variables.entity_id; ]]]"
+          #               animate: true
+          #               hours_to_show: 24
+          #               points_per_hour: 1
+          #               height: 200
+          #               hour24: true
+          #               action: none
+          #               color_thresholds:
+          #               - value: 21.5
+          #                 color: "#307FFD"
+          #               - value: 22.5
+          #                 color: "#018001"
+          #               - value: 23.5
+          #                 color: "#FF9801"
+          #               show:
+          #                 graph: line
+          #                 icon: false
+          #                 name: false
+          #                 labels: false
+          #                 points: hover
+          #                 extrema: true
+          #                 average: true
+          #                 labels_secondary: false
+
+          #         - type: entities
+          #           view_layout:
+          #             grid-area: humidity
+          #           title: Wilgotność
+          #           show_header_toggle: false
+          #           card_mod:
+          #             class: header
+          #             style: |
+          #               ha-card {
+          #                 margin: 0px !important;
+          #               }
+          #               h1 {
+          #                 padding: 1em 0 0 1.3em !important;
+          #               }
+          #           entities:
+          #           - type: custom:mini-graph-card
+          #             entities:
+          #               - sensor.gabinet_humidity
+          #             animate: true
+          #             hours_to_show: 24
+          #             points_per_hour: 1
+          #             height: 200
+          #             hour24: true
+          #             action: none
+          #             color_thresholds:
+          #             - value: 40
+          #               color: "#307FFD"
+          #             - value: 50
+          #               color: "#018001"
+          #             - value: 60
+          #               color: "#FF9801"
+          #             show:
+          #               graph: line
+          #               icon: false
+          #               name: false
+          #               labels: false
+          #               points: hover
+          #               extrema: true
+          #               average: true
+          #               labels_secondary: false
           #   variables:
+          #     title: Gabinet
           #     circle_input: >
           #       [[[
-          #         let sensor = states['sensor.monitors_volume'];
-          #         return sensor === undefined || sensor.state;
+          #         return entity === undefined ?
+          #           null :
+          #           `${Math.round(parseFloat(entity.state))}<tspan font-size="10">°C</tspan>`;
           #       ]]]
+          #   styles:
+          #     name:
+          #       - margin-bottom: 2.1vw
+          #       - color: rgb(239, 239, 239)
+          #       - text-shadow: rgb(18 22 23 / 90%) 1px 1px 5px
+
+          #     custom_fields:
+          #       graph:
+          #         [
+          #           position: absolute,
+          #           bottom: 0,
+          #           left: 0,
+          #           width: 100%,
+          #           padding-top: 0,
+          #         ]
+
+          - type: custom:button-card
+            entity: switch.zraszacz
+            name: Zraszacz
+            template:
+              - base
+              - icon_sprinkler
 
       #################################################
       #                                               #

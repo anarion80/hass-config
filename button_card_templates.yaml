@@ -4060,6 +4060,20 @@ icon_aqi:
               }
           ]]]
 
+icon_sprinkler:
+  styles:
+    custom_fields:
+      icon:
+        - width: 75%
+        - margin-left: -3%
+        - fill: >
+            [[[
+              return variables.state_on ? '#5daeea' : '#9ca0a2';
+            ]]]
+  custom_fields:
+    icon: >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" xmlns:v="https://vecta.io/nano"><path d="M21 16.9h8V41h-8V16.9m-6-2h4v-4h-4v4m-6.1-2.1h4v-4h-4v4m0 6.1h4v-4h-4v4m-6 4h4v-4h-4v4m0-12.1h4v-4h-4v4m0 6.1h4v-4h-4v4m34.2 2h4v-4h-4v4m6-2h4v-4h-4v4m0-10.1v4h4v-4h-4m0 16.1h4v-4h-4v4m-12.1-8h4v-4h-4v4m6.1-2.1h4v-4h-4v4m-16.1-2h.7l1.3 4h4l1.3-4h.7v-2h-8v2z" /></svg>
+
 marked.js:
   variables:
     marked.js: >
