@@ -1574,3 +1574,31 @@ script:
              {% elif is_state("input_select.radio_station", "Nowy Świat") %} https://ha.anarion.pl/local/radio_covers/nowy-swiat.jpg
              {% endif %}'
     mode: single
+
+####################################################
+#                                                  #
+#                    CAMERA                        #
+#                                                  #
+####################################################
+
+  camera_snapshot:
+    alias: Camera Snapshot
+    sequence:
+    - service: telegram_bot.send_photo
+      data:
+        caption: 'Main Camera Snapshot'
+        target:
+          - !secret telegram_anarion_chat_id
+        url: !secret camera_main_still_image_url
+    - service: telegram_bot.send_photo
+      data:
+        caption: 'Garage Camera Snapshot'
+        target:
+          - !secret telegram_anarion_chat_id
+        url: !secret camera_garage_still_image_url
+    - service: telegram_bot.send_photo
+      data:
+        caption: 'Garden Camera Snapshot'
+        target:
+          - !secret telegram_anarion_chat_id
+        url: !secret camera_garden_still_image_url
