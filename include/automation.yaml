@@ -2197,6 +2197,10 @@ automation ui:
       #   condition: state
       #   entity_id: binary_sensor.antistorm_148_rain_alarm
       #   state: "off"
+      - alias: "Nie podlewaj w zimie"
+        condition: template
+        value_template: "{{ (4,1) <= (now().month, now().day) <= (10,1) }}"
+        #value_template: ‘{{ now().month in [1,2,3,4,5,10,11,12] }}’
       - alias: "Prawdopodobieństwo deszczu poniżej 100"
         condition: numeric_state
         entity_id: sensor.antistorm_148_rain_probability
