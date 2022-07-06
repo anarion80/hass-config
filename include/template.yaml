@@ -395,37 +395,94 @@ template:
               {% if loop.first %} {{'\u26A0\uFE0F'}} {% else %}, {% endif %}
               {{ state_attr(sensor, 'friendly_name') }} {{ states(sensor) }}%
             {% endfor %}
-          calendar: >
-            {% set start_time = state_attr('calendar.anarion_dunedain', 'start_time') %}
-            {% set end_time = state_attr('calendar.anarion_dunedain', 'end_time') %}
-            {% set event = state_attr('calendar.anarion_dunedain', 'message') %}
-            {% set location = state_attr('calendar.anarion_dunedain', 'location') %}
-            {% if start_time != None %}
-              {% set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
-              {% set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
-              {% set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
-              {% set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
-              {% set day = strptime(start_time, '%Y-%m-%d %H:%M:%S').strftime('%A')
-              | replace('Monday', 'poniedziałek')
-              | replace('Tuesday', 'wtorek')
-              | replace('Wednesday', 'środę')
-              | replace('Thursday', 'czwartek')
-              | replace('Friday', 'piątek')
-              | replace('Saturday', 'sobotę')
-              | replace('Sunday', 'niedzielę') %}
-              {% if count <= 0.0 %}
-                {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}
-              {% elif count <= 1.0 %}
-                {{ event}} jutro między {{ time }}-{{ time_end }}
-              {% elif count <= 2.0 %}
-                {{ event}} pojutrze między {{ time }}-{{ time_end }}
-              {% else %}
-                {% if day == 'wtorek' -%}
-                  {{event }} za {{ (count + hours) | round }} dni we {{ day }} między {{ time }}-{{ time_end }}
-                {% else -%}
-                  {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
-                {% endif %}
+          calendar: |
+            {# set helper variables #}
+            {% set ns = namespace(today=false) %}
+            {% set ns.tomorrow=false %}
+
+            {# Get a list of calendar event entities with start times #}
+            {% set entities = states.sensor | selectattr('entity_id','search','ical_kalendarz') |  selectattr('attributes.start','defined') | list %}
+
+            {# Check if there is any event today or tomorroe #}
+            {% for item in entities %}
+              {% if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+                {% set ns.today = true %}
+              {% elif item.attributes.start.strftime('%Y-%m-%d') == (now() + timedelta(days=1)).strftime('%Y-%m-%d')  %}
+                {% set ns.tomorrow = true %}
               {% endif %}
+            {% endfor %}
+
+            {# If there is at least one event today, iterate over them #}
+            {% if ns.today %}
+              {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+                {%- set start_time = sensor.attributes.start -%}
+                {%- set end_time = sensor.attributes.end -%}
+                {%- set event = sensor.attributes.summary -%}
+                {%- set location = sensor.attributes.location -%}
+                {%- if start_time != None -%}
+                  {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
+                  {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
+                  {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
+                  {%- set day = start_time.strftime('%A')
+                  | replace('Monday', 'poniedziałek')
+                  | replace('Tuesday', 'wtorek')
+                  | replace('Wednesday', 'środę')
+                  | replace('Thursday', 'czwartek')
+                  | replace('Friday', 'piątek')
+                  | replace('Saturday', 'sobotę')
+                  | replace('Sunday', 'niedzielę') %}
+                    {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}\n
+                {% endif -%}
+              {% endfor %}
+            {# If there is at least one event tomorrow, iterate over them #}
+            {% elif ns.tomorrow %}
+              {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == (now() + timedelta(days=1)).strftime('%Y-%m-%d') -%}
+                {%- set start_time = sensor.attributes.start -%}
+                {%- set end_time = sensor.attributes.end -%}
+                {%- set event = sensor.attributes.summary -%}
+                {%- set location = sensor.attributes.location -%}
+                {%- if start_time != None -%}
+                  {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') -%}
+                  {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') -%}
+                  {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 -%}
+                  {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours -%}
+                  {%- set day = start_time.strftime('%A')
+                  | replace('Monday', 'poniedziałek')
+                  | replace('Tuesday', 'wtorek')
+                  | replace('Wednesday', 'środę')
+                  | replace('Thursday', 'czwartek')
+                  | replace('Friday', 'piątek')
+                  | replace('Saturday', 'sobotę')
+                  | replace('Sunday', 'niedzielę') -%}
+                    {{ event }} jutro między {{ time }}-{{ time_end }}{{ '\n' }}
+                {%- endif -%}
+              {% endfor %}
+
+            {# Else just list the next event as usual #}
+            {% else %}
+              {%- set start_time = entities[0].attributes.start -%}
+              {%- set end_time = entities[0].attributes.end -%}
+              {%- set event = entities[0].attributes.summary -%}
+              {%- set location = entities[0].attributes.location -%}
+              {%- if start_time != None -%}
+                {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
+                {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
+                {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
+                {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
+                {%- set day = start_time.strftime('%A')
+                | replace('Monday', 'poniedziałek')
+                | replace('Tuesday', 'wtorek')
+                | replace('Wednesday', 'środę')
+                | replace('Thursday', 'czwartek')
+                | replace('Friday', 'piątek')
+                | replace('Saturday', 'sobotę')
+                | replace('Sunday', 'niedzielę') %}
+                  {% if day == 'wtorek' -%}
+                    {{event }} za {{ (count + hours) | round }} dni we {{ day }} między {{ time }}-{{ time_end }}
+                  {% else -%}
+                    {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
+                  {% endif %}
+              {% endif -%}
             {% endif %}
 
           plex: >
@@ -709,3 +766,81 @@ template:
           temperatura_nawiewu: "{{ states('sensor.komfovent_supply_temperature_c') }}"
           temperatura: "{{ states('sensor.komfovent_status_panel_temperature') }}"
           wilgotnosc: "{{ states('sensor.komfovent_status_panel_humidity') }}"
+
+      - unique_id: daily_digest
+        state: template
+        attributes:
+          digest: >
+            Dzień dobry. Dzisiaj jest
+            {#- Data -#}
+                {%- set days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'] -%}
+                {%- set months = ['Stycznia', 'Lutego', 'Marca', 'Kwietnia', 'Maja', 'Czerwca',
+                'Lipca', 'Sierpnia', 'Września', 'Października', 'Listopada', 'Grudnia'] %}
+                {% set temp = states('sensor.openweathermap_feels_like_temperature')|round %}
+                  {{- days[now().weekday()] }} {{ strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}.
+
+            {#- Pogoda -#}
+                Obecnie mamy {{states('sensor.openweathermap_weather')}} i temperaturę odczuwalną {{ temp }}
+                {%- if temp|int == 1 %} stopień.
+                {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
+                {% else %} stopni.
+                {% endif -%}
+                {%- set condition = states('sensor.openweathermap_forecast_condition') -%}
+                {%- set temp = states('sensor.openweathermap_forecast_temperature')|round -%}
+                Dzisiaj będzie {% if condition == 'clear-night' -%}bezchmurnie
+                {%- elif condition == 'cloudy' -%}pochmurnie
+                {%- elif condition == 'exceptional' -%}wyjątkowo
+                {%- elif condition == 'fog'-%}mgliście
+                {%- elif condition == 'hail' -%}grad
+                {%- elif condition == 'lightning' -%}burzowo
+                {%- elif condition == 'lightning-rainy' -%}burzowo i deszczowo
+                {%- elif condition == 'partlycloudy' -%}częściowo pochmurnie
+                {%- elif condition == 'pouring' -%}lało jak z cebra
+                {%- elif condition == 'rainy' -%}deszczowo
+                {%- elif condition == 'snowy' -%}padał śnieg
+                {%- elif condition == 'snowy-rainy' -%}padał deszcz ze śniegiem
+                {%- elif condition == 'sunny' -%}słonecznie
+                {%- elif condition == 'windy' -%}wietrznie
+                {%- elif condition == 'windy-variant' -%}wiał wiatr
+                {% endif -%}, a temperatura maksymalna wyniesie {{ temp }}
+                {%- if temp|int == 1 %} stopień.
+                {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
+                {% else %} stopni.
+                {% endif -%}
+                Będzie wiał wiatr {% set winbearing = (states('sensor.openweathermap_forecast_wind_bearing')|int/45)|round  %}
+                {%- set winddir = ['z północy', 'z północnego-wschodu','ze wschodu','z południowego wschodu','z południa','z południowego-zachodu','z zachodu','z północnego-zachodu'] -%}
+                {{ winddir[winbearing] }} z prędkością {{(states('sensor.openweathermap_forecast_wind_speed')|int*3.6)|round}} km/h.
+                {% if states('sensor.openweathermap_forecast_precipitation')|int == 0 %} Dzisiaj ma nie padać.
+                {% else -%} Prognozowany opad wyniesie {{ states('sensor.openweathermap_forecast_precipitation') }} milimetra.
+                {% endif -%}
+
+            {#- Czas do pracy -#}
+                Czas dojazdu do pracy: {{states('sensor.home_to_work')}} minut.
+            {#- Przypomnienie o śmieciach #}
+               {% set entities = states.sensor | selectattr('attributes.device_class', 'defined')
+                                | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
+                                | rejectattr('entity_id', 'search', 'garbage')
+                                | list -%}
+                  {% if entities -%}
+                    {% if entities | selectattr('attributes.days','eq', 1) | list | count > 0 -%}
+                    Pamiętaj żeby dzisiaj wieczorem wystawić śmieci {% for sensor in entities if sensor.attributes.days == 1 -%}
+                      {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+                    {%- endfor -%}.
+                    {% endif -%}
+                  {% endif -%}
+            {#- Kalendarz -#}
+                {%- set entities = states.sensor | selectattr('entity_id','search','ical_kalendarz')
+                          | selectattr('attributes.start','defined') | list -%}
+                {%- set ns = namespace(today=false) -%}
+                {%- for item in entities %}
+                              {%- if item.attributes.start.strftime('%Y-%m-%d') == now().date() %}
+                                {% set ns.today = true %}
+                              {% endif -%}
+                            {% endfor %}
+                {% if ns.today %}
+                Dzisiaj w kalendarzu masz {%- for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+                    {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}
+                    {{- sensor.name + '\n' | lower }} o godzinie {{ sensor.attributes.start.strftime('%H:%M') }}
+                {% endfor %}
+                {% else %}Dzisiaj nie masz nic w kalendarzu.{% endif %}
+                Miłego dnia!
