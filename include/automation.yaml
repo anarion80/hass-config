@@ -1069,7 +1069,7 @@ automation ui:
     #       data:
     #         ttl: 0
     #         priority: high
-    mode: single
+    mode: restart
 
   - id: '1618433673900'
     alias: Notify on device unavailable
@@ -2203,8 +2203,8 @@ automation ui:
         #value_template: ‘{{ now().month in [1,2,3,4,5,10,11,12] }}’
       - alias: "Prawdopodobieństwo deszczu poniżej 100"
         condition: numeric_state
-        entity_id: sensor.antistorm_148_rain_probability
-        below: 100
+        entity_id: sensor.openweathermap_forecast_precipitation_probability
+        below: 20
     action:
     - service: switch.turn_on
       entity_id: switch.zraszacz
@@ -2317,3 +2317,29 @@ automation ui:
           id: {{ trigger.event.data.message.message_id }}. Data: {{ trigger.event.data.data
           }} {{now().strftime("%Y-%m-%d %H:%M:%S")}} Pong, Message from {{ trigger.event.data.message.chat.username }}.'
         show_alert: true
+
+  - alias: Play Good Morning
+    id: play_good_morning
+    initial_state: true
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.motion_sensor_1_occupancy
+        to: 'on'
+    condition:
+      - condition: time
+        after: '07:00'
+        before: '12:00'
+      - condition: template
+        # Only run if more than 6 hours (21,600 sec) since it last ran
+        value_template: >
+          {% if state_attr("automation.play_good_morning", "last_triggered") != none %}
+            {{(as_timestamp(now()) - as_timestamp(state_attr("automation.play_good_morning", "last_triggered") | default(0)) | int > 21600 )}}
+          {% else %}
+            {{ True }}
+          {% endif %}
+    action:
+      - service: tts.google_cloud_say
+        data:
+          entity_id: media_player.nest_mini
+          message: >
+            {{ state_attr('sensor.template_daily_digest','digest') }}
