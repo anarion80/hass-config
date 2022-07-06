@@ -159,17 +159,26 @@ browser_mod:
           - type: custom:weather-chart-card
             title: Pogoda
             entity: weather.openweathermap
-            #mode: daily
+            mode: daily
           - type: custom:auto-entities
             card:
               type: entities
             filter:
               include:
-                - entity_id: '*.*airly*'
+                - entity_id: '*antistorm*'
               exclude: []
             sort:
               method: none
-            view_layout:
-              grid-area: doors
-            title: Airly
-            show_header_toggle: false
+          # - type: custom:auto-entities
+          #   card:
+          #     type: entities
+          #   filter:
+          #     include:
+          #       - entity_id: '*.*airly*'
+          #     exclude: []
+          #   sort:
+          #     method: none
+          #   view_layout:
+          #     grid-area: doors
+          #   title: Airly
+          #   show_header_toggle: false
