@@ -2190,8 +2190,12 @@ automation ui:
   - id: '1635431265504'
     alias: Turn on sprinkler
     trigger:
-    - platform: time
-      at: '19:30'
+    # - platform: time
+    #   at: '19:30'
+    - platform: sun
+      event: sunset
+      # Optional time offset. This example will trigger 45 minutes before sunset.
+      # offset: "-00:45:00"
     condition:
       # - alias: "Brak alarmu opadów"
       #   condition: state
@@ -2219,7 +2223,7 @@ automation ui:
       entity_id: switch.zraszacz
       to: 'on'
       for:
-        minutes: 15
+        minutes: "{{ states('input_number.watering_time')|int }}"
     action:
     - service: switch.turn_off
       entity_id: switch.zraszacz
@@ -2321,6 +2325,8 @@ automation ui:
   - alias: Play Good Morning
     id: play_good_morning
     initial_state: true
+    trace:
+      stored_traces: 20
     trigger:
       - platform: state
         entity_id: binary_sensor.motion_sensor_1_occupancy
@@ -2343,3 +2349,29 @@ automation ui:
           entity_id: media_player.nest_mini
           message: >
             {{ state_attr('sensor.template_daily_digest','digest') }}
+
+  - id: sodexo_top_up
+    alias: Notify when Sodexo card is updated
+    description: Notify when Sodexo card is updated
+    trigger:
+    - platform: state
+      entity_id:
+      - sensor.sodexo_praca
+      - sensor.sodexo_sodexo2
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Sodexo załadowane
+      message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+    - service: notify.email
+      data:
+        title: Sodexo załadowane
+        message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+    mode: single
