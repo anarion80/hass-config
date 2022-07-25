@@ -1602,3 +1602,46 @@ script:
         target:
           - !secret telegram_anarion_chat_id
         url: !secret camera_garden_still_image_url
+
+####################################################
+#                                                  #
+#                   SPRINKLER                      #
+#                                                  #
+####################################################
+
+  sprinkler:
+    alias: "Turn on sprinkler via script"
+    icon: "mdi:sprinkler-variant"
+    description: "Turn on sprinkler and then turn it off after set time"
+    fields:
+      minutes:
+        name: Minutes
+        description: "The amount of time to wait before turning sprinkler off"
+        selector:
+          number:
+            min: 0.0
+            max: 60.0
+            step: 1.0
+            unit_of_measurement: minutes
+            mode: slider
+    # If called again while still running (probably in delay step), start over.
+    mode: single
+    sequence:
+      # This is Home Assistant Script Syntax
+      - event: LOGBOOK_ENTRY
+        event_data:
+          name: Zraszacz
+          message: włączony
+          entity_id: switch.zraszacz
+          domain: switch
+      - alias: "Turn sprinkler ON"
+        service: switch.turn_on
+        target:
+          entity_id: switch.zraszacz
+      - delay:
+          # supports seconds, milliseconds, minutes, hours
+          minutes: "{{ minutes }}"
+      - alias: "Turn sprinkler OFF"
+        service: switch.turn_off
+        target:
+          entity_id: switch.zraszacz
