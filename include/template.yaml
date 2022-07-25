@@ -338,7 +338,7 @@ template:
               | rejectattr('entity_id', 'search', 'garbage')
               | list %}
               {% if entities %}
-                {% if entities | selectattr('attributes.days','eq', 0) | list | count > 0 -%}
+                {% if entities | selectattr('attributes.days','eq', 0) | list | count | int > 0 -%}
 
               🗑️ Śmieci {% for sensor in entities if sensor.attributes.days == 0 -%}
                 {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
@@ -350,7 +350,7 @@ template:
                             | replace('Saturday', 'sobotę')
                             | replace('Sunday', 'niedzielę') }})
 
-              {% elif entities | selectattr('attributes.days','eq', 1) | list | count > 0 -%}
+              {% elif entities | selectattr('attributes.days','eq', 1) | list | count | int > 0 -%}
               🗑️ Śmieci {% for sensor in entities if sensor.attributes.days == 1 -%}
                 {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
               {%- endfor %} jutro ({{ (now() + timedelta(days=1)).strftime('%A') | replace('Monday', 'poniedziałek')
@@ -361,7 +361,7 @@ template:
                             | replace('Saturday', 'sobotę')
                             | replace('Sunday', 'niedzielę') }})
 
-              {% elif entities | selectattr('attributes.days','eq', 2) | list | count > 0 -%}
+              {% elif entities | selectattr('attributes.days','eq', 2) | list | count | int > 0 -%}
               Śmieci {% for sensor in entities if sensor.attributes.days == 2 -%}
                 {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
               {%- endfor %} pojutrze ({{ (now() + timedelta(days=2)).strftime('%A') | replace('Monday', 'poniedziałek')
@@ -372,7 +372,7 @@ template:
                             | replace('Saturday', 'sobotę')
                             | replace('Sunday', 'niedzielę') }})
 
-              {% elif entities | selectattr('attributes.days','gt', 2) | list | count > 0 -%}
+              {% elif entities | selectattr('attributes.days','gt', 2) | list | count | int > 0 -%}
               Śmieci {% for sensor in entities  if sensor.attributes.days == entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min -%}
                   {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
               {%- endfor %} za {{ entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min }} dni w {{ (now() + timedelta(days=entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min)).strftime('%A') | replace('Monday', 'poniedziałek')
@@ -401,9 +401,10 @@ template:
             {% set ns.tomorrow=false %}
 
             {# Get a list of calendar event entities with start times #}
-            {% set entities = states.sensor | selectattr('entity_id','search','ical_kalendarz') |  selectattr('attributes.start','defined') | list %}
+            {% set entities = states.sensor | selectattr('entity_id','search','ical_kalendarz') | selectattr('attributes.start','defined') | list %}
 
-            {# Check if there is any event today or tomorroe #}
+            {# Check if there is any event today or tomorrow #}
+            {% if entities %}
             {% for item in entities %}
               {% if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
                 {% set ns.today = true %}
@@ -414,15 +415,15 @@ template:
 
             {# If there is at least one event today, iterate over them #}
             {% if ns.today %}
-              {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+              {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
                 {%- set start_time = sensor.attributes.start -%}
                 {%- set end_time = sensor.attributes.end -%}
                 {%- set event = sensor.attributes.summary -%}
                 {%- set location = sensor.attributes.location -%}
                 {%- if start_time != None -%}
-                  {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
-                  {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
-                  {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
+                  {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') -%}
+                  {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') -%}
+                  {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 -%}
                   {%- set day = start_time.strftime('%A')
                   | replace('Monday', 'poniedziałek')
                   | replace('Tuesday', 'wtorek')
@@ -430,9 +431,9 @@ template:
                   | replace('Thursday', 'czwartek')
                   | replace('Friday', 'piątek')
                   | replace('Saturday', 'sobotę')
-                  | replace('Sunday', 'niedzielę') %}
-                    {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}\n
-                {% endif -%}
+                  | replace('Sunday', 'niedzielę') -%}
+                    {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}{{ '\n' }}
+                {%- endif -%}
               {% endfor %}
             {# If there is at least one event tomorrow, iterate over them #}
             {% elif ns.tomorrow %}
@@ -445,7 +446,6 @@ template:
                   {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') -%}
                   {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') -%}
                   {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 -%}
-                  {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours -%}
                   {%- set day = start_time.strftime('%A')
                   | replace('Monday', 'poniedziałek')
                   | replace('Tuesday', 'wtorek')
@@ -483,6 +483,7 @@ template:
                     {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
                   {% endif %}
               {% endif -%}
+            {% endif %}
             {% endif %}
 
           plex: >
@@ -833,14 +834,14 @@ template:
                           | selectattr('attributes.start','defined') | list -%}
                 {%- set ns = namespace(today=false) -%}
                 {%- for item in entities %}
-                              {%- if item.attributes.start.strftime('%Y-%m-%d') == now().date() %}
-                                {% set ns.today = true %}
-                              {% endif -%}
-                            {% endfor %}
+                              {%- if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+                                {%- set ns.today = true -%}
+                              {%- endif -%}
+                            {%- endfor -%}
                 {% if ns.today %}
                 Dzisiaj w kalendarzu masz {%- for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
                     {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}
                     {{- sensor.name + '\n' | lower }} o godzinie {{ sensor.attributes.start.strftime('%H:%M') }}
                 {% endfor %}
-                {% else %}Dzisiaj nie masz nic w kalendarzu.{% endif %}
+                {%- else %}Dzisiaj nie masz nic w kalendarzu.{% endif -%}
                 Miłego dnia!
