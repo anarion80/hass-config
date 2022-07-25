@@ -134,13 +134,19 @@ views:
 
           - type: custom:button-card
             entity: sensor.template_sidebar
-            name: >
+            name: |
                [[[
                    return entity.attributes.calendar;
                    ]]]
             template: sidebar
             tap_action:
               !include popup/home_calendar.yaml
+            style: |
+              #name {
+                margin-top: calc(var(--sidebar-line-height) * -1);
+                white-space: pre-line;
+              }
+
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -225,226 +231,282 @@ views:
         title: Salon
         view_layout:
           grid-area: living_room
-        columns: 2
+        columns: 1
         cards:
-          - type: custom:button-card
-            entity: sensor.ventilation_info
-            name: Wentylacja
-            tap_action:
-              !include popup/ventilation.yaml
-            template:
-              - base
-              - icon_fan
-              - full_circle
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    `${parseInt(states['sensor.komfovent_extract_temperature_c'].state)}<tspan font-size="10">°C</tspan>`;
-                ]]]
-              speed: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    entity.state;
-                ]]]
+          - type: custom:swipe-card
+            parameters:
+              speed: 550
+              spaceBetween: 40
+              threshold: 5
+            cards:
+              - type: grid
+                columns: 2
+                cards:
+                - type: custom:button-card
+                  entity: sensor.ventilation_info
+                  name: Wentylacja
+                  tap_action:
+                    !include popup/ventilation.yaml
+                  template:
+                    - base
+                    - icon_fan
+                    - full_circle
+                  variables:
+                    circle_input: >
+                      [[[
+                        return entity === undefined ?
+                          null :
+                          `${parseInt(states['sensor.komfovent_extract_temperature_c'].state)}<tspan font-size="10">°C</tspan>`;
+                      ]]]
+                    speed: >
+                      [[[
+                        return entity === undefined ?
+                          null :
+                          entity.state;
+                      ]]]
 
-          - type: custom:button-card
-            entity: fan.zhimi_airpurifier_v7
-            name: Oczyszczacz powietrza
-            hold_action:
-              !include popup/sovrum_luftrenare.yaml
-            template:
-              - base
-              - icon_air_purifier
-              - full_circle
-              - loader
-            triggers_update:
-              - sensor.airpurifier_pm2_5
-              - fan.zhimi_airpurifier_v7
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    parseInt(states['sensor.airpurifier_pm2_5'].state);
-                ]]]
+                - type: custom:button-card
+                  entity: fan.zhimi_airpurifier_v7
+                  name: Oczyszczacz powietrza
+                  hold_action:
+                    !include popup/sovrum_luftrenare.yaml
+                  template:
+                    - base
+                    - icon_air_purifier
+                    - full_circle
+                    - loader
+                  triggers_update:
+                    - sensor.airpurifier_pm2_5
+                    - fan.zhimi_airpurifier_v7
+                  variables:
+                    circle_input: >
+                      [[[
+                        return entity === undefined ?
+                          null :
+                          parseInt(states['sensor.airpurifier_pm2_5'].state);
+                      ]]]
 
-          - type: custom:button-card
-            entity: media_player.sony_bravia_tv
-            name: TV
-            state_display: >
-              [[[
-                if (variables.state === 'playing') {
-                  return 'wł.';
-                }
-                if (variables.state === true) {
-                  return variables.translate_unknown;
-                }
-              ]]]
-            hold_action:
-              !include popup/vardagsrum_tv.yaml
-            template:
-              - base
-              - icon_tv
-              - loader
-              - media_source
-            variables:
-              circle: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    entity.attributes.source;
-                ]]]
+                - type: custom:button-card
+                  entity: media_player.sony_bravia_tv
+                  name: TV
+                  state_display: >
+                    [[[
+                      if (variables.state === 'playing') {
+                        return 'wł.';
+                      }
+                      if (variables.state === true) {
+                        return variables.translate_unknown;
+                      }
+                    ]]]
+                  hold_action:
+                    !include popup/vardagsrum_tv.yaml
+                  template:
+                    - base
+                    - icon_tv
+                    - loader
+                    - media_source
+                  variables:
+                    circle: >
+                      [[[
+                        return entity === undefined ?
+                          null :
+                          entity.attributes.source;
+                      ]]]
 
-          - type: custom:button-card
-            entity: sensor.komfovent_status_panel_temperature
-            name: Temperatura
-            hold_action: none
-            tap_action:
-              !include popup/salon_klimat.yaml
-            custom_fields:
-              graph:
-                card:
-                  entities:
-                    - sensor.komfovent_status_panel_temperature
-            template:
-              - base
-              - icon_temperature
-              - humidity
-              - graph
-            extra_styles: >
-              [[[
-                if (entity) {
-                  let hs = entity.attributes.hs_color === undefined,
-                    h = hs || entity.attributes.hs_color[0],
-                    s = hs || entity.attributes.hs_color[1],
-                    l_min = 28,
-                    l_max = 48,
-                    l_calc = entity.attributes.brightness / 2.54 * (l_max - l_min) / 100 + l_min;
-                  var light_color = entity.attributes.color_mode === 'color_temp' || entity.attributes.color_mode === 'brightness'
-                    ? `hsl(204, 58%, ${l_calc}%);`
-                    : `hsl(${h}, ${s}%, ${l_calc}%);`;
-                }
-                return `
-                  svg {
-                    --light-color:
-                    ${ variables.state_on && entity.attributes.brightness !== undefined
-                        ? light_color
-                        : variables.state_on && entity.attributes.brightness === undefined
-                          ? 'var(--state-icon-active-color);'
-                          : 'var(--state-icon-color);'
-                    }
-                  }
-                  #container {
-                    text-align: left !important;
-                  }
-                  #name, #state {
-                    font-size: 1.32vw;
-                    letter-spacing: -0.02vw;
-                  }
-                  #state::first-letter {
-                    text-transform: uppercase;
-                  }
-                  /* portrait */
-                  @media screen and (max-width: 1200px) {
-                    #name, #state {
-                      font-size: 2vw;
-                    }
-                  }
-                  /* phone */
-                  @media screen and (max-width: 800px) {
-                    #name, #state {
-                      font-size: 3vw;
-                    }
-                  }
-                  ${this._config.template.includes('footer') ? `
-                    :host {
-                      --name-font-size: 1.22vw;
-                      --name-icon-size: 1.5vw;
-                      --notify-font-size: 0.9vw;
-                      --notify-box-size: 1.8vw;
-                      --name-padding-v: 0.7vw;
-                      --name-padding-h: 1.1vw;
-                      --card-border-radius: 0.6vw;
-                    }
-                    #name {
-                      font-size: var(--name-font-size);
-                      padding: var(--name-padding-v) var(--name-padding-h);
-                      letter-spacing: 0.012vw;
-                    }
-                    ha-icon {
-                      width: var(--name-icon-size);
-                      vertical-align: 7%;
-                      padding-right: 0.1vw;
-                      opacity: 0.4;
-                    }
-                    #card {
-                      border-radius: var(--card-border-radius);
-                      background: rgba(115, 115, 115, 0.04);
-                    }
-                    #notify {
-                      font-size: var(--notify-font-size);
-                      width: var(--notify-box-size);
-                      height: var(--notify-box-size);
-                      line-height: var(--notify-box-size);
-                      padding-right: 0.5px;
-                      padding-top: 0.5px;
-                    }
-                    /* portrait */
-                    @media screen and (max-width: 1200px) {
-                      #name {
-                        font-size: calc(var(--name-font-size) * 1.4);
-                        padding: calc(var(--name-padding-v) * 1.4) calc(var(--name-padding-h) * 1.4);
+                - type: custom:button-card
+                  entity: sensor.komfovent_status_panel_temperature
+                  name: Temperatura
+                  hold_action: none
+                  tap_action:
+                    !include popup/salon_klimat.yaml
+                  custom_fields:
+                    graph:
+                      card:
+                        entities:
+                          - sensor.komfovent_status_panel_temperature
+                  template:
+                    - base
+                    - icon_temperature
+                    - humidity
+                    - graph
+                  extra_styles: >
+                    [[[
+                      if (entity) {
+                        let hs = entity.attributes.hs_color === undefined,
+                          h = hs || entity.attributes.hs_color[0],
+                          s = hs || entity.attributes.hs_color[1],
+                          l_min = 28,
+                          l_max = 48,
+                          l_calc = entity.attributes.brightness / 2.54 * (l_max - l_min) / 100 + l_min;
+                        var light_color = entity.attributes.color_mode === 'color_temp' || entity.attributes.color_mode === 'brightness'
+                          ? `hsl(204, 58%, ${l_calc}%);`
+                          : `hsl(${h}, ${s}%, ${l_calc}%);`;
                       }
-                      ha-icon {
-                        width: calc(var(--name-icon-size) * 1.4);
-                      }
-                      #card {
-                        border-radius: calc(var(--card-border-radius) * 1.4);
-                        margin: 0 0.5vw;
-                      }
-                      #notify {
-                        font-size: calc(var(--notify-font-size) * 1.4);
-                        width: calc(var(--notify-box-size) * 1.4);
-                        height: calc(var(--notify-box-size) * 1.4);
-                        line-height: calc(var(--notify-box-size) * 1.4);
-                      }
-                    }
-                    /* phone */
-                    @media screen and (max-width: 800px) {
-                      #name {
-                        font-size: calc(var(--name-font-size) * 2.7);
-                        padding: calc(var(--name-padding-v) * 2.7) calc(var(--name-padding-h) * 2.7);
-                        letter-spacing: 0.12vw;
-                      }
-                      ha-icon {
-                        width: calc(var(--name-icon-size) * 2.7);
-                      }
-                      #card {
-                        border-radius: calc(var(--card-border-radius) * 2.7);
-                        background: rgba(115, 115, 115, 0.08);
-                        margin: 0 0.5vw;
-                      }
-                      #notify {
-                        font-size: calc(var(--notify-font-size) * 2.7);
-                        width: calc(var(--notify-box-size) * 2.7);
-                        height: calc(var(--notify-box-size) * 2.7);
-                        line-height: calc(var(--notify-box-size) * 2.7);
-                        padding: 0;
-                      }
-                    }
-                  `:''}
-                `
-              ]]]
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    parseFloat(states['sensor.komfovent_status_panel_humidity'].state);
-                ]]]
+                      return `
+                        svg {
+                          --light-color:
+                          ${ variables.state_on && entity.attributes.brightness !== undefined
+                              ? light_color
+                              : variables.state_on && entity.attributes.brightness === undefined
+                                ? 'var(--state-icon-active-color);'
+                                : 'var(--state-icon-color);'
+                          }
+                        }
+                        #container {
+                          text-align: left !important;
+                        }
+                        #name, #state {
+                          font-size: 1.32vw;
+                          letter-spacing: -0.02vw;
+                        }
+                        #state::first-letter {
+                          text-transform: uppercase;
+                        }
+                        /* portrait */
+                        @media screen and (max-width: 1200px) {
+                          #name, #state {
+                            font-size: 2vw;
+                          }
+                        }
+                        /* phone */
+                        @media screen and (max-width: 800px) {
+                          #name, #state {
+                            font-size: 3vw;
+                          }
+                        }
+                        ${this._config.template.includes('footer') ? `
+                          :host {
+                            --name-font-size: 1.22vw;
+                            --name-icon-size: 1.5vw;
+                            --notify-font-size: 0.9vw;
+                            --notify-box-size: 1.8vw;
+                            --name-padding-v: 0.7vw;
+                            --name-padding-h: 1.1vw;
+                            --card-border-radius: 0.6vw;
+                          }
+                          #name {
+                            font-size: var(--name-font-size);
+                            padding: var(--name-padding-v) var(--name-padding-h);
+                            letter-spacing: 0.012vw;
+                          }
+                          ha-icon {
+                            width: var(--name-icon-size);
+                            vertical-align: 7%;
+                            padding-right: 0.1vw;
+                            opacity: 0.4;
+                          }
+                          #card {
+                            border-radius: var(--card-border-radius);
+                            background: rgba(115, 115, 115, 0.04);
+                          }
+                          #notify {
+                            font-size: var(--notify-font-size);
+                            width: var(--notify-box-size);
+                            height: var(--notify-box-size);
+                            line-height: var(--notify-box-size);
+                            padding-right: 0.5px;
+                            padding-top: 0.5px;
+                          }
+                          /* portrait */
+                          @media screen and (max-width: 1200px) {
+                            #name {
+                              font-size: calc(var(--name-font-size) * 1.4);
+                              padding: calc(var(--name-padding-v) * 1.4) calc(var(--name-padding-h) * 1.4);
+                            }
+                            ha-icon {
+                              width: calc(var(--name-icon-size) * 1.4);
+                            }
+                            #card {
+                              border-radius: calc(var(--card-border-radius) * 1.4);
+                              margin: 0 0.5vw;
+                            }
+                            #notify {
+                              font-size: calc(var(--notify-font-size) * 1.4);
+                              width: calc(var(--notify-box-size) * 1.4);
+                              height: calc(var(--notify-box-size) * 1.4);
+                              line-height: calc(var(--notify-box-size) * 1.4);
+                            }
+                          }
+                          /* phone */
+                          @media screen and (max-width: 800px) {
+                            #name {
+                              font-size: calc(var(--name-font-size) * 2.7);
+                              padding: calc(var(--name-padding-v) * 2.7) calc(var(--name-padding-h) * 2.7);
+                              letter-spacing: 0.12vw;
+                            }
+                            ha-icon {
+                              width: calc(var(--name-icon-size) * 2.7);
+                            }
+                            #card {
+                              border-radius: calc(var(--card-border-radius) * 2.7);
+                              background: rgba(115, 115, 115, 0.08);
+                              margin: 0 0.5vw;
+                            }
+                            #notify {
+                              font-size: calc(var(--notify-font-size) * 2.7);
+                              width: calc(var(--notify-box-size) * 2.7);
+                              height: calc(var(--notify-box-size) * 2.7);
+                              line-height: calc(var(--notify-box-size) * 2.7);
+                              padding: 0;
+                            }
+                          }
+                        `:''}
+                      `
+                    ]]]
+                  variables:
+                    circle_input: >
+                      [[[
+                        return entity === undefined ?
+                          null :
+                          parseFloat(states['sensor.komfovent_status_panel_humidity'].state);
+                      ]]]
+
+              - type: grid
+                columns: 2
+                cards:
+                  - type: custom:button-card
+                    entity: switch.plex
+                    name: Plex
+                    tap_action:
+                      action: toggle
+                      entity: entity
+                    template:
+                      - media
+                      - icon_plex
+                  - type: custom:button-card
+                    entity: switch.radio
+                    name: Radio
+                    tap_action:
+                      action: toggle
+                      entity: entity
+                    template:
+                      - base
+                      #- media
+                      - icon_radio2
+                      - loader
+
+                  - type: custom:button-card
+                    entity: switch.netflix
+                    name: Netflix
+                    tap_action:
+                      action: toggle
+                      entity: entity
+                    template:
+                      - media
+                      - icon_netflix4
+                      - loader
+
+                  - type: custom:button-card
+                    entity: switch.chromecast_audio
+                    name: ChromecastAudio
+                    tap_action:
+                      action: toggle
+                      entity: entity
+                    template:
+                      - base
+                      #- media
+                      - icon_chromecast
+                      - loader
 
           # - type: custom:button-card
           #   entity: climate.living_room_ac
@@ -670,7 +732,7 @@ views:
               !include popup/radio.yaml
             template:
               - base
-              - icon_radio
+              - icon_radio2
               - loader
               - lock
             variables:
@@ -857,7 +919,7 @@ views:
             name: Zraszacz
             template:
               - base
-              - icon_sprinkler
+              - icon_sprinkler3
 
       #################################################
       #                                               #
@@ -872,9 +934,127 @@ views:
         columns: 2
         cards:
 
+          # - type: custom:frigate-card
+          #   cameras:
+          #     - camera_entity: camera.main_2
+          #     # - camera_entity: camera.main_2
+          #     #   live_provider: webrtc-card
+          #     #   title: Front Door (WebRTC)
+          #     #   webrtc_card:
+          #     #     url: 'rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.48:554/h264Preview_01_main'
+          #     #   id: front-door-webrtc
+          #   view:
+          #     default: live
+          #     timeout_seconds: 15
+          #     update_seconds: 5
+          #     update_force: false
+          #     actions:
+          #       tap_action:
+          #         action: custom:frigate-card-action
+          #         frigate_card_action: fullscreen
+          #   dimensions:
+          #     aspect_ratio_mode: static
+          #     aspect_ratio: '1/1'
+          #   # live:
+          #   #   webrtc_card:
+          #   #     ui: true
+          #   menu:
+          #     style: none
+          #   live:
+          #     controls:
+          #       thumbnails:
+          #         mode: none
+          #       title:
+          #         mode: none
+          #   card_mod:
+          #     style: |
+          #       :host {
+          #         border-radius: var(--custom-button-card-border-radius);
+          #       }
+
+          # - type: custom:frigate-card
+          #   cameras:
+          #     - camera_entity: camera.garage_2
+          #     # - camera_entity: camera.main_2
+          #     #   live_provider: webrtc-card
+          #     #   title: Front Door (WebRTC)
+          #     #   webrtc_card:
+          #     #     url: 'rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.48:554/h264Preview_01_main'
+          #     #   id: front-door-webrtc
+          #   view:
+          #     default: live
+          #     timeout_seconds: 15
+          #     update_seconds: 5
+          #     update_force: false
+          #     actions:
+          #       tap_action:
+          #         action: custom:frigate-card-action
+          #         frigate_card_action: fullscreen
+          #   dimensions:
+          #     aspect_ratio_mode: dynamic
+          #     #aspect_ratio: '1/1'
+          #   # live:
+          #   #   webrtc_card:
+          #   #     ui: true
+          #   menu:
+          #     style: none
+          #   live:
+          #     controls:
+          #       thumbnails:
+          #         mode: none
+          #       title:
+          #         mode: none
+          #   card_mod:
+          #     style: |
+          #       :host {
+          #         border-radius: var(--custom-button-card-border-radius);
+          #       }
+
+          # - type: custom:frigate-card
+          #   cameras:
+          #     - camera_entity: camera.garden_2
+          #     # - camera_entity: camera.main_2
+          #     #   live_provider: webrtc-card
+          #     #   title: Front Door (WebRTC)
+          #     #   webrtc_card:
+          #     #     url: 'rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.48:554/h264Preview_01_main'
+          #     #   id: front-door-webrtc
+          #   view:
+          #     default: live
+          #     timeout_seconds: 0
+          #     update_seconds: 0
+          #     update_force: true
+          #     actions:
+          #       tap_action:
+          #         action: custom:frigate-card-action
+          #         frigate_card_action: fullscreen
+          #   dimensions:
+          #     aspect_ratio_mode: static
+          #     aspect_ratio: '1/1'
+          #   # live:
+          #   #   webrtc_card:
+          #   #     ui: true
+          #   menu:
+          #     style: none
+          #   live:
+          #     controls:
+          #       thumbnails:
+          #         mode: none
+          #       title:
+          #         mode: none
+          #   card_mod:
+          #     style:
+          #       .: |
+          #         ha-card {
+          #           border-radius: 4.75% !important;
+          #         }
+          #         .container {
+          #           border-radius: 4.75% !important;
+          #         }
+
           - type: custom:button-card
             entity: camera.main_3
-            name: Wejście
+            #name: Wejście
             show_state: false
             template:
               - base
@@ -882,25 +1062,25 @@ views:
             tap_action:
               !include popup/camera_main.yaml
 
-          - type: custom:button-card
-            entity: camera.garage_3
-            name: Garaż
-            show_state: false
-            template:
-              - base
-              - camera
-            tap_action:
-              !include popup/camera_garage.yaml
+          # - type: custom:button-card
+          #   entity: camera.garage_3
+          #   name: Garaż
+          #   show_state: false
+          #   template:
+          #     - base
+          #     - camera
+          #   tap_action:
+          #     !include popup/camera_garage.yaml
 
-          - type: custom:button-card
-            entity: camera.garden_3
-            name: Ogród
-            show_state: false
-            template:
-              - base
-              - camera
-            tap_action:
-              !include popup/camera_garden.yaml
+          # - type: custom:button-card
+          #   entity: camera.garden_3
+          #   name: Ogród
+          #   show_state: false
+          #   template:
+          #     - base
+          #     - camera
+          #   tap_action:
+          #     !include popup/camera_garden.yaml
 
           - type: custom:button-card
             #entity: alarm_control_panel.glowny_alarm
@@ -1112,123 +1292,173 @@ views:
       #################################################
 
       - type: grid
-        title: Inne
+        title: Camera
         view_layout:
           grid-area: other
         columns: 1
         cards:
-          # - type: custom:mod-card
-          #   style:
-          #     swipe-card:
-          #       $: |
-          #         .swiper-container {
-          #           padding: 0px 0px 20px 0px !important;
-          #         }
-          #   card:
-            - type: custom:swipe-card
-              parameters:
-                speed: 550
-                spaceBetween: 40
-                threshold: 5
-              cards:
 
-                - type: grid
-                  columns: 2
-                  cards:
+          - type: custom:frigate-card
+            cameras:
+              - camera_entity: camera.main_2
+                live_provider: ha
+              - camera_entity: camera.garage_2
+                live_provider: ha
+              - camera_entity: camera.garden_2
+              - camera_entity: camera.main_2
+                live_provider: webrtc-card
+                title: Front Door (WebRTC)
+                webrtc_card:
+                  url: 'rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.48:554/h264Preview_01_main'
+                id: front-door-webrtc
+            view:
+              # scan:
+              #   enabled: false
+              default: live
+              timeout_seconds: 300
+              update_seconds: 5
+              update_force: false
+              actions:
+                double_tap_action:
+                  action: custom:frigate-card-action
+                  frigate_card_action: fullscreen
+            dimensions:
+              aspect_ratio_mode: unconstrained
+              #aspect_ratio: '1/1'
+            # live:
+            #   webrtc_card:
+            #     ui: true
+            live:
+              controls:
+                thumbnails:
+                  mode: none
+                title:
+                  mode: none
+            card_mod:
+              style: |
+                :host {
+                  border-radius: calc(var(--custom-button-card-border-radius) / 2);
+                }
 
-                    - type: custom:button-card
-                      entity: switch.plex
-                      name: Plex
-                      tap_action:
-                        action: toggle
-                        entity: entity
-                      template:
-                        - media
-                        - icon_plex
 
-                    - type: custom:button-card
-                      entity: media_player.sony_bravia_tv
-                      name: TV
-                      tap_action:
-                        action: toggle
-                        entity: switch.tv
-                      hold_action:
-                        !include popup/vardagsrum_tv.yaml
-                      template:
-                        - base
-                        - icon_tv
-                        - loader
-                        - media_source
-                      variables:
-                        circle: >
-                          [[[
-                            return entity === undefined ?
-                              null :
-                              entity.attributes.source;
-                          ]]]
+      # - type: grid
+      #   title: Inne
+      #   view_layout:
+      #     grid-area: other
+      #   columns: 1
+      #   cards:
+      #     # - type: custom:mod-card
+      #     #   style:
+      #     #     swipe-card:
+      #     #       $: |
+      #     #         .swiper-container {
+      #     #           padding: 0px 0px 20px 0px !important;
+      #     #         }
+      #     #   card:
+      #       - type: custom:swipe-card
+      #         parameters:
+      #           speed: 550
+      #           spaceBetween: 40
+      #           threshold: 5
+      #         cards:
 
-                    - type: custom:button-card
-                      entity: switch.radio
-                      name: Radio
-                      tap_action:
-                        action: toggle
-                        entity: entity
-                      template:
-                        - base
-                        #- media
-                        - icon_radio
-                        - loader
+      #           - type: grid
+      #             columns: 2
+      #             cards:
 
-                    - type: custom:button-card
-                      entity: switch.netflix
-                      name: Netflix
-                      tap_action:
-                        action: toggle
-                        entity: entity
-                      template:
-                        - media
-                        - icon_netflix4
-                        - loader
+      #               - type: custom:button-card
+      #                 entity: switch.plex
+      #                 name: Plex
+      #                 tap_action:
+      #                   action: toggle
+      #                   entity: entity
+      #                 template:
+      #                   - media
+      #                   - icon_plex
 
-                - type: grid
-                  columns: 2
-                  cards:
+      #               - type: custom:button-card
+      #                 entity: media_player.sony_bravia_tv
+      #                 name: TV
+      #                 tap_action:
+      #                   action: toggle
+      #                   entity: switch.tv
+      #                 hold_action:
+      #                   !include popup/vardagsrum_tv.yaml
+      #                 template:
+      #                   - base
+      #                   - icon_tv
+      #                   - loader
+      #                   - media_source
+      #                 variables:
+      #                   circle: >
+      #                     [[[
+      #                       return entity === undefined ?
+      #                         null :
+      #                         entity.attributes.source;
+      #                     ]]]
 
-                    - type: custom:button-card
-                      entity: switch.chromecast_audio
-                      name: ChromecastAudio
-                      tap_action:
-                        action: toggle
-                        entity: entity
-                      template:
-                        - base
-                        #- media
-                        - icon_chromecast
-                        - loader
+      #               - type: custom:button-card
+      #                 entity: switch.radio
+      #                 name: Radio
+      #                 tap_action:
+      #                   action: toggle
+      #                   entity: entity
+      #                 template:
+      #                   - base
+      #                   #- media
+      #                   - icon_radio
+      #                   - loader
 
-                    # - type: custom:button-card
-                      # entity: switch.tv
-                      # name: TV
-                      # template:
-                        # - media
-                        # - icon_tv
-                        # - loader
+      #               - type: custom:button-card
+      #                 entity: switch.netflix
+      #                 name: Netflix
+      #                 tap_action:
+      #                   action: toggle
+      #                   entity: entity
+      #                 template:
+      #                   - media
+      #                   - icon_netflix4
+      #                   - loader
 
-                    # - type: custom:button-card
-                      # entity: switch.radio
-                      # name: Radio
-                      # template:
-                        # - media
-                        # - icon_radio
-                        # - loader
+      #           - type: grid
+      #             columns: 2
+      #             cards:
 
-                    # - type: custom:button-card
-                      # entity: switch.netflix
-                      # name: Netflix
-                      # template:
-                        # - media
-                        # - icon_netflix4
-                        # - loader
+      #               - type: custom:button-card
+      #                 entity: switch.chromecast_audio
+      #                 name: ChromecastAudio
+      #                 tap_action:
+      #                   action: toggle
+      #                   entity: entity
+      #                 template:
+      #                   - base
+      #                   #- media
+      #                   - icon_chromecast
+      #                   - loader
+
+      #               # - type: custom:button-card
+      #                 # entity: switch.tv
+      #                 # name: TV
+      #                 # template:
+      #                   # - media
+      #                   # - icon_tv
+      #                   # - loader
+
+      #               # - type: custom:button-card
+      #                 # entity: switch.radio
+      #                 # name: Radio
+      #                 # template:
+      #                   # - media
+      #                   # - icon_radio
+      #                   # - loader
+
+      #               # - type: custom:button-card
+      #                 # entity: switch.netflix
+      #                 # name: Netflix
+      #                 # template:
+      #                   # - media
+      #                   # - icon_netflix4
+      #                   # - loader
 
       #################################################
       #                                               #
@@ -1479,21 +1709,6 @@ views:
 
           - type: custom:button-card
             name: >
-              <ha-icon icon="mdi:tablet"></ha-icon> Tablet
-            tap_action:
-              !include popup/footer/tablet.yaml
-            variables:
-              notify: >
-                [[[
-                  let plugged_in = states['binary_sensor.fire_tablet_plugged_in'];
-                  if (plugged_in) {
-                    return plugged_in.state === 'off';
-                  }
-                ]]]
-            template: footer
-
-          - type: custom:button-card
-            name: >
               <ha-icon icon="mdi:battery-charging-high"></ha-icon> Baterie
             tap_action:
               !include popup/batteries.yaml
@@ -1520,4 +1735,11 @@ views:
               <ha-icon icon="mdi:raspberry-pi"></ha-icon> Finanse
             tap_action:
               !include popup/footer/finance.yaml
+            template: footer
+
+          - type: custom:button-card
+            name: >
+              <ha-icon icon="mdi:cog-outline"></ha-icon>
+            tap_action:
+              !include popup/footer/settings.yaml
             template: footer
