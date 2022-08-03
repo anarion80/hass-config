@@ -32,6 +32,9 @@ browser_mod:
           class: content
         entities:
 
+          - entity: automation.turn_on_sprinkler
+            name: Automatyczne włączanie zraszacza
+
           - type: custom:slider-entity-row
             entity: input_number.watering_time
 
