@@ -14,7 +14,7 @@ browser_mod:
     cards:
       - type: custom:apexcharts-card
         update_interval: 1d
-        graph_span: 30d
+        graph_span: 60d
         span:
           end: day
         header:
