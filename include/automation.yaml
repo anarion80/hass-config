@@ -636,12 +636,12 @@ automation ui:
     mode: restart
     trigger:
       platform: state
-      entity_id: binary_sensor.ffd92947_09fd7c47
+      entity_id: binary_sensor.25ffd809_364afacd
       from: 'off'
       to: 'on'
     action:
       if: >
-        {{ 'binary_sensor.ffd92947_09fd7c47' in trigger.entity_id }}
+        {{ 'binary_sensor.25ffd809_364afacd' in trigger.entity_id }}
       then:
         - service: switch.turn_off
           entity_id: switch.fire_tablet_screensaver
@@ -759,7 +759,7 @@ automation ui:
     action:
       - service: media_player.play_media
         data:
-          entity_id: media_player.ffd92947_09fd7c47
+          entity_id: media_player.25ffd809_364afacd
           media_content_id: /local/sound/timer.mp3
           media_content_type: music
       - delay:
@@ -1386,7 +1386,7 @@ automation ui:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.ffd92947_09fd7c47
+        entity_id: media_player.25ffd809_364afacd
       data:
         media_content_id: /local/sound/off.m4a
         media_content_type: music
@@ -1400,7 +1400,7 @@ automation ui:
     description: Turn on tablet screen on motion detected
     trigger:
     - platform: state
-      entity_id: binary_sensor.ffd92947_09fd7c47
+      entity_id: binary_sensor.25ffd809_364afacd
       from: 'off'
       to: 'on'
     condition:
@@ -1410,7 +1410,7 @@ automation ui:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.ffd92947_09fd7c47
+        entity_id: media_player.25ffd809_364afacd
       data:
         media_content_id: /local/sound/on.m4a
         media_content_type: music
@@ -2218,6 +2218,7 @@ automation ui:
 
   - id: '1635431265505'
     alias: Turn off sprinkler
+    description: "Automatyczne włączanie zraszacza"
     trigger:
     - platform: state
       entity_id: switch.zraszacz
