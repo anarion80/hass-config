@@ -9,7 +9,7 @@
 settings:
   variables:
     entity_tablet: light.fire_tablet_screen
-    entity_browser_mod: media_player.ffd92947_09fd7c47
+    entity_browser_mod: media_player.25ffd809_364afacd
 
     translate_unknown: Nieznany
     translate_idle: Nieaktywny
@@ -733,14 +733,14 @@ base_ac:
 
         if (variables.state === 'off' && screen === 'on') {
           hass.callService('media_player', 'play_media', {
-            entity_id: 'media_player.ffd92947_09fd7c47',
+            entity_id: 'media_player.25ffd809_364afacd',
             media_content_id: '/local/sound/on.m4a',
             media_content_type: 'music'
           });
         }
         if (variables.state_on && screen === 'on') {
           hass.callService('media_player', 'play_media', {
-            entity_id: 'media_player.ffd92947_09fd7c47',
+            entity_id: 'media_player.25ffd809_364afacd',
             media_content_id: '/local/sound/off.m4a',
             media_content_type: 'music'
           });

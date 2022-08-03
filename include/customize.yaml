@@ -48,7 +48,7 @@ homeassistant:
       friendly_name: klädkammaren
     binary_sensor.wemo_motion:
       friendly_name: vardagsrummet
-    binary_sensor.ffd92947_09fd7c47:
+    binary_sensor.25ffd809_364afacd:
       friendly_name: tablet_motion
 
     #fan
