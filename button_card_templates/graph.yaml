@@ -1,0 +1,88 @@
+graph:
+  #template:
+  #  - base
+  show_state: true
+  styles:
+    custom_fields:
+      graph:
+        - position: absolute
+        - width: 100%
+        #- height: 100%
+        - clip-path: inset(0 round var(--custom-button-card-border-radius))
+        - left: 0
+        - bottom: 0
+
+  custom_fields:
+    graph:
+      card:
+        type: "custom:mini-graph-card"
+        line_color: "#385581"
+        line_width: 4
+        font_size: 75
+        #hours_to_show: 24
+        show:
+          name: false
+          icon: false
+          state: false
+          legend: false
+          labels: false
+        color_thresholds:
+          - value: 20
+            color: "#385581"
+          - value: 22
+            color: "#32a852"
+          - value: 24
+            color: "#d35400"
+          - value: 26
+            color: "#c0392b"
+        tap_action:
+          action: none
+        card_mod:
+          style: |
+            .header, .value, .measurement {
+              display: none !important;
+            }
+    icon: >
+      [[[
+      if (entity.state != 'unavailable')
+      {
+        var temp_color ="'#9da0a2";
+        if (entity.state >= '-10' && entity.state < 0) {
+          temp_color = "#0302FC";
+        } else if(entity.state >= '0' && entity.state < 12) {
+          temp_color = "#2A00D5";
+        } else if(entity.state >= '12' && entity.state < 22) {
+          temp_color = "#66ff66";
+        } else if(entity.state >= '22' && entity.state < 24) {
+          temp_color = "#008020";
+        } else if(entity.state >= '24' && entity.state < 28) {
+          temp_color = "#d35400";
+        } else if(entity.state >= '28' && entity.state < 40) {
+          temp_color = "#FE0002";
+        }
+        return `<svg viewBox="0 0 50 50" >
+          <path fill="#9da0a2" d="M16.3,33.6V6.4c0-2.6-2.2-4.8-4.8-4.8S6.7,3.8,6.7,6.4v27.1c-1.8,1.4-2.9,3.6-2.9,5.9c0,4.2,3.4,7.7,7.7,7.7
+            s7.6-3.4,7.6-7.7C19.1,37.2,18.1,35,16.3,33.6z M11.5,45.5c-3.3,0-6-2.7-6-6c0-2.1,1.1-4,2.9-5.1v-28c0-1.7,1.4-3.2,3.2-3.2
+            c1.7,0,3.2,1.4,3.2,3.2v28c1.7,1.1,2.9,3,2.9,5.1C17.5,42.9,14.8,45.5,11.5,45.5z"/>
+          <path fill="${temp_color}" d="M13,35.5v-11c0-0.8-0.7-1.5-1.5-1.5c-0.8,0-1.5,0.7-1.5,1.5v11c-1.7,0.6-2.9,2.2-2.9,4.1c0,2.4,2,4.4,4.4,4.4
+            s4.4-2,4.4-4.4C15.9,37.7,14.7,36.1,13,35.5z"/>
+          <rect fill="#9da0a2" x="18" y="6.5" width="7.8" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="12" width="3.7" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="17.4" width="7.8" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="22.8" width="3.7" height="1.6"/>
+          <rect fill="#9da0a2" x="18" y="28.2" width="7.8" height="1.6"/>
+          </svg>`;
+      } ]]]
+    push_graph: >
+      [[[
+        setTimeout(() => {
+          let elt = this.shadowRoot,
+            card = elt.getElementById('card'),
+            container = elt.getElementById('container'),
+            graph = elt.getElementById('graph');
+          if (elt && card && container && graph) {
+            card.insertBefore(graph, container);
+          }
+        }, 0);
+        return null;
+      ]]]

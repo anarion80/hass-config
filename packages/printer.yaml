@@ -1,0 +1,18 @@
+template:
+  - sensor:
+      - unique_id: printer_status
+        state: >
+          {% macro prt(state, translate) %}
+          {{ translate if states('sensor.hp_deskjet_2600_series') == state }}
+          {% endmacro %}
+          {{ prt('On', 'Włączony') }}
+          {{ prt('Scanning', 'Skanuje') }}
+          {{ prt('Copying', 'Kopiuje') }}
+          {{ prt('Printing', 'Drukuje') }}
+          {{ prt('Cancelling Job', 'Kasuje pracę') }}
+          {{ prt('trayEmptyOrOpen', 'trayEmptyOrOpen') }}
+          {{ prt('idle', 'bezczynny') }}
+          {{ prt('Off', 'Wyłączony') }}
+        attributes:
+          friendly_name: Drukarka
+          icon: mdi:printer-wireless

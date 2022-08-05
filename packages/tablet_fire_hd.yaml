@@ -1,0 +1,207 @@
+automation:
+  - alias: homeassistant_start
+    id: '7426848686945'
+    trigger:
+      - platform: homeassistant
+        event: start
+    action:
+      - service: button.press
+        target:
+          entity_id: button.fire_tablet_restart_browser
+
+  - alias: lovelace_updated_ignore
+    id: '9381519720051'
+    mode: restart
+    trigger:
+      - platform: event
+        event_type: lovelace_updated
+    action:
+      - service: browser_mod.toast
+        data:
+          duration: 1
+          message: ' '
+
+  - alias: fullykiosk_screensaver
+    id: '9452750674803'
+    mode: restart
+    trigger:
+      platform: state
+      entity_id: binary_sensor.25ffd809_364afacd
+      from: 'off'
+      to: 'on'
+    action:
+      if: >
+        {{ 'binary_sensor.25ffd809_364afacd' in trigger.entity_id }}
+      then:
+        - service: switch.turn_off
+          entity_id: switch.fire_tablet_screensaver
+        - service: light.turn_on
+          data:
+            entity_id: light.fire_tablet_screen
+            brightness_pct: >
+              {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
+      else:
+        - service: switch.turn_on
+          entity_id: switch.fire_tablet_screensaver
+        - delay:
+            minutes: 15
+        - service: browser_mod.close_popup
+          data:
+            deviceID: amazon_tablet
+
+  - id: '1634040402000'
+    alias: fullykiosk_disable_screen
+    description: Turn off tablet screen after time-out
+    trigger:
+    - platform: state
+      entity_id: light.fire_tablet_screen
+      to: 'on'
+      for:
+        hours: 0
+        minutes: 2
+        seconds: 0
+        milliseconds: 0
+    condition: []
+    action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.25ffd809_364afacd
+      data:
+        media_content_id: /local/sound/off.m4a
+        media_content_type: music
+    - service: light.turn_off
+      target:
+        entity_id: light.fire_tablet_screen
+    - service: browser_mod.close_popup
+    mode: restart
+  - id: '1634041571300'
+    alias: fullykiosk_enable_screen
+    description: Turn on tablet screen on motion detected
+    trigger:
+    - platform: state
+      entity_id: binary_sensor.25ffd809_364afacd
+      from: 'off'
+      to: 'on'
+    condition:
+    - condition: state
+      entity_id: light.fire_tablet_screen
+      state: 'off'
+    action:
+    - service: media_player.play_media
+      target:
+        entity_id: media_player.25ffd809_364afacd
+      data:
+        media_content_id: /local/sound/on.m4a
+        media_content_type: music
+    - service: light.turn_on
+      data:
+        entity_id: light.fire_tablet_screen
+        brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
+    mode: restart
+
+  - id: '1637682511628'
+    alias: Bateria w tablecie
+    description: Bateria w tablecie
+    trigger:
+    - platform: state
+      entity_id: sensor.kftrwi_battery_level
+    condition: []
+    action:
+    - choose:
+      - conditions:
+        - condition: numeric_state
+          entity_id: sensor.kftrwi_battery_level
+          above: '80'
+        sequence:
+        - service: switch.turn_off
+          target:
+            entity_id: switch.sonoff_1000d4b2e1_1
+      - conditions:
+        - condition: numeric_state
+          entity_id: sensor.kftrwi_battery_level
+          below: '20'
+        sequence:
+        - service: switch.turn_on
+          target:
+            entity_id: switch.sonoff_1000d4b2e1_1
+      default: []
+    mode: restart
+
+browser_mod:
+  devices:
+    #ffd92947-09fd7c47:
+    25ffd809-364afacd:
+      name: amazon_tablet
+      #screensaver: true
+      force_stay_awake: true
+      camera: true
+
+homeassistant:
+  customize:
+    switch.fire_tablet_screensaver:
+      friendly_name: Wygaszacz ekranu
+      icon: mdi:power-sleep
+    light.fire_tablet_screen:
+      friendly_name: Ekran
+      icon: mdi:tablet
+    binary_sensor.fire_tablet_plugged_in:
+      friendly_name: Zasilanie
+      icon: mdi:power-plug
+    sensor.fire_tablet_battery_level:
+      friendly_name: Bateria w tablecie
+      icon: mdi:battery
+    sensor.kftrwi_battery_level:
+      friendly_name: Bateria w tablecie
+
+template:
+  - sensor:
+      - unique_id: fullykiosk_storage
+        state: >
+          {% set FreeSpace = states('sensor.fire_tablet_internal_storage_free_space') | float(default=0) %}
+          {% set TotalSpace = states('sensor.fire_tablet_internal_storage_total_space') | float(default=0) %}
+          {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
+            {{ 100 - (FreeSpace / TotalSpace * 100) | int(default=0) }}
+          {% endif %}
+        attributes:
+          friendly_name: Storage
+          icon: mdi:sd
+          unit_of_measurement: '%'
+
+      - unique_id: fullykiosk_memory
+        state: >
+          {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') | float(default=0) %}
+          {% set TotalMemory = states('sensor.fire_tablet_ram_total_memory') | float(default=0) %}
+          {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
+            {{ 100 - (FreeMemory / TotalMemory * 100) | int(default=0) }}
+          {% endif %}
+        attributes:
+          friendly_name: Memory
+          icon: mdi:memory
+          unit_of_measurement: '%'
+
+      - unique_id: fullykiosk_last_app_start
+        state: >
+          {{ as_timestamp(states('sensor.fire_tablet_last_app_start'), default=0) | timestamp_local(default=0) }}
+        attributes:
+          friendly_name: Ostatni restart
+          icon: mdi:update
+          device_class: timestamp
+
+sensor:
+  - platform: template
+    sensors:
+      smart_plug_2_current:
+        unique_id: "smart_plug_2_current"
+        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Current"
+        value_template: "{{ state_attr('switch.smart_plug_2','current') | float(default=0) }}"
+        unit_of_measurement: "mA"
+      smart_plug_2_power:
+        unique_id: "smart_plug_2_power"
+        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Power"
+        value_template: "{{ state_attr('switch.smart_plug_2','current_consumption') | float(default=0) }}"
+        unit_of_measurement: "W"
+      smart_plug_2_voltage:
+        unique_id: "smart_plug_2_voltage"
+        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Voltage"
+        value_template: "{{ state_attr('switch.smart_plug_2','voltage') | float(default=0) }}"
+        unit_of_measurement: "V"

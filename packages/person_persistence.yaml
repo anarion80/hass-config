@@ -1,0 +1,283 @@
+automation:
+  - alias: person_home
+    id: '8423590985012'
+    mode: parallel
+    trigger:
+      - platform: state
+        entity_id:
+          - person.anarion
+          - person.iwona
+        from:
+          - home
+          - not_home
+        to:
+          - home
+          - not_home
+    action:
+      service: mqtt.publish
+      data:
+        topic_template: >
+          homeassistant/persistence/{{ trigger.to_state.name | lower }}
+        payload_template: >
+          {{ now() }}
+        retain: true
+
+  - id: '1613993960200'
+    alias: Anarion is out of home
+    description: ''
+    use_blueprint:
+      path: homeassistant/notify_leaving_zone.yaml
+      input:
+        person_entity: person.anarion
+        zone_entity: zone.home
+        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+
+  - id: '1613996396700'
+    alias: Iwona is out
+    description: ''
+    use_blueprint:
+      path: homeassistant/notify_leaving_zone.yaml
+      input:
+        person_entity: person.iwona
+        zone_entity: zone.home
+        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+
+  - id: '1614021562500'
+    alias: Notify when redmi note 5 battery level is lower than 5
+    description: ''
+    trigger:
+    - platform: numeric_state
+      below: '5'
+      entity_id: sensor.redmi_note_5_battery_level
+    condition:
+    - condition: time
+      after: '8:00'
+      before: '20:00'
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: Iwona, bateria w telefonie ci spadła poniżej {{ states('sensor.redmi_note_5_battery_level')
+          }} procent. Podładuj sobie
+        entity_id: media_player.nest_mini
+    - service: notify.mobile_app_redmi_note_5
+      data:
+        message: TTS
+        title: Iwona, bateria ci się kończy, podładuj sobie
+        data:
+          channel: alarm_stream_max
+    mode: single
+
+  - id: '1617115926500'
+    alias: Powiadomienie o angielskim
+    description: ''
+    trigger:
+    - platform: time
+      at: '16:00'
+    condition: []
+    action:
+    # - service: notify.mobile_app_ta_1004
+    #   data:
+    #     message: TTS
+    #     title: Kochana Hanusiu, czas na angielski! Zrób proszę lekcje ładnie, bez
+    #       marudzenia!
+    #     data:
+    #       channel: alarm_stream_max
+    - service: tts.google_cloud_say
+      data:
+        entity_id: media_player.nest_mini
+        message: Kochani Hanusiu i Wojtusiu, czas na angielski! Zróbcie proszę lekcje ładnie, bez marudzenia!
+        #language: pl
+    mode: single
+
+  - id: two_km_away
+    alias: Someone is 2 kilometers away and heading home
+    trigger:
+    - platform: numeric_state
+      entity_id:
+      - proximity.janek_home
+      - proximity.iwona_home
+      below: '2'
+    condition:
+      and:
+        - condition: template
+          value_template: '{{ trigger.to_state.attributes.dir_of_travel  == "towards"
+            }}'
+    action:
+    - service: tts.google_cloud_say
+      data:
+        message: '{{trigger.to_state.object_id[:-5] | capitalize}} jest już 2 kilometry
+          od domu i zaraz będzie w domu!'
+        entity_id: media_player.nest_mini
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: '{{ trigger.to_state.object_id[:-5] | capitalize}} jest już 2 kilometry
+          od domu i zaraz będzie na miejscu!'
+    mode: single
+
+binary_sensor:
+  - name: "Anarion Home"
+    platform: "bayesian"
+    prior: 0.9
+    probability_threshold: 0.7
+    observations:
+      - platform: template
+        value_template: >
+          {{is_state('device_tracker.nokia_8_3_5g','not_home') and ((as_timestamp(now()) - as_timestamp(states.device_tracker.nokia_8_3_5g.last_changed)) > 300)}}
+        prob_given_true: 0.8
+      - platform: template
+        value_template: >
+          {{is_state('device_tracker.a2_2b_19_c3_2b_cd','not_home') and ((as_timestamp(now()) - as_timestamp(states.device_tracker.a2_2b_19_c3_2b_cd.last_changed)) > 300)}}
+        prob_given_true: 0.95
+
+group:
+  people:
+    entities:
+      - person.anarion
+      - person.iwona
+      - person.hania
+
+homeassistant:
+  customize:
+    #person
+    person.anarion:
+      entity_picture: /local/anarion.png
+    person.iwona:
+      entity_picture: /local/iwona.png
+
+mqtt:
+  sensor:
+    - name: anarion_last_changed
+      state_topic: homeassistant/persistence/anarion
+      value_template: >
+        {{ value | replace(' ', 'T') }}
+
+    - name: iwona_last_changed
+      state_topic: homeassistant/persistence/iwona
+      value_template: >
+        {{ value | replace(' ', 'T') }}
+
+    - name: hania_last_changed
+      state_topic: homeassistant/persistence/hania
+      value_template: >
+        {{ value | replace(' ', 'T') }}
+
+sensor:
+  - platform: template
+    sensors:
+      people_at_home:
+        unique_id: people_at_home
+        friendly_name: People at Home
+        value_template: >
+          {%- set people = expand('group.people') %}
+          {{ people | selectattr('state', 'in', ['home', 'on'] ) | list | count }}
+        icon_template: >
+          {%- set icons = ['account-off', 'account', 'account-multiple'] %}
+          {%- set people = expand('group.people') %}
+          {%- set cnt = people | selectattr('state', 'in', ['home', 'on'] ) | list | count %}
+          {%- if cnt >= 0 %}
+            mdi:{{ icons[cnt] if cnt in range(icons | count) else 'account-group' }}
+          {%- else %}
+            mdi:account-alert
+          {%- endif %}
+        attribute_templates:
+          people: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {{ people }}
+          and: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {%- if people | count > 0 %}
+              {{- [people[:-1] | join(', '), 'and', people[-1]] | join(' ') if people | count > 1 else people[0] }}
+            {%- else %}unknown
+            {%- endif %}
+          or: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {%- if people | count > 0 %}
+              {{- [people[:-1] | join(', '), 'or', people[-1]] | join(' ') if people | count > 1 else people[0] }}
+            {%- else %}unknown
+            {%- endif %}
+          count: >
+            {%- set people = expand('group.people') | selectattr('state', 'eq', 'home') | map(attribute='name') | list %}
+            {%- set company = expand('group.people') | selectattr('state', 'eq', 'on') | map(attribute='name') | list %}
+            {%- set people = people + company %}
+            {{ people | count }}
+
+script:
+  anarion_find_my_iphone:
+    sequence:
+      - repeat:
+          count: 3
+          sequence:
+            - service: notify.mobile_app_nokia_8_3_5g
+              data:
+                title: Znajdź mój telefon
+                message: Tu jestem
+                data:
+                  ttl: 0
+                  priority: high
+                  channel: alarm_stream
+            - delay:
+                seconds: 4
+
+  iwona_find_my_iphone:
+    sequence:
+      - repeat:
+          count: 3
+          sequence:
+            - service: notify.mobile_app_nokia_x20
+              data:
+                title: Znajdź mój telefon
+                message: Tu jestem
+                data:
+                  ttl: 0
+                  priority: high
+                  channel: alarm_stream
+            - delay:
+                seconds: 4
+
+  hania_find_my_iphone:
+    sequence:
+      - repeat:
+          count: 3
+          sequence:
+            - service: notify.mobile_app_ta_1004
+              data:
+                title: Znajdź mój telefon
+                message: Tu jestem
+                data:
+                  ttl: 0
+                  priority: high
+                  channel: alarm_stream
+            - delay:
+                seconds: 4
+  iwona_odbierz_telefon:
+    alias: Iwona odbierz telefon
+    sequence:
+    - service: tts.google_say
+      data:
+        message: Iwona, odbierz telefon
+        entity_id: group.living_room_media_players
+        language: pl
+    mode: single
+    icon: mdi:blur
+
+proximity:
+  janek_home:
+    ignored_zones:
+      - work
+    devices:
+      - person.anarion
+    tolerance: 50
+    unit_of_measurement: km
+  iwona_home:
+    ignored_zones:
+      - work
+    devices:
+      - person.iwona
+    tolerance: 50
+    unit_of_measurement: km

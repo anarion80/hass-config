@@ -159,7 +159,7 @@ browser_mod:
           - type: custom:weather-chart-card
             title: Pogoda
             entity: weather.openweathermap
-            mode: daily
+            #mode: daily
           - type: custom:auto-entities
             card:
               type: entities

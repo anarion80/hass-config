@@ -1,0 +1,81 @@
+full_circle:
+  template:
+    #- base
+    #- circle
+  styles:
+    card:
+      - --c-stroke-color-on: '#b0b0b0'
+      - --c-stroke-color-off: none
+      - --c-fill-color-on: none
+      - --c-fill-color-off: rgba(255,255,255,0.04)
+      - --c-stroke-width: 2.3
+      - --c-stroke-width-dragging: 4
+      - --c-font-color: '#97989c'
+      - --c-font-size: 14px
+      - --c-unit-font-size: 10.5px
+      - --c-font-weight: 700
+      - --c-letter-spacing: -0.02rem
+    custom_fields:
+      circle:
+        - display: initial
+        - width: 88%
+        - margin: -3% 2% 0 0
+        - justify-self: end
+        - opacity: 1
+    # custom_fields:
+    #   circle:
+    #     # - clip-path: circle()
+    #     # - width: 79%
+    #     # - pointer-events: none
+    #     # - display: flex
+    #     - display: initial
+    #     - width: 90%
+    #     - letter-spacing: 0.03vw
+    #     - margin: -6% -6% 0 0
+    #     - justify-self: end
+    #     - opacity: 1
+  custom_fields:
+    circle: >
+      [[[
+          let input = variables.circle_input;
+          let unit = variables.circle_input_unit;
+          let tspan = '<tspan dx=".2" dy="-.4">';
+          let circle_color = '';
+          let text_color = '';
+
+          if (variables.circle_color === undefined) {
+              circle_color = '#b2b2b2';
+              text_color = '#8d8e90';
+          } else {
+              circle_color = variables.circle_color;
+              text_color = variables.circle_color;
+          }
+
+          return `
+            <svg viewBox="0 0 50 50">
+              <style>
+                circle {
+                transform: none;
+                transform-origin: none;
+                stroke-dasharray: none;
+                stroke-dashoffset: none;
+                }
+                text {
+                  font-size: var(--c-font-size);
+                  font-weight: var(--c-font-weight);
+                  letter-spacing: var(--c-letter-spacing);
+                  fill: var(--c-font-color);
+                }
+                tspan {
+                  font-size: var(--c-unit-font-size);
+                }
+                #circle_value, tspan {
+                  text-anchor: middle;
+                  dominant-baseline: central;
+                }
+              </style>
+              <circle id="circle_stroke" cx="25" cy="25" r="20.5" stroke="${circle_color}" stroke-width="1.5" fill="none" />
+              <text id="circle_value" x="50%" y="54%">${input}${tspan}${unit}</tspan></text>
+            </svg>
+          `;
+      ]]]

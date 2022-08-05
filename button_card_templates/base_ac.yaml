@@ -1,0 +1,121 @@
+base_ac:
+  variables:
+    state: >
+      [[[ return entity === undefined || entity.state; ]]]
+    timeout: >
+      [[[ return entity === undefined || Date.now() - Date.parse(entity.last_changed); ]]]
+    light_color: >
+      [[[ return entity === undefined ? 'var(--state-icon-color)' : 'var(--button-card-light-color-no-temperature)'; ]]]
+  aspect_ratio: 1/1
+  show_state: true
+  show_icon: false
+  state_display: >
+    [[[ if (variables.state === true) return 'Unknown'; ]]]
+  tap_action:
+    ui_sound_tablet: |
+      [[[
+        let screen = states['light.fire_tablet_screen'] === undefined ||
+          states['light.fire_tablet_screen'].state;
+
+        if (variables.state === 'off' && screen === 'on') {
+          hass.callService('media_player', 'play_media', {
+            entity_id: 'media_player.25ffd809_364afacd',
+            media_content_id: '/local/sound/on.m4a',
+            media_content_type: 'music'
+          });
+        }
+        if (variables.state_on && screen === 'on') {
+          hass.callService('media_player', 'play_media', {
+            entity_id: 'media_player.25ffd809_364afacd',
+            media_content_id: '/local/sound/off.m4a',
+            media_content_type: 'music'
+          });
+        }
+      ]]]
+    animation_card: |
+      [[[
+        let animation_speed_ms = 900;
+        let animation = `card_bounce ${animation_speed_ms}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+        this.shadowRoot.getElementById("card").style.animation = animation;
+        window.setTimeout(() => {
+          this.shadowRoot.getElementById("card").style.animation = "none";
+        }, animation_speed_ms)
+      ]]]
+    action: toggle
+    haptic: medium
+  styles:
+    grid:
+      - grid-template-areas: |
+          "icon  circle"
+          "n     n"
+          "s     s"
+      - grid-template-columns: repeat(2, 1fr)
+      - grid-template-rows: auto repeat(2, min-content)
+      - gap: 2%
+      - align-items: start
+    name:
+      - justify-self: start
+      - line-height: 115%
+    state:
+      - justify-self: start
+      - line-height: 115%
+    card:
+      - font-family: Sf Display, Roboto
+      - border-radius: var(--custom-button-card-border-radius)
+      - -webkit-tap-highlight-color: rgba(0,0,0,0)
+      - transition: none
+      - padding: 10%
+      - --mdc-ripple-color: >
+          [[[
+            return (variables.state === 'heat_cool' || variables.state === 'cool' || variables.state === 'heat' || variables.state === 'dry' || variables.state === 'fan_only') ?
+              'rgb(0, 0, 0)' :
+              'rgba(255, 255, 255, 0.3)';
+          ]]]
+      - color: >
+          [[[
+            return (variables.state === 'heat_cool' || variables.state === 'cool' || variables.state === 'heat' || variables.state === 'dry' || variables.state === 'fan_only') ?
+              'rgba(0, 0, 0, 0.6)' :
+              'rgba(255, 255, 255, 0.3)';
+          ]]]
+      - background-color: >
+          [[[
+            return (variables.state === 'heat_cool' || variables.state === 'cool' || variables.state === 'heat' || variables.state === 'dry' || variables.state === 'fan_only') ?
+              'rgba(255, 255, 255, 0.8)' :
+              'rgba(115, 115, 115, 0.2)';
+          ]]]
+  extra_styles: |
+    #name, #state {
+      font-size: 1.34vw;
+      letter-spacing: 0.05vw;
+    }
+    /* portrait */
+    @media screen and (max-width: 1200px) {
+      #name, #state {
+        font-size: 2vw;
+        letter-spacing: 0.05vw;
+      }
+    }
+    /* phone */
+    @media screen and (max-width: 800px) {
+      #name, #state {
+        font-size: 3.1vw;
+        letter-spacing: 0.12vw;
+      }
+    }
+    @keyframes card_bounce {
+      0% {
+        transform: scale(1);
+      }
+      15% {
+        transform: scale(0.9);
+      }
+      25% {
+        transform: scale(1);
+      }
+      30% {
+        transform: scale(0.98);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }

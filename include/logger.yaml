@@ -1,6 +1,0 @@
-logger:
-  default: warning
-  logs:
-    homeassistant.components.websocket_api: fatal
-    homeassistant.components.camera: fatal
-    homeassistant.helpers.entity: fatal

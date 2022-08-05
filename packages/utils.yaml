@@ -1,0 +1,117 @@
+automation:
+  - alias: clear_log_filesize
+    id: '3331821824310'
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.home_assistant_log_size
+        above: 50
+    action:
+      - service: shell_command.ha_purge_logs
+
+template:
+  - sensor:
+      - unique_id: domain_counter
+        state: >
+          {{ states | count }}
+        attributes:
+          automation: >
+            {{ states.automation | count }}
+          binary_sensor: >
+            {{ states.binary_sensor | count }}
+          device_tracker: >
+            {{ states.device_tracker | count }}
+          light: >
+            {{ states.light | count }}
+          media_player: >
+            {{ states.media_player | count }}
+          sensor: >
+            {{ states.sensor | count }}
+          switch: >
+            {{ states.switch | count }}
+          other: >
+            {{ states.calendar | count +
+            states.camera | count +
+            states.climate | count +
+            states.fan | count +
+            states.input_boolean | count +
+            states.input_number | count +
+            states.input_select | count +
+            states.lock | count +
+            states.person | count +
+            states.remote | count +
+            states.scene | count +
+            states.script | count +
+            states.select | count +
+            states.sun | count +
+            states.timer | count +
+            states.vacuum | count +
+            states.weather | count +
+            states.zone | count }}
+
+sensor:
+  - platform: time_date
+    display_options:
+      - 'date_time'
+      - 'date'
+      - 'time'
+
+  - platform: uptime
+    name: HA Uptime
+
+  - platform: template
+    sensors:
+    #----- Count Automations
+      count_automations:
+        value_template: "{{ states.automation | list | length }}"
+    #----- Count Scripts
+      count_scripts:
+        value_template: "{{ states.script| list | length }}"
+    #----- Count Device Trackers
+      count_device_trackers:
+        value_template: "{{ states.device_tracker | list | length }}"
+    #----- Count Binary Sensors
+      count_binary_sensors:
+        value_template: "{{ states.binary_sensor| list | length }}"
+    #----- Count Sensors
+      count_sensors:
+        value_template: "{{ states.sensor | list | length }}"
+    #----- Count Switches
+      count_switches:
+        value_template: "{{ states.switch | list | length }}"
+    #----- Count Zones
+      count_zones:
+        value_template: "{{ states.zone | list | length }}"
+    #----- Input Booleans
+      count_input_booleans:
+        value_template: "{{ states.input_boolean | list | length }}"
+    #----- Input Numbers
+      count_input_numbers:
+        value_template: "{{ states.input_number | list | length }}"
+    #----- Input Texts
+      count_input_texts:
+        value_template: "{{ states.input_text | list | length }}"
+    #----- Input Selects
+      count_input_selects:
+        value_template: "{{ states.input_select | list | length }}"
+    #----- Input Date Times
+      count_input_datetimes:
+        value_template: "{{ states.input_datetime | list | length }}"
+
+mqtt:
+  sensor:
+    - name: Zigbee2mqtt Networkmap
+      # if you change base_topic of Zigbee2mqtt, change state_topic accordingly
+      state_topic: zigbee2mqtt/bridge/response/networkmap
+      value_template: >-
+        {{ now().strftime('%Y-%m-%d %H:%M:%S') }}
+      # again, if you change base_topic of Zigbee2mqtt, change json_attributes_topic accordingly
+      json_attributes_topic: zigbee2mqtt/bridge/response/networkmap
+      json_attributes_template: "{{ value_json.data.value | tojson }}"
+
+device_tracker:
+  - platform: unifi_direct
+    host: !secret unifi_ap_host
+    username: !secret unifi_ap_username
+    password: !secret unifi_ap_password
+    interval_seconds: 10
+    consider_home: 180

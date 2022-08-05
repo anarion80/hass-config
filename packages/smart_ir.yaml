@@ -1,0 +1,21 @@
+binary_sensor:
+  - platform: template
+    sensors:
+      ac:
+        friendly_name: AC
+        value_template: >
+            {{ 'on' if states('climate.living_room_ac') in ['heat_cool', 'cool', 'heat', 'dry', 'fan_only'] else 'off' }}
+
+climate:
+  - platform: smartir
+    name: Living Room AC
+    unique_id: living_room_ac
+    device_code: 1686
+    controller_data: remote.rm4c_mini_remote
+    temperature_sensor: sensor.airpurifier_temperature
+    humidity_sensor: sensor.airpurifier_humidity
+    #power_sensor: binary_sensor.ac_power
+
+smartir:
+  check_updates: false
+

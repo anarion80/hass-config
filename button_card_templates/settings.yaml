@@ -1,0 +1,13 @@
+settings:
+  variables:
+    entity_tablet: light.fire_tablet_screen
+    entity_browser_mod: media_player.25ffd809_364afacd
+
+    translate_unknown: Nieznany
+    translate_idle: Nieaktywny
+    translate_home: Tak
+    translate_not_home: Nie
+    translate_available: dostępny
+    translate_no_updates: Brak aktualizacji
+    translate_update_available: aktualizacja dostępna
+    translate_updates_available: aktualizacje dostępne

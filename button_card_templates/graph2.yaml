@@ -1,0 +1,59 @@
+graph2:
+  #template:
+  #  - base
+  show_state: true
+  styles:
+    custom_fields:
+      graph2:
+        - position: absolute
+        - width: 100%
+        #- height: 100%
+        - clip-path: inset(0 round var(--custom-button-card-border-radius))
+        - left: 0
+        - bottom: 0
+
+  custom_fields:
+    graph2:
+      card:
+        type: "custom:mini-graph-card"
+        entity:
+          - [[[ return entity.entity_id; ]]]
+        line_color: "#385581"
+        line_width: 4
+        font_size: 75
+        #hours_to_show: 24
+        show:
+          name: false
+          icon: false
+          state: false
+          legend: false
+          labels: false
+        color_thresholds:
+          - value: 20
+            color: "#385581"
+          - value: 22
+            color: "#32a852"
+          - value: 24
+            color: "#d35400"
+          - value: 26
+            color: "#c0392b"
+        tap_action:
+          action: none
+        card_mod:
+          style: |
+            .header, .value, .measurement {
+              display: none !important;
+            }
+    push_graph: >
+      [[[
+        setTimeout(() => {
+          let elt = this.shadowRoot,
+            card = elt.getElementById('card'),
+            container = elt.getElementById('container'),
+            graph = elt.getElementById('graph2');
+          if (elt && card && container && graph) {
+            card.insertBefore(graph, container);
+          }
+        }, 0);
+        return null;
+      ]]]

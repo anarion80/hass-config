@@ -1,0 +1,40 @@
+switch:
+  - platform: template
+    switches:
+      computer_imac:
+        friendly_name: PC
+        icon_template: custom:imac-alternative
+        value_template: "{{ is_state('switch.wol_imac', 'on') }}"
+        turn_on:
+          - service: shell_command.imac_switchbot
+          - service: light.turn_on
+            entity_id: light.dator
+        turn_off:
+          - choose:
+            - conditions:
+                - condition: state
+                  entity_id: input_boolean.computer_lock
+                  state: 'on'
+              sequence:
+                - service: browser_mod.toast
+                  data:
+                    duration: 8000
+                    message: Komputer jest zablokowany...
+            default:
+              - service: shell_command.imac_off
+
+lock:
+  - platform: template
+    name: Dator
+    value_template: "{{ states('input_boolean.computer_lock') }}"
+    lock:
+      service: input_boolean.turn_on
+      entity_id: input_boolean.computer_lock
+    unlock:
+      service: input_boolean.turn_off
+      entity_id: input_boolean.computer_lock
+
+input_boolean:
+  computer_lock:
+    name: Shut-off lock
+    icon: custom:lock

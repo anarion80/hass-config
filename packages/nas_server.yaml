@@ -1,0 +1,140 @@
+
+automation:
+  - id: '1635431265500'
+    alias: High CPU utlization
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.processor_use_percent
+      above: '99'
+      for:
+        hours: 0
+        minutes: 10
+        seconds: 0
+        milliseconds: 0
+    condition: []
+    action:
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: High Home Assistant CPU!
+      message: Użycie procesora w HA było 100% przez 10 minut!
+    mode: single
+
+binary_sensor:
+  - platform: ping
+    name: nas_internet_access
+    host: 8.8.8.8
+
+homeassistant:
+  customize:
+    sensor.ha_uptime:
+      friendly_name: Ostatni restart
+      icon: mdi:update
+      device_class: timestamp
+    sensor.docker_cpu:
+      friendly_name: Procesor
+      icon: mdi:chip
+    sensor.processor_use_percent:
+      friendly_name: Użycie procesora
+      icon: mdi:chip
+    sensor.memory_use_percent:
+      friendly_name: Użycie pamięci
+      icon: mdi:memory
+    sensor.router_current_consumption:
+      friendly_name: Pobór mocy NAS
+    sensor.nas_cpu:
+      friendly_name: Procesor
+      icon: mdi:chip
+    sensor.nas_mem:
+      friendly_name: Pamięć
+      icon: mdi:memory
+    sensor.nas_disk:
+      friendly_name: Dysk
+      icon: mdi:harddisk
+    sensor.nas_uptime:
+      friendly_name: Ostatni restart
+      icon: mdi:update
+      device_class: timestamp
+
+template:
+  - sensor:
+      - unique_id: nas_status
+        state: >
+          {% set entity_id = 'sensor.nas_volume_1_status' %}
+          {% if is_state(entity_id, 'normal') %}
+            Działa
+          {% elif is_state(entity_id, 'background') %}
+            Sprawdź
+          {% else %}
+            {{ states(entity_id) }}
+          {% endif %}
+        attributes:
+          icon: custom:synology-nas
+
+      - unique_id: nas_vpn
+        state: >
+          {{ 'Nie połączony' if states('sensor.myip') == states('sensor.template_public_ip') else 'Połączony' }}
+        attributes:
+          icon: >
+            mdi:shield-{{ 'alert' if states('sensor.myip') == states('sensor.template_public_ip') else 'check' }}
+
+      - unique_id: nas_net_down
+        state: ' '
+        attributes:
+          friendly_name: >
+            {% set down = states('sensor.nas_network_down') | float(default=0) %}
+            {% if down < 1000 %} {{ down | round(0) }} kb/s
+            {% elif down >= 1000 %} {{ ((down / 1000) | round(2) | string).rstrip('.0') }} Mb/s
+            {% endif %}
+          icon: mdi:arrow-down-bold
+
+      - unique_id: nas_net_up
+        state: ' '
+        attributes:
+          friendly_name: >
+            {% set up = states('sensor.nas_network_up') | float(default=0) %}
+            {% if up < 1000 %} {{ up | round(0) }} kb/s
+            {% elif up >= 1000 %} {{ ((up / 1000) | round(2) | string).rstrip('.0') }} Mb/s
+            {% endif %}
+          icon: mdi:arrow-up-bold
+
+sensor:
+  - platform: systemmonitor
+    resources:
+      - type: disk_use_percent
+        arg: '/'
+      - type: memory_use_percent
+      - type: processor_use
+      - type: last_boot
+      - type: swap_use_percent
+    scan_interval: 120
+
+  - platform: command_line
+    name: nas_disk
+    command: !secret nas_disk
+    unit_of_measurement: '%'
+    value_template: >
+      {{ value[:-1] }}
+    scan_interval: 300
+
+  - platform: command_line
+    name: nas_cpu
+    command: !secret nas_cpu
+    unit_of_measurement: '%'
+    scan_interval: 300
+
+  - platform: command_line
+    name: nas_mem
+    command: !secret nas_mem
+    unit_of_measurement: '%'
+    value_template: >
+      {{ value | round(1) }}
+    scan_interval: 300
+
+  - platform: command_line
+    name: nas_uptime
+    command: !secret nas_uptime
+    value_template: >
+      {{ value | replace(' ', 'T') }}
+    scan_interval: 300

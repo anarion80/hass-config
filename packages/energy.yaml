@@ -1,0 +1,24 @@
+sensor:
+  - platform: scrape
+    name: Tauron_energy_cost
+    resource: http://www.cena-pradu.pl/tabela.html
+    select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div > table > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+    index: 0
+    unit_of_measurement: 'PLN/kWh'
+    value_template: >
+      {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
+    scan_interval: 3600
+
+  - platform: scrape
+    name: Tauron_static_cost
+    resource: http://www.cena-pradu.pl/tabela.html
+    select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div > table > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+    index: 1
+    unit_of_measurement: 'PLN'
+    value_template: >
+      {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
+    scan_interval: 3600
+
+  - platform: pgnig_gas_sensor
+    username: !secret pgnig_username
+    password: !secret pgnig_password

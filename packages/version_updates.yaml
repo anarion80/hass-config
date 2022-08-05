@@ -1,0 +1,210 @@
+automation:
+  - alias: ios_notify_hass_rc
+    id: '3984233949106'
+    trigger:
+      - platform: state
+        entity_id: sensor.hass_version_latest_beta
+    condition:
+      - condition: state
+        entity_id: sensor.template_hass_dev_release
+        state:
+          - Today
+          - Released
+    action:
+      - service: notify.mobile_app_nokia_8_3_5g
+        data:
+          title: >
+            RC {{ states(trigger.entity_id) }} dostępny
+          message: Naciśnij, żeby przeczytać release notes
+          data:
+            ttl: 0
+            priority: high
+            url: https://rc.home-assistant.io/latest-release-notes/
+
+  - alias: ios_notify_hass_update
+    id: '7958228563778'
+    variables:
+      latest: >
+        {{ states(trigger.entity_id) }}
+      installed: >
+        {{ states('sensor.hass_version_installed') }}
+    trigger:
+      - platform: state
+        entity_id: sensor.hass_version_latest
+    condition: >
+      {{ installed != latest if '.' in installed and '.' in latest else false }}
+    action:
+      - service: homeassistant.update_entity
+        target:
+          entity_id:
+            - sensor.hass_release_notes
+            - sensor.hass_release_notes_rc
+      - delay:
+          minutes: 30
+      - service: notify.mobile_app_nokia_8_3_5g
+        data:
+          title: >
+           {{ latest }} dostępny {{ '\U0001F389' }}
+          message: Przytrzymaj żeby uaktualnić
+          data:
+            data:
+              url: https://www.home-assistant.io/latest-release-notes/
+
+  - alias: ios_notify_hass_update_action
+    id: '0694774018396'
+    trigger:
+      - platform: event
+        event_type: ios.notification_action_fired
+        event_data:
+          actionName: START_WATCHTOWER
+    action:
+      - service: switch.turn_on
+        entity_id: switch.watchtower
+
+  - alias: update_hass_release_notes
+    id: '4289040658246'
+    trigger:
+      - platform: state
+        entity_id:
+          - sensor.hass_version_latest
+          - sensor.hass_version_latest_beta
+    action:
+      - service: homeassistant.update_entity
+        entity_id:
+          - sensor.hass_release_notes
+          - sensor.hass_release_notes_rc
+
+rest:
+  - resource: https://api.github.com/repos/home-assistant/core/releases/latest
+    sensor:
+      name: hass_release_notes
+      value_template: >
+        {{ value_json.name }}
+      json_attributes:
+        - body
+    scan_interval: 21600
+
+  - resource: https://api.github.com/repos/home-assistant/core/releases?per_page=1
+    sensor:
+      name: hass_release_notes_beta
+      value_template: >
+        {{ value_json[0].name }}
+      json_attributes:
+        - body
+    scan_interval: 21600
+
+template:
+  - sensor:
+      - unique_id: hass_next_release
+        state: >
+          {% set start_time = state_attr('calendar.home_assistant_devs', 'start_time') %}
+          {{ (as_timestamp(start_time, default=0) + 60*60*20.5) | timestamp_local(default) }}
+        attributes:
+          friendly_name: >
+            {% set release = state_attr('calendar.home_assistant_devs','message') %}
+            {% if release == 'Home Assistant Core Beta Release' %}
+              Nästa beta
+            {% elif release == 'Home Assistant Core Release' %}
+              Nästa release
+            {% else %}
+              {{ release }}
+            {% endif %}
+          icon: mdi:dev-to
+          device_class: timestamp
+
+      - unique_id: hass_version
+        state: >
+          {{ 'Najnowsza' if states('sensor.hass_version_installed') ==
+          states('sensor.hass_version_latest') else states('sensor.hass_version_latest') }}
+        attributes:
+          friendly_name: >
+            Zainstalowana {{ states('sensor.hass_version_installed') }}
+          icon: mdi:home-assistant
+
+      - unique_id: hass_dev_release
+        state: >
+          {% set start_time = state_attr('calendar.home_assistant_devs', 'start_time') %}
+          {{ (as_timestamp(start_time, default=0) + 60*60*20.5) | timestamp_local(default) }}
+        attributes:
+          friendly_name: >
+            {% set release = state_attr('calendar.home_assistant_devs','message') %}
+            {% if release == 'Home Assistant Core Beta Release' %}
+              Następna beta
+            {% elif release == 'Home Assistant Core Release' %}
+              Następna wersja
+            {% else %}
+              {{ release }}
+            {% endif %}
+          icon: mdi:dev-to
+          device_class: timestamp
+
+  - binary_sensor:
+    - unique_id: supervisor_update
+      state: >
+        {% set ns = namespace(update=false) %}
+        {% set supervisor = state_attr('sensor.supervisor_updates','addons') %}
+          {% for addon in supervisor %}
+            {% if addon.version != addon.version_latest %}
+            {% set ns.update = true %}
+            {% endif %}
+          {% endfor %}
+        {{ ns.update }}
+
+sensor:
+  - platform: command_line
+    name: hacs_installed
+    command: |-
+      python3 << EOF
+      import os, json
+      installed = {"repositories": []}
+      PATH = "/config/.storage/hacs.repositories"
+      with open(PATH, "r", encoding="UTF-8") as file:
+          data = json.load(file)["data"]
+          for i in data:
+              if "installed" in data[i]:
+                  installed["repositories"] += [data[i]["full_name"]]
+          file.close()
+      print(json.dumps(installed))
+      EOF
+    value_template: >
+      {{ value_json.repositories | count }}
+    json_attributes:
+      - repositories
+    scan_interval: 86400
+
+  - platform: command_line
+    name: hacs_version
+    scan_interval: 86400
+    command: >
+      sed -nr 's/\"version\": \"([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)\"/\1/p' /config/custom_components/hacs/manifest.json
+
+  - platform: command_line
+    name: Supervisor updates
+    command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"addons":[.data.addons[] | select(.version != .installed)]}'''
+    value_template: "{{ value_json.addons | length }}"
+    json_attributes:
+    - newest_version
+    - current_version
+    - addons
+
+shell_command:
+  ha_core_update: !secret ha_core_update_command
+  ha_os_update: !secret ha_os_update_command
+  ha_supervisor_update: !secret ha_supervisor_update_command
+
+script:
+  homeassistant_restart:
+    sequence:
+      - service: browser_mod.toast
+        data:
+          duration: 16000
+          message: Restartuję kontener HA...
+      - service: shell_command.ha_dockermon_restart_container
+
+  homeassistant_core_update:
+    sequence:
+      - service: shell_command.ha_core_update
+
+  homeassistant_supervisor_update:
+    sequence:
+      - service: shell_command.ha_supervisor_update

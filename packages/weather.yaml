@@ -1,0 +1,60 @@
+binary_sensor:
+  - platform: burze_dzis_net
+    api_key: !secret burze_dzis_net.api_key
+    name: Storm warning
+    latitude: !secret burze_net_latitude
+    longitude: !secret burze_net_longitude
+    warnings:
+      - frost_warning
+      - heat_warning
+      - wind_warning
+      - precipitation_warning
+      - storm_warning
+      - tornado_warning
+    storms_nearby:
+      radius: 30
+
+  - platform: antistorm
+    station_id: 148
+    monitored_conditions:
+      - 'storm_alarm'
+      - 'rain_alarm'
+      - 'storm_active'
+
+  - platform: meteoalarm
+    country: "Poland"
+    province: "malopolska"
+    language: "pl-PL"
+
+sensor:
+  - platform: template
+    sensors:
+      meteo_url:
+        value_template: >-
+          {% if now().hour >= 0 and now().hour < 10 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ (now() - timedelta( days = 1 )).strftime('%Y%m%d') }}18&row=466&col=232&lang=pl
+          {%- elif now().hour >= 10 and now().hour < 12 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}00&row=466&col=232&lang=pl
+          {%- elif now().hour >= 12 and now().hour < 19 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}06&row=466&col=232&lang=pl
+          {%- elif now().hour >= 19 and now().hour < 24 -%}
+          https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}12&row=466&col=232&lang=pl
+          {%- endif %}
+      air_quality_level:
+        friendly_name: Poziom Jakości Powietrza
+        value_template: >-
+          {%- if (states('sensor.u_s_air_pollution_level') == "good") -%} dobry
+          {%- elif (states('sensor.u_s_air_pollution_level') == "hazardous") -%} niebezpieczny
+          {%- elif (states('sensor.u_s_air_pollution_level') == "moderate") -%} umiarkowany
+          {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy") -%} niezdrowy
+          {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy_sensitive") -%} niezdrowy dla grup wrażliwych
+          {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
+          {%- endif %}
+
+  - platform: antistorm
+    station_id: 148
+    monitored_conditions:
+      - 'storm_probability'
+      - 'storm_time'
+      - 'rain_probability'
+      - 'rain_time'

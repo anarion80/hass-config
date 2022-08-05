@@ -1,0 +1,43 @@
+template:
+  - sensor:
+      - unique_id: coronavirus
+        state: template
+        attributes:
+          template: >
+              {% set break = '‍ ‍ ‍ ‍ ‍ ‍<font color="#2f3436">|</font> ‍ ‍ ‍ ‍ ' %}
+              <font color='#6a7377'>
+              <ha-icon icon="mdi:virus"></ha-icon> <b>Coronavirus</b>{{ break -}}
+              <ha-icon icon="mdi:emoticon-sad"></ha-icon> <b>{{ states('sensor.covid19_infections') }}</b> przypadków{{ break -}}
+              <ha-icon icon="mdi:grave-stone"></ha-icon> <b>{{ states('sensor.covid19_deaths') }}</b> zgonów{{ break -}}
+              <ha-icon icon="mdi:emoticon-happy"></ha-icon> <b>{{ states('sensor.covid19_recovered') }}</b> wyzdrowień
+              </font>
+          icon: mdi:virus
+
+sensor:
+  - platform: rest
+    name: COVID19
+    resource: https://koronawirus-api.herokuapp.com/api/covid-vaccinations-tests/daily
+    value_template: >
+      {{ value_json.today.infections.newInfections }}
+    json_attributes:
+      - today
+    scan_interval: 86400
+    force_update: true
+
+  - platform: template
+    sensors:
+      covid19_infections:
+        value_template: "{{ state_attr('sensor.covid19','today')['tests']['infections'] | int }}"
+        unit_of_measurement: '🙍'
+        friendly_name: "Zakażenia COVID19"
+
+      covid19_deaths:
+        value_template: "{{ state_attr('sensor.covid19','today')['tests']['deaths']['deaths'] | int }}"
+        unit_of_measurement: '🙍'
+        friendly_name: "Zgony COVID19"
+
+      covid19_recovered:
+        value_template: "{{ state_attr('sensor.covid19','today')['tests']['recovered'] | int }}"
+        unit_of_measurement: '👨'
+        friendly_name: "Wyleczenia COVID19"
+

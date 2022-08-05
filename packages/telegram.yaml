@@ -1,0 +1,127 @@
+automation:
+  - id: telegram-camera-ss
+    alias: Camera command
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: telegram_command
+      event_data:
+        command: /camera
+    action:
+    - service: notify.telegram_anarion
+      data:
+        message: Kamery
+    - service: script.camera_snapshot
+
+  - id: telegram-start
+    alias: Telegram Start Command
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: telegram_command
+      event_data:
+        command: /start
+    action:
+    - service: notify.telegram_anarion
+      data:
+        message: "{{ [ \"Hi, I'm your housekeeper .. I'll list you below \
+           \ list of available commands \", \" How can I help you? \", \" Yes Sir! \"\
+           , \"If you really insist, this is the command list \", \"Aaaaa .. more here? \",
+            \" Nice to see you again\"] | random }}       \n"
+        data:
+          keyboard:
+          - /nico, /mamma
+          - /nicopcon, /nicopcoff, /nicopcreboot
+          - /ping, /camera
+          - /start, /cp
+
+  - alias: Telegram_Bot_Stop
+    id: telegram-stop
+    trigger:
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /stop
+    action:
+    - service: notify.telegram_anarion
+      data_template:
+        message: '*Control Panel*'
+        data:
+          inline_keyboard:
+          - 💡 Lights:/lights, 🚨 Security:/security
+          - 💻 System:/system, 💻 Status:/status, Help:/help, Ping:/ping
+          - 📄 Summary:/summary, ☀ Weather:/weather
+          - Addons:/addons
+
+  - id: telegram-control-pannel-start
+    alias: Telegram Control Pannel Command
+    initial_state: 'on'
+    trigger:
+      platform: event
+      event_type: telegram_command
+      event_data:
+        command: /cp
+    action:
+    - service: notify.telegram_anarion
+      data:
+        message: "{{ [ \"Home Assistant Status\", \"Control Panel\", \"Yes Sir!\", \"\
+          Home Assistant Control Panel\" ] | random }}  \
+          \     \n"
+        data:
+          inline_keyboard:
+          - 💡 Lights:/lights, 🚨 Security:/security
+          - 💻 System:/system, ℹ Status:/status, Help:/help, Ping:/ping
+          - 📄 Summary:/summar, ☀ Weather:/weather
+          - Addons:/addons
+
+  - id: telegram-ik-ping-pong
+    alias: telegram ping pong
+    trigger:
+    - platform: event
+      event_type: telegram_callback
+      event_data:
+        data: /ping
+    action:
+    - service: telegram_bot.answer_callback_query
+      data_template:
+        callback_query_id: '{{ trigger.event.data.id }}'
+        message: 'Callback received from {{ trigger.event.data.message.from.username }}. Message
+          id: {{ trigger.event.data.message.message_id }}. Data: {{ trigger.event.data.data
+          }} {{now().strftime("%Y-%m-%d %H:%M:%S")}} Pong, Message from {{ trigger.event.data.message.chat.username }}.'
+        show_alert: true
+
+notify:
+  - platform: telegram
+    name: telegram_anarion
+    chat_id: !secret telegram_anarion_chat_id
+
+script:
+  camera_snapshot:
+    alias: Camera Snapshot
+    sequence:
+    - service: telegram_bot.send_photo
+      data:
+        caption: 'Main Camera Snapshot'
+        target:
+          - !secret telegram_anarion_chat_id
+        url: !secret camera_main_still_image_url
+    - service: telegram_bot.send_photo
+      data:
+        caption: 'Garage Camera Snapshot'
+        target:
+          - !secret telegram_anarion_chat_id
+        url: !secret camera_garage_still_image_url
+    - service: telegram_bot.send_photo
+      data:
+        caption: 'Garden Camera Snapshot'
+        target:
+          - !secret telegram_anarion_chat_id
+        url: !secret camera_garden_still_image_url
+
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_api_key
+    allowed_chat_ids:
+      - !secret telegram_anarion_chat_id
+
+

@@ -1,0 +1,107 @@
+automation:
+  - alias: Play Good Morning
+    id: play_good_morning
+    initial_state: true
+    trace:
+      stored_traces: 20
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.motion_sensor_1_occupancy
+        to: 'on'
+    condition:
+      - condition: time
+        after: '07:00'
+        before: '12:00'
+      - condition: template
+        # Only run if more than 6 hours (21,600 sec) since it last ran
+        value_template: >
+          {% if state_attr("automation.play_good_morning", "last_triggered") != none %}
+            {{(as_timestamp(now()) - as_timestamp(state_attr("automation.play_good_morning", "last_triggered") | default(0)) | int > 21600 )}}
+          {% else %}
+            {{ True }}
+          {% endif %}
+    action:
+      - service: tts.google_cloud_say
+        data:
+          entity_id: media_player.nest_mini
+          message: >
+            {{ state_attr('sensor.template_daily_digest','digest') }}
+
+template:
+  - sensor:
+      - unique_id: daily_digest
+        state: template
+        attributes:
+          digest: >
+            Dzień dobry. Dzisiaj jest
+            {#- Data -#}
+                {%- set days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'] -%}
+                {%- set months = ['Stycznia', 'Lutego', 'Marca', 'Kwietnia', 'Maja', 'Czerwca',
+                'Lipca', 'Sierpnia', 'Września', 'Października', 'Listopada', 'Grudnia'] %}
+                {% set temp = states('sensor.openweathermap_feels_like_temperature')|round %}
+                  {{- days[now().weekday()] }} {{ strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}.
+
+            {#- Pogoda -#}
+                Obecnie mamy {{states('sensor.openweathermap_weather')}} i temperaturę odczuwalną {{ temp }}
+                {%- if temp|int == 1 %} stopień.
+                {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
+                {% else %} stopni.
+                {% endif -%}
+                {%- set condition = states('sensor.openweathermap_forecast_condition') -%}
+                {%- set temp = states('sensor.openweathermap_forecast_temperature')|round -%}
+                Dzisiaj będzie {% if condition == 'clear-night' -%}bezchmurnie
+                {%- elif condition == 'cloudy' -%}pochmurnie
+                {%- elif condition == 'exceptional' -%}wyjątkowo
+                {%- elif condition == 'fog'-%}mgliście
+                {%- elif condition == 'hail' -%}grad
+                {%- elif condition == 'lightning' -%}burzowo
+                {%- elif condition == 'lightning-rainy' -%}burzowo i deszczowo
+                {%- elif condition == 'partlycloudy' -%}częściowo pochmurnie
+                {%- elif condition == 'pouring' -%}lało jak z cebra
+                {%- elif condition == 'rainy' -%}deszczowo
+                {%- elif condition == 'snowy' -%}padał śnieg
+                {%- elif condition == 'snowy-rainy' -%}padał deszcz ze śniegiem
+                {%- elif condition == 'sunny' -%}słonecznie
+                {%- elif condition == 'windy' -%}wietrznie
+                {%- elif condition == 'windy-variant' -%}wiał wiatr
+                {% endif -%}, a temperatura maksymalna wyniesie {{ temp }}
+                {%- if temp|int == 1 %} stopień.
+                {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
+                {% else %} stopni.
+                {% endif -%}
+                Będzie wiał wiatr {% set winbearing = (states('sensor.openweathermap_forecast_wind_bearing')|int/45)|round  %}
+                {%- set winddir = ['z północy', 'z północnego-wschodu','ze wschodu','z południowego wschodu','z południa','z południowego-zachodu','z zachodu','z północnego-zachodu'] -%}
+                {{ winddir[winbearing] }} z prędkością {{(states('sensor.openweathermap_forecast_wind_speed')|int*3.6)|round}} km/h.
+                {% if states('sensor.openweathermap_forecast_precipitation')|int == 0 %} Dzisiaj ma nie padać.
+                {% else -%} Prognozowany opad wyniesie {{ states('sensor.openweathermap_forecast_precipitation') }} milimetra.
+                {% endif -%}
+            {#- Czas do pracy -#}
+            {# Czas dojazdu do pracy: {{states('sensor.home_to_work')}} minut. #}
+            {#- Przypomnienie o śmieciach #}
+               {% set entities = states.sensor | selectattr('attributes.device_class', 'defined')
+                                | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
+                                | rejectattr('entity_id', 'search', 'garbage')
+                                | list -%}
+                  {% if entities -%}
+                    {% if entities | selectattr('attributes.days','eq', 1) | list | count > 0 -%}
+                    Pamiętaj żeby dzisiaj wieczorem wystawić śmieci {% for sensor in entities if sensor.attributes.days == 1 -%}
+                      {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
+                    {%- endfor -%}.
+                    {% endif -%}
+                  {% endif -%}
+            {#- Kalendarz -#}
+                {%- set entities = states.sensor | selectattr('entity_id','search','ical_kalendarz')
+                          | selectattr('attributes.start','defined') | list -%}
+                {%- set ns = namespace(today=false) -%}
+                {%- for item in entities %}
+                              {%- if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+                                {%- set ns.today = true -%}
+                              {%- endif -%}
+                            {%- endfor -%}
+                {% if ns.today %}
+                Dzisiaj w kalendarzu masz {%- for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+                    {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}
+                    {{- sensor.name + '\n' | lower }} o godzinie {{ sensor.attributes.start.strftime('%H:%M') }}
+                {% endfor %}
+                {%- else %}Dzisiaj nie masz nic w kalendarzu. {% endif -%}
+                Miłego dnia!

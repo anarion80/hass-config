@@ -1,0 +1,123 @@
+automation:
+  - alias: laundry_display
+    id: '4792508317061'
+    mode: restart
+    trigger:
+      - platform: time_pattern
+        minutes: /5
+    condition: >
+      {% set start_time = state_attr('calendar.tvatta', 'start_time') %}
+      {{ as_timestamp(start_time) - as_timestamp(now()) < 10 * 60 if start_time != None else false }}
+    action:
+      - service: input_boolean.turn_on
+        entity_id: input_boolean.laundry_display
+      - delay:
+          hours: 4
+      - service: input_boolean.turn_off
+        entity_id: input_boolean.laundry_display
+
+  - alias: laundry_alert
+    id: '3403466403120'
+    trigger:
+      - platform: event
+        event_type: timer.finished
+        event_data:
+          entity_id: timer.laundry
+    action:
+      - service: media_player.play_media
+        data:
+          entity_id: media_player.25ffd809_364afacd
+          media_content_id: /local/sound/timer.mp3
+          media_content_type: music
+      - delay:
+          seconds: 2
+      - service: tts.cloud_say
+        data:
+          entity_id: media_player.nest_mini
+          message: >
+            {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+          language: pl-PL
+      - service: notify.all_devices
+        data:
+          message: >
+            {{'\U0001F9FA'}} {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+          data:
+            ttl: 0
+            priority: high
+
+  - id: '1635431265502'
+    alias: Set Washing Machine Status to Running
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.pralka_power
+      above: '200'
+      for:
+        hours: 0
+        minutes: 2
+        seconds: 0
+        milliseconds: 0
+    condition:
+      - condition: state
+        entity_id: input_select.washing_machine
+        state: 'Off'
+    action:
+    - service: notify.anarion_iwona_phones
+      data:
+        message: 💚 Washing Machine has started
+    - service: input_select.select_option
+      data:
+        option: Washing
+      target:
+        entity_id: input_select.washing_machine
+    mode: single
+
+  - id: '1635431265503'
+    alias: Set Washing Machine Status to Done
+    description: ''
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.pralka_power
+      below: '0.1'
+      for:
+        hours: 0
+        minutes: 1
+        seconds: 0
+        milliseconds: 0
+    condition:
+      - condition: state
+        entity_id: input_select.washing_machine
+        state: 'Washing'
+    action:
+    - service: notify.anarion_iwona_phones
+      data:
+        message: >
+          {{ '🏁 ' + ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+    - service: input_select.select_option
+      data:
+        option: 'Off'
+      target:
+        entity_id: input_select.washing_machine
+    - service: tts.google_cloud_say
+      data:
+        entity_id: media_player.nest_mini
+        message: >
+            {{ ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}
+    mode: single
+
+input_boolean:
+  laundry_display:
+
+input_select:
+  washing_machine:
+    initial: 'Off'
+    options:
+      - 'Off'
+      - Washing
+      - Unemptied
+
+timer:
+  laundry:
+    duration: 01:00:00
+    icon: mdi:washing-machine
+    restore: true

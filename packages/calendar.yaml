@@ -1,0 +1,10 @@
+sensor:
+  - platform: template
+    sensors:
+      today_events:
+        friendly_name: "Dzisiejsze wydarzenia"
+        value_template: "{{ state_attr('calendar.anarion_dunedain', 'message') }}"
+        icon_template: mdi:calendar
+        attribute_templates:
+          location: "{{ state_attr('calendar.anarion_dunedain', 'location') }}"
+          description: "{{ state_attr('calendar.anarion_dunedain', 'description') }}"

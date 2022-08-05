@@ -1,0 +1,171 @@
+automation:
+  - id: stopa_bazowa_change_notification_up
+    alias: Notify when stopa bazowa changes up
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.stopa_bazowa_pko_bp
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana stopy bazowej
+      message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana stopy bazowej
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.stopa_bazowa_rising
+    mode: single
+  - id: stopa_bazowa_change_notification_down
+    alias: Notify when stopa bazowa changes down
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.stopa_bazowa_pko_bp
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float < trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana stopy bazowej
+      message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana stopy bazowej
+        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.stopa_bazowa_rising
+    mode: single
+  - id: wibor6m_change_notification_down
+    alias: Notify when Wibor 6M changes down
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.wibor_6m
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float < trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana Wibor
+      message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana Wibor
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.wibor6m_rising
+    mode: single
+  - id: wibor6m_change_notification_up
+    alias: Notify when Wibor 6M changes up
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.wibor_6m
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state
+        | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Zmiana Wibor
+      message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: notify.email
+      data:
+        title: Zmiana Wibor
+        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.wibor6m_rising
+    mode: single
+
+  - id: sodexo_top_up
+    alias: Notify when Sodexo card is updated
+    description: Notify when Sodexo card is updated
+    trigger:
+    - platform: state
+      entity_id:
+      - sensor.sodexo_praca
+      - sensor.sodexo_sodexo2
+    condition:
+    - condition: template
+      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state | float }}'
+    action:
+    - service: notify.pushover
+      data:
+        message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+      domain: mobile_app
+      type: notify
+      title: Sodexo załadowane
+      message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+    - service: notify.email
+      data:
+        title: Sodexo załadowane
+        message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+    mode: single
+
+input_boolean:
+  stopa_bazowa_rising:
+    name: Stopa Bazowa is rising
+    icon: mdi:trending-up
+
+  wibor6m_rising:
+    name: Wibor6M is rising
+    icon: mdi:trending-up
+
+input_number:
+  tauron_cost:
+    name: Cena prądu
+    initial: 0
+    min: 0
+    max: 10
+    step: 0.01
+    mode: box
+    unit_of_measurement: 'PLN/kWh'
+    icon: mdi:currency-usd
+
+sensor:
+  - platform: scrape
+    name: Stopa bazowa PKO BP
+    resource: https://www.pkobp.pl/waluty/#/base_rate/
+    select: '#base_rate p'
+    value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
+    unit_of_measurement: '%'
+    scan_interval: 3600
+
+  - platform: scrape
+    name: Wibor 6M
+    resource: https://www.pkobp.pl/waluty/#/interbank/
+    select: 'div.course__irs-tab-box:nth-child(4) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)'
+    unit_of_measurement: '%'
+    scan_interval: 3600

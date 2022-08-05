@@ -1,116 +1,108 @@
 # Home Assistant Configuration
 
-[Home Assistant Container](https://www.home-assistant.io/installation/#compare-installation-methods) ([Docker](https://hub.docker.com/r/homeassistant/home-assistant)) on a NAS ([Synology DiskStation DS918+](https://www.synology.com/products/DS918+)). My use case is a [wall mounted](https://www.durable.eu/information-and-presentation/tablet-holder/wall-mounted-tablet-holder/tablet-holder-wall.html) tablet ([Galaxy Tab A 10.1](https://www.samsung.com/us/mobile/tablets/galaxy-tab-a/galaxy-tab-a-10-1-2019-32gb-black-wi-fi-sm-t510nzkaxar/)) using [Fully Kiosk Browser](https://www.ozerov.de/fully-kiosk-browser/), and on desktop using [homeassistant-desktop](https://github.com/mrvnklm/homeassistant-desktop). My configuration is exposed to HomeKit with Apple Tv acting as a hub for remote connection. I also support [Nabu Casa](https://www.nabucasa.com/).
+[Home Assistant Container](https://www.home-assistant.io/installation/#compare-installation-methods) on a Synology DiskStation DS918+ NAS. [Wall mounted](https://www.durable.eu/en_DE/tablet-holder-wall/893323) tablet ([Galaxy Tab A 10.1](https://www.samsung.com/us/mobile/tablets/galaxy-tab-a/galaxy-tab-a-10-1-2019-32gb-black-wi-fi-sm-t510nzkaxar/)) using [Fully Kiosk Browser](https://www.fully-kiosk.com/#get-kiosk-apps). My configuration is exposed to HomeKit with Apple TV acting as a hub for remote connection.
 
-If you like anything here be sure to :star2: my repo!
+If you like anything here, be sure to :star2: my repo!
 
-![screenshot](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/screenshot.png)
+![dashboard](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/dash.png)
 
+## Installation
 
-# June 2021
+**How do I install this theme?** <br>
+There's no install button. I'm sharing my full configuration
 
-While picture elements is still a valid card for layouts that doesn't follow a specific grid, this dashboard does. Instead of placing button cards using coordinates, it's now placed onto a grid that is responsive.
+**Can you please add this to HACS?** <br>
+No, because this is not a custom card or integration
 
-**Layout** `custom:layout-card`
-* CSS grid everything and as a bonus...
-* Mobile and portrait dashboards
-
-https://user-images.githubusercontent.com/36163594/120789256-ad825000-c531-11eb-97c2-18904c48efdd.mp4
-
-**Buttons** `custom:button-card`
-* Loader template doesn't need any `input_boolean` helpers anymore 
-* Icons will only animate on state change to prevent all icons animating on dashboard refresh
-* Some entity checks for undefined entities, no errors on restarts
-* Added a bounce effect to the button when pressed
-
-**Theme** `custom:card-mod`
-* Reworked themes with focus on performance
-* Wrote a tool to help with styling [card-mod-helper](https://matt8707.github.io/card-mod-helper/)
-
-**Deprecated**
-*If you're looking for picture elements, browse this repository before March 2021 [https://github.com/matt8707/hass-config/tree/c9dd19e04bd4fde2322e610a42f4e246b58ee19a](https://github.com/matt8707/hass-config/tree/c9dd19e04bd4fde2322e610a42f4e246b58ee19a)*
-
-**Includes**
-Since this configuration is split into several yaml files, I'm using [lovelace-gulp-watch](https://github.com/akmolina28/lovelace-gulp-watch), which auto updates lovelace if an included file is changed.
-
-**Known issues**
-* card-mod randomly not applying markdown styling on 2021.6.0 [#130](https://github.com/thomasloven/lovelace-card-mod/issues/130)
-* swipe-card not updating size unless resizing window [#32](https://github.com/bramkragten/swipe-card/issues/32) [#147](https://github.com/thomasloven/lovelace-layout-card/issues/147)
-
-**Support**
-If you want, you can [buy me a beer](https://www.buymeacoffee.com/matt8707) :blush:
-
----
+**Where do I even start?** <br>
+[INSTALL.md explains how to get started](https://github.com/matt8707/hass-config/blob/master/www/INSTALL.md) :tada:
 
 ## Features
 
-* A different take on designing a [Lovelace UI](https://www.home-assistant.io/lovelace/) using <s>picture elements card</s> [custom:layout-card](https://github.com/thomasloven/lovelace-layout-card)
-* Achieving a less cluttered interface by displaying [more information](https://github.com/thomasloven/hass-browser_mod#popup) on a [long press](https://www.home-assistant.io/lovelace/picture-elements/#hold_action)
-* Loading wheel for slow responding entities such as booting a computer.
-* [Adding sounds](https://github.com/thomasloven/hass-browser_mod#media_player) to the UI using automations listening for events
-* [CSS Animations](https://www.w3schools.com/css/css3_animations.asp) based on state
+* [Dashboard (Lovelace)](https://www.home-assistant.io/lovelace/) using custom [button-card](https://github.com/custom-cards/button-card) and [layout-card](https://github.com/thomasloven/lovelace-layout-card)
+* Portrait, landscape and mobile view - [responsive_demo.mp4](https://user-images.githubusercontent.com/36163594/120789256-ad825000-c531-11eb-97c2-18904c48efdd.mp4) [[mirror]](https://drive.google.com/file/d/1BgGHFgKF2sfI7cvdbWUeCyU_85D2R5x3/view?usp=sharing)
+* Less cluttered interface by displaying more information in a popup
+* Loading animation for slow responding entities
+* Adding tap audio feedback to the UI for wall-mounted tablet
+* Icon [CSS animations](https://www.w3schools.com/css/css3_animations.asp) based on entity state
 
 ![animations](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/animations.gif)
 
-### The sidebar
-
-[Markdown Card](https://www.home-assistant.io/lovelace/markdown/) to create dynamic [templates](https://www.home-assistant.io/docs/configuration/templating/).
+#### Sidebar
 
 * Time and date with greeting based on time of day
-* Lights and switches that are on, using natural language
+* Entities that are on, using natural language
+* Mailbox counter to show received mail
 * Temperature with emoji based on weather conditions
 * Important calendar information
 * Other conditional alerts
 
-### Sidebar footer
+#### Footer
 
-The three icons at the bottom in order:
+Popups that supports notifications.
 
-* Card to control [robot vacuum](https://www.mi-store.se/en/smart-homes/robot-vacuum-cleaners/xiaomi-robot-vacuum-2-roborock)
-* Monitor [Home Assistant](https://home-assistant.io/), [tablet](https://www.samsung.com/us/mobile/tablets/galaxy-tab-a/galaxy-tab-a-10-1-2019-32gb-black-wi-fi-sm-t510nzkaxar/) and [Network Attached Storage](https://www.synology.com/products/DS918+)
-* Lists available HACS updates and release notes for Home Assistant
+![footer](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/footer.png)
 
-![info](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/info.png)
+#### Popups
 
-### Media
+Long press a button to show settings and information pertaining to the entity, using [browser_mod](https://github.com/thomasloven/hass-browser_mod). Light popups are automatically created using the `light` button-card template with 🍄 [Mushroom](https://github.com/piitaya/lovelace-mushroom)
 
-Conditionally displaying media player controls based on last active device such as [Apple TV](https://www.home-assistant.io/integrations/apple_tv/), [Playstation 4](https://www.home-assistant.io/integrations/ps4/), [Google Nest Mini](https://www.home-assistant.io/integrations/cast/). If nothing is active for 15 minutes then a poster of last downloaded movie/episode is shown ([Radarr](https://github.com/Radarr/Radarr)/[Sonarr](https://github.com/Sonarr/Sonarr)). Swipe to reveal other than last active media players.
+<img src="https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/group.png" width="35%">
+
+#### Media
+
+Conditionally display media players based on the last active device. If nothing is active for 15 minutes, a poster of the last downloaded movie/episode is shown ([Plex](https://github.com/plexinc/pms-docker), [Radarr](https://github.com/Radarr/Radarr), [Sonarr](https://github.com/Sonarr/Sonarr)). Swipe to reveal non-active media players
 
 ![media](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/media.gif)
 
-### Lights and sensors
+## Theme
 
-All [Philips Hue](https://www2.meethue.com) lights with [sensors](https://www2.meethue.com/en-gb/p/hue-motion-sensor/8718696743171) in hallway, bathroom and walk-in closet.
+[card-mod](https://github.com/thomasloven/lovelace-card-mod) is used for the styles in `include/themes.yaml` and each popup also contain styles depending on content.
+I've made a tool to help with css element selectors - [https://matt8707.github.io/card-mod-helper/](https://matt8707.github.io/card-mod-helper/)
 
-![light](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/light.gif)
+![media](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/cardmod_helper.png)
 
+## Screenshots
 
-### Switches
+| nas | vacuum |
+| --- | --- |
+| ![nas](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/nas.png) | ![vacuum](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/vacuum.png) |
 
-* [SwitchBot](https://www.switch-bot.com/bot) to cold boot computer with a raspberry as a [hub](https://github.com/OpenWonderLabs/python-host). Numerous shell commands to monitor and control macOS
-* [Belkin WeMo Switch](https://www.belkin.com/) to control studio monitors (speakers) with automations to apply [EQ calibration](https://www.sonarworks.com/reference) and volume control through AppleScript
-* Control a pedestal fan, using [Belkin WeMo Switch](https://www.belkin.com/) and hue motion sensor temperature data to automate on summer nights
-* [Broadlink](https://www.ibroadlink.com/products/ir+rf) to control fan and air purifier with IR and [Gosund Smart Wi-Fi Plug](https://www.gosund.com/download/smart_plug/127.html) for power/state
+| misc |
+| --- |
+| ![multi](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/multi.png) |
 
-![info_light](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/info_light.png)
+## Hardware
 
+| Vendor | Product | Integration | Description |
+|---|---|---|---|
+| Ubiquiti | UniFi Dream Machine | [unifi](https://www.home-assistant.io/integrations/unifi/) | Router, controller, switch and access point |
+| Synology | DiskStation DS918+ | [synology_dsm](https://www.home-assistant.io/integrations/synology_dsm/) | 4x4TB NAS - [matt8707/docker-compose-dsm](https://github.com/matt8707/docker-compose-dsm) |
+| Raspberry | Pi 3 Model B+ | [shell_command](https://www.home-assistant.io/integrations/shell_command/) | Bluetooth communication - [matt8707/docker-compose-rpi](https://github.com/matt8707/docker-compose-rpi) |
+| Samsung | Galaxy Tab A SM-T510 | [custom](https://github.com/cgarwood/homeassistant-fullykiosk) | Wall mounted tablet in hallway by the front door |
+| Philips | Hue | [hue](https://www.home-assistant.io/integrations/hue/) | Bridge, 15 bulbs, 3 motion sensors, 2 dimmer switches |
+| Apple | iMac | [shell_command](https://www.home-assistant.io/integrations/shell_command/) | All-in-one desktop computer |
+| SwitchBot | SwitchBot Bot | [custom](https://github.com/fphammerle/switchbot-mqtt) | Bluetooth device that mechanically turns on my computer |
+| Xiaomi | Mi Roborock S50 | [xiaomi_miio](https://www.home-assistant.io/integrations/xiaomi_miio/) | Robot vacuum with lidar -  [xiaomi-cloud-map-extractor](https://github.com/PiotrMachowski/Home-Assistant-custom-components-Xiaomi-Cloud-Map-Extractor) |
+| Broadlink | RM4 Pro, HTS2 cable | [broadlink](https://www.home-assistant.io/integrations/broadlink/) | Infrared transmitter for AC unit with temp/humidity sensor |
+| Gosund | SP112 | [esphome](https://www.home-assistant.io/integrations/esphome/) | 3x tuya wifi plugs with power monitoring, flashed with ESPHome |
+| Belkin | WeMo | [wemo](https://www.home-assistant.io/integrations/wemo/) | 2x wifi plugs and 1x motion sensor |
+| Google | Nest Mini | [cast](https://www.home-assistant.io/integrations/cast/) | Not really used, Google sent me one |
+| Deltaco | SH-P01 | [tuya](https://www.home-assistant.io/integrations/tuya/) | Cheap wifi plug for balcony LED lights |
+| Phoscon | ConBee II | [custom](https://github.com/Koenkk/zigbee2mqtt) | Zigbee USB gateway using zigbee2mqtt |
+| Xiaomi | Aqara MCCGQ11LM | [mqtt](https://www.home-assistant.io/integrations/mqtt/) | 3x zigbee door/window contact sensors |
+| Apple | TV 4K | [apple_tv](https://www.home-assistant.io/integrations/apple_tv/) | 2x set-top-boxes that streams content from Plex |
+| Sony | Bravia KDL-55W905A | [braviatv](https://www.home-assistant.io/integrations/braviatv/) | 2013 mid-range 55" 1080p 3D TV |
+| Samsung | UE50RU6025KXXC | [custom](https://github.com/ollo69/ha-samsungtv-smart) | 2019 low-range 50" 4K HDR TV |
+| Sony | PlayStation 5 | [custom](https://github.com/dhleong/playactor) | Game console - State, sleep and wake [#ps5 thread](https://community.home-assistant.io/t/playstation-5-command-line-sensor-help-command-failed-empty-json/256275/60) |
+| Apple | iPhone X | [ios](https://www.home-assistant.io/integrations/ios/) | Home Assistant Companion App for iOS |
 
-### Custom icons
+*Note: I do not recommend "Belkin WeMo" or "Deltaco SH-P01"*
 
-I made some custom icons located in `www/custom_icons.js`. If you want to make your own I recommend reading the [material design principles](https://material.io/design/iconography/system-icons.html#design-principles).
+---
 
-![custom_icons](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/custom_icons.png)
+**GitHub Repository**
+[https://github.com/anarion80/hass-config](https://github.com/anarion80/hass-config)
 
-
-### Misc
-
-![vacuum](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/vacuum.png)
-
-![misc](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/misc.png)
-
-![tracker](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/tracker.png)
-
-***
-
-**Home Assistant Community Topic**  
+**Home Assistant Community Topic**
 [https://community.home-assistant.io/t/a-different-take-on-designing-a-lovelace-ui/162594](https://community.home-assistant.io/t/a-different-take-on-designing-a-lovelace-ui/162594)

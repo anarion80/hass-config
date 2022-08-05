@@ -1,0 +1,17 @@
+automation:
+  - id: '1615319114500'
+    alias: Turn on lampka u Hani after pressing button1
+    description: ''
+    trigger:
+    - platform: state
+      entity_id: sensor.button1_action
+      to: single
+    - platform: state
+      entity_id: sensor.switch1_action
+      to: single
+    condition: []
+    action:
+    - service: light.toggle
+      target:
+        entity_id: light.lampka_u_hani
+    mode: single

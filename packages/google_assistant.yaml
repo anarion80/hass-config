@@ -1,0 +1,14 @@
+google_assistant:
+  project_id: !secret google_assistant_project
+  service_account: !secret google_assistant_service_account
+  report_state: true
+  exposed_domains:
+    - switch
+    - light
+    - fan
+    - alarm_control_panel
+    - camera
+    - media_player
+    - climate
+    - sensor
+    - humidifier

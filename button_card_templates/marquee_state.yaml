@@ -1,0 +1,45 @@
+marquee_state:
+  template:
+    - base
+    #- base_media
+  state_display: >
+    [[[
+      if (entity) {
+        let elt = this.shadowRoot,
+          await = setTimeout(marquee, 0),
+          output = entity.state;
+        function marquee() {
+          let state = elt.getElementById("state"),
+            container = elt.getElementById("container");
+          if (state && container) {
+            state.innerHTML = output;
+            let ro = new ResizeObserver(entries => {
+              let spacer = "&nbsp;".repeat(3),
+                s = entries[0],
+                c = entries[1],
+                r = s && s.contentRect &&
+                    c && c.contentRect &&
+                    s.contentRect.width !== 0 &&
+                    c.contentRect.width !== 0;
+              if (r && s.contentRect.width < c.contentRect.width) {
+                state.classList.remove("marquee");
+              }
+              else if (r && s.contentRect.width >= c.contentRect.width) {
+                state.innerHTML = `${output} ${spacer} ${output} ${spacer}&nbsp;`;
+                state.classList.add("marquee");
+              }
+            });
+            ro.observe(state);
+            ro.observe(container);
+          }
+        }
+        return output;
+      }
+      return variables.translate_unknown;
+    ]]]
+  styles:
+    state:
+      - z-index: 3
+      - max-width: unset
+      - overflow: visible
+      - margin-bottom: -0.5%

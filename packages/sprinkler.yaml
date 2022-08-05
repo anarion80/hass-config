@@ -1,0 +1,83 @@
+automation:
+  - id: '1635431265504'
+    alias: Turn on sprinkler
+    trigger:
+    # - platform: time
+    #   at: '19:30'
+    - platform: sun
+      event: sunset
+      # Optional time offset. This example will trigger 45 minutes before sunset.
+      # offset: "-00:45:00"
+    condition:
+      # - alias: "Brak alarmu opadów"
+      #   condition: state
+      #   entity_id: binary_sensor.antistorm_148_rain_alarm
+      #   state: "off"
+      - alias: "Nie podlewaj w zimie"
+        condition: template
+        value_template: "{{ (4,1) <= (now().month, now().day) <= (10,1) }}"
+        #value_template: ‘{{ now().month in [1,2,3,4,5,10,11,12] }}’
+      - alias: "Prawdopodobieństwo deszczu poniżej 100"
+        condition: numeric_state
+        entity_id: sensor.openweathermap_forecast_precipitation_probability
+        below: 20
+    action:
+    - service: switch.turn_on
+      entity_id: switch.zraszacz
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: '🏁 Zraszacz włączony'
+
+  - id: '1635431265505'
+    alias: Turn off sprinkler
+    description: "Automatyczne włączanie zraszacza"
+    trigger:
+    - platform: state
+      entity_id: switch.zraszacz
+      to: 'on'
+      for:
+        minutes: "{{ states('input_number.watering_time')|int }}"
+    action:
+    - service: switch.turn_off
+      entity_id: switch.zraszacz
+    - service: notify.mobile_app_nokia_8_3_5g
+      data:
+        message: '🛑 Zraszacz wyłączony'
+
+script:
+  sprinkler:
+    alias: "Turn on sprinkler via script"
+    icon: "mdi:sprinkler-variant"
+    description: "Turn on sprinkler and then turn it off after set time"
+    fields:
+      minutes:
+        name: Minutes
+        description: "The amount of time to wait before turning sprinkler off"
+        selector:
+          number:
+            min: 0.0
+            max: 60.0
+            step: 1.0
+            unit_of_measurement: minutes
+            mode: slider
+    # If called again while still running (probably in delay step), start over.
+    mode: single
+    sequence:
+      # This is Home Assistant Script Syntax
+      - event: LOGBOOK_ENTRY
+        event_data:
+          name: Zraszacz
+          message: włączony
+          entity_id: switch.zraszacz
+          domain: switch
+      - alias: "Turn sprinkler ON"
+        service: switch.turn_on
+        target:
+          entity_id: switch.zraszacz
+      - delay:
+          # supports seconds, milliseconds, minutes, hours
+          minutes: "{{ minutes }}"
+      - alias: "Turn sprinkler OFF"
+        service: switch.turn_off
+        target:
+          entity_id: switch.zraszacz
