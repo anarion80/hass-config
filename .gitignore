@@ -1,6 +1,7 @@
-
+backups
 blueprints
 tts
+deps
 __pycache__
 .*
 !.HA_VERSION
@@ -8,10 +9,13 @@ __pycache__
 google_calendars.yaml
 known_devices.yaml
 secrets.yaml
+secrets_template.yaml
 
+custom_components/
+www/community/
 www/Plex_Recently_Added/*
 www/fonts
 
 home-assistant.code-workspace
-home-assistant.log
+home-assistant.log*
 hass-config.code-workspace
