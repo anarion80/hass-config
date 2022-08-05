@@ -1,4 +1,5 @@
-button_card_templates: !include button_card_templates.yaml
+button_card_templates:
+  !include_dir_merge_named button_card_templates
 
 views:
   - type: custom:grid-layout
@@ -120,7 +121,7 @@ views:
                    ]]]
             template: sidebar
             tap_action:
-              !include popup/batteries.yaml
+              !include popup/footer_batteries.yaml
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -165,7 +166,7 @@ views:
             card:
               type: custom:button-card
               entity: timer.laundry
-              hold_action:
+              double_tap_action:
                 action: call-service
                 service: input_boolean.turn_off
                 service_data:
@@ -180,27 +181,27 @@ views:
           #       icon: mdi:robot-vacuum
           #       tap_action:
           #         !include popup/sidebar_vacuum.yaml
-          #       hold_action:
+          #       double_tap_action:
           #         action: none
           #     - type: button
           #       icon: mdi:bell-circle-outline
           #       tap_action:
           #         !include popup/history.yaml
-          #       hold_action:
+          #       double_tap_action:
           #         action: none
 
           #     - type: button
           #       icon: mdi:information-outline
           #       tap_action:
           #         !include popup/sidebar_information.yaml
-          #       hold_action:
+          #       double_tap_action:
           #         action: none
 
           #     - type: button
           #       icon: mdi:arrow-up-bold-circle-outline
           #       tap_action:
           #         !include popup/sidebar_update2.yaml
-          #       hold_action:
+          #       double_tap_action:
           #         action: none
           #       variables:
           #         notify: >
@@ -245,6 +246,8 @@ views:
                 - type: custom:button-card
                   entity: sensor.ventilation_info
                   name: Wentylacja
+                  triggers_update:
+                    - sensor.ventilation_info
                   tap_action:
                     !include popup/ventilation.yaml
                   template:
@@ -256,8 +259,9 @@ views:
                       [[[
                         return entity === undefined ?
                           null :
-                          `${parseInt(states['sensor.komfovent_extract_temperature_c'].state)}<tspan font-size="10">°C</tspan>`;
+                          parseInt(states['sensor.komfovent_extract_temperature_c'].state);
                       ]]]
+                    circle_input_unit: '°C'
                     speed: >
                       [[[
                         return entity === undefined ?
@@ -268,7 +272,7 @@ views:
                 - type: custom:button-card
                   entity: fan.zhimi_airpurifier_v7
                   name: Oczyszczacz powietrza
-                  hold_action:
+                  double_tap_action:
                     !include popup/sovrum_luftrenare.yaml
                   template:
                     - base
@@ -285,6 +289,7 @@ views:
                           null :
                           parseInt(states['sensor.airpurifier_pm2_5'].state);
                       ]]]
+                    circle_input_unit: ''
 
                 - type: custom:button-card
                   entity: media_player.sony_bravia_tv
@@ -298,7 +303,7 @@ views:
                         return variables.translate_unknown;
                       }
                     ]]]
-                  hold_action:
+                  double_tap_action:
                     !include popup/vardagsrum_tv.yaml
                   template:
                     - base
@@ -316,150 +321,26 @@ views:
                 - type: custom:button-card
                   entity: sensor.komfovent_status_panel_temperature
                   name: Temperatura
-                  hold_action: none
+                  double_tap_action: none
                   tap_action:
                     !include popup/salon_klimat.yaml
+                  template:
+                    - base
+                    - icon_temperature
+                    - full_circle
+                    - graph
                   custom_fields:
                     graph:
                       card:
                         entities:
                           - sensor.komfovent_status_panel_temperature
-                  template:
-                    - base
-                    - icon_temperature
-                    - humidity
-                    - graph
-                  extra_styles: >
-                    [[[
-                      if (entity) {
-                        let hs = entity.attributes.hs_color === undefined,
-                          h = hs || entity.attributes.hs_color[0],
-                          s = hs || entity.attributes.hs_color[1],
-                          l_min = 28,
-                          l_max = 48,
-                          l_calc = entity.attributes.brightness / 2.54 * (l_max - l_min) / 100 + l_min;
-                        var light_color = entity.attributes.color_mode === 'color_temp' || entity.attributes.color_mode === 'brightness'
-                          ? `hsl(204, 58%, ${l_calc}%);`
-                          : `hsl(${h}, ${s}%, ${l_calc}%);`;
-                      }
-                      return `
-                        svg {
-                          --light-color:
-                          ${ variables.state_on && entity.attributes.brightness !== undefined
-                              ? light_color
-                              : variables.state_on && entity.attributes.brightness === undefined
-                                ? 'var(--state-icon-active-color);'
-                                : 'var(--state-icon-color);'
-                          }
-                        }
-                        #container {
-                          text-align: left !important;
-                        }
-                        #name, #state {
-                          font-size: 1.32vw;
-                          letter-spacing: -0.02vw;
-                        }
-                        #state::first-letter {
-                          text-transform: uppercase;
-                        }
-                        /* portrait */
-                        @media screen and (max-width: 1200px) {
-                          #name, #state {
-                            font-size: 2vw;
-                          }
-                        }
-                        /* phone */
-                        @media screen and (max-width: 800px) {
-                          #name, #state {
-                            font-size: 3vw;
-                          }
-                        }
-                        ${this._config.template.includes('footer') ? `
-                          :host {
-                            --name-font-size: 1.22vw;
-                            --name-icon-size: 1.5vw;
-                            --notify-font-size: 0.9vw;
-                            --notify-box-size: 1.8vw;
-                            --name-padding-v: 0.7vw;
-                            --name-padding-h: 1.1vw;
-                            --card-border-radius: 0.6vw;
-                          }
-                          #name {
-                            font-size: var(--name-font-size);
-                            padding: var(--name-padding-v) var(--name-padding-h);
-                            letter-spacing: 0.012vw;
-                          }
-                          ha-icon {
-                            width: var(--name-icon-size);
-                            vertical-align: 7%;
-                            padding-right: 0.1vw;
-                            opacity: 0.4;
-                          }
-                          #card {
-                            border-radius: var(--card-border-radius);
-                            background: rgba(115, 115, 115, 0.04);
-                          }
-                          #notify {
-                            font-size: var(--notify-font-size);
-                            width: var(--notify-box-size);
-                            height: var(--notify-box-size);
-                            line-height: var(--notify-box-size);
-                            padding-right: 0.5px;
-                            padding-top: 0.5px;
-                          }
-                          /* portrait */
-                          @media screen and (max-width: 1200px) {
-                            #name {
-                              font-size: calc(var(--name-font-size) * 1.4);
-                              padding: calc(var(--name-padding-v) * 1.4) calc(var(--name-padding-h) * 1.4);
-                            }
-                            ha-icon {
-                              width: calc(var(--name-icon-size) * 1.4);
-                            }
-                            #card {
-                              border-radius: calc(var(--card-border-radius) * 1.4);
-                              margin: 0 0.5vw;
-                            }
-                            #notify {
-                              font-size: calc(var(--notify-font-size) * 1.4);
-                              width: calc(var(--notify-box-size) * 1.4);
-                              height: calc(var(--notify-box-size) * 1.4);
-                              line-height: calc(var(--notify-box-size) * 1.4);
-                            }
-                          }
-                          /* phone */
-                          @media screen and (max-width: 800px) {
-                            #name {
-                              font-size: calc(var(--name-font-size) * 2.7);
-                              padding: calc(var(--name-padding-v) * 2.7) calc(var(--name-padding-h) * 2.7);
-                              letter-spacing: 0.12vw;
-                            }
-                            ha-icon {
-                              width: calc(var(--name-icon-size) * 2.7);
-                            }
-                            #card {
-                              border-radius: calc(var(--card-border-radius) * 2.7);
-                              background: rgba(115, 115, 115, 0.08);
-                              margin: 0 0.5vw;
-                            }
-                            #notify {
-                              font-size: calc(var(--notify-font-size) * 2.7);
-                              width: calc(var(--notify-box-size) * 2.7);
-                              height: calc(var(--notify-box-size) * 2.7);
-                              line-height: calc(var(--notify-box-size) * 2.7);
-                              padding: 0;
-                            }
-                          }
-                        `:''}
-                      `
-                    ]]]
                   variables:
                     circle_input: >
                       [[[
-                        return entity === undefined ?
-                          null :
-                          parseFloat(states['sensor.komfovent_status_panel_humidity'].state);
+                        let humidity = states['sensor.komfovent_status_panel_humidity'];
+                        if (humidity) return parseInt(humidity.state);
                       ]]]
+                    circle_input_unit: '%'
 
               - type: grid
                 columns: 2
@@ -511,7 +392,7 @@ views:
           # - type: custom:button-card
           #   entity: climate.living_room_ac
           #   name: Klima
-          #   hold_action:
+          #   double_tap_action:
           #     !include popup/livingroom_ac.yaml
           #   template:
           #     - base
@@ -549,7 +430,7 @@ views:
           - type: custom:button-card
             entity: sensor.gabinet_temperature
             name: Temperatura
-            hold_action: none
+            double_tap_action: none
             tap_action:
               !include popup/gabinet_klimat.yaml
             custom_fields:
@@ -557,178 +438,24 @@ views:
                 card:
                   entities:
                     - sensor.gabinet_temperature
-              icon: >
-                [[[
-                if (entity.state != 'unavailable')
-                {
-                  var temp_color ="'#9da0a2";
-                  if (entity.state >= '-10' && entity.state < 0) {
-                    temp_color = "#0302FC";
-                  } else if(entity.state >= '0' && entity.state < 12) {
-                    temp_color = "#2A00D5";
-                  } else if(entity.state >= '12' && entity.state < 22) {
-                    temp_color = "#66ff66";
-                  } else if(entity.state >= '22' && entity.state < 30) {
-                    temp_color = "#008020";
-                  } else if(entity.state >= '30' && entity.state < 35) {
-                    temp_color = "#D80027";
-                  } else if(entity.state >= '35' && entity.state < 40) {
-                    temp_color = "#FE0002";
-                  }
-                  return `<svg viewBox="0 0 50 50" >
-                    <path fill="#9da0a2" d="M16.3,33.6V6.4c0-2.6-2.2-4.8-4.8-4.8S6.7,3.8,6.7,6.4v27.1c-1.8,1.4-2.9,3.6-2.9,5.9c0,4.2,3.4,7.7,7.7,7.7
-                      s7.6-3.4,7.6-7.7C19.1,37.2,18.1,35,16.3,33.6z M11.5,45.5c-3.3,0-6-2.7-6-6c0-2.1,1.1-4,2.9-5.1v-28c0-1.7,1.4-3.2,3.2-3.2
-                      c1.7,0,3.2,1.4,3.2,3.2v28c1.7,1.1,2.9,3,2.9,5.1C17.5,42.9,14.8,45.5,11.5,45.5z"/>
-                    <path fill="${temp_color}" d="M13,35.5v-11c0-0.8-0.7-1.5-1.5-1.5c-0.8,0-1.5,0.7-1.5,1.5v11c-1.7,0.6-2.9,2.2-2.9,4.1c0,2.4,2,4.4,4.4,4.4
-                      s4.4-2,4.4-4.4C15.9,37.7,14.7,36.1,13,35.5z"/>
-                    <rect fill="#9da0a2" x="18" y="6.5" width="7.8" height="1.6"/>
-                    <rect fill="#9da0a2" x="18" y="12" width="3.7" height="1.6"/>
-                    <rect fill="#9da0a2" x="18" y="17.4" width="7.8" height="1.6"/>
-                    <rect fill="#9da0a2" x="18" y="22.8" width="3.7" height="1.6"/>
-                    <rect fill="#9da0a2" x="18" y="28.2" width="7.8" height="1.6"/>
-                    </svg>`;
-                } ]]]
             template:
               - base
               - icon_temperature
-              - humidity
+              - full_circle
               - graph
-            extra_styles: >
-              [[[
-                if (entity) {
-                  let hs = entity.attributes.hs_color === undefined,
-                    h = hs || entity.attributes.hs_color[0],
-                    s = hs || entity.attributes.hs_color[1],
-                    l_min = 28,
-                    l_max = 48,
-                    l_calc = entity.attributes.brightness / 2.54 * (l_max - l_min) / 100 + l_min;
-                  var light_color = entity.attributes.color_mode === 'color_temp' || entity.attributes.color_mode === 'brightness'
-                    ? `hsl(204, 58%, ${l_calc}%);`
-                    : `hsl(${h}, ${s}%, ${l_calc}%);`;
-                }
-                return `
-                  svg {
-                    --light-color:
-                    ${ variables.state_on && entity.attributes.brightness !== undefined
-                        ? light_color
-                        : variables.state_on && entity.attributes.brightness === undefined
-                          ? 'var(--state-icon-active-color);'
-                          : 'var(--state-icon-color);'
-                    }
-                  }
-                  #container {
-                    text-align: left !important;
-                  }
-                  #name, #state {
-                    font-size: 1.32vw;
-                    letter-spacing: -0.02vw;
-                  }
-                  #state::first-letter {
-                    text-transform: uppercase;
-                  }
-                  /* portrait */
-                  @media screen and (max-width: 1200px) {
-                    #name, #state {
-                      font-size: 2vw;
-                    }
-                  }
-                  /* phone */
-                  @media screen and (max-width: 800px) {
-                    #name, #state {
-                      font-size: 3vw;
-                    }
-                  }
-                  ${this._config.template.includes('footer') ? `
-                    :host {
-                      --name-font-size: 1.22vw;
-                      --name-icon-size: 1.5vw;
-                      --notify-font-size: 0.9vw;
-                      --notify-box-size: 1.8vw;
-                      --name-padding-v: 0.7vw;
-                      --name-padding-h: 1.1vw;
-                      --card-border-radius: 0.6vw;
-                    }
-                    #name {
-                      font-size: var(--name-font-size);
-                      padding: var(--name-padding-v) var(--name-padding-h);
-                      letter-spacing: 0.012vw;
-                    }
-                    ha-icon {
-                      width: var(--name-icon-size);
-                      vertical-align: 7%;
-                      padding-right: 0.1vw;
-                      opacity: 0.4;
-                    }
-                    #card {
-                      border-radius: var(--card-border-radius);
-                      background: rgba(115, 115, 115, 0.04);
-                    }
-                    #notify {
-                      font-size: var(--notify-font-size);
-                      width: var(--notify-box-size);
-                      height: var(--notify-box-size);
-                      line-height: var(--notify-box-size);
-                      padding-right: 0.5px;
-                      padding-top: 0.5px;
-                    }
-                    /* portrait */
-                    @media screen and (max-width: 1200px) {
-                      #name {
-                        font-size: calc(var(--name-font-size) * 1.4);
-                        padding: calc(var(--name-padding-v) * 1.4) calc(var(--name-padding-h) * 1.4);
-                      }
-                      ha-icon {
-                        width: calc(var(--name-icon-size) * 1.4);
-                      }
-                      #card {
-                        border-radius: calc(var(--card-border-radius) * 1.4);
-                        margin: 0 0.5vw;
-                      }
-                      #notify {
-                        font-size: calc(var(--notify-font-size) * 1.4);
-                        width: calc(var(--notify-box-size) * 1.4);
-                        height: calc(var(--notify-box-size) * 1.4);
-                        line-height: calc(var(--notify-box-size) * 1.4);
-                      }
-                    }
-                    /* phone */
-                    @media screen and (max-width: 800px) {
-                      #name {
-                        font-size: calc(var(--name-font-size) * 2.7);
-                        padding: calc(var(--name-padding-v) * 2.7) calc(var(--name-padding-h) * 2.7);
-                        letter-spacing: 0.12vw;
-                      }
-                      ha-icon {
-                        width: calc(var(--name-icon-size) * 2.7);
-                      }
-                      #card {
-                        border-radius: calc(var(--card-border-radius) * 2.7);
-                        background: rgba(115, 115, 115, 0.08);
-                        margin: 0 0.5vw;
-                      }
-                      #notify {
-                        font-size: calc(var(--notify-font-size) * 2.7);
-                        width: calc(var(--notify-box-size) * 2.7);
-                        height: calc(var(--notify-box-size) * 2.7);
-                        line-height: calc(var(--notify-box-size) * 2.7);
-                        padding: 0;
-                      }
-                    }
-                  `:''}
-                `
-              ]]]
             variables:
               circle_input: >
                 [[[
-                  return entity === undefined ?
-                    null :
-                    parseFloat(states['sensor.gabinet_humidity'].state);
+                  let humidity = states['sensor.gabinet_humidity'];
+                  if (humidity) return parseInt(humidity.state);
                 ]]]
+              circle_input_unit: '%'
+
 
           - type: custom:button-card
             entity: switch.radio
             name: Radio
-            hold_action:
+            double_tap_action:
               !include popup/radio.yaml
             template:
               - base
@@ -739,12 +466,12 @@ views:
               lock: >
                 [[[
                   let lock = states['lock.dator'];
-                  return lock === undefined || lock.state;
+                  return !lock || lock.state;
                 ]]]
               trigger: >
                 [[[
                   let trigger = states['script.home_leave'];
-                  return trigger === undefined || trigger;
+                  return !trigger || trigger;
                 ]]]
           # - type: custom:button-card
           #   entity: sensor.gabinet_temperature
@@ -1083,12 +810,36 @@ views:
           #     !include popup/camera_garden.yaml
 
           - type: custom:button-card
+            entity: sensor.gabinet_temperature
+            name: Temperatura
+            tap_action: none
+            state_display: >
+              [[[ return '&nbsp;'; ]]]
+            template:
+              - base
+              - full_circle
+              - icon_temperature
+              - graph
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.gabinet_temperature
+            variables:
+              circle_input: >
+                [[[
+                  let humidity = states['sensor.gabinet_humidity'];
+                  if (humidity) return parseInt(humidity.state);
+                ]]]
+              circle_input_unit: '%'
+
+          - type: custom:button-card
             #entity: alarm_control_panel.glowny_alarm
             entity: sensor.alarm_status
             name: Alarm
             tap_action:
               !include popup/alarm.yaml
-            hold_action: none
+            double_tap_action: none
             template:
               - base
               - icon_alarm
@@ -1382,7 +1133,7 @@ views:
       #                 tap_action:
       #                   action: toggle
       #                   entity: switch.tv
-      #                 hold_action:
+      #                 double_tap_action:
       #                   !include popup/vardagsrum_tv.yaml
       #                 template:
       #                   - base
@@ -1523,7 +1274,7 @@ views:
                     # - type: custom:button-card
                       # entity: script.home_leave
                       # name: Close All
-                      # hold_action:
+                      # double_tap_action:
                         # action: none
                       # template:
                         # - base
@@ -1556,6 +1307,7 @@ views:
                               parseInt(states['sensor.u_s_air_quality_index'].state);
                           ]]]
                         circle_color: rgba(0, 0, 0, 0.6)
+                        circle_input_unit: ''
                 - type: grid
                   columns: 2
                   cards:
@@ -1563,7 +1315,7 @@ views:
                     - type: custom:button-card
                       entity: script.home_arrive
                       name: Powrót do domu
-                      hold_action:
+                      double_tap_action:
                         action: none
                       template:
                         - base
@@ -1641,7 +1393,7 @@ views:
             name: >
               <ha-icon icon="mdi:nas"></ha-icon> Info
             tap_action:
-              !include popup/footer/nas.yaml
+              !include popup/footer_nas.yaml
             variables:
               notify: >
                 [[[
@@ -1663,7 +1415,7 @@ views:
             name: >
               <ha-icon icon="mdi:arrow-up-bold-circle-outline"></ha-icon> Update
             tap_action:
-              !include popup/footer/updater.yaml
+              !include popup/footer_updater.yaml
             variables:
               notify: >
                 [[[
@@ -1688,7 +1440,7 @@ views:
             name: >
               <ha-icon icon="mdi:robot-vacuum-variant"></ha-icon> Odkurzacz
             tap_action:
-              !include popup/footer/vacuum.yaml
+              !include popup/footer_vacuum.yaml
             variables:
               notify: >
                 [[[
@@ -1704,14 +1456,14 @@ views:
             name: >
               <ha-icon icon="mdi:chart-line-variant"></ha-icon> Historia
             tap_action:
-              !include popup/footer/history.yaml
+              !include popup/footer_history.yaml
             template: footer
 
           - type: custom:button-card
             name: >
               <ha-icon icon="mdi:battery-charging-high"></ha-icon> Baterie
             tap_action:
-              !include popup/batteries.yaml
+              !include popup/footer_batteries.yaml
             variables:
               notify: >
                 [[[
@@ -1734,12 +1486,12 @@ views:
             name: >
               <ha-icon icon="mdi:raspberry-pi"></ha-icon> Finanse
             tap_action:
-              !include popup/footer/finance.yaml
+              !include popup/footer_finance.yaml
             template: footer
 
           - type: custom:button-card
             name: >
               <ha-icon icon="mdi:cog-outline"></ha-icon>
             tap_action:
-              !include popup/footer/settings.yaml
+              !include popup/footer_settings.yaml
             template: footer

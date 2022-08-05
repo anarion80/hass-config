@@ -13,7 +13,7 @@ mqtt:
   # Optional: password
   # NOTE: Environment variables that begin with 'FRIGATE_' may be referenced in {}.
   #       eg. password: '{FRIGATE_MQTT_PASSWORD}'
-  password: 4LtX4C&goQQedJ
+  password: '{FRIGATE_MQTT_PASSWORD}'
   # Optional: interval in seconds for publishing stats (default: shown below)
   stats_interval: 60
 cameras:
@@ -41,14 +41,14 @@ cameras:
       #   - -pix_fmt
       #   - rgb24
       inputs:
-        - path: http://192.168.2.46/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=homeassistant&password=pKP3wbpQVefjcS
-        # - path: rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.46:554/h264Preview_01_main
+        - path: http://192.168.2.46/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=homeassistant&password=password
+        # - path: rtsp://homeassistant:password@192.168.2.46:554/h264Preview_01_main
           roles:
             - record
             #- rtmp
-        #- path: http://192.168.2.46/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user=homeassistant&password=pKP3wbpQVefjcS
-        #- path: rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.46:554/h264Preview_01_sub
-        - path: rtmp://192.168.2.46/bcs/channel0_ext.bcs?channel=0&user=homeassistant&password=pKP3wbpQVefjcS
+        #- path: http://192.168.2.46/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user=homeassistant&password=password
+        #- path: rtsp://homeassistant:password@192.168.2.46:554/h264Preview_01_sub
+        - path: rtmp://192.168.2.46/bcs/channel0_ext.bcs?channel=0&user=homeassistant&password=password
           roles:
             - detect
     rtmp:
@@ -73,14 +73,14 @@ cameras:
         #- -rw_timeout
         #- "5000000"
       inputs:
-        - path: http://192.168.2.47/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=homeassistant&password=pKP3wbpQVefjcS
-        #- path: rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.47:554/h264Preview_01_main
+        - path: http://192.168.2.47/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=homeassistant&password=password
+        #- path: rtsp://homeassistant:password@192.168.2.47:554/h264Preview_01_main
           roles:
             - record
             #- rtmp
-        #- path: http://192.168.2.47/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user=homeassistant&password=pKP3wbpQVefjcS
-        #- path: rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.46:554/h264Preview_01_sub
-        - path: rtmp://192.168.2.47/bcs/channel0_ext.bcs?channel=0&user=homeassistant&password=pKP3wbpQVefjcS
+        #- path: http://192.168.2.47/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user=homeassistant&password=password
+        #- path: rtsp://homeassistant:password@192.168.2.46:554/h264Preview_01_sub
+        - path: rtmp://192.168.2.47/bcs/channel0_ext.bcs?channel=0&user=homeassistant&password=password
           roles:
             - detect
     rtmp:
@@ -125,12 +125,12 @@ cameras:
         #- -rw_timeout
         #- "5000000"
       inputs:
-        - path: http://192.168.2.48/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=homeassistant&password=pKP3wbpQVefjcS
+        - path: http://192.168.2.48/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=homeassistant&password=password
           roles:
             - record
               #- rtmp
-        #- path: http://192.168.2.48/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user=homeassistant&password=pKP3wbpQVefjcS
-        - path: rtmp://192.168.2.48/bcs/channel0_ext.bcs?channel=0&user=homeassistant&password=pKP3wbpQVefjcS
+        #- path: http://192.168.2.48/flv?port=1935&app=bcs&stream=channel0_sub.bcs&user=homeassistant&password=password
+        - path: rtmp://192.168.2.48/bcs/channel0_ext.bcs?channel=0&user=homeassistant&password=password
           roles:
             - detect
     rtmp:

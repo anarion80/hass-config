@@ -7,16 +7,17 @@ conversation:
 api:
 websocket_api:
 stream:
+ffmpeg:
 media_source:
 lovelace:
   mode: storage
   resources:
     [ { url: /hacsfiles/bar-card/bar-card.js,                               type: module },
       { url: /hacsfiles/button-card/button-card.js,                         type: module },
-      { url: /local/kiosk-mode.js?v=1.7.2,                                  type: module },
+      { url: /hacsfiles/kiosk-mode/kiosk-mode.js,                           type: module },
       { url: /hacsfiles/browser_mod/browser_mod.js,                         type: module },
-      { url: /hacsfiles/light-entity-card/light-entity-card.js,             type: module },
-      { url: /hacsfiles/light-popup-card/light-popup-card.js,               type: module },
+      #{ url: /hacsfiles/light-entity-card/light-entity-card.js,             type: module },
+      #{ url: /hacsfiles/light-popup-card/light-popup-card.js,               type: module },
       #{ url: /hacsfiles/lovelace-card-mod/card-mod.js,                      type: module },
       { url: /hacsfiles/lovelace-hui-element/hui-element.js,                type: module },
       { url: /hacsfiles/lovelace-layout-card/layout-card.js,                type: module },
@@ -47,7 +48,7 @@ lovelace:
       { url: /hacsfiles/entity-attributes-card/entity-attributes-card.js,           type: module },
       { url: /hacsfiles/search-card/search-card.js,                                 type: module },
       { url: /hacsfiles/garbage-collection-card/garbage-collection-card.js,         type: module },
-      {  url: /local/swipe-navigation.js?v=1.3.6,                                   type: module },
+      { url: /hacsfiles/lovelace-swipe-navigation/lovelace-swipe-navigation.js,     type: module },
 
       { url: /hacsfiles/tv-card/tv-card.js,                                   type: module },
       { url: /hacsfiles/tv-card/tv-card-editor.js,                            type: module },
@@ -56,6 +57,7 @@ lovelace:
       { url: /hacsfiles/uptime-card/uptime-card.js,                           type: module },
       { url: /hacsfiles/lovelace-battery-entity-row/battery-entity-row.js,    type: module },
       { url: /hacsfiles/lovelace-more-info-card/more-info-card.js,            type: module },
+      { url: /hacsfiles/lovelace-mushroom/mushroom.js,                        type: module },
 
       { url: /hacsfiles/lovelace-state-switch/state-switch.js,               type: module },
       { url: /hacsfiles/lovelace-gui-sandbox/gui-sandbox.js,                 type: module },
@@ -67,11 +69,11 @@ lovelace:
       { url: /hacsfiles/popup-backdrop-filter/popup-backdrop-filter.js,      type: module },
       { url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js,    type: module },
 
-      { url: '/local/calendar-card.js',                                     type: module },
-      { url: '/local/custom_icons.js',                                      type: module },
-      { url: '/local/marked.min.js?v=4.0.12',                               type: module },
+      #{ url: '/local/calendar-card.js',                                     type: module },
+      #{ url: '/local/custom_icons.js',                                      type: module },
+      { url: '/local/marked.min.js?v=4.0.18',                               type: module },
       { url: '/local/vanilla-tilt.min.js?v=1.7.2',                          type: module },
-      { url: '/local/font.css',                                             type: css    } ]
+      { url: '/local/fonts.css?v=2',                                             type: css    } ]
 
   dashboards:
     lovelace-tablet:
@@ -82,10 +84,71 @@ lovelace:
       filename: ui-lovelace-tablet.yaml
 
 homeassistant:
-  packages: !include_dir_named include
+  packages: !include_dir_named packages
+  customize_domain:
+    automation:
+      initial_state: true
   allowlist_external_dirs:
     - /config
     - /config/www
+
+frontend: !include themes.yaml
+template: !include sidebar.yaml
+
+http:
+  use_x_forwarded_for: true
+  ip_ban_enabled: false
+  cors_allowed_origins: !secret cors_allowed_origins
+  trusted_proxies: !secret trusted_proxies
+
+logger:
+  default: warning
+  logs:
+    homeassistant.components.websocket_api: fatal
+    homeassistant.components.camera: fatal
+    homeassistant.helpers.entity: fatal
+
+recorder:
+  purge_keep_days: 10
+  auto_purge: true
+  commit_interval: 30
+  include:
+    domains:
+      - air_quality
+      - binary_sensor
+      - sensor
+      - switch
+      - person
+      - device_tracker
+      - input_select
+  exclude:
+    entity_globs:
+      - sensor.weather_*
+      - binary_sensor.nokia_*
+      - binary_sensor.ta_*
+      - binary_sensor.redmi_*
+      - binary_sensor.amazon_tablet*
+      - binary_sensor.25ffd809_364afacd
+      - binary_sensor.fire_tablet*
+      - binary_sensor.kftrwi*
+      - sensor.nokia_*
+      - sensor.ta_*
+      - sensor.redmi_*
+      - sensor.amazon_tablet*
+      - sensor.count*
+      - sensor.dab7da49*
+      - sensor.25ffd809_364afacd
+      - sensor.ff084fda_073ef5d8
+      - sensor.b955c88d_61f3339e
+      - sensor.kftrwi*
+      - sensor.template_sidebar
+      - sensor.date_time
+      - sensor.time
+      - sensor.firefox_on_pc
+      - sensor.processor*
+      - switch.smart_plug_2*
+      - sensor.pc_monthly
+      - sensor.pc_yearly
 
 
 
