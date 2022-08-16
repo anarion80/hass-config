@@ -78,7 +78,7 @@ themes:
     button-card-font-size: 1.35vw
     z-axis-adjustment: 0.05vw #tilt compensation
     button-card-font-weight: 400
-    button-card-letter-spacing: -0.03vw
+    button-card-letter-spacing: normal
     button-card-border-radius: 10%
 
     footer-card-font-size: 1.22vw
@@ -91,6 +91,8 @@ themes:
     footer-notify-box-size: 1.8vw
     footer-notify-top: -0.9vw
     footer-notify-right: -1vw
+
+    button-card-light-color-temp: hsl(204, 58%, 38%)
 
   ####################################################
   #                                                  #
@@ -138,6 +140,7 @@ themes:
               font-weight: 500 !important;
               color: rgba(255, 255, 255, 0.8) !important;
               padding: 0.2vw 0 2vw 0 !important;
+              letter-spacing: 0.07vw !important;
             }
             /* portrait */
             @media screen and (max-width: 1200px) {

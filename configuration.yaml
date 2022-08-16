@@ -73,7 +73,7 @@ lovelace:
       #{ url: '/local/custom_icons.js',                                      type: module },
       { url: '/local/marked.min.js?v=4.0.18',                               type: module },
       { url: '/local/vanilla-tilt.min.js?v=1.7.2',                          type: module },
-      { url: '/local/fonts.css?v=2',                                             type: css    } ]
+      { url: '/local/fonts.css?v=2.1',                                             type: css    } ]
 
   dashboards:
     lovelace-tablet:

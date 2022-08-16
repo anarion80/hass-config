@@ -95,15 +95,12 @@ updates_hass_icon_name:
   icon: mdi:update
   styles:
     card:
-      - width: max-content
-      - filter: >
+      - opacity: >
           [[[
-            if (entity) {
-              return entity.state === states[variables.latest].state ||
-                entity.state === states[variables.latest_beta].state
-                  ? 'opacity(30%)'
-                  : 'drop-shadow(3px 3px 5px #00000050)';
-            }
+            return entity && (entity.state === states[variables.latest].state ||
+              entity.state === states[variables.latest_beta].state)
+                ? '0.3'
+                : '1';
           ]]]
       - display: >
           [[[
@@ -155,20 +152,17 @@ updates_hacs_icon_name:
   icon: mdi:open-in-new
   styles:
     card:
-      - width: max-content
-      - filter: >
+      - opacity: >
           [[[
-            if (entity) {
-              return entity.state === '0'
-                ? 'opacity(30%)'
-                : 'drop-shadow(3px 3px 5px #00000050)';
-            }
+            return entity && entity.state === '0'
+                ? '0.3'
+                : '1';
           ]]]
       - display: >
           [[[
             return entity && entity.state !== 'unknown'
-              ? 'flex'
-              : 'none';
+                ? 'flex'
+                : 'none';
           ]]]
 
 updates_other:
@@ -206,16 +200,35 @@ updates_other_icon_name:
   icon: mdi:reload
   styles:
     card:
-      - width: max-content
-      - filter: 'opacity(30%)'
+      - opacity: 0.3
       - display: >
           [[[
-            return `[[[
-              return entity
+            return entity
                 ? 'flex'
                 : 'none';
-            ]]]`
           ]]]
+
+updates_supervisor:
+  template:
+    - updates
+    - settings
+  state_display: |
+    [[[
+      if (entity) {
+        let output = "";
+        let attr = entity.attributes.addons;
+        attr = attr.filter(addon => addon.version !== addon.version_latest).map(addon => output += `<li>${addon.name}</a></b> ${addon.version} \u279e ${addon.version_latest}</li>`);
+        let count = attr.length;
+        let subtitle = count == 0
+            ? `${variables.translate_no_updates} <b>&larr;</b> ${states['update.home_assistant_supervisor_update'].attributes.installed_version || ''}`
+            : `${count} ${count == 1 ? variables.translate_update_available : variables.translate_updates_available} ${String.fromCodePoint("0x1f389")}`;
+        return `
+          <ha-icon icon="mdi:update"></ha-icon> <span class="title">Supervisor</span><br>
+          <p class="subtitle">${subtitle}</p>
+          <ul>${output}</ul>
+        `;
+      }
+    ]]]
 
 hacs_iframe:
   tap_action:

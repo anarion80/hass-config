@@ -42,7 +42,7 @@ template:
                   {{- days[now().weekday()] }} {{ strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}.
 
             {#- Pogoda -#}
-                Obecnie mamy {{states('sensor.openweathermap_weather')}} i temperaturę odczuwalną {{ temp }}
+                Obecnie mamy {{states('sensor.openweathermap_weather')}} i temperaturę odczuwalną: {{ temp }}
                 {%- if temp|int == 1 %} stopień.
                 {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
                 {% else %} stopni.
@@ -64,7 +64,7 @@ template:
                 {%- elif condition == 'sunny' -%}słonecznie
                 {%- elif condition == 'windy' -%}wietrznie
                 {%- elif condition == 'windy-variant' -%}wiał wiatr
-                {% endif -%}, a temperatura maksymalna wyniesie {{ temp }}
+                {% endif -%}, a temperatura maksymalna wyniesie: {{ temp }}
                 {%- if temp|int == 1 %} stopień.
                 {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
                 {% else %} stopni.
