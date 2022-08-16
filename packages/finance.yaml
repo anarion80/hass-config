@@ -114,8 +114,8 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - sensor.sodexo_praca
-      - sensor.sodexo_sodexo2
+      - sensor.sodexo_dla_ciebie_praca
+      - sensor.sodexo_dla_ciebie_sodexo2
     condition:
     - condition: template
       value_template: '{{ trigger.to_state.state | float > trigger.from_state.state | float }}'
