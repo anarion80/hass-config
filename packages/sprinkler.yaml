@@ -44,6 +44,17 @@ automation:
       data:
         message: '🛑 Zraszacz wyłączony'
 
+
+input_number:
+  watering_time:
+    name: "Czas podlewania"
+    unit_of_measurement: min
+    min: 0
+    max: 60
+    step: 1
+    initial: 15
+    icon: mdi:timer
+
 script:
   sprinkler:
     alias: "Turn on sprinkler via script"
