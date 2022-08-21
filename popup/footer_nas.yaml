@@ -38,6 +38,11 @@ browser_mod:
                 border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
               }
             }
+          $mushroom-light-card: |
+            mushroom-light-card {
+              padding: 10px 19px 0 19px;
+              margin-bottom: -10px !important;
+            }
           $hui-horizontal-stack-card:
             $: |
               #root {
@@ -171,13 +176,9 @@ browser_mod:
         entities:
           - entity: switch.fire_tablet_screensaver
 
-          - entity: light.fire_tablet_screen
-
-          - type: custom:slider-entity-row
+          - type: custom:mushroom-light-card
             entity: light.fire_tablet_screen
-            name: Jasność
-            icon: mdi:brightness-6
-            hide_state: false
+            show_brightness_control: true
 
           - entity: binary_sensor.fire_tablet_plugged_in
 

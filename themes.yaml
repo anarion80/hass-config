@@ -3,6 +3,8 @@ extra_module_url:
 
 themes:
   tablet:
+    #enable mode
+    #modes: {dark: {.: .}}
 
     #default dark mode
     primary-text-color: '#e1e1e1'

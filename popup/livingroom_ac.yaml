@@ -9,9 +9,35 @@ browser_mod:
           padding-top: 0.5em;
           padding-bottom: 0em;
         }
+      $: |
+        mushroom-climate-card {
+          padding: 10px 18px 0 18px;
+        }
+        mushroom-climate-card:nth-child(2) {
+          margin-top: -18px !important;
+        }
   card:
     type: vertical-stack
     cards:
+      - type: custom:mushroom-climate-card
+        entity: climate.living_room_ac
+        name: Klimatyzacja
+        icon: mdi:home-thermometer
+        hvac_modes:
+          - 'off'
+          - cool
+          - fan_only
+        primary_info: name
+        secondary_info: state
+        show_temperature_control: false
+
+      - type: custom:mushroom-climate-card
+        entity: climate.living_room_ac
+        icon_type: none
+        secondary_info: none
+        primary_info: none
+        show_temperature_control: true
+
       - type: thermostat
         entity: climate.living_room_ac
       - type: entities
