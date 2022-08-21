@@ -925,6 +925,7 @@ views:
                     card:
                       type: custom:button-card
                       entity: media_player.sony_bravia_tv
+                      triggers_update: sensor.youtube_watching
                       template:
                         - conditional_media
                         - icon_tv
@@ -936,6 +937,7 @@ views:
                     card:
                       type: custom:button-card
                       entity: media_player.kd_55xe9305
+                      triggers_update: sensor.youtube_watching
                       template:
                         - conditional_media
                         - icon_tv
@@ -947,6 +949,7 @@ views:
                     card:
                       type: custom:button-card
                       entity: media_player.sony_bravia_tv
+                      triggers_update: sensor.youtube_watching
                       template:
                         - conditional_media
                         - icon_tv
@@ -1022,6 +1025,7 @@ views:
 
                   - type: custom:button-card
                     entity: media_player.sony_bravia_tv
+                    triggers_update: sensor.youtube_watching
                     name: TV
                     template:
                       - media
@@ -1030,6 +1034,7 @@ views:
                   - type: custom:button-card
                     name: TV
                     entity: media_player.kd_55xe9305
+                    triggers_update: sensor.youtube_watching
                     template:
                       - media
                       - icon_tv
@@ -1436,19 +1441,40 @@ views:
                 ]]]
             template: footer
 
+          # - type: custom:button-card
+          #   name: >
+          #     <ha-icon icon="mdi:robot-vacuum-variant"></ha-icon> Odkurzacz
+          #   tap_action:
+          #     !include popup/footer_vacuum.yaml
+          #   variables:
+          #     notify: >
+          #       [[[
+          #         let last_clean = states['sensor.morty_last_clean_end'],
+          #           week_ms = 6048e5;
+          #         if (last_clean) {
+          #           return (Date.now() - Date.parse(last_clean.state)) > week_ms;
+          #         }
+          #       ]]]
+          #   template: footer
+
           - type: custom:button-card
             name: >
-              <ha-icon icon="mdi:robot-vacuum-variant"></ha-icon> Odkurzacz
+              <ha-icon icon="mdi:printer"></ha-icon> Drukarka
             tap_action:
-              !include popup/footer_vacuum.yaml
+              !include popup/footer_printer.yaml
             variables:
               notify: >
                 [[[
-                  let last_clean = states['sensor.morty_last_clean_end'],
-                    week_ms = 6048e5;
-                  if (last_clean) {
-                    return (Date.now() - Date.parse(last_clean.state)) > week_ms;
-                  }
+                  let count = 0;
+                  Object.keys(states).forEach(key => {
+                    let s = states[key],
+                        e = s.entity_id,
+                        a = s.attributes;
+                    if (e.includes('hp_officejet_pro') && a.marker_type === 'inkCartridge' && parseInt(s.state) < 30) {
+                        count += 1;
+                    }
+                  })
+                  return count;
                 ]]]
             template: footer
 

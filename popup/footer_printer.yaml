@@ -1,0 +1,48 @@
+action: fire-dom-event
+browser_mod:
+  command: popup
+  title: Drukarka
+  style:
+    .: |
+      :host .content {
+        width: 100%;
+      }
+  card:
+    type: entities
+
+    entities:
+      - entity: sensor.hp_officejet_pro_6230
+        name: Stan
+
+      - entity: sensor.hp_officejet_pro_6230_uptime
+        name: Uptime
+
+      - type: custom:bar-card
+        width: 55%
+        height: 2em
+        decimal: 0
+        unit_of_measurement: '%'
+        positions: &bar_card_positions
+          icon: outside
+          indicator: 'off'
+          name: outside
+        severity: &bar_card_severity
+          - color: '#6d2525'
+            from: 0
+            to: 30
+          - color: '#303435'
+            from: 30
+            to: 90
+          - color: '#006600'
+            from: 90
+            to: 100
+        entity_row: true
+        entities:
+          - entity: sensor.hp_officejet_pro_6230_black_ink
+            name: Czarny
+          - entity: sensor.hp_officejet_pro_6230_cyan_ink
+            name: Cyan
+          - entity: sensor.hp_officejet_pro_6230_magenta_ink
+            name: Magenta
+          - entity: sensor.hp_officejet_pro_6230_yellow_ink
+            name: Yellow
