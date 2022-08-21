@@ -1,0 +1,5 @@
+homeassistant:
+  customize:
+    sensor.lodowka_energy_total:
+      state_class: total_increasing
+      device_class: energy
