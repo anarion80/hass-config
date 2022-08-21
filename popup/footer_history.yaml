@@ -2,7 +2,7 @@ action: fire-dom-event
 browser_mod:
   command: popup
   large: true
-  title: Historik
+  title: History
   style:
     hui-grid-card:
       $: |
@@ -15,9 +15,9 @@ browser_mod:
     square: false
     cards:
 
-      #kwh
+      #server kwh
       - type: custom:apexcharts-card
-        graph_span: 12months
+        graph_span: 1month
         apex_config:
           tooltip:
             style:
@@ -31,7 +31,7 @@ browser_mod:
                 }
           chart:
             height: 400px
-            fontFamily: SF Text
+            fontFamily: SF Pro Text
           fill:
             type: gradient
             gradient:
@@ -74,16 +74,18 @@ browser_mod:
               color: rgba(112, 135, 164, 0.5)
               height: 1
         series:
-          - entity: sensor.date
-            name: Förbrukning
+          - entity: sensor.server_power_power
+            name: Server power
             unit: kWh
             type: column
             color: rgba(228,224,17,1)
-            #data_generator: !secret apexcharts_tibber
+            group_by:
+              func: last
+              duration: 1d
 
-      #influx
+      #tv
       - type: custom:apexcharts-card
-        graph_span: 1month
+        graph_span: 1week
         apex_config:
           yaxis:
             show: true
@@ -99,7 +101,7 @@ browser_mod:
             show: true
             borderColor: rgba(112, 135, 164, 0.1)
           title:
-            text: kg
+            text: kWh
             style:
               color: white
               fontSize: 30px
@@ -111,7 +113,7 @@ browser_mod:
               show: true
               formatter: |
                 EVAL:(timestamp) => {
-                  let date = new Date(timestamp).toLocaleString('sv-SE',{day: 'numeric', year: 'numeric', month:'long'}).toString().split(' ');
+                  let date = new Date(timestamp).toLocaleString('pl-PL',{day: 'numeric', year: 'numeric', month:'long'}).toString().split(' ');
                   return `${date[0]} ${date[1].charAt(0).toUpperCase() + date[1].slice(1)} ${date[2]}`;
                 }
           xaxis:
@@ -132,10 +134,10 @@ browser_mod:
               offsetX: -1
               formatter: |
                 EVAL:(timestamp) => {
-                  return new Date(timestamp).toLocaleString('sv-SE',{day: 'numeric', month:'short'});
+                  return new Date(timestamp).toLocaleString('pl-PL',{day: 'numeric', month:'short'});
                 }
           chart:
-            fontFamily: SF Text
+            fontFamily: SF Pro Text
             height: 350px
           fill:
             type: gradient
@@ -155,15 +157,15 @@ browser_mod:
           type: area
           fill_raw: last
         series:
-          - entity: sensor.date
+          - entity: sensor.tvset_power
             curve: smooth
-            name: Mattias
+            name: TV power
             color: '#9a0ca3'
-            #data_generator: !secret apexcharts_influx
+
 
       #github
       - type: custom:apexcharts-card
-        graph_span: 2.2year
+        graph_span: 3year
         apex_config:
           yaxis:
             show: true
@@ -179,7 +181,7 @@ browser_mod:
             show: true
             borderColor: rgba(112, 135, 164, 0.1)
           title:
-            text: ⭐ matt8707/hass-config
+            text: ⭐ anarion80/gatsby-ghost-simply
             style:
               color: white
               fontSize: 30px
@@ -191,7 +193,7 @@ browser_mod:
               show: true
               formatter: |
                 EVAL:(timestamp) => {
-                  let date = new Date(timestamp).toLocaleString('sv-SE',{day: 'numeric', year: 'numeric', month:'long'}).toString().split(' ');
+                  let date = new Date(timestamp).toLocaleString('pl-PL',{day: 'numeric', year: 'numeric', month:'long'}).toString().split(' ');
                   return `${date[0]} ${date[1].charAt(0).toUpperCase() + date[1].slice(1)} ${date[2]}`;
                 }
           xaxis:
@@ -212,10 +214,10 @@ browser_mod:
               offsetX: -1
               formatter: |
                 EVAL:(timestamp) => {
-                  return new Date(timestamp).toLocaleString('sv-SE',{day: 'numeric', month:'short'});
+                  return new Date(timestamp).toLocaleString('pl-PL',{day: 'numeric', month:'short'});
                 }
           chart:
-            fontFamily: SF Text
+            fontFamily: SF Pro Text
             height: 350px
           fill:
             type: gradient
@@ -237,9 +239,41 @@ browser_mod:
         series:
           - entity: sensor.date
             curve: smooth
-            name: Mattias
+            name: anarion80
             color: '#9a0ca3'
-            #data_generator: !secret apexcharts_github
+            data_generator: |-
+              let token_url = 'https://ha.anarion.pl/local/.apex.json';
+              let api_url = 'https://api.github.com/repos/anarion80/gatsby-ghost-simply';
+
+              let response = await fetch(token_url);
+              let token = await response.json();
+
+              let auth = {
+                headers: new Headers({
+                  accept: 'application/vnd.github.v3.star+json',
+                  Authorization: `token ${token['github']}`,
+                }),
+              };
+
+              let request = await fetch(api_url, auth);
+              let data = await request.json();
+              let stargazers_total = [];
+              stargazers_total.push(data.stargazers_count);
+
+              let array = [];
+              let stargazer_count = 0;
+              let totalPages = Math.ceil(stargazers_total[0] / 100);
+
+              for (var i = 1; i <= totalPages; i++) {
+                let data = await fetch(`${api_url}/stargazers?per_page=100&page=${i}`, auth);
+                (await data.json()).forEach((data) => {
+                  Object.entries(data).forEach(([key, value]) => {
+                    key === 'starred_at' &&
+                      (stargazer_count++, array.push([new Date(value), stargazer_count]));
+                  });
+                });
+              }
+              return array;
 
       #entity counter
       - type: custom:apexcharts-card
@@ -257,7 +291,7 @@ browser_mod:
                 - 90
                 - 100
           chart:
-            fontFamily: SF Text
+            fontFamily: SF Pro Text
           legend:
             position: right
             fontSize: 13px
@@ -386,7 +420,7 @@ browser_mod:
                 show: false
               chart:
                 height: 280px
-                fontFamily: SF Display
+                fontFamily: SF Pro Display
               plotOptions:
                 radialBar:
                   startAngle: -180
@@ -432,7 +466,7 @@ browser_mod:
                 dashArray: 3.2
                 lineCap: butt
             series:
-              - entity: sensor.komfovent_status_panel_temperature
+              - entity: sensor.nas_cpu
                 color: '#379c55'
           - type: custom:apexcharts-card
             chart_type: radialBar
@@ -443,7 +477,7 @@ browser_mod:
                 show: false
               chart:
                 height: 280px
-                fontFamily: SF Display
+                fontFamily: SF Pro Display
               plotOptions:
                 radialBar:
                   startAngle: -180
@@ -490,7 +524,7 @@ browser_mod:
                 dashArray: 3.2
                 lineCap: butt
             series:
-              - entity: sensor.komfovent_status_panel_humidity
+              - entity: sensor.nas_cpu
                 color: '#379c55'
         columns: 2
         square: true
