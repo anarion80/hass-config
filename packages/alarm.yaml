@@ -32,18 +32,19 @@ automation:
           message: >
             Wykryto ruch w {{ trigger.to_state.name }}
 
-  - id: '1617367166600'
-    alias: Motion Detected
-    description: ''
-    use_blueprint:
-      path: vorion/send-camera-snapshot-notification-on-motion.yaml
-      input:
-        notification_message: '{{ motion_sensor_name }} - wykryto ruch!'
-        motion_sensor: binary_sensor.camera1_motion
-        camera: camera.camera1
-        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
-        notification_title: Wykryto ruch!
-        delay: 2
+  # - id: '1617367166600'
+  #   alias: Motion Detected
+  #   description: ''
+  #   use_blueprint:
+  #     path: vorion/send-camera-snapshot-notification-on-motion.yaml
+  #     input:
+  #       notification_message: '{{ motion_sensor_name }} - wykryto ruch!'
+  #       motion_sensor: binary_sensor.camera1_motion
+  #       camera: camera.camera1
+  #       notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+  #       notification_title: Wykryto ruch!
+  #       delay: 2
+
   - id: '1617387394300'
     alias: Frigate person detection notification
     description: ''
@@ -68,6 +69,7 @@ automation:
             ttl: 0
             priority: high
     mode: single
+
   - id: '1617387394301'
     alias: Frigate person detection notification - popup
     description: 'Frigate person detection notification - popup'
@@ -102,9 +104,11 @@ automation:
     trigger:
     - platform: state
       entity_id:
-      - binary_sensor.door_sensor_1_contact
+      - binary_sensor.alarm_keypad_contact
+      - binary_sensor.drzwi_do_ogrodu_contact
+      - binary_sensor.drzwi_wejsciowe_contact
       - binary_sensor.motion_sensor_1_battery_low
-      - sensor.my_tp_switch_amps
+      - switch.server_power
       to: unavailable
       for: 0:05:00
     condition: []
@@ -452,19 +456,13 @@ automation:
 group:
   all_motion_detectors:
     entities:
-      - binary_sensor.schowek_person_motion
+      - binary_sensor.alarm_keypad_occupancy
       - binary_sensor.motion_sensor_1_occupancy
 
   all_door_sensors:
     entities:
       - binary_sensor.drzwi_do_ogrodu_contact
       - binary_sensor.drzwi_wejsciowe_contact
-
-homeassistant:
-  customize:
-  #door
-    binary_sensor.bedroom_door_contact:
-      friendly_name: Sypialnia
 
 sensor:
   - platform: template
