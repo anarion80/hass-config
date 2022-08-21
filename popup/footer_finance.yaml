@@ -29,6 +29,10 @@ browser_mod:
           - entity: sensor.wibor_6m
             curve: straight
             float_precision: 2
+      - type: entities
+        entities:
+          - entity: sensor.sodexo_dla_ciebie_praca
+          - entity: sensor.sodexo_dla_ciebie_sodexo2
 
 
 
