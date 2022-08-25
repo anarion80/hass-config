@@ -81,6 +81,8 @@ browser_mod:
       ### HACS
       - type: custom:button-card
         entity: sensor.hacs
+        variables:
+          installed: sensor.hacs_installed
         template: updates_hacs
 
       - type: custom:button-card
