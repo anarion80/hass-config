@@ -234,7 +234,8 @@ template:
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
             states.media_player.plex_plexamp_android,
             states.media_player.sony_bravia_tv,
-            states.media_player.spotify_anarion ] %}
+            states.media_player.spotify_anarion,
+            states.sensor.netflix_on_shield ] %}
           {% macro media(state) %}
           {% set state = media_players | selectattr('state','eq',state) | list %}
           {% set last_changed = recently_added if state | length == 0 else state | map(attribute='last_changed') | list | max %}
@@ -262,7 +263,8 @@ template:
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
             states.media_player.plex_plexamp_android,
             states.media_player.sony_bravia_tv,
-            states.media_player.spotify_anarion ] %}
+            states.media_player.spotify_anarion,
+            states.sensor.netflix_on_shield ] %}
           {{ recently_added + media_players | map(attribute='name') | list }}
         select_option:
           service: select.select_option
@@ -286,6 +288,37 @@ template:
           data:
             source: >
               {{ option }}
+
+  - sensor:
+      - name: "Netflix on Shield"
+        state: >
+          {% set player = states.media_player.nvidia_shield.state %}
+          {% if player == 'playing' and state_attr('media_player.nvidia_shield', 'source') == 'Netflix'  %}
+            playing
+          {% elif (player == 'paused' or player == 'standby') and state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
+            paused
+          {% else %}
+            idle
+          {% endif %}
+        attributes:
+          media_artist: >
+            {% set player = states.media_player.nvidia_shield.state %}
+            {% if player == 'playing' and state_attr('media_player.nvidia_shield', 'source') == 'Netflix'  %}
+              Netflix
+            {% elif (player == 'paused' or player == 'standby') and state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
+              Netflix
+            {% else %}
+            {% endif %}
+          media_title: >
+            {% set player = states.media_player.nvidia_shield.state %}
+            {% if player == 'playing' and state_attr('media_player.nvidia_shield', 'source') == 'Netflix'  %}
+              Netflix
+            {% elif (player == 'paused' or player == 'standby') and state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
+              Netflix
+            {% else %}
+            {% endif %}
+          entity_picture: "/local/netflix-logo2.jpg"
+
 
 sensor:
   - platform: plex_recently_added

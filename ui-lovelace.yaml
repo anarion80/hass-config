@@ -42,10 +42,32 @@ views:
             "sidebar  footer      footer  ."
             "sidebar  .           .       ."
     cards:
+      #extra_styles fix, do not remove
+      #also warn if theme is not set
+
       - type: custom:button-card
-        styles: #extra_styles fix
+        view_layout:
+          grid-area: 1 / 2 / 2 / 5
+        name: SET THEME TO "tablet" IN PROFILE
+        tap_action:
+          action: navigate
+          navigation_path: /profile
+        styles:
           card:
-            - display: none
+            - display: >
+                [[[
+                  return hass.themes.theme === 'tablet'
+                      ? 'none'
+                      : 'initial';
+                ]]]
+          name:
+            - z-index: 1
+            - overflow: visible
+            - color: red
+            - font-weight: bolder
+            - font-size: xxx-large
+            - background: yellow
+
       #################################################
       #                                               #
       #                    SIDEBAR                    #
@@ -858,6 +880,24 @@ views:
                   card:
                     - animation: blink 1s ease infinite
 
+          - type: custom:button-card
+            entity: climate.living_room_ac
+            name: Klima
+            double_tap_action:
+              !include popup/livingroom_ac.yaml
+            template:
+              - base
+              - icon_ac
+              - full_circle
+              - loader
+            variables:
+              circle_input: >
+                [[[
+                  return entity === undefined ?
+                    null :
+                    parseFloat(entity.attributes.current_temperature);
+                ]]]
+
       #################################################
       #                                               #
       #                     MEDIA                     #
@@ -897,6 +937,8 @@ views:
                         state_not: Spotify
                       - entity: select.conditional_media
                         state_not: Google Nest Mini
+                      - entity: select.conditional_media
+                        state_not: Netflix on Shield
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
@@ -986,6 +1028,16 @@ views:
                       template:
                         - conditional_media
                         - icon_nest_mini
+
+                  - type: conditional
+                    conditions:
+                      - entity: select.conditional_media
+                        state: Netflix on Shield
+                    card:
+                      type: custom:button-card
+                      entity: sensor.netflix_on_shield
+                      template:
+                        - conditional_media
 
               - type: grid
                 columns: 2
