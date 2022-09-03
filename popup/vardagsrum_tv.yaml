@@ -35,7 +35,7 @@ browser_mod:
         cards:
 
           - type: custom:button-card
-            entity: media_player.sony_bravia_tv
+            entity: media_player.sony_kd_55xe9305
             icon: mdi:volume-mute
             show_name: false
             tap_action:

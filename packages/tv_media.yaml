@@ -12,7 +12,7 @@ automation:
         data:
           entity_id: >
             {% if trigger.entity_id == 'input_select.hdmi' %}
-              media_player.sony_bravia_tv
+              media_player.sony_kd_55xe9305
             {% elif trigger.entity_id == 'input_select.hdmi2' %}
               media_player.samsung_tv
             {% endif %}
@@ -38,7 +38,7 @@ automation:
       - media_player.spotify_anarion
       - media_player.nest_mini
       - media_player.kd_55xe9305
-      - media_player.sony_bravia_tv
+      - media_player.sony_kd_55xe9305
       - media_player.chromecastaudio
       attribute: media_title
       to: Advertisement
@@ -58,7 +58,7 @@ automation:
         - media_player.spotify_anarion
         - media_player.nest_mini
         - media_player.kd_55xe9305
-        - media_player.sony_bravia_tv
+        - media_player.sony_kd_55xe9305
         - media_player.chromecastaudio
         attribute: media_title
         from: Advertisement
@@ -79,7 +79,7 @@ binary_sensor:
 homeassistant:
   customize:
   #media_player
-    media_player.sony_bravia_tv:
+    media_player.sony_kd_55xe9305:
       friendly_name: TV
       device_class: tv
       source_list: ['HDMI 1', 'HDMI 2/MHL', 'HDMI 3', 'HDMI 4']
@@ -101,6 +101,9 @@ input_boolean:
   radio_status:
     name: Radio is on
     icon: mdi:radio
+  chromecast_audio_status:
+    name: Chromecast Audio is on
+    icon: mdi:cast-audio
 
 input_select:
   hdmi:
@@ -218,7 +221,7 @@ group:
       - media_player.nvidia_shield
       - media_player.nest_mini
       - media_player.kd_55xe9305
-      - media_player.sony_bravia_tv
+      - media_player.sony_kd_55xe9305
       - media_player.spotify_anarion
 
 template:
@@ -233,7 +236,7 @@ template:
             states.media_player.nest_mini,
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
             states.media_player.plex_plexamp_android,
-            states.media_player.sony_bravia_tv,
+            states.media_player.sony_kd_55xe9305,
             states.media_player.spotify_anarion,
             states.sensor.netflix_on_shield ] %}
           {% macro media(state) %}
@@ -262,7 +265,7 @@ template:
             states.media_player.nest_mini,
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
             states.media_player.plex_plexamp_android,
-            states.media_player.sony_bravia_tv,
+            states.media_player.sony_kd_55xe9305,
             states.media_player.spotify_anarion,
             states.sensor.netflix_on_shield ] %}
           {{ recently_added + media_players | map(attribute='name') | list }}
@@ -276,15 +279,15 @@ template:
 
       - name: hdmi_bravia
         state: >
-          {% set source = state_attr('media_player.sony_bravia_tv', 'source') %}
+          {% set source = state_attr('media_player.sony_kd_55xe9305', 'source') %}
           {{ iif(source == None, 'HDMI3', source) }}
         options: >
-          {% set source_list = state_attr('media_player.sony_bravia_tv', 'source_list') %}
+          {% set source_list = state_attr('media_player.sony_kd_55xe9305', 'source_list') %}
           {{ iif(source_list == None, ['HDMI3'], source_list) }}
         select_option:
           service: media_player.select_source
           target:
-            entity_id: media_player.sony_bravia_tv
+            entity_id: media_player.sony_kd_55xe9305
           data:
             source: >
               {{ option }}
@@ -336,7 +339,7 @@ sensor:
         friendly_name: Current TV Channel
         value_template: >
           {%- set all_channels = ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS 2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV', 'TOYAcyfrowaINFO'] %}
-          {{ state_attr('media_player.sony_bravia_tv','source') }}
+          {{ state_attr('media_player.sony_kd_55xe9305','source') }}
       czas_tv:
         friendly_name: Czas działania TV
         value_template: >
@@ -349,7 +352,7 @@ sensor:
 
   - platform: history_stats
     name: Czas działania TV
-    entity_id: media_player.sony_bravia_tv
+    entity_id: media_player.sony_kd_55xe9305
     state: "on"
     type: time
     start: "{{ now().replace(hour=0, minute=0, second=0) }}"
@@ -363,7 +366,7 @@ switch:
         value_template: >
                 {% if states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
                 and is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.android')
-                and states('media_player.sony_bravia_tv') in ['on', 'playing', 'paused'] %}
+                and states('media_player.sony_kd_55xe9305') in ['on', 'playing', 'paused'] %}
                 on
                 {% else %}
                 off
@@ -421,7 +424,7 @@ switch:
         value_template: >
                 {% if states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
                 and is_state_attr('media_player.nvidia_shield','app_id','com.netflix.ninja')
-                and is_state('media_player.sony_bravia_tv', 'on') %}
+                and is_state('media_player.sony_kd_55xe9305', 'on') %}
                 on
                 {% else %}
                 off
@@ -473,7 +476,7 @@ switch:
         value_template: >
                 {% if states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
                 and is_state_attr('media_player.nvidia_shield','app_id','com.google.android.youtube.tv')
-                and is_state('media_player.sony_bravia_tv', 'on') %}
+                and is_state('media_player.sony_kd_55xe9305', 'on') %}
                 on
                 {% else %}
                 off
@@ -526,7 +529,7 @@ switch:
       tv:
         friendly_name: TV
         value_template: >
-                        {% if state_attr('media_player.sony_bravia_tv','source') in ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS 2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV', 'TOYAcyfrowaINFO'] %}
+                        {% if state_attr('media_player.sony_kd_55xe9305','source') in ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS 2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV', 'TOYAcyfrowaINFO'] %}
                           on
                           {% else %}
                           off
@@ -1752,7 +1755,7 @@ script:
             value_template: >-
               {{ states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
                 and is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.android')
-                and is_state('media_player.sony_bravia_tv', 'on') }}
+                and is_state('media_player.sony_kd_55xe9305', 'on') }}
           sequence: []
         default:
         #### If Plex isn't open on the device, open it

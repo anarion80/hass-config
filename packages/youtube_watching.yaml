@@ -28,7 +28,7 @@ automation:
         - media_player.kd_55xe9305
         - media_player.nvidia_shield
         - media_player.shield
-        - media_player.sony_bravia_tv
+        - media_player.sony_kd_55xe9305
       to: playing
     condition: >
       {{ is_state_attr(trigger.entity_id, 'app_id', 'com.google.android.youtube') and

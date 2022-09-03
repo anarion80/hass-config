@@ -55,7 +55,7 @@
           ] %}
 
           {% set media_players = [
-            states.media_player.sony_bravia_tv
+            states.media_player.sony_kd_55xe9305
           ] %}
 
           {% set lights_on = lights | selectattr('state','eq','on') | list %}
@@ -215,6 +215,7 @@
             | rejectattr('entity_id', 'search', 'battery_state')
             | rejectattr('entity_id', 'search', 'battery_health')
             | rejectattr('entity_id', 'search', 'battery_temperature')
+            | rejectattr('entity_id', 'search', 'battery_power')
             | map(attribute = 'entity_id') | list %}
           {% for sensor in entities if states(sensor) != 'unknown' and states(sensor) != 'unavailable' and states(sensor) != 'None' and states(sensor) | int(default=0) <= 5 %}
             {% if loop.first %} {{'\u26A0\uFE0F'}} {% else %}, {% endif %}
