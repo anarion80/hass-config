@@ -314,7 +314,7 @@ views:
                     circle_input_unit: ''
 
                 - type: custom:button-card
-                  entity: media_player.sony_bravia_tv
+                  entity: media_player.sony_kd_55xe9305
                   name: TV
                   state_display: >
                     [[[
@@ -374,7 +374,8 @@ views:
                       action: toggle
                       entity: entity
                     template:
-                      - media
+                      - base
+                      #- media
                       - icon_plex
                   - type: custom:button-card
                     entity: switch.radio
@@ -395,7 +396,8 @@ views:
                       action: toggle
                       entity: entity
                     template:
-                      - media
+                      - base
+                      #- media
                       - icon_netflix4
                       - loader
 
@@ -966,7 +968,7 @@ views:
                         state: TV
                     card:
                       type: custom:button-card
-                      entity: media_player.sony_bravia_tv
+                      entity: media_player.sony_kd_55xe9305
                       triggers_update: sensor.youtube_watching
                       template:
                         - conditional_media
@@ -990,7 +992,7 @@ views:
                         state: Sony Bravia TV
                     card:
                       type: custom:button-card
-                      entity: media_player.sony_bravia_tv
+                      entity: media_player.sony_kd_55xe9305
                       triggers_update: sensor.youtube_watching
                       template:
                         - conditional_media
@@ -1076,7 +1078,7 @@ views:
                 cards:
 
                   - type: custom:button-card
-                    entity: media_player.sony_bravia_tv
+                    entity: media_player.sony_kd_55xe9305
                     triggers_update: sensor.youtube_watching
                     name: TV
                     template:
@@ -1185,7 +1187,7 @@ views:
       #                   - icon_plex
 
       #               - type: custom:button-card
-      #                 entity: media_player.sony_bravia_tv
+      #                 entity: media_player.sony_kd_55xe9305
       #                 name: TV
       #                 tap_action:
       #                   action: toggle
