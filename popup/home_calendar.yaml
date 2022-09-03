@@ -1,24 +1,83 @@
 action: fire-dom-event
 browser_mod:
   command: popup
-  title: Kalendarz
+  title: Kalendarze
   style:
-    hui-grid-card$: |
-      #root {
-        grid-gap: 0 !important;
-      }
     .: |
-      ha-dialog > div {
-        width: 500px !important;
-        margin: 0 !important;
+      :host .content {
+        width: calc(385px + 385px + 385px);
+        max-width: 90vw;
       }
+    layout-card:
+      $grid-layout$:
+        hui-calendar-card:
+          $: |
+            .card-content {
+              padding: 1.5em 2.7em 2.3em 2em;
+            }
+            ha-card {
+              animation: border 1s forwards;
+              border-radius: 0;
+            }
+            @keyframes border {
+              0%, 100% {
+                border-right: 1px solid rgba(0, 0, 0, 0.3);
+              }
+            }
+            /* phone */
+            @media screen and (max-width: 800px) {
+              ha-card {
+                animation: none;
+              }
+            }
+        atomic-calendar-revive:
+          $: |
+            .card-content {
+              padding: 1.5em 2.7em 2.3em 2em;
+            }
+            ha-card {
+              animation: border 1s forwards;
+              border-radius: 0;
+            }
+            @keyframes border {
+              0%, 100% {
+                border-right: 1px solid rgba(0, 0, 0, 0.3);
+              }
+            }
+            /* phone */
+            @media screen and (max-width: 800px) {
+              ha-card {
+                animation: none;
+              }
+            }
 
   card:
-    type: grid
-    columns: 1
-    square: false
+    type: custom:layout-card
+    layout_type: custom:grid-layout
+    layout:
+      grid-template-columns: repeat(2, 1fr)
+      grid-template-rows: 1fr
+      grid-template-areas: |
+        "kalendarz plan_lekcji"
+      mediaquery:
+        #phone
+        "(max-width: 800px)":
+          grid-template-columns: 1fr
+          grid-template-rows: repeat(2, 1fr)
+          grid-template-areas: |
+            "kalendarz"
+            "plan_lekcji"
     cards:
+
+      #################################################
+      #                                               #
+      #                Kalendarz                      #
+      #                                               #
+      #################################################
+
       - type: custom:atomic-calendar-revive
+        view_layout:
+          grid-area: kalendarz
         name: Kalendarz
         entities:
           - entity: calendar.anarion_dunedain
@@ -40,4 +99,18 @@ browser_mod:
         showNoEventsForToday: false
         showFullDayProgress: false
         showEventIcon: false
-        maxDaysToShow: 60
+        maxDaysToShow: 30
+
+      #################################################
+      #                                               #
+      #                Plan lekcji                    #
+      #                                               #
+      #################################################
+
+      - type: calendar
+        view_layout:
+          grid-area: plan_lekcji
+        initial_view: dayGridDay
+        entities:
+          - calendar.plan_lekcji_hani
+        title: Plan lekcji Hani

@@ -69,9 +69,9 @@ template:
                 {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
                 {% else %} stopni.
                 {% endif -%}
-                Będzie wiał wiatr {% set winbearing = (states('sensor.openweathermap_forecast_wind_bearing')|int/45)|round  %}
-                {%- set winddir = ['z północy', 'z północnego-wschodu','ze wschodu','z południowego wschodu','z południa','z południowego-zachodu','z zachodu','z północnego-zachodu'] -%}
-                {{ winddir[winbearing] }} z prędkością {{(states('sensor.openweathermap_forecast_wind_speed')|int*3.6)|round}} km/h.
+                Będzie wiał wiatr {% set windbearing = ((states('sensor.openweathermap_forecast_wind_bearing') |int / 45) % 8 )|round  %}
+                {%- set winddir = ['z północy', 'z północnego-wschodu','ze wschodu','z południowego wschodu','z południa','z południowego-zachodu','z zachodu','z północnego-zachodu', 'z północy'] -%}
+                {{ winddir[windbearing] }} z prędkością {{(states('sensor.openweathermap_forecast_wind_speed')|int*3.6)|round}} km/h.
                 {% if states('sensor.openweathermap_forecast_precipitation')|int == 0 %} Dzisiaj ma nie padać.
                 {% else -%} Prognozowany opad wyniesie {{ states('sensor.openweathermap_forecast_precipitation') }} milimetra.
                 {% endif -%}
@@ -102,6 +102,37 @@ template:
                 Dzisiaj w kalendarzu masz {%- for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
                     {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}
                     {{- sensor.name + '\n' | lower }} o godzinie {{ sensor.attributes.start.strftime('%H:%M') }}
-                {% endfor %}
+                {% endfor %}.
                 {%- else %}Dzisiaj nie masz nic w kalendarzu. {% endif -%}
+
+            {#- Plan Lekcji -#}
+              {%- set ns = namespace(today=false) -%}
+              {%- set ns.tomorrow=false -%}
+
+              {# Get a list of calendar event entities with start times #}
+              {%- set entities = states.sensor | selectattr('entity_id','search','ical_plan_lekcji_hani') | selectattr('attributes.start','defined') | list -%}
+
+
+              {# Check if there is any event today or tomorrow #}
+              {%- if entities -%}
+                {%- for item in entities -%}
+                  {%- if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+                    {%- set ns.today = true -%}
+                  {%- elif item.attributes.start.strftime('%Y-%m-%d') == (now() + timedelta(days=1)).strftime('%Y-%m-%d') -%}
+                    {%- set ns.tomorrow = true -%}
+                  {%- endif -%}
+                {%- endfor %}
+
+                {# If there is at least one event today, iterate over them #}
+                {%- if ns.today -%}
+                 Hania dzisiaj ma:{{ '\n' }}
+                  {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+                    {%- set start_time = sensor.attributes.start -%}
+                    {%- set event = sensor.attributes.summary -%}
+                    {%- if start_time != None -%}
+                      {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ event }}
+                    {%- endif -%}
+                  {%- endfor -%}.
+                {%- endif -%}
+              {% endif %}
                 Miłego dnia!
