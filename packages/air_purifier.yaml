@@ -74,7 +74,7 @@ script:
     - service: tts.google_say
       data:
         message: Poziom zanieczyszczeń w salonie to {{ state_attr('fan.zhimi_airpurifier_v7','aqi') }}
-        entity_id: media_player.chromecastaudio
+        entity_id: media_player.nest_mini
         language: pl
     mode: single
     icon: mdi:blur
