@@ -161,6 +161,7 @@ sensor:
     select: '#base_rate p'
     value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
     unit_of_measurement: '%'
+    state_class: measurement
     scan_interval: 3600
 
   - platform: scrape
@@ -168,4 +169,5 @@ sensor:
     resource: https://www.pkobp.pl/waluty/#/interbank/
     select: 'div.course__irs-tab-box:nth-child(4) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)'
     unit_of_measurement: '%'
+    state_class: measurement
     scan_interval: 3600
