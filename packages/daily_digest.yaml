@@ -115,6 +115,7 @@ template:
 
               {# Check if there is any event today or tomorrow #}
               {%- if entities -%}
+                {%- set first = (entities | first).attributes.start.strftime('%H:%M') -%}
                 {%- for item in entities -%}
                   {%- if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
                     {%- set ns.today = true -%}
@@ -125,12 +126,15 @@ template:
 
                 {# If there is at least one event today, iterate over them #}
                 {%- if ns.today -%}
-                 Hania dzisiaj ma:{{ '\n' }}
+                  Hania zaczyna dzisiaj o {{ first }} i ma:{{ '\n' }}
                   {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
                     {%- set start_time = sensor.attributes.start -%}
                     {%- set event = sensor.attributes.summary -%}
                     {%- if start_time != None -%}
                       {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ event }}
+                    {% if loop.last %}
+                      Koniec lekcji o {{ sensor.attributes.end.strftime('%H:%M') }}.
+                    {% endif %}
                     {%- endif -%}
                   {%- endfor -%}.
                 {%- endif -%}
