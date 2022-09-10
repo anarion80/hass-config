@@ -1,432 +1,482 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Info
-  style:
-    .: |
-      :host .content {
-        width: calc(400px + 400px + 400px);
-        max-width: 90vw;
-      }
-      /* phone */
-      @media screen and (max-width: 800px) {
-        :host .content {
-          max-width: 100vw;
-        }
-      }
-    layout-card:
-      $grid-layout$:
-        hui-entities-card:
-          $: |
-            .card-content {
-              padding: 1.5em 2.7em 2.3em 2em;
-            }
-            ha-card {
-              border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-              border-radius: 0;
-              transition: none;
-            }
-            @keyframes border {
-              0%, 100% {
-                border-right: 1px solid rgba(0, 0, 0, 0.3);
-              }
-            }
-            /* phone */
-            @media screen and (max-width: 800px) {
-              ha-card {
-                border-right: none;
-                border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-              }
-            }
-          $mushroom-light-card: |
-            mushroom-light-card {
-              padding: 10px 19px 0 19px;
-              margin-bottom: -10px !important;
-            }
-          $hui-horizontal-stack-card:
-            $: |
-              #root {
-                justify-content: space-evenly;
-                margin-top: 1.9em;
-                max-width: 82vw; /* iphonex */
-              }
-  card:
-    type: custom:layout-card
-    layout_type: custom:grid-layout
-    layout:
-      grid-template-columns: repeat(3, 1fr)
-      grid-template-rows: 1fr
-      grid-template-areas: |
-        "hass tablet nas"
-      mediaquery:
-        #phone
-        "(max-width: 800px)":
-          grid-template-columns: 1fr
-          grid-template-rows: repeat(3, 1fr)
-          grid-template-areas: |
-            "hass"
-            "tablet"
-            "nas"
-    cards:
-
-      #################################################
-      #                                               #
-      #                HOME ASSISTANT                 #
-      #                                               #
-      #################################################
-
-      - type: entities
-        view_layout:
-          grid-area: hass
-        title: Home Assistant
-        show_header_toggle: false
-        card_mod:
-          class: header
-          style: |
-            ha-card {
-              margin: 0px !important;
-            }
-        entities:
-          - entity: sensor.template_hass_version
-
-          #- entity: switch.watchtower
-
-          - entity: sensor.template_hass_dev_release
-
-          #- entity: sensor.database
-
-          - entity: sensor.home_assistant_v2_db_size
-
-          - entity: sensor.uptime
-
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: &bar_card_positions
-              icon: outside
-              indicator: 'off'
-              name: outside
-            severity: &bar_card_severity
-              - color: '#6d2525'
-                from: 90
-                to: 200
-            entity_row: true
-            entities:
-
-              - entity: sensor.processor_use_percent
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.processor_use_percent
-
-              - entity: sensor.memory_use_percent
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.memory_use_percent
-
-          - type: custom:hui-horizontal-stack-card
-            cards:
-              - type: custom:button-card
-                name: Home Assistant
-                icon: mdi:reload
-                tap_action:
-                  confirmation: >
-                    [[[
-                      return `[[[
-                        if (window.confirm('Are you sure you want to restart HA?')) {
-                          hass.callService('browser_mod', 'toast', { message: 'Restarting Home Assistant...', duration: 3000 });
-                          hass.callService('homeassistant', 'restart');
-                        }
-                      ]]]`
-                    ]]]
-                template: icon_name
-
-              # - type: custom:button-card
-              #   name: Container
-              #   icon: mdi:reload
-              #   tap_action:
-              #     action: call-service
-              #     service: script.turn_on
-              #     service_data:
-              #       entity_id: script.homeassistant_restart
-              #   template: icon_name
-
-      #################################################
-      #                                               #
-      #                    TABLET                     #
-      #                                               #
-      #################################################
-
-      - type: entities
-        view_layout:
-          grid-area: tablet
-        title: Amazon Fire HD 10
-        show_header_toggle: false
-        card_mod:
-          class: header
-          style: |
-            ha-card {
-              margin: 0px !important;
-            }
-        entities:
-          - entity: switch.fire_tablet_screensaver
-
-          - type: custom:mushroom-light-card
-            entity: light.fire_tablet_screen
-            show_brightness_control: true
-
-          - entity: binary_sensor.fire_tablet_plugged_in
-
-          - entity: sensor.fire_tablet_last_app_start
-
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: *bar_card_positions
-            severity:
-              - color: '#6d2525'
-                from: 0
-                to: 89
-              - color: '#303435'
-                from: 90
-                to: 100
-            entity_row: true
-            entities:
-
-              - entity: sensor.fire_tablet_battery_level
-                icon: mdi:battery
-
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: *bar_card_positions
-            severity: *bar_card_severity
-            entity_row: true
-            entities:
-
-              - entity: sensor.template_fullykiosk_memory
-                name: Pamięć RAM - 2GB
-                icon: mdi:memory
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.template_fullykiosk_memory
-
-              - entity: sensor.template_fullykiosk_storage
-                name: Pamięć - 32GB
-                icon: mdi:sd
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.template_fullykiosk_storage
-
-          - type: custom:hui-horizontal-stack-card
-            cards:
-              - type: custom:button-card
-                name: Strona główna
-                icon: mdi:reload
-                tap_action:
-                  services: |
-                    [[[
-                      return `[[[
-                        hass.callService('browser_mod', 'toast', {
-                          message: 'Wczytuję stronę główną...'
-                        });
-                        hass.callService('button', 'press', {
-                          entity_id: 'button.fire_tablet_load_start_url'
-                        });
-                      ]]]`
-                    ]]]
-                template: icon_name
-
-              - type: custom:button-card
-                name: Cała aplikacja
-                icon: mdi:reload
-                tap_action:
-                  services: |
-                    [[[
-                      return `[[[
-                        hass.callService('browser_mod', 'toast', {
-                          message: 'Restartuję Fully Kiosk Browser...'
-                        });
-                        hass.callService('button', 'press', {
-                          entity_id: 'button.fire_tablet_reboot_device'
-                        });
-                      ]]]`
-                    ]]]
-                template: icon_name
-
-      #################################################
-      #                                               #
-      #                      NAS                      #
-      #                                               #
-      #################################################
-
-      - type: entities
-        view_layout:
-          grid-area: nas
-        title: NAS
-        show_header_toggle: false
-        card_mod:
-          class: header
-          style:
+  service: browser_mod.popup
+  data:
+    title: Info
+    style: >
+      --popup-max-width: calc(385px + 385px + 385px);
+      --ha-card-border-radius: 0;
+    card_mod:
+      style:
+        layout-card:
+          $grid-layout$:
+            # card divider border
             .: |
-              ha-card {
-                animation: none !important;
-                margin: 0px !important;
+              #root {
+                  margin: -24px 0 !important;
               }
-            mini-graph-card:
+            hui-entities-card:
               $: |
-                ha-card {
-                  padding: 0px !important;
+                .card-content {
+                  padding: var(--tablet-popup-content-padding);
+                  padding-bottom: 0.8em;
                 }
-            hui-horizontal-stack-card:
-              $:
-                .: |
+                ha-card {
+                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                  border-radius: 0;
+                  transition: none;
+                }
+                /* portrait */
+                @media screen and (max-width: 1200px) {
+                  ha-card {
+                    border-right: none;
+                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                  }
+                }
+              $hui-horizontal-stack-card:
+                # horizontal bottom buttons
+                $: |
                   #root {
-                    margin-top: 1em;
-                    margin-right: 1.5em;
+                    justify-content: space-evenly;
+                    margin-top: 1.7em;
+                    max-width: 82vw; /* iphonex */
                   }
-                  #root > * {
-                    flex: none !important;
+            hui-vertical-stack-card:
+              $hui-entities-card:
+                $: |
+                  .card-content {
+                    padding: var(--tablet-popup-content-padding);
+                    padding-bottom: 0.8em;
                   }
-                hui-entities-card:
-                  $:
-                    .: |
-                      #states {
-                        padding: 0;
-                      }
-                    hui-sensor-entity-row:
-                      $hui-generic-entity-row$: |
-                        .info {
-                          margin: 0 8px 0 8px !important;
+                  ha-card {
+                    border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                    border-radius: 0;
+                    transition: none;
+                  }
+                  /* portrait */
+                  @media screen and (max-width: 1200px) {
+                    ha-card {
+                      border-right: none;
+                      border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                    }
+                  }
+    content:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        margin: 0
+        grid-template-columns: 385px 385px 385px
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "hass tablet nas"
+        mediaquery:
+          #portrait
+          "(max-width: 1200px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(3, 1fr)
+            grid-template-areas: |
+              "hass"
+              "tablet"
+              "nas"
+      cards:
+
+        #################################################
+        #                                               #
+        #                HOME ASSISTANT                 #
+        #                                               #
+        #################################################
+
+        - type: entities
+          view_layout:
+            grid-area: hass
+          title: Home Assistant
+          show_header_toggle: false
+          card_mod:
+            class: header
+          entities:
+            - entity: sensor.template_hass_version
+
+            #- entity: switch.watchtower
+
+            - entity: sensor.template_hass_dev_release
+
+            #- entity: sensor.database
+
+            - entity: sensor.home_assistant_v2_db_size
+
+            - entity: sensor.uptime
+
+            - type: custom:bar-card
+              width: 55%
+              height: 2em
+              decimal: 0
+              unit_of_measurement: '%'
+              positions: &bar_card_positions
+                icon: outside
+                indicator: 'off'
+                name: outside
+              severity: &bar_card_severity
+                - color: '#6d2525'
+                  from: 90
+                  to: 200
+              entity_row: true
+              entities:
+
+                - entity: sensor.processor_use_percent
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.update_entity
+                    service_data:
+                      entity_id: sensor.processor_use_percent
+
+                - entity: sensor.memory_use_percent
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.update_entity
+                    service_data:
+                      entity_id: sensor.memory_use_percent
+
+            - type: custom:hui-horizontal-stack-card
+              cards:
+                - type: custom:button-card
+                  name: Home Assistant
+                  icon: mdi:reload
+                  confirmation:
+                    text: Are you sure you want to restart HA?
+                  tap_action:
+                    action: call-service
+                    service: browser_mod.sequence
+                    service_data:
+                      sequence:
+                        - service: browser_mod.notification
+                          data:
+                            message: Restarting Home Assistant...
+                        - service: homeassistant.restart
+                  template: icon_name
+
+                # - type: custom:button-card
+                #   name: Container
+                #   icon: mdi:reload
+                #   tap_action:
+                #     action: call-service
+                #     service: script.turn_on
+                #     service_data:
+                #       entity_id: script.homeassistant_restart
+                #   template: icon_name
+
+        #################################################
+        #                                               #
+        #                    TABLET                     #
+        #                                               #
+        #################################################
+        - type: vertical-stack
+          cards:
+            - type: entities
+              state_color: true
+              card_mod:
+                class: content
+              entities:
+
+                - entity: switch.fire_tablet_screensaver
+                  secondary_info: last-changed
+
+                - entity: light.amazon_tablet_screen
+                  name: Ekran
+
+                - type: custom:slider-entity-row
+                  entity: number.fire_tablet_screensaver_brightness
+                  name: Jasność
+                  icon: mdi:brightness-6
+                  hide_state: false
+                  card_mod:
+                    style:
+                      # full width slider
+                      hui-generic-entity-row$: |
+                        div {
+                          flex: auto !important;
                         }
-        entities:
-          #- entity: sensor.template_nas_status
+                - entity: switch.fire_tablet_screensaver
 
-          - entity: sensor.server_power_power
-            name: Pobór mocy serwera
+                - entity: binary_sensor.fire_tablet_plugged_in
 
-          - entity: sensor.nas_uptime
-            name: Ostatni restart
+                - type: custom:bar-card
+                  width: 55%
+                  height: 2em
+                  decimal: 0
+                  unit_of_measurement: '%'
+                  positions: *bar_card_positions
+                  severity:
+                    - color: '#6d2525'
+                      from: 0
+                      to: 89
+                    - color: '#303435'
+                      from: 90
+                      to: 999
+                  entity_row: true
+                  entities:
 
-          # - entity: sensor.template_nas_vpn
-            # style: |
-              # :host {
-                # --paper-item-icon-color: {{ '#9e9e9e' if is_state(config.entity, 'Connected') else '#9c2525' }};
-                # }
+                    - entity: sensor.kftrwi_battery_level
+                      icon: mdi:battery
+                      tap_action:
+                        action: call-service
+                        service: homeassistant.update_entity
+                        service_data:
+                          entity_id: sensor.kftrwi_battery_level
 
-          - type: custom:bar-card
-            width: 55%
-            height: 2em
-            decimal: 0
-            unit_of_measurement: '%'
-            positions: *bar_card_positions
-            severity: *bar_card_severity
-            entity_row: true
-            entities:
+                - type: custom:bar-card
+                  width: 55%
+                  height: 2em
+                  decimal: 0
+                  unit_of_measurement: '%'
+                  positions: *bar_card_positions
+                  severity:
+                    - color: '#6d2525'
+                      from: 90
+                      to: 999
+                  entity_row: true
+                  entities:
 
-              - entity: sensor.nas_cpu
-                name: Procesor
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.nas_cpu
+                    - entity: sensor.template_fullykiosk_memory
+                      name: Pamięć RAM - 2GB
+                      icon: mdi:memory
+                      tap_action:
+                        action: call-service
+                        service: homeassistant.update_entity
+                        service_data:
+                          entity_id: sensor.template_fullykiosk_memory
 
-              - entity: sensor.nas_mem
-                name: Pamięć
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.nas_mem
+                    - entity: sensor.template_fullykiosk_storage
+                      name: Pamięć - 32GB
+                      icon: mdi:sd
+                      tap_action:
+                        action: call-service
+                        service: homeassistant.update_entity
+                        service_data:
+                          entity_id: sensor.template_fullykiosk_storage
 
-              - entity: sensor.nas_disk
-                name: Dysk
-                tap_action:
-                  action: call-service
-                  service: homeassistant.update_entity
-                  service_data:
-                    entity_id: sensor.nas_disk
+            - type: custom:mod-card
+              card_mod:
+                style:
+                  hui-horizontal-stack-card$: |
+                    #root {
+                      justify-content: space-evenly !important;
+                      padding: var(--tablet-popup-button-padding);
+                    }
+              card:
+                type: custom:hui-horizontal-stack-card
+                cards:
+                  - type: custom:button-card
+                    name: Strona główna
+                    icon: mdi:reload
+                    tap_action:
+                      action: call-service
+                      service: browser_mod.sequence
+                      service_data:
+                        sequence:
+                          - service: browser_mod.notification
+                            data:
+                              message: Wczytuję stronę główną...
+                          - service: button.press
+                            data:
+                              entity_id: button.fire_tablet_load_start_url
+                    template: icon_name
 
-        footer:
-          type: custom:apexcharts-card
-          layout: minimal
-          graph_span: 1h
-          locale: en
-          show:
-            loading: false
-          apex_config:
-            chart:
-              fontFamily: Roboto
-              height: 135px
-              offsetY: -20px
-            grid:
-              padding:
-                top: -20
-            tooltip:
-              style:
+                  - type: custom:button-card
+                    name: Cała aplikacja
+                    icon: mdi:reload
+                    tap_action:
+                      action: call-service
+                      service: browser_mod.sequence
+                      service_data:
+                        sequence:
+                          - service: browser_mod.notification
+                            data:
+                              message: Restartuję Fully Kiosk Browser...
+                          - service: button.press
+                            data:
+                              entity_id: button.fire_tablet_reboot_device
+                    template: icon_name
+
+        #################################################
+        #                                               #
+        #                      NAS                      #
+        #                                               #
+        #################################################
+
+        - type: entities
+          view_layout:
+            grid-area: nas
+          title: NAS
+          show_header_toggle: false
+          card_mod:
+            class: header
+            style: |
+              ha-card {
+                border: none !important;
+              }
+          entities:
+            #- entity: sensor.template_nas_status
+
+            - entity: sensor.server_power_power
+              name: Pobór mocy serwera
+
+            - entity: sensor.nas_uptime
+              name: Ostatni restart
+
+            # - entity: sensor.template_nas_vpn
+              # style: |
+                # :host {
+                  # --paper-item-icon-color: {{ '#9e9e9e' if is_state(config.entity, 'Connected') else '#9c2525' }};
+                  # }
+
+            - type: custom:bar-card
+              width: 55%
+              height: 2em
+              decimal: 0
+              unit_of_measurement: '%'
+              positions: *bar_card_positions
+              severity: *bar_card_severity
+              entity_row: true
+              entities:
+
+                - entity: sensor.nas_cpu
+                  name: Procesor
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.update_entity
+                    service_data:
+                      entity_id: sensor.nas_cpu
+
+                - entity: sensor.nas_mem
+                  name: Pamięć
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.update_entity
+                    service_data:
+                      entity_id: sensor.nas_mem
+
+                - entity: sensor.nas_disk
+                  name: Dysk
+                  tap_action:
+                    action: call-service
+                    service: homeassistant.update_entity
+                    service_data:
+                      entity_id: sensor.nas_disk
+
+          footer:
+            type: custom:apexcharts-card
+            layout: minimal
+            graph_span: 1h
+            locale: en
+            show:
+              loading: false
+            apex_config:
+              chart:
+                fontFamily: Roboto
+                height: 135px
+                offsetY: -20px
+              grid:
+                padding:
+                  top: -20
+              tooltip:
+                style:
+                  fontSize: 14px
+                x:
+                  show: true
+                  format: dddd HH:mm
+              xaxis:
+                crosshairs:
+                  show: false
+              legend:
                 fontSize: 14px
-              x:
-                show: true
-                format: dddd HH:mm
-            xaxis:
-              crosshairs:
-                show: false
-            legend:
-              fontSize: 14px
-              fontWeight: 400
-              itemMargin:
-                horizontal: 25
-              # formatter: |
-                #  EVAL: (seriesName, opts) => {
-                  # var arr = opts.w.globals.series[opts.seriesIndex],
-                  #   value = arr[arr.length - 1],
-                  #   convert = (value/1024).toFixed(2);
-                  # return value == null
-                  #   ? seriesName : value < 1024 ? `${Math.round(value)} kB/s`
-                  #   : `${convert} MB/s`;
-                # }
-              markers:
-                width: 26
-                height: 23
-                customHTML:
-                  - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-down-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
-                  - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-up-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
-                fillColors:
-                  - none
-                  - none
-            fill:
-              type: gradient
-              gradient:
-                type: vertical
-                opacityFrom: 0.8
-                opacityTo: 0
-                stops:
-                  - 0
-                  - 99
-                  - 100
-            stroke:
-              width: 3
-          all_series_config:
-            type: area
-            fill_raw: last
-          series:
-            - entity: sensor.speedtest_download
-              name: Download
-              color: green
-            - entity: sensor.speedtest_upload
-              name: Upload
-              color: '#385581'
+                fontWeight: 400
+                itemMargin:
+                  horizontal: 25
+                # formatter: |
+                  #  EVAL: (seriesName, opts) => {
+                    # var arr = opts.w.globals.series[opts.seriesIndex],
+                    #   value = arr[arr.length - 1],
+                    #   convert = (value/1024).toFixed(2);
+                    # return value == null
+                    #   ? seriesName : value < 1024 ? `${Math.round(value)} kB/s`
+                    #   : `${convert} MB/s`;
+                  # }
+                markers:
+                  width: 26
+                  height: 23
+                  customHTML:
+                    - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-down-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
+                    - 'EVAL:() => {return `<ha-icon icon="mdi:arrow-up-bold" style="--mdc-icon-size: 23px;"></ha-icon>`}'
+                  fillColors:
+                    - none
+                    - none
+              fill:
+                type: gradient
+                gradient:
+                  type: vertical
+                  opacityFrom: 0.8
+                  opacityTo: 0
+                  stops:
+                    - 0
+                    - 99
+                    - 100
+              stroke:
+                width: 3
+            all_series_config:
+              type: area
+              fill_raw: last
+            series:
+              - entity: sensor.speedtest_download
+                name: Download
+                color: green
+              - entity: sensor.speedtest_upload
+                name: Upload
+                color: '#385581'
+  # style:
+  #   .: |
+  #     :host .content {
+  #       width: calc(400px + 400px + 400px);
+  #       max-width: 90vw;
+  #     }
+  #     /* phone */
+  #     @media screen and (max-width: 800px) {
+  #       :host .content {
+  #         max-width: 100vw;
+  #       }
+  #     }
+  #   layout-card:
+  #     $grid-layout$:
+  #       hui-entities-card:
+  #         $: |
+  #           .card-content {
+  #             padding: 1.5em 2.7em 2.3em 2em;
+  #           }
+  #           ha-card {
+  #             border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+  #             border-radius: 0;
+  #             transition: none;
+  #           }
+  #           @keyframes border {
+  #             0%, 100% {
+  #               border-right: 1px solid rgba(0, 0, 0, 0.3);
+  #             }
+  #           }
+  #           /* phone */
+  #           @media screen and (max-width: 800px) {
+  #             ha-card {
+  #               border-right: none;
+  #               border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+  #             }
+  #           }
+  #         $mushroom-light-card: |
+  #           mushroom-light-card {
+  #             padding: 10px 19px 0 19px;
+  #             margin-bottom: -10px !important;
+  #           }
+  #         $hui-horizontal-stack-card:
+  #           $: |
+  #             #root {
+  #               justify-content: space-evenly;
+  #               margin-top: 1.9em;
+  #               max-width: 82vw; /* iphonex */
+  #             }

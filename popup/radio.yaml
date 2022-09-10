@@ -1,52 +1,44 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: 📻 Radio
-  style:
-    hui-vertical-stack-card:
-      $hui-conditional-card>hui-vertical-stack-card$: |
-        hui-horizontal-stack-card {
-          padding: 0em 2em 2.3em 2em;
-        }
-      $hui-conditional-card>hui-vertical-stack-card$hui-horizontal-stack-card$: |
-        #root {
-          justify-content: space-evenly;
-        }
-  card:
-    type: vertical-stack
-    cards:
-      - type: vertical-stack
-        cards:
-          - type: custom:mini-media-player
-            entity: media_player.nest_mini
-            name: Google Home
-            volume_step: '10'
-            max_volume: '100'
-            min_volume: '0'
-            toggle_power: false
-            source: full
-            artwork: full-cover
-          - type: custom:mini-media-player
-            entity: media_player.chromecastaudio
-            name: Chromecast Audio
-            volume_step: '10'
-            max_volume: '100'
-            min_volume: '0'
-            toggle_power: false
-            source: full
-            artwork: full-cover
-          - type: custom:mini-media-player
-            entity: media_player.spotify_anarion
-            name: Spotify
-            volume_step: '10'
-            max_volume: '100'
-            min_volume: '0'
-            toggle_power: false
-            source: full
-            artwork: full-cover
-          - type: entities
-            entities:
-              - entity: script.radio
-              - entity: input_select.radio_station
-              - entity: input_select.player
-            title: Radio
+  service: browser_mod.popup
+  data:
+    title: 📻 Radio
+    size: NORMAL
+    content:
+      type: vertical-stack
+      cards:
+        - type: vertical-stack
+          cards:
+            - type: custom:mini-media-player
+              entity: media_player.nest_mini
+              name: Google Home
+              volume_step: '10'
+              max_volume: '100'
+              min_volume: '0'
+              toggle_power: false
+              source: full
+              artwork: full-cover
+            - type: custom:mini-media-player
+              entity: media_player.chromecastaudio
+              name: Chromecast Audio
+              volume_step: '10'
+              max_volume: '100'
+              min_volume: '0'
+              toggle_power: false
+              source: full
+              artwork: full-cover
+            - type: custom:mini-media-player
+              entity: media_player.spotify_anarion
+              name: Spotify
+              volume_step: '10'
+              max_volume: '100'
+              min_volume: '0'
+              toggle_power: false
+              source: full
+              artwork: full-cover
+            - type: entities
+              entities:
+                - entity: script.radio
+                - entity: input_select.radio_station
+                - entity: input_select.player
+              title: Radio

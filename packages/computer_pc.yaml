@@ -14,12 +14,9 @@ switch:
             - conditions:
                 - condition: state
                   entity_id: input_boolean.computer_lock
-                  state: 'on'
+                  state: 'of'
               sequence:
-                - service: browser_mod.toast
-                  data:
-                    duration: 8000
-                    message: Komputer jest zablokowany...
+                - service: shell_command.imac_off
             default:
               - service: shell_command.imac_off
 

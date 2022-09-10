@@ -14,8 +14,8 @@ lovelace:
   resources:
     [ { url: /hacsfiles/bar-card/bar-card.js,                               type: module },
       { url: /hacsfiles/button-card/button-card.js,                         type: module },
-      { url: /hacsfiles/kiosk-mode/kiosk-mode.js,                           type: module },
-      { url: /hacsfiles/browser_mod/browser_mod.js,                         type: module },
+      #{ url: /hacsfiles/kiosk-mode/kiosk-mode.js,                           type: module },
+      #{ url: /hacsfiles/browser_mod/browser_mod.js,                         type: module },
       #{ url: /hacsfiles/light-entity-card/light-entity-card.js,             type: module },
       #{ url: /hacsfiles/light-popup-card/light-popup-card.js,               type: module },
       #{ url: /hacsfiles/lovelace-card-mod/card-mod.js,                      type: module },
@@ -71,7 +71,7 @@ lovelace:
 
       #{ url: '/local/calendar-card.js',                                     type: module },
       #{ url: '/local/custom_icons.js',                                      type: module },
-      { url: '/local/marked.min.js?v=4.0.18',                               type: module },
+      { url: '/local/marked.min.js?v=4.1.0',                                 type: module },
       { url: '/local/vanilla-tilt.min.js?v=1.7.2',                          type: module },
       { url: '/local/fonts.css?v=2.1',                                             type: css    } ]
 
@@ -107,6 +107,14 @@ logger:
     homeassistant.components.websocket_api: fatal
     homeassistant.components.camera: fatal
     homeassistant.helpers.entity: fatal
+    # homeassistant.components.http: debug
+    # homeassistant.components.util: debug
+    # homeassistant.core: debug
+    # aiohttp.server: debug
+    # homeassistant.util: debug
+    # homeassistant.util.yaml: debug
+    # homeassistant.util.yaml.loader: debug
+    #homeassistant.components.sodexo_dlaciebie: debug
 
 recorder:
   purge_keep_days: 10
@@ -118,6 +126,7 @@ recorder:
       - binary_sensor
       - sensor
       - switch
+      #- media_player
       - person
       - device_tracker
       - input_select
@@ -140,13 +149,16 @@ recorder:
       - sensor.25ffd809_364afacd
       - sensor.ff084fda_073ef5d8
       - sensor.b955c88d_61f3339e
+      #- sensor.fire_tablet*
       - sensor.kftrwi*
       - sensor.template_sidebar
       - sensor.date_time
       - sensor.time
       - sensor.firefox_on_pc
+      #- sensor.router*
       - sensor.processor*
       - switch.smart_plug_2*
+      #- sensor.pc_daily
       - sensor.pc_monthly
       - sensor.pc_yearly
 

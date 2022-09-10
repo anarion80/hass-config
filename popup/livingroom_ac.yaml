@@ -1,162 +1,222 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Klimatyzacja
-  style:
-    hui-vertical-stack-card:
-      $hui-entities-card$ : |
-        #states {
-          padding-top: 0.5em;
-          padding-bottom: 0em;
-        }
-      $: |
-        mushroom-climate-card {
-          padding: 10px 18px 0 18px;
-        }
-        mushroom-climate-card:nth-child(2) {
-          margin-top: -18px !important;
-        }
-  card:
-    type: vertical-stack
-    cards:
-      - type: custom:mushroom-climate-card
-        entity: climate.living_room_ac
-        name: Klimatyzacja
-        icon: mdi:home-thermometer
-        hvac_modes:
-          - 'off'
-          - cool
-          - fan_only
-        primary_info: name
-        secondary_info: state
-        show_temperature_control: false
+  service: browser_mod.popup
+  data:
+    title: Klimatyzacja
+    size: NORMAL
+    content:
+      type: vertical-stack
+      cards:
+        - type: entities
+          card_mod:
+            class: content
+            style: |
+              #states {
+                padding-top: 0.5em;
+                padding-bottom: 0em;
+              }
+          entities:
+            - type: custom:mushroom-climate-card
+              entity: climate.living_room_ac
+              name: Klimatyzacja
+              icon: mdi:home-thermometer
+              hvac_modes:
+                - 'off'
+                - cool
+                - fan_only
+              primary_info: name
+              secondary_info: state
+              show_temperature_control: false
+              card_mod:
+                style: |
+                  mushroom-card {
+                    margin: -5px -13px 0 -4px;
+                  }
+            - type: custom:mushroom-climate-card
+              entity: climate.living_room_ac
+              icon_type: none
+              secondary_info: none
+              primary_info: none
+              show_temperature_control: true
+              card_mod:
+                style: |
+                  mushroom-card {
+                    margin: -18px -13px -8px -4px;
+            - type: custom:more-info-card
+              entity: climate.living_room_ac
+              card_mod:
+                style:
+                  # hide everything but ha-select
+                  .: |
+                    h1 {
+                      display: none;
+                    }
+                    .card-content {
+                      padding: 0.3em 0 0.6em 0.6em;
+                    }
+                  state-card-climate$: |
+                    div {
+                      display: none !important;
+                    }
+                  more-info-climate$:
+                    .: |
+                      .container-temperature, .container-hvac_modes {
+                        display: none;
+                      }
+                    ha-select:
+                      $:
+                        # no icon so reduce label inset
+                        .: |
+                          .mdc-floating-label {
+                            inset-inline-start: 4px !important;
+                          }
+                        # fix transparent menu background color
+                        mwc-menu$: |
+                          mwc-list {
+                            background: var(--card-background-color);
+                          }
+            - entity: sensor.airpurifier_temperature
+              name: Temperatura
+            - entity: sensor.airpurifier_humidity
+              name: Wilgotność
+        # - type: custom:mushroom-climate-card
+        #   entity: climate.living_room_ac
+        #   name: Klimatyzacja
+        #   icon: mdi:home-thermometer
+        #   hvac_modes:
+        #     - 'off'
+        #     - cool
+        #     - fan_only
+        #   primary_info: name
+        #   secondary_info: state
+        #   show_temperature_control: false
 
-      - type: custom:mushroom-climate-card
-        entity: climate.living_room_ac
-        icon_type: none
-        secondary_info: none
-        primary_info: none
-        show_temperature_control: true
+        # - type: custom:mushroom-climate-card
+        #   entity: climate.living_room_ac
+        #   icon_type: none
+        #   secondary_info: none
+        #   primary_info: none
+        #   show_temperature_control: true
 
-      - type: thermostat
-        entity: climate.living_room_ac
-      - type: entities
-        card_mod:
-          class: content
-        entities:
-          - entity: sensor.airpurifier_temperature
-            name: Temperatura
-          - entity: sensor.airpurifier_humidity
-            name: Wilgotność
+        # - type: thermostat
+        #   entity: climate.living_room_ac
+        # - type: entities
+        #   card_mod:
+        #     class: content
+        #   entities:
+        #     - entity: sensor.airpurifier_temperature
+        #       name: Temperatura
+        #     - entity: sensor.airpurifier_humidity
+        #       name: Wilgotność
 
-      # - type: custom:mini-graph-card
-        # entities:
-          # #- color: '#385581'
-          # - entity: sensor.temperature_living_room
-        # line_width: 8
-        # hour24: true
-        # group: true
-        # align_icon: left
-        # align_state: right
-        # align_header: left
-        # hours_to_show: 24
-        # show:
-          # {fill: fade, icon: false, name: false, state: false,
-          # name_adaptive_color: false, labels: hover, legend: false}
-        # color_thresholds:
-          # - value: 20
-            # color: "#385581"
-          # - value: 22
-            # color: "#32a852"
-          # - value: 24
-            # color: "#d35400"
-          # - value: 26
-            # color: "#c0392b"
-        # tap_action:
-          # action: non
-      - type: custom:apexcharts-card
-        graph_span: 48h
-        experimental:
-          color_threshold: true
-        header:
-          show: false
-          title: ApexCharts-Card
-          show_states: true
-          colorize_states: true
-        yaxis:
-          - id: temp # identification name of the first y-axis
-            decimals: 0
-            apex_config:
-              tickAmount: 4
-          - id: hum # identification name of the second y-axis
-            opposite: true # make it show on the right side
-            decimals: 0
-            apex_config:
-              tickAmount: 4
-        series:
-          - entity: sensor.airpurifier_temperature
-            yaxis_id: temp
-            fill_raw: last
-            group_by:
-              func: last
-              fill: last
-            color_threshold:
-              - value: 20
-                color: '#385581'
-              - value: 22
-                color: '#32a852'
-              - value: 24
-                color: '#d35400'
-              - value: 26
-                color: '#c0392b'
-          - entity: sensor.airpurifier_humidity
-            yaxis_id: hum
-            fill_raw: last
-            group_by:
-              func: last
-              fill: last
-      # - type: custom:apexcharts-card
-        # layout: minimal
-        # locale: en
-        # graph_span: 24h
-        # show:
-          # loading: false
-        # apex_config:
-          # plotOptions:
-            # area:
-              # fillTo: end
-          # grid:
-            # padding:
-              # top: -15
-          # fill:
-            # type: gradient
-            # gradient:
-              # type: vertical
-              # opacityFrom: 0.8
-              # opacityTo: 0
-              # stops:
-                # - 0
-                # - 99
-                # - 100
-          # stroke:
-            # width: 4
-          # tooltip:
-            # style:
-              # fontSize: 14px
-            # x:
-              # format: dddd HH:mm
-          # chart:
-            # height: 140px
-            # offsetY: -20px
-          # xaxis:
-            # crosshairs:
-              # show: false
-        # series:
-          # - entity: sensor.airpurifier_temperature
-            # name: Temperature
-            # color: '#385581'
-            # type: area
-            # fill_raw: last
-            # group_by:
-              # func: avg
-              # duration: 1h
+        # - type: custom:mini-graph-card
+          # entities:
+            # #- color: '#385581'
+            # - entity: sensor.temperature_living_room
+          # line_width: 8
+          # hour24: true
+          # group: true
+          # align_icon: left
+          # align_state: right
+          # align_header: left
+          # hours_to_show: 24
+          # show:
+            # {fill: fade, icon: false, name: false, state: false,
+            # name_adaptive_color: false, labels: hover, legend: false}
+          # color_thresholds:
+            # - value: 20
+              # color: "#385581"
+            # - value: 22
+              # color: "#32a852"
+            # - value: 24
+              # color: "#d35400"
+            # - value: 26
+              # color: "#c0392b"
+          # tap_action:
+            # action: non
+        - type: custom:apexcharts-card
+          graph_span: 48h
+          experimental:
+            color_threshold: true
+          header:
+            show: false
+            title: ApexCharts-Card
+            show_states: true
+            colorize_states: true
+          yaxis:
+            - id: temp # identification name of the first y-axis
+              decimals: 0
+              apex_config:
+                tickAmount: 4
+            - id: hum # identification name of the second y-axis
+              opposite: true # make it show on the right side
+              decimals: 0
+              apex_config:
+                tickAmount: 4
+          series:
+            - entity: sensor.airpurifier_temperature
+              yaxis_id: temp
+              fill_raw: last
+              group_by:
+                func: last
+                fill: last
+              color_threshold:
+                - value: 20
+                  color: '#385581'
+                - value: 22
+                  color: '#32a852'
+                - value: 24
+                  color: '#d35400'
+                - value: 26
+                  color: '#c0392b'
+            - entity: sensor.airpurifier_humidity
+              yaxis_id: hum
+              fill_raw: last
+              group_by:
+                func: last
+                fill: last
+        # - type: custom:apexcharts-card
+          # layout: minimal
+          # locale: en
+          # graph_span: 24h
+          # show:
+            # loading: false
+          # apex_config:
+            # plotOptions:
+              # area:
+                # fillTo: end
+            # grid:
+              # padding:
+                # top: -15
+            # fill:
+              # type: gradient
+              # gradient:
+                # type: vertical
+                # opacityFrom: 0.8
+                # opacityTo: 0
+                # stops:
+                  # - 0
+                  # - 99
+                  # - 100
+            # stroke:
+              # width: 4
+            # tooltip:
+              # style:
+                # fontSize: 14px
+              # x:
+                # format: dddd HH:mm
+            # chart:
+              # height: 140px
+              # offsetY: -20px
+            # xaxis:
+              # crosshairs:
+                # show: false
+          # series:
+            # - entity: sensor.airpurifier_temperature
+              # name: Temperature
+              # color: '#385581'
+              # type: area
+              # fill_raw: last
+              # group_by:
+                # func: avg
+                # duration: 1h

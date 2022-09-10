@@ -1,0 +1,50 @@
+notify:
+  - name: all_devices
+    platform: group
+    services:
+      - service: notify_mobile_app_nokia_8_3_5g
+      - service: notify_mobile_app_nokia_x20
+
+homeassistant:
+  customize:
+    binary_sensor.motion_sensor_1_occupancy:
+      friendly_name: Kuchnia
+
+input_datetime:
+  sleep_notify_torrent:
+    name: Pausa notiser ett dygn
+    has_date: true
+    has_time: true
+
+automation:
+  - alias: toast
+    id: '3161036041566'
+    mode: parallel
+    trigger:
+      platform: state
+      entity_id:
+        - binary_sensor.motion_sensor_1_occupancy
+      from: 'off'
+      to: 'on'
+    action:
+      service: browser_mod.notification
+      data:
+        duration: 3000
+        message: >
+          Wykryto ruch w {{ trigger.to_state.name }}
+
+  - alias: dismiss_lovelace_updated
+    id: '1309195316329'
+    mode: restart
+    trigger:
+      platform: event
+      event_type: lovelace_updated
+    action:
+      repeat:
+        count: 5
+        sequence:
+          - delay: 0.5
+          - service: browser_mod.notification
+            data:
+              duration: 1
+              message: ' '

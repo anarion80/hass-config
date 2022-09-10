@@ -1,116 +1,100 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Kalendarze
-  style:
-    .: |
-      :host .content {
-        width: calc(385px + 385px + 385px);
-        max-width: 90vw;
-      }
-    layout-card:
-      $grid-layout$:
-        hui-calendar-card:
-          $: |
-            .card-content {
-              padding: 1.5em 2.7em 2.3em 2em;
-            }
-            ha-card {
-              animation: border 1s forwards;
-              border-radius: 0;
-            }
-            @keyframes border {
-              0%, 100% {
-                border-right: 1px solid rgba(0, 0, 0, 0.3);
+  service: browser_mod.popup
+  data:
+    title: Kalendarze
+    style: >
+      --popup-max-width: calc(385px + 385px);
+      --ha-card-border-radius: 0;
+    size: NORMAL
+    card_mod:
+      style:
+        layout-card:
+          $grid-layout$:
+            # card divider border
+            .: |
+              #root {
+                  margin: -24px 0 !important;
               }
-            }
-            /* phone */
-            @media screen and (max-width: 800px) {
-              ha-card {
-                animation: none;
-              }
-            }
-        atomic-calendar-revive:
-          $: |
-            .card-content {
-              padding: 1.5em 2.7em 2.3em 2em;
-            }
-            ha-card {
-              animation: border 1s forwards;
-              border-radius: 0;
-            }
-            @keyframes border {
-              0%, 100% {
-                border-right: 1px solid rgba(0, 0, 0, 0.3);
-              }
-            }
-            /* phone */
-            @media screen and (max-width: 800px) {
-              ha-card {
-                animation: none;
-              }
-            }
+            atomic-calendar-revive:
+              $: |
+                .card-content {
+                  padding: var(--tablet-popup-content-padding);
+                  padding-bottom: 0.8em;
+                }
+                #root {
+                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                  border-radius: 0;
+                  transition: none;
+                }
+                /* portrait */
+                @media screen and (max-width: 1200px) {
+                  #root {
+                    border-right: none;
+                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                  }
+                }
+    content:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: repeat(2, 1fr)
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "kalendarz plan_lekcji"
+        mediaquery:
+          #phone
+          "(max-width: 800px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(2, 1fr)
+            grid-template-areas: |
+              "kalendarz"
+              "plan_lekcji"
+      cards:
 
-  card:
-    type: custom:layout-card
-    layout_type: custom:grid-layout
-    layout:
-      grid-template-columns: repeat(2, 1fr)
-      grid-template-rows: 1fr
-      grid-template-areas: |
-        "kalendarz plan_lekcji"
-      mediaquery:
-        #phone
-        "(max-width: 800px)":
-          grid-template-columns: 1fr
-          grid-template-rows: repeat(2, 1fr)
-          grid-template-areas: |
-            "kalendarz"
-            "plan_lekcji"
-    cards:
+        #################################################
+        #                                               #
+        #                Kalendarz                      #
+        #                                               #
+        #################################################
 
-      #################################################
-      #                                               #
-      #                Kalendarz                      #
-      #                                               #
-      #################################################
+        - type: custom:atomic-calendar-revive
+          view_layout:
+            grid-area: kalendarz
+          name: Kalendarz
+          entities:
+            - entity: calendar.anarion_dunedain
+              titleColor: red
+            - entity: calendar.iwona_migalska_gmail_com
+              titleColor: blue
+            - entity: calendar.holidays_in_poland
+              titleColor: tellow
+          enableModeChange: true
+          firstDayOfWeek: 1
+          showDate: true
+          sortByStartTime: false
+          showCurrentEventLine: false
+          showProgressBar: true
+          showMonth: false
+          showWeekDay: true
+          showDescription: true
+          disableLocationLink: false
+          showNoEventsForToday: false
+          showFullDayProgress: false
+          showEventIcon: false
+          maxDaysToShow: 30
 
-      - type: custom:atomic-calendar-revive
-        view_layout:
-          grid-area: kalendarz
-        name: Kalendarz
-        entities:
-          - entity: calendar.anarion_dunedain
-            titleColor: red
-          - entity: calendar.iwona_migalska_gmail_com
-            titleColor: blue
-          - entity: calendar.holidays_in_poland
-            titleColor: tellow
-        enableModeChange: true
-        firstDayOfWeek: 1
-        showDate: true
-        sortByStartTime: false
-        showCurrentEventLine: false
-        showProgressBar: true
-        showMonth: false
-        showWeekDay: true
-        showDescription: true
-        disableLocationLink: false
-        showNoEventsForToday: false
-        showFullDayProgress: false
-        showEventIcon: false
-        maxDaysToShow: 30
+        #################################################
+        #                                               #
+        #                  Plan lekcji                  #
+        #                                               #
+        #################################################
 
-      #################################################
-      #                                               #
-      #                Plan lekcji                    #
-      #                                               #
-      #################################################
+        - type: calendar
+          view_layout:
+            grid-area: plan_lekcji
+          initial_view: dayGridDay
+          entities:
+            - calendar.plan_lekcji_hani
+          title: Plan lekcji Hani
 
-      - type: calendar
-        view_layout:
-          grid-area: plan_lekcji
-        initial_view: dayGridDay
-        entities:
-          - calendar.plan_lekcji_hani
-        title: Plan lekcji Hani

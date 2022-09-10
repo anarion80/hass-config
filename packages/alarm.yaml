@@ -16,22 +16,6 @@ alarm_control_panel:
       trigger_time: 60
 
 automation:
-  - alias: toast
-    id: '3900676590344'
-    mode: parallel
-    trigger:
-      - platform: state
-        entity_id:
-          - binary_sensor.motion_sensor_1_occupancy
-        from: 'off'
-        to: 'on'
-    action:
-      - service: browser_mod.toast
-        data:
-          duration: 3000
-          message: >
-            Wykryto ruch w {{ trigger.to_state.name }}
-
   # - id: '1617367166600'
   #   alias: Motion Detected
   #   description: ''
@@ -86,13 +70,13 @@ automation:
         data:
           entity_id: >
             camera.{{trigger.payload_json["after"]["camera"]}}_2
-          deviceID:
+          browser_id:
             - amazon_tablet
       - delay:
           minutes: 1
       - service: browser_mod.close_popup
         data:
-          deviceID: amazon_tablet
+          browser_id: amazon_tablet
       - service: light.turn_off
         data:
           entity_id: light.fire_tablet_screen

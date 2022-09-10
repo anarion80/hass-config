@@ -1,7 +1,59 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: COVID-19
+  service: browser_mod.popup
+  data:
+    title: COVID-19
+    size: NORMAL
+    content:
+      type: custom:apexcharts-card
+      graph_span: 31d
+      yaxis:
+        - id: first
+          apex_config:
+            tickAmount: 4
+        - id: second
+          opposite: true
+          apex_config:
+            tickAmount: 4
+      header:
+        show: true
+        title: COVID-19
+        show_states: true
+        colorize_states: true
+      all_series_config:
+        stroke_width: 2
+        opacity: 0.6
+        type: area
+        show:
+          legend_value: false
+      series:
+        - entity: sensor.covid19_infections
+          #header_actions:
+          #  tap_action:
+          #    action: call-service
+          #    service: browser_mod.close_popup
+          #    confirmation:
+          #      text: Are you sure?
+          #      exemptions:
+          #        - user: befc8496799848bda1824f2a8111e30a
+          yaxis_id: first
+          type: column
+          group_by:
+            func: last
+            duration: 1d
+        - entity: sensor.covid19_deaths
+          type: column
+          fill_raw: last
+          group_by:
+            func: last
+            duration: 1d
+          yaxis_id: first
+        - entity: sensor.covid19_recovered
+          yaxis_id: first
+          type: column
+          group_by:
+            func: last
+            duration: 1d
   style:
     .: |
       :host .content {
@@ -12,59 +64,3 @@ browser_mod:
       #root {
         grid-gap: 0 !important;
       }
-  card:
-    type: custom:apexcharts-card
-    graph_span: 31d
-    yaxis:
-      - id: first
-        apex_config:
-          tickAmount: 4
-      - id: second
-        opposite: true
-        apex_config:
-          tickAmount: 4
-    header:
-      show: true
-      title: COVID-19
-      show_states: true
-      colorize_states: true
-    all_series_config:
-      stroke_width: 2
-      opacity: 0.6
-      type: area
-      show:
-        legend_value: false
-    series:
-      - entity: sensor.covid19_infections
-        #header_actions:
-        #  tap_action:
-        #    action: call-service
-        #    service: browser_mod.close_popup
-        #    confirmation:
-        #      text: Are you sure?
-        #      exemptions:
-        #        - user: befc8496799848bda1824f2a8111e30a
-        yaxis_id: first
-        type: column
-        group_by:
-          func: last
-          duration: 1d
-      - entity: sensor.covid19_deaths
-        type: column
-        fill_raw: last
-        group_by:
-          func: last
-          duration: 1d
-        yaxis_id: first
-      - entity: sensor.covid19_recovered
-        yaxis_id: first
-        type: column
-        group_by:
-          func: last
-          duration: 1d
-
-
-
-
-
-

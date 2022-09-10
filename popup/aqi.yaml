@@ -1,51 +1,57 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Jakość powietrza
-  style:
-    hui-grid-card$: |
-      #root {
-        grid-gap: 0 !important;
-      }
-  card:
-    type: grid
-    columns: 1
-    square: false
-    cards:
-      - type: custom:air-visual-card
-        hide_weather: false
-        hide_title: true
-        hide_face: false
-        weather: weather.openweathermap
-        city: Krakow
-        country: Poland
-        speed_unit: km/h
-        air_pollution_level: sensor.u_s_air_pollution_level
-        air_quality_index: sensor.u_s_air_quality_index
-        main_pollutant: sensor.u_s_main_pollutant
+  service: browser_mod.popup
+  data:
+    title: Jakość powietrza
+    size: NORMAL
+    content:
+      type: custom:mod-card
+      card_mod:
+        style:
+          hui-grid-card$: |
+            #root {
+              grid-gap: 0 !important;
+            }
 
-      - type: custom:apexcharts-card
-        graph_span: 24h
-        experimental:
-          color_threshold: true
-        header:
-          show: false
-          title: Indeks Jakości Powietrza
-          show_states: true
-          colorize_states: true
-        series:
-          - entity: sensor.u_s_air_quality_index
-            name: AQI
-            fill_raw: last
-            group_by:
-              func: last
-              fill: last
-            color_threshold:
-              - value: 50
-                color: '#32a852'
-              - value: 100
-                color: "#ffff00"
-              - value: 150
-                color: "#ff8000"
-              - value: 200
-                color: "#d10000"
+      card:
+        type: grid
+        columns: 1
+        square: false
+        cards:
+          - type: custom:air-visual-card
+            hide_weather: false
+            hide_title: true
+            hide_face: false
+            weather: weather.openweathermap
+            city: Krakow
+            country: Poland
+            speed_unit: km/h
+            air_pollution_level: sensor.u_s_air_pollution_level
+            air_quality_index: sensor.u_s_air_quality_index
+            main_pollutant: sensor.u_s_main_pollutant
+
+          - type: custom:apexcharts-card
+            graph_span: 24h
+            experimental:
+              color_threshold: true
+            header:
+              show: false
+              title: Indeks Jakości Powietrza
+              show_states: true
+              colorize_states: true
+            series:
+              - entity: sensor.u_s_air_quality_index
+                name: AQI
+                fill_raw: last
+                group_by:
+                  func: last
+                  fill: last
+                color_threshold:
+                  - value: 50
+                    color: '#32a852'
+                  - value: 100
+                    color: "#ffff00"
+                  - value: 150
+                    color: "#ff8000"
+                  - value: 200
+                    color: "#d10000"

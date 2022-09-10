@@ -6,48 +6,46 @@ automation:
         event: start
     action:
       - service: button.press
-        target:
+        data:
           entity_id: button.fire_tablet_restart_browser
 
-  - alias: lovelace_updated_ignore
-    id: '9381519720051'
-    mode: restart
-    trigger:
-      - platform: event
-        event_type: lovelace_updated
-    action:
-      - service: browser_mod.toast
-        data:
-          duration: 1
-          message: ' '
-
-  - alias: fullykiosk_screensaver
-    id: '9452750674803'
-    mode: restart
-    trigger:
-      platform: state
-      entity_id: binary_sensor.25ffd809_364afacd
-      from: 'off'
-      to: 'on'
-    action:
-      if: >
-        {{ 'binary_sensor.25ffd809_364afacd' in trigger.entity_id }}
-      then:
-        - service: switch.turn_off
-          entity_id: switch.fire_tablet_screensaver
-        - service: light.turn_on
-          data:
-            entity_id: light.fire_tablet_screen
-            brightness_pct: >
-              {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
-      else:
-        - service: switch.turn_on
-          entity_id: switch.fire_tablet_screensaver
-        - delay:
-            minutes: 15
-        - service: browser_mod.close_popup
-          data:
-            deviceID: amazon_tablet
+  # - alias: fullykiosk_screensaver
+  #   id: '9452750674803'
+  #   mode: restart
+  #   trigger:
+  #     platform: state
+  #     entity_id: binary_sensor.amazon_tablet
+  #     from: 'off'
+  #     to: 'on'
+  #   action:
+  #     if: >
+  #       {{ 'binary_sensor.amazon_tablet' in trigger.entity_id }}
+  #     then:
+  #       - service: switch.turn_off
+  #         entity_id: switch.fire_tablet_screensaver
+  #       # - service: light.turn_on
+  #       #   data:
+  #       #     entity_id: light.fire_tablet_screen
+  #       #     brightness_pct: >
+  #       #       {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
+  #       - service: number.set_value
+  #         target:
+  #           entity_id: number.fire_tablet_screensaver_brightness
+  #         data:
+  #           value: >
+  #             {% set day_percent = 90 %}
+  #             {% set night_percent = 65 %}
+  #             {% set day_convert = ((day_percent * 255) / 100) | int %}
+  #             {% set night_convert = ((night_percent * 255) / 100) | int %}
+  #             {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
+  #     else:
+  #       - service: switch.turn_on
+  #         entity_id: switch.fire_tablet_screensaver
+  #       - delay:
+  #           minutes: 15
+  #       - service: browser_mod.close_popup
+  #         data:
+  #           browser_id: amazon_tablet
 
   - id: '1634040402000'
     alias: fullykiosk_disable_screen
@@ -65,7 +63,7 @@ automation:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.25ffd809_364afacd
+        entity_id: media_player.amazon_tablet
       data:
         media_content_id: /local/sound/off.m4a
         media_content_type: music
@@ -79,7 +77,7 @@ automation:
     description: Turn on tablet screen on motion detected
     trigger:
     - platform: state
-      entity_id: binary_sensor.25ffd809_364afacd
+      entity_id: binary_sensor.amazon_tablet
       from: 'off'
       to: 'on'
     condition:
@@ -89,14 +87,24 @@ automation:
     action:
     - service: media_player.play_media
       target:
-        entity_id: media_player.25ffd809_364afacd
+        entity_id: media_player.amazon_tablet
       data:
         media_content_id: /local/sound/on.m4a
         media_content_type: music
-    - service: light.turn_on
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.fire_tablet_screen
+    #     brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
+    - service: number.set_value
+      target:
+        entity_id: number.fire_tablet_screensaver_brightness
       data:
-        entity_id: light.fire_tablet_screen
-        brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
+        value: >
+          {% set day_percent = 90 %}
+          {% set night_percent = 65 %}
+          {% set day_convert = ((day_percent * 255) / 100) | int %}
+          {% set night_convert = ((night_percent * 255) / 100) | int %}
+          {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
     mode: restart
 
   - id: '1637682511628'

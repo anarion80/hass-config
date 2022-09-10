@@ -1,145 +1,126 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: 🚮 Odbiór odpadów
-  style:
-      .: |
-        :host .content {
-          width: calc(500px + 500px);
-          max-width: 90vw;
-        }
-        /* phone */
-        @media screen and (max-width: 800px) {
-          :host .content {
-            max-width: 100vw;
-          }
-        }
-      layout-card:
-        $grid-layout$:
-          hui-vertical-stack-card:
-            $: |
+  service: browser_mod.popup
+  data:
+    title: 🚮 Odbiór odpadów
+    style: >
+      --popup-max-width: calc(385px + 385px);
+      --ha-card-border-radius: 0;
+    size: NORMAL
+    card_mod:
+      style:
+        layout-card:
+          $grid-layout$:
+            # card divider border
+            .: |
               #root {
-                padding: 1.2em 1.2em 1.2em 1.2em;
-                border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                border-radius: 0;
-                transition: none;
+                  margin: -24px 0 !important;
               }
-              @keyframes border {
-                0%, 100% {
-                  border-right: 1px solid rgba(0, 0, 0, 0.3);
-                }
-              }
-              /* phone */
-              @media screen and (max-width: 800px) {
-                #root {
-                  border-right: none;
-                  border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                }
-              }
-            $hui-horizontal-stack-card:
+            hui-vertical-stack-card:
               $: |
-                #root {
-                  justify-content: space-evenly;
-                  margin-top: 1.9em;
-                  max-width: 82vw; /* iphonex */
+                .card-content {
+                  padding: var(--tablet-popup-content-padding);
+                  padding-bottom: 0.8em;
                 }
-  card:
-    type: custom:layout-card
-    layout_type: custom:grid-layout
-    layout:
-      grid-template-columns: repeat(2, 1fr)
-      grid-template-rows: 1fr
-      grid-template-areas: |
-        "buttons calendar"
-      mediaquery:
-        #phone
-        "(max-width: 800px)":
-          grid-template-columns: 1fr
-          grid-template-rows: repeat(2, 1fr)
-          grid-template-areas: |
-            "buttons"
-            "calendar"
-    cards:
+                #root {
+                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                  border-radius: 0;
+                  transition: none;
+                }
+                /* portrait */
+                @media screen and (max-width: 1200px) {
+                  #root {
+                    border-right: none;
+                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                  }
+                }
+              $hui-horizontal-stack-card:
+                # horizontal bottom buttons
+                $: |
+                  #root {
+                    justify-content: space-evenly;
+                    margin-top: 1.7em;
+                    max-width: 82vw; /* iphonex */
+                  }
+    content:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: 385px 385px
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "buttons calendar"
+        mediaquery:
+          #phone
+          "(max-width: 800px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(2, 1fr)
+            grid-template-areas: |
+              "buttons"
+              "calendar"
+      cards:
 
-      - type: vertical-stack
-        view_layout:
-          grid-area: buttons
-        cards:
-          # - type: custom:button-card
-          #   name: Śmieci
-          #   entity: input_boolean.garbage_reminder
-          #   icon: mdi:trash-can
-          #   show_state: false
-          #   template:
-          #     - icon_name
-          #   variables:
-          #   styles:
-          #     # icon:
-          #     #   - width: 100%
-          #     #   - color: var(--state-icon-color)
-          #     card:
-          #       - border-radius: var(--custom-button-card-border-radius)
-          #       - -webkit-tap-highlight-color: rgba(0,0,0,0)
-          #       - transition: none
-          #       - padding: 10% 9% 9% 10%
-          #       - --mdc-ripple-color: >
-          #           [[[
-          #             return (['wł.','on', 'home', 'cool', 'fan_only', 'playing', 'Normalny', 'Intensywny', 'Poza Domem', 'Turbo'].indexOf(entity === undefined || entity.state) !== -1)
-          #               ? 'rgb(0, 0, 0)'
-          #               : 'rgba(255, 255, 255, 0.3)';
-          #           ]]]
-          #       - color: >
-          #           [[[
-          #             return (['wł.','on', 'home', 'cool', 'fan_only', 'playing', 'Normalny', 'Intensywny', 'Poza Domem', 'Turbo'].indexOf(entity === undefined || entity.state) !== -1)
-          #               ? 'rgba(0, 0, 0, 0.6)'
-          #               : 'rgba(255, 255, 255, 0.3)';
-          #           ]]]
-          #       - background-color: >
-          #           [[[
-          #             return (['wł.','on', 'home', 'cool', 'fan_only', 'playing', 'Normalny', 'Intensywny', 'Poza Domem', 'Turbo'].indexOf(entity === undefined || entity.state) !== -1)
-          #               ? 'rgba(255, 255, 255, 0.8)'
-          #               : 'rgba(115, 115, 115, 0.2)';
-          #           ]]]
+        - type: vertical-stack
+          view_layout:
+            grid-area: buttons
+          cards:
+            - type: custom:hui-horizontal-stack-card
+              cards:
+                - type: custom:button-card
+                  entity: input_boolean.garbage_reminder
+                  state:
+                  - value: 'on'
+                    icon: 'mdi:delete-restore'
+                    name: 'Potwierdź wyniesienie śmieci'
+                  - value: 'off'
+                    icon: mdi:delete-empty
+                    name: 'Śmieci wyniesione'
+                  icon: mdi:reload
+                  template: icon_name
+              styles:
+                name:
+                  - text-align: center;
+              template: icon_name
 
-          - type: custom:button-card
-            #name: Śmieci
-            entity: input_boolean.garbage_reminder
-            show_state: false
-            show_label: false
-            show_name: true
-            template:
-              - basic
-            state:
-              - value: 'on'
-                icon: 'mdi:delete-restore'
-                name: 'Potwierdź wyniesienie śmieci'
-              - value: 'off'
-                icon: mdi:delete-empty
-                name: 'Śmieci wyniesione'
-            styles:
-              name:
-                - text-align: center;
+            # - type: custom:button-card
+            #   #name: Śmieci
+            #   entity: input_boolean.garbage_reminder
+            #   show_state: false
+            #   show_label: false
+            #   show_name: true
+            #   template:
+            #     - basic
+            #   state:
+            #     - value: 'on'
+            #       icon: 'mdi:delete-restore'
+            #       name: 'Potwierdź wyniesienie śmieci'
+            #     - value: 'off'
+            #       icon: mdi:delete-empty
+            #       name: 'Śmieci wyniesione'
+            #   styles:
+            #     name:
+            #       - text-align: center;
 
-      - type: vertical-stack
-        view_layout:
-          grid-area: calendar
-        cards:
-          - type: custom:atomic-calendar-revive
-            name: Śmieci
-            entities:
-              - entity: calendar.garbage_collection
-                titleColor: red
-            enableModeChange: true
-            firstDayOfWeek: 1
-            showDate: true
-            sortByStartTime: false
-            showCurrentEventLine: false
-            showProgressBar: true
-            showMonth: false
-            showWeekDay: true
-            showDescription: true
-            disableLocationLink: false
-            showNoEventsForToday: false
-            showFullDayProgress: false
-            showEventIcon: false
-            maxDaysToShow: 60
+        - type: vertical-stack
+          view_layout:
+            grid-area: calendar
+          cards:
+            - type: custom:atomic-calendar-revive
+              #name: Śmieci
+              entities:
+                - entity: calendar.garbage_collection
+                  titleColor: red
+              enableModeChange: true
+              firstDayOfWeek: 1
+              showDate: true
+              sortByStartTime: false
+              showCurrentEventLine: false
+              showProgressBar: true
+              showMonth: false
+              showWeekDay: true
+              showDescription: true
+              disableLocationLink: false
+              showNoEventsForToday: false
+              showFullDayProgress: false
+              showEventIcon: false
+              maxDaysToShow: 60

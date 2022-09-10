@@ -1,139 +1,129 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Aktualizacje
-  style:
-    .: |
-      :host .content {
-        width: 100%;
-      }
-    hui-grid-card:
-      $: |
-        button-card:nth-child(2),
-        button-card:nth-child(4) {
-          margin: 0.6em 0 2.1em 0.8em;
-        }
-        button-card:nth-child(6) {
-          margin: 0.6em 0 0.5em 0.8em;
-        }
-        #root {
-          grid-gap: 0 !important;
-          padding: var(--card-content-padding);
-          width: calc(100% - 4px);
-        }
-  card:
-    type: grid
-    columns: 1
-    square: false
-    cards:
-      - type: custom:button-card
-        entity: sensor.current_version
-        template: updates_hass
-        variables:
-          latest: sensor.hass_version_latest
-          latest_beta: sensor.hass_version_latest_beta
-          release_notes: sensor.hass_release_notes
-          release_notes_beta: sensor.hass_release_notes_beta
+  service: browser_mod.popup
+  data:
+    title: Aktualizacje
+    size: NORMAL
+    content:
+      type: custom:mod-card
+      card_mod:
+        style:
+          .: |
+            :host .content {
+              width: 100%;
+            }
+          hui-grid-card:
+            $: |
+              button-card:nth-child(2),
+              button-card:nth-child(4) {
+                margin: 0.6em 0 2.1em 0.8em;
+              }
+              button-card:nth-child(6) {
+                margin: 0.6em 0 0.5em 0.8em;
+              }
+              #root {
+                grid-gap: 0 !important;
+                padding: var(--tablet-popup-content-padding);
+                width: calc(100% - 4px);
+              }
+      card:
+        type: grid
+        columns: 1
+        square: false
+        cards:
+          - type: custom:button-card
+            entity: sensor.current_version
+            template: updates_hass
+            variables:
+              latest: sensor.hass_version_latest
+              latest_beta: sensor.hass_version_latest_beta
+              release_notes: sensor.hass_release_notes
+              release_notes_beta: sensor.hass_release_notes_beta
 
-      - type: custom:button-card
-        entity: sensor.hass_version_installed
-        triggers_update:
-          - sensor.hass_version_latest
-          - sensor.hass_version_latest_beta
-        name: Aktualizuj HASS
-        icon: mdi:update
-        styles:
-          card:
-            - width: max-content
-            - filter: >
+          - type: custom:button-card
+            # entity: sensor.hass_version_installed
+            entity: sensor.current_version
+            # triggers_update:
+            #   - sensor.hass_version_latest
+            #   - sensor.hass_version_latest_beta
+            name: Aktualizuj HASS
+            icon: mdi:update
+            # styles:
+            #   card:
+            #     - width: max-content
+            #     - filter: >
+            #         [[[
+            #           return `[[[
+            #             if (entity) {
+            #               return entity.state === states['sensor.hass_version_latest'].state ||
+            #                 entity.state === states['sensor.hass_version_latest_beta'].state
+            #                   ? 'opacity(30%)'
+            #                   : 'drop-shadow(3px 3px 5px #00000050)';
+            #             }
+            #           ]]]`
+            #         ]]]
+            #     - display: >
+            #         [[[
+            #           return `[[[
+            #             return entity
+            #               ? 'flex'
+            #               : 'none';
+            #           ]]]`
+            #         ]]]
+            tap_action:
+              action: call-service
+              service: browser_mod.sequence
+              service_data:
+                sequence:
+                  - service: browser_mod.notification
+                    data:
+                      message: Starting update...
+                  - service: script.turn_on
+                    data:
+                      entity_id: script.homeassistant_core_update
+            template: updates_hass_icon_name
+
+          ### HACS
+          - type: custom:button-card
+            entity: sensor.hacs
+            variables:
+              installed: sensor.hacs_installed
+            template: updates_hacs
+
+          - type: custom:button-card
+            entity: sensor.hacs
+            name: Otwórz HACS
+            template:
+              - updates_hacs_icon_name
+              - >
                 [[[
-                  return `[[[
-                    if (entity) {
-                      return entity.state === states['sensor.hass_version_latest'].state ||
-                        entity.state === states['sensor.hass_version_latest_beta'].state
-                          ? 'opacity(30%)'
-                          : 'drop-shadow(3px 3px 5px #00000050)';
-                    }
-                  ]]]`
+                  return window.navigator.userAgent.match(/iPhone/i)
+                    ? 'hacs_navigate_ios'
+                    : 'hacs_iframe';
                 ]]]
-            - display: >
-                [[[
-                  return `[[[
-                    return entity
-                      ? 'flex'
-                      : 'none';
-                  ]]]`
-                ]]]
-        tap_action:
-          services: |
-            [[[
-              return `[[[
-                hass.callService('browser_mod', 'toast', {
-                  message: 'Starting update...'
-                });
-                hass.callService('script', 'turn_on', {
-                  entity_id: 'script.homeassistant_core_update'
-                });
-              ]]]`
-            ]]]
-        template: icon_name
 
-      ### HACS
-      - type: custom:button-card
-        entity: sensor.hacs
-        variables:
-          installed: sensor.hacs_installed
-        template: updates_hacs
+          - type: custom:button-card
+            entity: sensor.template_updates
+            template: updates_other
 
-      - type: custom:button-card
-        entity: sensor.hacs
-        name: Otwórz HACS
-        icon: mdi:open-in-new
-        styles:
-          card:
-            - width: max-content
-            - filter: >
-                [[[
-                  return `[[[
-                    if (entity) {
-                      return entity.state === '0'
-                        ? 'opacity(30%)'
-                        : 'drop-shadow(3px 3px 5px #00000050)';
-                    }
-                  ]]]`
-                ]]]
-            - display: >
-                [[[
-                  return `[[[
-                    return entity && entity.state !== 'unknown'
-                      ? 'flex'
-                      : 'none';
-                  ]]]`
-                ]]]
-        template: hacs_iframe
+          ### supervisor
+          - type: custom:button-card
+            entity: sensor.supervisor_updates
+            template: updates_supervisor
 
-      - type: custom:button-card
-        entity: sensor.template_updates
-        template: updates_other
-
-      ### supervisor
-      - type: custom:button-card
-        entity: sensor.supervisor_updates
-        template: updates_supervisor
-
-      - type: custom:button-card
-        entity: sensor.supervisor_updates
-        triggers_update:
-          - binary_sensor.template_supervisor_update
-        name: Aktualizuj Supervisor
-        icon: mdi:open-in-new
-        styles:
-          card:
-            - width: max-content
-            - filter: >
-                [[[
-                  return states['binary_sensor.template_supervisor_update'].state === 'off' ?
-                    'opacity(30%)' :
-                    'drop-shadow(3px 3px 5px #00000050)';
-                ]]]
-        template: supervisor_iframe
+          - type: custom:button-card
+            entity: sensor.supervisor_updates
+            triggers_update:
+              - binary_sensor.template_supervisor_update
+            name: Otwórz Supervisor
+            icon: mdi:open-in-new
+            styles:
+              card:
+                - width: max-content
+                - filter: >
+                    [[[
+                      return states['binary_sensor.template_supervisor_update'].state === 'off' ?
+                        'opacity(30%)' :
+                        'drop-shadow(3px 3px 5px #00000050)';
+                    ]]]
+            template: supervisor_iframe

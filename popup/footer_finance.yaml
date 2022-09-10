@@ -1,39 +1,43 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Finanse
-  style:
-    hui-grid-card$: |
-      #root {
-        grid-gap: 0 !important;
-      }
-  card:
-    type: grid
-    columns: 1
-    square: false
-    cards:
-      - type: custom:apexcharts-card
-        update_interval: 1d
-        graph_span: 60d
-        span:
-          end: day
-        header:
-          show: true
-          title: Stopy procentowe PKO BP
-          show_states: true
-          colorize_states: true
-        series:
-          - entity: sensor.stopa_bazowa_pko_bp
-            curve: straight
-            float_precision: 2
-          - entity: sensor.wibor_6m
-            curve: straight
-            float_precision: 2
-      - type: entities
-        entities:
-          - entity: sensor.sodexo_dla_ciebie_praca
-          - entity: sensor.sodexo_dla_ciebie_sodexo2
-
+  service: browser_mod.popup
+  data:
+    title: Finanse
+    size: NORMAL
+    card_mod:
+      style:
+        hui-grid-card$: |
+          #root {
+            grid-gap: 0 !important;
+          }
+    content:
+      type: custom:mod-card
+      card:
+        type: grid
+        columns: 1
+        square: false
+        cards:
+          - type: custom:apexcharts-card
+            update_interval: 1d
+            graph_span: 60d
+            span:
+              end: day
+            header:
+              show: true
+              title: Stopy procentowe PKO BP
+              show_states: true
+              colorize_states: true
+            series:
+              - entity: sensor.stopa_bazowa_pko_bp
+                curve: straight
+                float_precision: 2
+              - entity: sensor.wibor_6m
+                curve: straight
+                float_precision: 2
+          - type: entities
+            entities:
+              - entity: sensor.sodexo_dla_ciebie_praca
+              - entity: sensor.sodexo_dla_ciebie_sodexo2
 
 
 

@@ -1,7 +1,7 @@
 settings:
   variables:
     entity_tablet: light.fire_tablet_screen
-    entity_browser_mod: media_player.25ffd809_364afacd
+    entity_browser_mod: media_player.amazon_tablet
 
     translate_unknown: Nieznany
     translate_idle: Nieaktywny

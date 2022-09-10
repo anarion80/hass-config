@@ -295,7 +295,7 @@ views:
                   entity: fan.zhimi_airpurifier_v7
                   name: Oczyszczacz powietrza
                   double_tap_action:
-                    !include popup/sovrum_luftrenare.yaml
+                    !include popup/livingroom_purifier.yaml
                   template:
                     - base
                     - icon_air_purifier
@@ -326,7 +326,7 @@ views:
                       }
                     ]]]
                   double_tap_action:
-                    !include popup/vardagsrum_tv.yaml
+                    !include popup/livingroom_tv.yaml
                   template:
                     - base
                     - icon_tv
@@ -882,23 +882,30 @@ views:
                   card:
                     - animation: blink 1s ease infinite
 
+          # - type: custom:button-card
+          #   entity: climate.living_room_ac
+          #   name: Klima
+          #   double_tap_action:
+          #     !include popup/sovrum_tv2.yaml
+          #   template:
+          #     - base
+          #     - icon_ac
+          #     - full_circle
+          #     - loader
+          #   variables:
+          #     circle_input: >
+          #       [[[
+          #         return entity === undefined ?
+          #           null :
+          #           parseFloat(entity.attributes.current_temperature);
+          #       ]]]
+
           - type: custom:button-card
-            entity: climate.living_room_ac
-            name: Klima
-            double_tap_action:
-              !include popup/livingroom_ac.yaml
+            entity: light.yeelight_ceilc_0x19fcaf7c
+            name: U Hani
             template:
-              - base
-              - icon_ac
-              - full_circle
-              - loader
-            variables:
-              circle_input: >
-                [[[
-                  return entity === undefined ?
-                    null :
-                    parseFloat(entity.attributes.current_temperature);
-                ]]]
+              - light
+              - icon_pendants
 
       #################################################
       #                                               #
@@ -1134,21 +1141,30 @@ views:
                   frigate_card_action: fullscreen
             dimensions:
               aspect_ratio_mode: unconstrained
-              #aspect_ratio: '1/1'
+              aspect_ratio: '4:4'
+            # image:
+            #   layout:
+            #     fit: fill
             # live:
             #   webrtc_card:
             #     ui: true
             live:
+              layout:
+                fit: cover
               controls:
                 thumbnails:
                   mode: none
                 title:
                   mode: none
             card_mod:
-              style: |
-                :host {
-                  border-radius: calc(var(--custom-button-card-border-radius) / 2);
-                }
+              style:
+                ha-card:
+                  $: |
+                    #main {
+                        border-radius: calc(var(--custom-button-card-border-radius) / 2) !important;
+                      }
+
+
 
 
       # - type: grid

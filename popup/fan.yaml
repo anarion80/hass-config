@@ -1,7 +1,44 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Klimat
+  service: browser_mod.popup
+  data:
+    title: Klimat
+    size: NORMAL
+    content:
+      type: grid
+      columns: 1
+      square: false
+      cards:
+
+        - type: thermostat
+          entity: climate.living_room_ac
+
+
+        - type: entities
+          state_color: true
+          entities:
+            - climate.living_room_ac
+            - entity: sensor.airpurifier_temperature
+              name: Temperatura Salon
+            - entity: sensor.airpurifier_humidity
+              name: Wilgotność Salon
+
+        - type: custom:mini-graph-card
+          entities:
+            - color: '#385581'
+              entity: sensor.airpurifier_temperature
+          line_width: 8
+          hour24: true
+          group: true
+          align_icon: left
+          align_state: right
+          align_header: left
+          hours_to_show: 24
+          show:
+            {fill: fade, icon: false, name: false, state: false,
+            name_adaptive_color: false, labels: hover, legend: false}
+          tap_action:
+            action: none
   style:
     hui-grid-card:
       $more-info-card$:
@@ -26,38 +63,3 @@ browser_mod:
         #root {
           grid-gap: 0 !important;
         }
-  card:
-    type: grid
-    columns: 1
-    square: false
-    cards:
-
-      - type: thermostat
-        entity: climate.living_room_ac
-
-
-      - type: entities
-        state_color: true
-        entities:
-          - climate.living_room_ac
-          - entity: sensor.airpurifier_temperature
-            name: Temperatura Salon
-          - entity: sensor.airpurifier_humidity
-            name: Wilgotność Salon
-
-      - type: custom:mini-graph-card
-        entities:
-          - color: '#385581'
-            entity: ssensor.airpurifier_temperature
-        line_width: 8
-        hour24: true
-        group: true
-        align_icon: left
-        align_state: right
-        align_header: left
-        hours_to_show: 24
-        show:
-          {fill: fade, icon: false, name: false, state: false,
-          name_adaptive_color: false, labels: hover, legend: false}
-        tap_action:
-          action: none

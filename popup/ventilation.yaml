@@ -1,7 +1,500 @@
 action: fire-dom-event
 browser_mod:
-  command: popup
-  title: Wentylacja
+  service: browser_mod.popup
+  data:
+    title: Wentylacja
+    style: >
+      --popup-max-width: calc(500px + 500px);
+      --ha-card-border-radius: 0;
+    size: NORMAL
+    card_mod:
+      style:
+        layout-card:
+          $grid-layout$:
+            # card divider border
+            .: |
+              #root {
+                  margin: -24px 0 !important;
+              }
+            hui-vertical-stack-card:
+              $: |
+                .card-content {
+                  padding: var(--tablet-popup-content-padding);
+                  padding-bottom: 0.8em;
+                }
+                #root {
+                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                  border-radius: 0;
+                  transition: none;
+                  padding: 1.5em;
+                }
+                }
+                /* portrait */
+                @media screen and (max-width: 1200px) {
+                  #root {
+                    border-right: none;
+                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                  }
+                }
+              $hui-horizontal-stack-card:
+                # horizontal bottom buttons
+                $: |
+                  #root {
+                    justify-content: space-evenly;
+                    margin-top: 1.7em;
+                    max-width: 82vw; /* iphonex */
+                  }
+    content:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: 500px 500px
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "buttons entities"
+        mediaquery:
+          #phone
+          "(max-width: 800px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(2, 1fr)
+            grid-template-areas: |
+              "buttons"
+              "entities"
+      cards:
+        - type: vertical-stack
+          view_layout:
+            grid-area: buttons
+          cards:
+            - type: grid
+              columns: 3
+              cards:
+                - type: custom:button-card
+                  entity: sensor.komfovent_operation_mode
+                  name: Poza Domem
+                  icon: hass:home-export-outline
+                  show_state: false
+                  tap_action:
+                    action: call-service
+                    service: script.komfovent_set_away
+                  template:
+                    - basic
+                  state:
+                    - value: Away
+                      styles:
+                        icon:
+                          - color: var(--state-icon-active-color)
+                        card:
+                          - color: rgba(0, 0, 0, 0.6)
+                          - background-color: rgba(255, 255, 255, 0.8)
+                - type: custom:button-card
+                  entity: sensor.komfovent_operation_mode
+                  name: Normalny
+                  show_icon: true
+                  icon: hass:home-account
+                  show_state: false
+                  tap_action:
+                    action: call-service
+                    service: script.komfovent_set_normal
+                  template:
+                    - basic
+                  state:
+                    - value: Normal
+                      styles:
+                        icon:
+                          - color: var(--state-icon-active-color)
+                        card:
+                          - color: rgba(0, 0, 0, 0.6)
+                          - background-color: rgba(255, 255, 255, 0.8)
+                - type: custom:button-card
+                  entity: sensor.komfovent_operation_mode
+                  name: Intensywny
+                  show_icon: true
+                  icon: hass:weather-windy
+                  show_state: false
+                  tap_action:
+                    action: call-service
+                    service: script.komfovent_set_intensive
+                  template:
+                    - basic
+                  state:
+                    - value: Intensive
+                      styles:
+                        icon:
+                          - color: var(--state-icon-active-color)
+                        card:
+                          - color: rgba(0, 0, 0, 0.6)
+                          - background-color: rgba(255, 255, 255, 0.8)
+                - type: custom:button-card
+                  entity: sensor.komfovent_operation_mode
+                  name: Turbo
+                  show_icon: true
+                  icon: hass:fan
+                  show_state: false
+                  tap_action:
+                    action: call-service
+                    service: script.komfovent_set_boost
+                  template:
+                    - basic
+                  state:
+                    - value: Boost
+                      styles:
+                        icon:
+                          - color: var(--state-icon-active-color)
+                        card:
+                          - color: rgba(0, 0, 0, 0.6)
+                          - background-color: rgba(255, 255, 255, 0.8)
+                - type: custom:button-card
+                  entity: switch.komfovent_switch_power
+                  name: Zasilanie
+                  icon: hass:power-cycle
+                  show_state: false
+                  template:
+                    - basic
+
+                # - type: custom:button-card
+                #   entity: sensor.komfovent_operation_mode
+                #   name: Wyłącz
+                #   icon: hass:power-cycle
+                #   show_state: false
+                #   tap_action:
+                #     action: call-service
+                #     service: script.komfovent_set_off
+                #   template:
+                #     - basic
+
+            # - type: horizontal-stack
+            #   cards:
+            #     - type: entity
+            #       entity: sensor.komfovent_mode_text
+            #       name: Tryb
+            #     - type: entity
+            #       entity: sensor.komfovent_heat_recovery_w
+            #       icon: mdi:refresh-circle
+            #       name: Odzysk ciepła
+
+            - type: horizontal-stack
+              cards:
+                - type: gauge
+                  entity: sensor.komfovent_supply_fan_intensivity
+                  min: 0
+                  max: 100
+                  name: Przepływ nawiewu
+                - type: gauge
+                  entity: sensor.komfovent_extract_fan_intensivity
+                  min: 0
+                  max: 100
+                  name: Przepływ wywiewu
+                - type: gauge
+                  entity: sensor.komfovent_status_panel_humidity
+                  min: 0
+                  max: 100
+                  name: Wilgotność
+                  severity:
+                    yellow: 0
+                    green: 35
+                    red: 70
+                - type: gauge
+                  entity: sensor.komfovent_filter_impurity
+                  min: 0
+                  max: 100
+                  name: Zabrudzenie filtra
+                  severity:
+                    green: 0
+                    yellow: 45
+                    red: 85
+
+            - type: horizontal-stack
+              cards:
+                - type: gauge
+                  entity: sensor.komfovent_heater_power_w
+                  min: 0
+                  max: 1000
+                  name: Moc grzewcza
+                - type: gauge
+                  entity: sensor.komfovent_power_consumption_w
+                  min: 0
+                  max: 1000
+                  name: Zużycie prądu
+                - type: gauge
+                  entity: sensor.komfovent_heat_recovery_w
+                  min: 0
+                  max: 1000
+                  name: Odzysk ciepła
+                - type: gauge
+                  entity: sensor.komfovent_heat_exchanger_efficiency
+                  min: 0
+                  max: 100
+                  name: Efektywność wymiennika
+                  severity:
+                    red: 0
+                    yellow: 50
+                    green: 70
+
+            # - type: grid
+            #   cards:
+            #     - type: custom:apexcharts-card
+            #       chart_type: radialBar
+            #       apex_config:
+            #         legend:
+            #           onItemHover:
+            #             highlightDataSeries: false
+            #           show: false
+            #         chart:
+            #           #height: 280px
+            #           fontFamily: SF Display
+            #         plotOptions:
+            #           radialBar:
+            #             startAngle: -180
+            #             endAngle: 180
+            #             dataLabels:
+            #               name:
+            #                 show: true
+            #                 offsetY: 55
+            #               value:
+            #                 show: true
+            #                 offsetY: -8
+            #                 #fontSize: 50px
+            #                 ##fontWeight: 600
+            #                 color: '#379c55'
+            #               total:
+            #                 show: true
+            #                 #fontSize: 21px
+            #                 ##fontWeight: 300
+            #                 label: Humidity
+            #                 color: '#a8a8a8'
+            #                 formatter: |
+            #                   EVAL:(w) => {
+            #                     return w.globals.seriesTotals + '٪';
+            #                   }
+            #             hollow:
+            #               #size: 75%
+            #               image: mdi:water-percent
+            #               #imageWidth: 118
+            #               #imageHeight: 118
+            #               #imageOffsetY: -50
+            #               imageClipped: false
+            #             track:
+            #               show: true
+            #               background: '#222222'
+            #               #strokeWidth: 155%
+            #         stroke:
+            #           dashArray: 3.2
+            #           lineCap: butt
+            #       series:
+            #         - entity: sensor.komfovent_status_panel_humidity
+            #           color: '#379c55'
+            #     - type: custom:apexcharts-card
+            #       chart_type: radialBar
+            #       apex_config:
+            #         legend:
+            #           onItemHover:
+            #             highlightDataSeries: false
+            #           show: false
+            #         chart:
+            #           #height: 280px
+            #           fontFamily: SF Display
+            #         plotOptions:
+            #           radialBar:
+            #             startAngle: -180
+            #             endAngle: 180
+            #             dataLabels:
+            #               name:
+            #                 show: true
+            #                 offsetY: 55
+            #               value:
+            #                 show: true
+            #                 offsetY: -8
+            #                 #fontSize: 50px
+            #                 ##fontWeight: 600
+            #                 color: '#379c55'
+            #               total:
+            #                 show: true
+            #                 #fontSize: 21px
+            #                 ##fontWeight: 300
+            #                 label: Temperatura
+            #                 color: '#a8a8a8'
+            #                 formatter: |
+            #                   EVAL:(w) => {
+            #                     return w.globals.seriesTotals + '٪';
+            #                   }
+            #             hollow:
+            #               #size: 75%
+            #               image: mdi:thermometer
+            #               #imageWidth: 118
+            #               #imageHeight: 118
+            #               #imageOffsetY: -50
+            #               imageClipped: false
+            #             track:
+            #               show: true
+            #               background: '#222222'
+            #               #strokeWidth: 155%
+            #         stroke:
+            #           dashArray: 3.2
+            #           lineCap: butt
+            #       series:
+            #         - entity: sensor.komfovent_status_panel_temperature
+            #           color: '#379c55'
+            #     - type: custom:apexcharts-card
+            #       chart_type: radialBar
+            #       apex_config:
+            #         legend:
+            #           onItemHover:
+            #             highlightDataSeries: false
+            #           show: false
+            #         chart:
+            #           #height: 280px
+            #           fontFamily: SF Display
+            #         plotOptions:
+            #           radialBar:
+            #             startAngle: -180
+            #             endAngle: 180
+            #             dataLabels:
+            #               name:
+            #                 show: true
+            #                 offsetY: 55
+            #               value:
+            #                 show: true
+            #                 offsetY: -8
+            #                 #fontSize: 50px
+            #                 ##fontWeight: 600
+            #                 color: '#379c55'
+            #               total:
+            #                 show: true
+            #                 #fontSize: 21px
+            #                 ##fontWeight: 300
+            #                 label: Humidity
+            #                 color: '#a8a8a8'
+            #                 formatter: |
+            #                   EVAL:(w) => {
+            #                     return w.globals.seriesTotals + '٪';
+            #                   }
+            #             hollow:
+            #               #size: 75%
+            #               image: mdi:water-percent
+            #               #imageWidth: 118
+            #               #imageHeight: 118
+            #               #imageOffsetY: -50
+            #               imageClipped: false
+            #             track:
+            #               show: true
+            #               background: '#222222'
+            #               #strokeWidth: 155%
+            #         stroke:
+            #           dashArray: 3.2
+            #           lineCap: butt
+            #       series:
+            #         - entity: sensor.komfovent_status_panel_humidity
+            #           color: '#379c55'
+            #   columns: 3
+            #   square: true
+
+
+            # - type: horizontal-stack
+            #   cards:
+            #     - type: button
+            #       entity: sensor.komfovent_supply_temperature_c
+            #       name: Temperatura nawiewu
+            #       tap_action: more-info
+            #       layout: name-state
+            #     - type: button
+            #       entity: sensor.komfovent_supply_flow_volume
+            #       name: Przepływ nawiewu
+            #       tap_action: more-info
+            #       layout: name-state
+            #     - type: button
+            #       entity: sensor.komfovent_extract_temperature_c
+            #       name: Temperatura wyciągu
+            #       tap_action: more-info
+            #       layout: name-state
+
+        #################################################
+        #                                               #
+        #                BUTTONS                        #
+        #                                               #
+        #################################################
+
+        - type: vertical-stack
+          view_layout:
+            grid-area: entities
+          cards:
+
+            #################################################
+            #                                               #
+            #                    ENTITIES                   #
+            #                                               #
+            #################################################
+
+            - type: entities
+              entities:
+                - entity: switch.komfovent_switch_eco
+                  name: Tryb ECO
+                  icon: mdi:piggy-bank-outline
+                - entity: switch.komfovent_switch_auto
+                  name: Tryb AUTO
+                  icon: mdi:refresh-auto
+                - entity: sensor.komfovent_supply_temperature_c
+                  name: Temperatura nawiewu
+                  icon: hass:home-import-outline
+                - entity: sensor.komfovent_extract_temperature_c
+                  name: Temperatura wywiewu
+                  icon: hass:home-export-outline
+                - entity: sensor.komfovent_outdoor_temperature_c
+                  name: Temperatura zewnętrzna
+                  icon: hass:weather-partly-cloudy
+                - entity: sensor.komfovent_ahu_consumption_month_kwh
+                  icon: mdi:calendar-end
+                  name: Zużyta energia, miesiąc
+                - entity: sensor.komfovent_heating_recovery_month_kwh
+                  icon: mdi:calendar-refresh
+                  name: Odzyskana energia, miesiąc
+              state_color: false
+              show_header_toggle: false
+            - type: entity-filter
+              entities:
+                - entity: binary_sensor.komfovent_status_starting
+                  name: Starting
+                  icon: hass:play
+                - entity: binary_sensor.komfovent_status_stopping
+                  name: Stopping
+                  icon: hass:stop
+                - entity: binary_sensor.komfovent_status_fan
+                  name: Fan
+                  icon: hass:fan
+                - entity: binary_sensor.komfovent_status_rotor
+                  name: Rotor
+                  icon: hass:autorenew
+                - entity: binary_sensor.komfovent_status_heating
+                  name: Heating
+                  icon: hass:radiator
+                - entity: binary_sensor.komfovent_status_cooling
+                  name: Cooling
+                - entity: binary_sensor.komfovent_status_heating_denied
+                  name: Heat denied
+                  icon: hass:radiator-off
+                - entity: binary_sensor.komfovent_status_cooling_denied
+                  name: Cooling denied
+                - entity: binary_sensor.komfovent_status_flow_down
+                  name: Low flow
+                  icon: hass:fan-minus
+                - entity: binary_sensor.komfovent_status_free_heating
+                  name: Free heat
+                  icon: hass:thermometer-plus
+                - entity: binary_sensor.komfovent_status_free_cooling
+                  name: Free cooling
+                  icon: hass:thermometer-minus
+                - entity: binary_sensor.komfovent_status_alarm_fail
+                  name: Fail
+                  icon: hass:alert
+                - entity: binary_sensor.komfovent_status_alarm_warning
+                  name: Warning
+                  icon: hass:alert
+              state_filter:
+                - 'on'
+              card:
+                type: glance
+                state_color: false
+                show_state: false
+                #title: Status
   # style:
   #   hui-grid-card:
   #     $hui-horizontal-stack-card$: |
@@ -58,459 +551,3 @@ browser_mod:
                 margin-top: 1.9em;
                 max-width: 82vw; /* iphonex */
               }
-  card:
-    type: custom:layout-card
-    layout_type: custom:grid-layout
-    layout:
-      grid-template-columns: repeat(2, 1fr)
-      grid-template-rows: 1fr
-      grid-template-areas: |
-        "buttons entities"
-      mediaquery:
-        #phone
-        "(max-width: 800px)":
-          grid-template-columns: 1fr
-          grid-template-rows: repeat(2, 1fr)
-          grid-template-areas: |
-            "buttons"
-            "entities"
-    cards:
-
-      - type: vertical-stack
-        view_layout:
-          grid-area: buttons
-        cards:
-          - type: grid
-            columns: 3
-            cards:
-
-              - type: custom:button-card
-                entity: sensor.komfovent_operation_mode
-                name: Poza Domem
-                icon: hass:home-export-outline
-                show_state: false
-                tap_action:
-                  action: call-service
-                  service: script.komfovent_set_away
-                template:
-                  - basic
-                state:
-                  - value: Away
-                    styles:
-                      icon:
-                        - color: var(--state-icon-active-color)
-                      card:
-                        - color: rgba(0, 0, 0, 0.6)
-                        - background-color: rgba(255, 255, 255, 0.8)
-
-              - type: custom:button-card
-                entity: sensor.komfovent_operation_mode
-                name: Normalny
-                show_icon: true
-                icon: hass:home-account
-                show_state: false
-                tap_action:
-                  action: call-service
-                  service: script.komfovent_set_normal
-                template:
-                  - basic
-                state:
-                  - value: Normal
-                    styles:
-                      icon:
-                        - color: var(--state-icon-active-color)
-                      card:
-                        - color: rgba(0, 0, 0, 0.6)
-                        - background-color: rgba(255, 255, 255, 0.8)
-
-              - type: custom:button-card
-                entity: sensor.komfovent_operation_mode
-                name: Intensywny
-                show_icon: true
-                icon: hass:weather-windy
-                show_state: false
-                tap_action:
-                  action: call-service
-                  service: script.komfovent_set_intensive
-                template:
-                  - basic
-                state:
-                  - value: Intensive
-                    styles:
-                      icon:
-                        - color: var(--state-icon-active-color)
-                      card:
-                        - color: rgba(0, 0, 0, 0.6)
-                        - background-color: rgba(255, 255, 255, 0.8)
-              - type: custom:button-card
-                entity: sensor.komfovent_operation_mode
-                name: Turbo
-                show_icon: true
-                icon: hass:fan
-                show_state: false
-                tap_action:
-                  action: call-service
-                  service: script.komfovent_set_boost
-                template:
-                  - basic
-                state:
-                  - value: Boost
-                    styles:
-                      icon:
-                        - color: var(--state-icon-active-color)
-                      card:
-                        - color: rgba(0, 0, 0, 0.6)
-                        - background-color: rgba(255, 255, 255, 0.8)
-
-              - type: custom:button-card
-                entity: switch.komfovent_switch_power
-                name: Zasilanie
-                icon: hass:power-cycle
-                show_state: false
-                template:
-                  - basic
-
-              # - type: custom:button-card
-              #   entity: sensor.komfovent_operation_mode
-              #   name: Wyłącz
-              #   icon: hass:power-cycle
-              #   show_state: false
-              #   tap_action:
-              #     action: call-service
-              #     service: script.komfovent_set_off
-              #   template:
-              #     - basic
-
-          # - type: horizontal-stack
-          #   cards:
-          #     - type: entity
-          #       entity: sensor.komfovent_mode_text
-          #       name: Tryb
-          #     - type: entity
-          #       entity: sensor.komfovent_heat_recovery_w
-          #       icon: mdi:refresh-circle
-          #       name: Odzysk ciepła
-
-          - type: horizontal-stack
-            cards:
-              - type: gauge
-                entity: sensor.komfovent_supply_fan_intensivity
-                min: 0
-                max: 100
-                name: Przepływ nawiewu
-              - type: gauge
-                entity: sensor.komfovent_extract_fan_intensivity
-                min: 0
-                max: 100
-                name: Przepływ wywiewu
-              - type: gauge
-                entity: sensor.komfovent_status_panel_humidity
-                min: 0
-                max: 100
-                name: Wilgotność
-                severity:
-                  yellow: 0
-                  green: 35
-                  red: 70
-              - type: gauge
-                entity: sensor.komfovent_filter_impurity
-                min: 0
-                max: 100
-                name: Zabrudzenie filtra
-                severity:
-                  green: 0
-                  yellow: 45
-                  red: 85
-
-          - type: horizontal-stack
-            cards:
-              - type: gauge
-                entity: sensor.komfovent_heater_power_w
-                min: 0
-                max: 1000
-                name: Moc grzewcza
-              - type: gauge
-                entity: sensor.komfovent_power_consumption_w
-                min: 0
-                max: 1000
-                name: Zużycie prądu
-              - type: gauge
-                entity: sensor.komfovent_heat_recovery_w
-                min: 0
-                max: 1000
-                name: Odzysk ciepła
-              - type: gauge
-                entity: sensor.komfovent_heat_exchanger_efficiency
-                min: 0
-                max: 100
-                name: Efektywność wymiennika
-                severity:
-                  red: 0
-                  yellow: 50
-                  green: 70
-
-          # - type: grid
-          #   cards:
-          #     - type: custom:apexcharts-card
-          #       chart_type: radialBar
-          #       apex_config:
-          #         legend:
-          #           onItemHover:
-          #             highlightDataSeries: false
-          #           show: false
-          #         chart:
-          #           #height: 280px
-          #           fontFamily: SF Display
-          #         plotOptions:
-          #           radialBar:
-          #             startAngle: -180
-          #             endAngle: 180
-          #             dataLabels:
-          #               name:
-          #                 show: true
-          #                 offsetY: 55
-          #               value:
-          #                 show: true
-          #                 offsetY: -8
-          #                 #fontSize: 50px
-          #                 ##fontWeight: 600
-          #                 color: '#379c55'
-          #               total:
-          #                 show: true
-          #                 #fontSize: 21px
-          #                 ##fontWeight: 300
-          #                 label: Humidity
-          #                 color: '#a8a8a8'
-          #                 formatter: |
-          #                   EVAL:(w) => {
-          #                     return w.globals.seriesTotals + '٪';
-          #                   }
-          #             hollow:
-          #               #size: 75%
-          #               image: mdi:water-percent
-          #               #imageWidth: 118
-          #               #imageHeight: 118
-          #               #imageOffsetY: -50
-          #               imageClipped: false
-          #             track:
-          #               show: true
-          #               background: '#222222'
-          #               #strokeWidth: 155%
-          #         stroke:
-          #           dashArray: 3.2
-          #           lineCap: butt
-          #       series:
-          #         - entity: sensor.komfovent_status_panel_humidity
-          #           color: '#379c55'
-          #     - type: custom:apexcharts-card
-          #       chart_type: radialBar
-          #       apex_config:
-          #         legend:
-          #           onItemHover:
-          #             highlightDataSeries: false
-          #           show: false
-          #         chart:
-          #           #height: 280px
-          #           fontFamily: SF Display
-          #         plotOptions:
-          #           radialBar:
-          #             startAngle: -180
-          #             endAngle: 180
-          #             dataLabels:
-          #               name:
-          #                 show: true
-          #                 offsetY: 55
-          #               value:
-          #                 show: true
-          #                 offsetY: -8
-          #                 #fontSize: 50px
-          #                 ##fontWeight: 600
-          #                 color: '#379c55'
-          #               total:
-          #                 show: true
-          #                 #fontSize: 21px
-          #                 ##fontWeight: 300
-          #                 label: Temperatura
-          #                 color: '#a8a8a8'
-          #                 formatter: |
-          #                   EVAL:(w) => {
-          #                     return w.globals.seriesTotals + '٪';
-          #                   }
-          #             hollow:
-          #               #size: 75%
-          #               image: mdi:thermometer
-          #               #imageWidth: 118
-          #               #imageHeight: 118
-          #               #imageOffsetY: -50
-          #               imageClipped: false
-          #             track:
-          #               show: true
-          #               background: '#222222'
-          #               #strokeWidth: 155%
-          #         stroke:
-          #           dashArray: 3.2
-          #           lineCap: butt
-          #       series:
-          #         - entity: sensor.komfovent_status_panel_temperature
-          #           color: '#379c55'
-          #     - type: custom:apexcharts-card
-          #       chart_type: radialBar
-          #       apex_config:
-          #         legend:
-          #           onItemHover:
-          #             highlightDataSeries: false
-          #           show: false
-          #         chart:
-          #           #height: 280px
-          #           fontFamily: SF Display
-          #         plotOptions:
-          #           radialBar:
-          #             startAngle: -180
-          #             endAngle: 180
-          #             dataLabels:
-          #               name:
-          #                 show: true
-          #                 offsetY: 55
-          #               value:
-          #                 show: true
-          #                 offsetY: -8
-          #                 #fontSize: 50px
-          #                 ##fontWeight: 600
-          #                 color: '#379c55'
-          #               total:
-          #                 show: true
-          #                 #fontSize: 21px
-          #                 ##fontWeight: 300
-          #                 label: Humidity
-          #                 color: '#a8a8a8'
-          #                 formatter: |
-          #                   EVAL:(w) => {
-          #                     return w.globals.seriesTotals + '٪';
-          #                   }
-          #             hollow:
-          #               #size: 75%
-          #               image: mdi:water-percent
-          #               #imageWidth: 118
-          #               #imageHeight: 118
-          #               #imageOffsetY: -50
-          #               imageClipped: false
-          #             track:
-          #               show: true
-          #               background: '#222222'
-          #               #strokeWidth: 155%
-          #         stroke:
-          #           dashArray: 3.2
-          #           lineCap: butt
-          #       series:
-          #         - entity: sensor.komfovent_status_panel_humidity
-          #           color: '#379c55'
-          #   columns: 3
-          #   square: true
-
-
-          # - type: horizontal-stack
-          #   cards:
-          #     - type: button
-          #       entity: sensor.komfovent_supply_temperature_c
-          #       name: Temperatura nawiewu
-          #       tap_action: more-info
-          #       layout: name-state
-          #     - type: button
-          #       entity: sensor.komfovent_supply_flow_volume
-          #       name: Przepływ nawiewu
-          #       tap_action: more-info
-          #       layout: name-state
-          #     - type: button
-          #       entity: sensor.komfovent_extract_temperature_c
-          #       name: Temperatura wyciągu
-          #       tap_action: more-info
-          #       layout: name-state
-
-      #################################################
-      #                                               #
-      #                BUTTONS                        #
-      #                                               #
-      #################################################
-
-      - type: vertical-stack
-        view_layout:
-          grid-area: entities
-        cards:
-
-          #################################################
-          #                                               #
-          #                    ENTITIES                   #
-          #                                               #
-          #################################################
-
-          - type: entities
-            entities:
-              - entity: switch.komfovent_switch_eco
-                name: Tryb ECO
-                icon: mdi:piggy-bank-outline
-              - entity: switch.komfovent_switch_auto
-                name: Tryb AUTO
-                icon: mdi:refresh-auto
-              - entity: sensor.komfovent_supply_temperature_c
-                name: Temperatura nawiewu
-                icon: hass:home-import-outline
-              - entity: sensor.komfovent_extract_temperature_c
-                name: Temperatura wywiewu
-                icon: hass:home-export-outline
-              - entity: sensor.komfovent_outdoor_temperature_c
-                name: Temperatura zewnętrzna
-                icon: hass:weather-partly-cloudy
-              - entity: sensor.komfovent_ahu_consumption_month_kwh
-                icon: mdi:calendar-end
-                name: Zużyta energia, miesiąc
-              - entity: sensor.komfovent_heating_recovery_month_kwh
-                icon: mdi:calendar-refresh
-                name: Odzyskana energia, miesiąc
-            state_color: false
-            show_header_toggle: false
-          - type: entity-filter
-            entities:
-              - entity: binary_sensor.komfovent_status_starting
-                name: Starting
-                icon: hass:play
-              - entity: binary_sensor.komfovent_status_stopping
-                name: Stopping
-                icon: hass:stop
-              - entity: binary_sensor.komfovent_status_fan
-                name: Fan
-                icon: hass:fan
-              - entity: binary_sensor.komfovent_status_rotor
-                name: Rotor
-                icon: hass:autorenew
-              - entity: binary_sensor.komfovent_status_heating
-                name: Heating
-                icon: hass:radiator
-              - entity: binary_sensor.komfovent_status_cooling
-                name: Cooling
-              - entity: binary_sensor.komfovent_status_heating_denied
-                name: Heat denied
-                icon: hass:radiator-off
-              - entity: binary_sensor.komfovent_status_cooling_denied
-                name: Cooling denied
-              - entity: binary_sensor.komfovent_status_flow_down
-                name: Low flow
-                icon: hass:fan-minus
-              - entity: binary_sensor.komfovent_status_free_heating
-                name: Free heat
-                icon: hass:thermometer-plus
-              - entity: binary_sensor.komfovent_status_free_cooling
-                name: Free cooling
-                icon: hass:thermometer-minus
-              - entity: binary_sensor.komfovent_status_alarm_fail
-                name: Fail
-                icon: hass:alert
-              - entity: binary_sensor.komfovent_status_alarm_warning
-                name: Warning
-                icon: hass:alert
-            state_filter:
-              - 'on'
-            card:
-              type: glance
-              state_color: false
-              show_state: false
-              #title: Status

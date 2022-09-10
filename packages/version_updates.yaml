@@ -195,10 +195,6 @@ shell_command:
 script:
   homeassistant_restart:
     sequence:
-      - service: browser_mod.toast
-        data:
-          duration: 16000
-          message: Restartuję kontener HA...
       - service: shell_command.ha_dockermon_restart_container
 
   homeassistant_core_update:
