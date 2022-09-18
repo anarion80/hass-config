@@ -231,6 +231,17 @@ script:
           sequence:
             - service: notify.mobile_app_nokia_x20
               data:
+                message: "command_ringer_mode"
+                data:
+                  command: "normal"
+            - service: notify.mobile_app_nokia_x20
+              data:
+                message: "command_volume_level"
+                data:
+                  media_stream: "alarm_stream"
+                  command: 20
+            - service: notify.mobile_app_nokia_x20
+              data:
                 title: Znajdź mój telefon
                 message: Tu jestem
                 data:
@@ -245,6 +256,17 @@ script:
       - repeat:
           count: 3
           sequence:
+            - service: notify.mobile_app_ta_1004
+              data:
+                message: "command_ringer_mode"
+                data:
+                  command: "normal"
+            - service: notify.mobile_app_ta_1004
+              data:
+                message: "command_volume_level"
+                data:
+                  media_stream: "alarm_stream"
+                  command: 20
             - service: notify.mobile_app_ta_1004
               data:
                 title: Znajdź mój telefon
