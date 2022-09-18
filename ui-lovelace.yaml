@@ -3,7 +3,7 @@ button_card_templates:
 
 views:
   - type: custom:grid-layout
-    path: 0
+    title: Tablet
     layout:
       #default
       margin: 0
@@ -901,11 +901,67 @@ views:
           #       ]]]
 
           - type: custom:button-card
-            entity: light.yeelight_ceilc_0x19fcaf7c
+            entity: light.u_hani
             name: U Hani
             template:
               - light
               - icon_pendants
+            #   - base
+            #   - circle
+            #   - loader
+            # double_tap_action:
+            #   action: fire-dom-event
+            #   browser_mod:
+            #     service: browser_mod.popup
+            #     data:
+            #       title: >
+            #         [[[
+            #           return !entity || entity.attributes.friendly_name;
+            #         ]]]
+            #       content:
+            #         type: entities
+            #         card_mod:
+            #           style: |
+            #             #states {
+            #               padding-top: 0.5em;
+            #             }
+            #         entities:
+            #           - type: custom:mushroom-light-card
+            #             entity: light.yeelight_ceilc_0x19fcaf7c
+            #             fill_container: false
+            #             primary_info: name
+            #             secondary_info: state
+            #             icon_type: icon
+            #             show_brightness_control: true
+            #             use_light_color: true
+            #             show_color_temp_control: true
+            #             show_color_control: true
+            #             collapsible_controls: true
+            #           - type: custom:mushroom-light-card
+            #             entity: light.yeelight_ceilc_0x19fcaf7c_ambilight
+            #             fill_container: false
+            #             primary_info: name
+            #             secondary_info: state
+            #             icon_type: icon
+            #             show_brightness_control: true
+            #             use_light_color: true
+            #             show_color_temp_control: true
+            #             show_color_control: true
+            #             collapsible_controls: true
+            #   circle_input: >
+            #     [[[
+            #       if (entity) {
+            #           // if light group get brightness from child to remove bounce
+            #           let child = entity.attributes.entity_id,
+            #               brightness = child && states[child[0]].attributes.brightness
+            #                   ? Math.round(states[child[0]].attributes.brightness / 2.54)
+            #                   : Math.round(entity.attributes.brightness / 2.54);
+            #           return brightness === 0 && entity.state !== 'off'
+            #               ? 1
+            #               : brightness
+            #       }
+            #     ]]]
+            #   circle_input_unit: '%'
 
       #################################################
       #                                               #
@@ -1139,9 +1195,9 @@ views:
                 double_tap_action:
                   action: custom:frigate-card-action
                   frigate_card_action: fullscreen
-            dimensions:
-              aspect_ratio_mode: unconstrained
-              aspect_ratio: '4:4'
+            # dimensions:
+            #   aspect_ratio_mode: unconstrained
+            #   aspect_ratio: '4:4'
             # image:
             #   layout:
             #     fit: fill
@@ -1156,13 +1212,21 @@ views:
                   mode: none
                 title:
                   mode: none
+            overrides:
+              - conditions:
+                  fullscreen: true
+                overrides:
+                  live:
+                    layout:
+                      fit: contain
             card_mod:
               style:
-                ha-card:
-                  $: |
-                    #main {
-                        border-radius: calc(var(--custom-button-card-border-radius) / 2) !important;
-                      }
+                frigate-card$:
+                  ha-card:
+                    $: |
+                      #main {
+                          border-radius: calc(var(--custom-button-card-border-radius) / 2) !important;
+                        }
 
 
 
