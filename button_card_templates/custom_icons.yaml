@@ -440,9 +440,9 @@ icon_alarm:
           [[[
             if (entity.state != 'unavailable')
             {
-              let color = 'rgba(255, 255, 255, 0.3)';
+              let color = '#9da0a2';
               if (entity.state == 'disarmed' || entity.state == 'rozbrojony') {
-                color = 'rgba(255, 255, 255, 0.3)';
+                color = '#9da0a2';
               } else if(entity.state == 'arming' || entity.state == 'uzbrajanie') {
                 color = 'rgba(0, 0, 0, 0.6)';
               } else if(entity.state == 'armed_home' || entity.state == 'w domu') {
