@@ -12,7 +12,6 @@ light:
           [[[
             return !entity || entity.attributes.friendly_name;
           ]]]
-        size: wide
         content:
           type: entities
           card_mod:

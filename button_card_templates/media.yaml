@@ -28,7 +28,8 @@ base_media:
   styles:
     card:
       - color: >
-          if (variables.is_youtube) {
+          [[[
+            if (variables.is_youtube) {
                 return `#efefef`;
             } else {
                 return variables.media_on && variables.entity_picture === undefined
@@ -37,6 +38,7 @@ base_media:
                         ? '#97989c'
                         : '#efefef';
             }
+          ]]]
       - text-shadow: >
           [[[
             if (variables.is_youtube) {
