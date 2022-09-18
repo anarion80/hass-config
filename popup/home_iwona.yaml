@@ -2,7 +2,7 @@ action: fire-dom-event
 browser_mod:
   service: browser_mod.popup
   data:
-    title: Anarion
+    title: Iwona
     size: NORMAL
     style: >
       --popup-max-width: 400px;

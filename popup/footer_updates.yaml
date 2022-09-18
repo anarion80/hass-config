@@ -48,6 +48,9 @@ browser_mod:
             #   - sensor.hass_version_latest_beta
             name: Aktualizuj HASS
             icon: mdi:update
+            variables:
+              latest: sensor.hass_version_latest
+              latest_beta: sensor.hass_version_latest_beta
             # styles:
             #   card:
             #     - width: max-content

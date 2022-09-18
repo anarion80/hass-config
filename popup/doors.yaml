@@ -3,109 +3,105 @@ browser_mod:
   service: browser_mod.popup
   data:
     title: Drzwi i okna
+    style: >
+      --popup-max-width: calc(385px + 385px);
+      --ha-card-border-radius: 0;
     size: NORMAL
-    content:
-      type: custom:mod-card
-      card_mod:
-        style:
-          # .: |
-          #   :host .content {
-          #     width: calc(385px + 385px);
-          #     max-width: 90vw;
-          #   }
-          layout-card:
-            $grid-layout$:
-              .: |
-                #root {
-                    margin: -24px 0 !important;
-                }
-              auto-entities:
-                hui-entities-card$:
-                  $: |
-                    .card-content {
-                      padding: var(--tablet-popup-content-padding);
-                      padding-bottom: 0.8em;
-                    }
+    card_mod:
+      style:
+        layout-card:
+          $grid-layout$:
+            # card divider border
+            .: |
+              #root {
+                  margin: -24px 0 !important;
+              }
+            auto-entities:
+              hui-entities-card:
+                $: |
+                  .card-content {
+                    padding: var(--tablet-popup-content-padding);
+                    padding-bottom: 0.8em;
+                  }
+                  ha-card {
+                    border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                    border-radius: 0;
+                    transition: none;
+                  }
+                  /* portrait */
+                  @media screen and (max-width: 1200px) {
                     ha-card {
-                      border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                      border-radius: 0;
-                      transition: none;
+                      border-right: none;
+                      border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
                     }
-                    /* portrait */
-                    @media screen and (max-width: 1200px) {
-                      ha-card {
-                        border-right: none;
-                        border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                      }
-                    }
+                  }
+    content:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: 385px 385px
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "doors windows"
+        mediaquery:
+          #phone
+          "(max-width: 800px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(2, 1fr)
+            grid-template-areas: |
+              "doors"
+              "windows"
+      cards:
 
-      card:
-        type: custom:layout-card
-        layout_type: custom:grid-layout
-        layout:
-          grid-template-columns: repeat(2, 1fr)
-          grid-template-rows: 1fr
-          grid-template-areas: |
-            "doors windows"
-          mediaquery:
-            #phone
-            "(max-width: 800px)":
-              grid-template-columns: 1fr
-              grid-template-rows: repeat(2, 1fr)
-              grid-template-areas: |
-                "doors"
-                "windows"
-        cards:
+        #################################################
+        #                                               #
+        #                DOORS                          #
+        #                                               #
+        #################################################
 
-          #################################################
-          #                                               #
-          #                DOORS                          #
-          #                                               #
-          #################################################
-
-          - type: custom:auto-entities
-            card:
-              type: entities
-            filter:
-              include:
-                - entity_id: '*.*drzwi*_contact'
-              exclude: []
-            sort:
-              method: none
-            view_layout:
-              grid-area: doors
-            title: Drzwi
-            show_header_toggle: false
-            # card_mod:
-            #   class: header
-            #   style: |
-            #     ha-card {
-            #       margin: 0px !important;
-            #     }
+        - type: custom:auto-entities
+          card:
+            type: entities
+          filter:
+            include:
+              - entity_id: '*.*drzwi*_contact'
+            exclude: []
+          sort:
+            method: none
+          view_layout:
+            grid-area: doors
+          title: Drzwi
+          show_header_toggle: false
+          # card_mod:
+          #   class: header
+          #   style: |
+          #     ha-card {
+          #       margin: 0px !important;
+          #     }
 
 
-          #################################################
-          #                                               #
-          #                    WINDOWS                    #
-          #                                               #
-          #################################################
+        #################################################
+        #                                               #
+        #                    WINDOWS                    #
+        #                                               #
+        #################################################
 
-          - type: custom:auto-entities
-            card:
-              type: entities
-            filter:
-              include:
-                - entity_id: '*.*window*_contact'
-              exclude: []
-            sort:
-              method: none
-            view_layout:
-              grid-area: windows
-            title: Okna
-            show_header_toggle: false
-            # card_mod:
-            #   class: header
-            #   style: |
-            #     ha-card {
-            #       margin: 0px !important;
-            #     }
+        - type: custom:auto-entities
+          card:
+            type: entities
+          filter:
+            include:
+              - entity_id: '*.*window*_contact'
+            exclude: []
+          sort:
+            method: none
+          view_layout:
+            grid-area: windows
+          title: Okna
+          show_header_toggle: false
+          # card_mod:
+          #   class: header
+          #   style: |
+          #     ha-card {
+          #       margin: 0px !important;
+          #     }
