@@ -131,7 +131,7 @@ template:
                     {%- set start_time = sensor.attributes.start -%}
                     {%- set event = sensor.attributes.summary -%}
                     {%- if start_time != None -%}
-                      {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ event }}
+                      {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ event }}.
                     {% if loop.last %}
                       Koniec lekcji o {{ sensor.attributes.end.strftime('%H:%M') }}.
                     {% endif %}
