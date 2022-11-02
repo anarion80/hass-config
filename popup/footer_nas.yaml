@@ -98,7 +98,7 @@ browser_mod:
 
             #- entity: switch.watchtower
 
-            - entity: sensor.template_hass_dev_release
+            - entity: sensor.template_hass_next_release
 
             #- entity: sensor.database
 

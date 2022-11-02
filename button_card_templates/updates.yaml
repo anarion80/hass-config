@@ -1,4 +1,4 @@
-updates:
+base_updates:
   show_state: true
   show_name: false
   show_icon: false
@@ -50,38 +50,30 @@ updates:
 
 updates_hass:
   template:
-    - updates
+    - base_updates
     - settings
   state_display: |
     [[[
       if (entity) {
+          let available = states[variables.available].attributes.home_assistant;
           let links = new RegExp('<a href="([^"]+)"', "g"),
               installed = entity.state,
               hass_version_latest = states[variables.latest],
               hass_version_latest_beta = states[variables.latest_beta],
               hass_release_notes = states[variables.release_notes],
               hass_release_notes_beta = states[variables.release_notes_beta];
-
           let latest = installed.includes('b')
               ? hass_version_latest_beta.state
               : hass_version_latest.state;
-
           let release_notes = installed.includes('b')
               ? marked.parse(hass_release_notes.attributes.body)
               : marked.parse(hass_release_notes_beta.attributes.body);
-
-          let subtitle = installed === latest
+          let subtitle = available === 0
               ? `${variables.translate_no_updates} <b>&larr;</b> ${installed}`
-              : `${ !installed.includes('.') || !latest.includes('.')
-                  ? `${variables.translate_no_updates} <b>&larr;</b> ${installed}`
-                  : `${installed} <b>&rarr;</b> ${latest} ${variables.translate_available} ${String.fromCodePoint("0x1f389")}` }`;
-
-          let output = installed === latest
+              : `${installed} <b>&rarr;</b> ${latest} ${variables.translate_available} ${String.fromCodePoint("0x1f389")}`;
+          let output = available === 0
               ? '<ul></ul>'
-              : `${ !installed.includes('.') || !latest.includes('.')
-                  ? '<ul></ul>'
-                  : release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"') }`;
-
+              : release_notes.replace(links, '<a href="#" onclick="window.open(\'$1\')"');
           return `
             <ha-icon icon="mdi:home-assistant"></ha-icon> <span class="title">Home Assistant</span><br>
             <p class="subtitle">${subtitle}</p>
@@ -107,6 +99,66 @@ updates_hass_icon_name:
             return entity
               ? 'flex'
               : 'none';
+          ]]]
+
+updates:
+  template:
+    - base_updates
+    - settings
+  state_display: |
+    [[[
+      // variables
+      let output = '',
+          updates = states[variables.updates],
+          hacs_installed = states[variables.hacs_installed]?.attributes.repositories,
+          supervisor_updates = states[variables.supervisor_updates],
+          hacs_update = states['update.hacs_update']?.attributes.installed_version,
+          no_updates = variables.translate_no_updates,
+          update_available = variables.translate_update_available,
+          updates_available = variables.translate_updates_available;
+      const rename = a => {
+          return a.release_url && a.release_url.indexOf('github.com') > -1
+              ? `${a.release_url.split('/')[3]}/${a.release_url.split('/')[4]}`
+              : a?.friendly_name;
+      };
+      // update entities
+      Object.keys(states).forEach(key => {
+        let s = states[key], e = s.entity_id, a = s.attributes;
+        if (e.includes('update.') && s.state === 'on') {
+            output += `<li><b><a href="#" onclick="window.open('${a.release_url}');">
+            ${rename(a)}</a></b> ${a.installed_version} <b>&rarr;</b> ${a.latest_version}</li>`
+        }
+      });
+      // Supervisor updates
+      let attr = Object.fromEntries(
+          Object.entries(supervisor_updates?.attributes).filter(([, value]) => value != false));
+      for (const [, value] of Object.entries(attr)) {
+        if (value.version !== value.version_latest) {
+          output += `<li><b>${value.name}</b> ${value.version} <b>&rarr;</b> ${value.latest_version}</li>`
+          }
+      }
+      // subtitle
+      let count = updates?.attributes.update_entities + updates?.attributes.supervisor_update,
+          subtitle = count === 0
+              ? `${no_updates} <b>&larr;</b> ${hacs_update || ''}`
+              : `${count} ${count === 1 ? update_available : updates_available} ${String.fromCodePoint('0x1f389')}`;
+      return `
+        <ha-icon icon="mdi:package-up"></ha-icon> <span class="title">Integrations</span><br>
+        <p class="subtitle">${subtitle}</p>
+        <ul>${output}</ul>
+      `;
+    ]]]
+
+updates_icon_name:
+  template: icon_name
+  icon: mdi:open-in-new
+  styles:
+    card:
+      - opacity: >
+          [[[
+            return entity?.attributes?.update_entities === 0
+                ? '0.3'
+                : '1';
           ]]]
 
 updates_hacs:

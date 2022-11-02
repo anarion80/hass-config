@@ -6,7 +6,7 @@ automation:
         entity_id: sensor.hass_version_latest_beta
     condition:
       - condition: state
-        entity_id: sensor.template_hass_dev_release
+        entity_id: sensor.template_hass_next_release
         state:
           - Today
           - Released
@@ -103,9 +103,9 @@ template:
           friendly_name: >
             {% set release = state_attr('calendar.home_assistant_devs','message') %}
             {% if release == 'Home Assistant Core Beta Release' %}
-              Nästa beta
+              Następna beta
             {% elif release == 'Home Assistant Core Release' %}
-              Nästa release
+              Następna wersja
             {% else %}
               {{ release }}
             {% endif %}
@@ -121,22 +121,44 @@ template:
             Zainstalowana {{ states('sensor.hass_version_installed') }}
           icon: mdi:home-assistant
 
-      - unique_id: hass_dev_release
+      - unique_id: updates
         state: >
-          {% set start_time = state_attr('calendar.home_assistant_devs', 'start_time') %}
-          {{ (as_timestamp(start_time, default=0) + 60*60*20.5) | timestamp_local(default) }}
+          {{ this.attributes.values() | sum }}
         attributes:
-          friendly_name: >
-            {% set release = state_attr('calendar.home_assistant_devs','message') %}
-            {% if release == 'Home Assistant Core Beta Release' %}
-              Następna beta
-            {% elif release == 'Home Assistant Core Release' %}
-              Następna wersja
-            {% else %}
-              {{ release }}
-            {% endif %}
-          icon: mdi:dev-to
-          device_class: timestamp
+          home_assistant: >
+            {% set installed = states('sensor.current_version') %}
+            {% set latest = states('sensor.hass_version_latest_beta') if version(installed).beta else states('sensor.hass_version_latest') %}
+            {{ iif(version(latest) > version(installed) and '.' in installed and '.' in latest, 1, 0) }}
+          update_entities: >
+            {{ states.update | selectattr('state','eq','on') | list | count }}
+          other_updates: >
+            {{ states('sensor.template_other_updates') | int(0) }}
+          supervisor_update: >
+            {% set ns = namespace(update=false) %}
+            {% set supervisor = state_attr('sensor.supervisor_updates','addons') %}
+              {% for addon in supervisor %}
+                {% if addon.version != addon.version_latest %}
+                {% set ns.update = true %}
+                {% endif %}
+              {% endfor %}
+            {{ ns.update }}
+
+      # - unique_id: hass_dev_release
+      #   state: >
+      #     {% set start_time = state_attr('calendar.home_assistant_devs', 'start_time') %}
+      #     {{ (as_timestamp(start_time, default=0) + 60*60*20.5) | timestamp_local(default) }}
+      #   attributes:
+      #     friendly_name: >
+      #       {% set release = state_attr('calendar.home_assistant_devs','message') %}
+      #       {% if release == 'Home Assistant Core Beta Release' %}
+      #         Następna beta
+      #       {% elif release == 'Home Assistant Core Release' %}
+      #         Następna wersja
+      #       {% else %}
+      #         {{ release }}
+      #       {% endif %}
+      #     icon: mdi:dev-to
+      #     device_class: timestamp
 
   - binary_sensor:
     - unique_id: supervisor_update
@@ -172,11 +194,11 @@ sensor:
       - repositories
     scan_interval: 86400
 
-  - platform: command_line
-    name: hacs_version
-    scan_interval: 86400
-    command: >
-      sed -nr 's/\"version\": \"([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)\"/\1/p' /config/custom_components/hacs/manifest.json
+  # - platform: command_line
+  #   name: hacs_version
+  #   scan_interval: 86400
+  #   command: >
+  #     sed -nr 's/\"version\": \"([[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+)\"/\1/p' /config/custom_components/hacs/manifest.json
 
   - platform: command_line
     name: Supervisor updates

@@ -35,17 +35,14 @@ browser_mod:
             entity: sensor.current_version
             template: updates_hass
             variables:
+              available: sensor.template_updates
               latest: sensor.hass_version_latest
               latest_beta: sensor.hass_version_latest_beta
               release_notes: sensor.hass_release_notes
               release_notes_beta: sensor.hass_release_notes_beta
 
           - type: custom:button-card
-            # entity: sensor.hass_version_installed
             entity: sensor.current_version
-            # triggers_update:
-            #   - sensor.hass_version_latest
-            #   - sensor.hass_version_latest_beta
             name: Aktualizuj HASS
             icon: mdi:update
             variables:
@@ -88,10 +85,11 @@ browser_mod:
 
           ### HACS
           - type: custom:button-card
-            entity: sensor.hacs
             variables:
-              installed: sensor.hacs_installed
-            template: updates_hacs
+              updates: sensor.template_updates
+              supervisor_updates: sensor.supervisor_updates
+              hacs_installed: sensor.hacs_installed
+            template: updates
 
           - type: custom:button-card
             entity: sensor.hacs
@@ -104,10 +102,6 @@ browser_mod:
                     ? 'hacs_navigate_ios'
                     : 'hacs_iframe';
                 ]]]
-
-          - type: custom:button-card
-            entity: sensor.template_updates
-            template: updates_other
 
           ### supervisor
           - type: custom:button-card
