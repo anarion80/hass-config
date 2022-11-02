@@ -70,109 +70,6 @@ browser_mod:
             entity: sensor.meteo_url
             image: ${states['sensor.meteo_url'].state}
 
-        # - type: entities
-          # view_layout:
-            # grid-area: hass
-          # title: Home Assistant
-          # show_header_toggle: false
-          # style: &border |
-            # ha-card {
-              # border-radius: 0;
-              # animation: ha-card 1s forwards;
-            # }
-
-            # @keyframes ha-card {
-              # 0%, 100% {
-                  # border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-              # }
-            # }
-
-            # /* phone */
-            # @media screen and (max-width: 800px) {
-              # ha-card {
-                  # border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                  # padding-right: 0;
-                  # animation: none;
-              # }
-            # }
-          # entities:
-            # - entity: sensor.hass_version
-
-            # #- entity: switch.watchtower
-
-            # - entity: sensor.hass_dev_release
-
-            # #- entity: sensor.database
-
-            # - entity: sensor.home_assistant_log_size
-
-            # - entity: sensor.ha_uptime
-
-            # - type: custom:bar-card
-              # width: 55%
-              # height: 2em
-              # decimal: 0
-              # unit_of_measurement: '%'
-              # positions: &bar_card_positions
-                # icon: outside
-                # indicator: 'off'
-                # name: outside
-              # severity: &bar_card_severity
-                # - color: '#303435'
-                  # from: 0
-                  # to: 89
-                # - color: '#6d2525'
-                  # from: 90
-                  # to: 200
-              # entity_row: true
-              # entities:
-
-                # - entity: sensor.processor_use_percent
-                  # tap_action:
-                    # action: call-service
-                    # service: homeassistant.update_entity
-                    # service_data:
-                      # entity_id: sensor.processor_use_percent
-
-                # - entity: sensor.memory_use_percent
-                  # tap_action:
-                    # action: call-service
-                    # service: homeassistant.update_entity
-                    # service_data:
-                      # entity_id: sensor.memory_use_percent
-
-            # - type: custom:hui-element
-              # card_type: horizontal-stack
-              # style: &horizontal-style |
-                # #root {
-                  # justify-content: space-evenly;
-                  # margin-top: 2em;
-                  # margin-left: 1em;
-                # }
-              # cards:
-                # - type: custom:button-card
-                  # name: Home Assistant
-                  # icon: mdi:reload
-                  # tap_action:
-                    # services: |
-                      # [[[
-                        # hass.callService('browser_mod', 'toast', {
-                          # message: 'Restarting Home Assistant...'
-                        # });
-                        # hass.callService('homeassistant', 'restart');
-                      # ]]]
-                  # template: icon_name
-
-                # - type: custom:button-card
-                  # name: Container
-                  # icon: mdi:reload
-                  # tap_action:
-                    # action: call-service
-                    # service: homeassistant.restart
-                    # service_data:
-                      # entity_id: script.homeassistant_restart
-                  # template: icon_name
-
         #################################################
         #                                               #
         #                      OTHER                    #
@@ -183,10 +80,57 @@ browser_mod:
           view_layout:
             grid-area: other
           cards:
-            - type: custom:weather-chart-card
-              title: Pogoda
-              entity: weather.openweathermap
-              #mode: daily
+            # - type: custom:weather-chart-card
+            #   title: Pogoda
+            #   entity: weather.openweathermap
+            #   #mode: daily
+            - type: custom:platinum-weather-card
+              card_config_version: 8
+              entity_apparent_temp: sensor.openweathermap_feels_like_temperature
+              entity_forecast_icon: weather.openweathermap
+              entity_forecast_icon_1: weather.openweathermap
+              entity_forecast_max: sensor.openweathermap_forecast_temperature
+              entity_forecast_max_1: weather.openweathermap
+              entity_forecast_min: sensor.openweathermap_forecast_temperature_low
+              entity_forecast_min_1: weather.openweathermap
+              entity_humidity: sensor.openweathermap_humidity
+              entity_pop: sensor.openweathermap_forecast_precipitation_probability
+              entity_pop_1: weather.openweathermap
+              entity_pos: sensor.openweathermap_rain
+              entity_pos_1: weather.openweathermap
+              entity_pressure: sensor.openweathermap_pressure
+              entity_summary: weather.openweathermap
+              entity_summary_1: weather.openweathermap
+              entity_temperature: sensor.openweathermap_temperature
+              entity_update_time: sensor.openweathermap_forecast_time
+              entity_wind_bearing: sensor.openweathermap_wind_bearing
+              entity_wind_speed: sensor.openweathermap_wind_speed
+              section_order:
+                - overview
+                - extended
+                - slots
+                - daily_forecast
+              show_section_daily_forecast: true
+              show_section_extended: false
+              show_section_slots: true
+              slot_l1: forecast_max
+              slot_l2: forecast_min
+              slot_l3: wind
+              slot_l4: pressure
+              slot_l5: sun_next
+              slot_l6: remove
+              slot_l7: remove
+              slot_l8: remove
+              slot_r1: popforecast
+              slot_r2: humidity
+              slot_r3: uv_summary
+              slot_r4: remove
+              slot_r5: sun_following
+              slot_r6: remove
+              slot_r7: remove
+              slot_r8: remove
+
+
             - type: custom:auto-entities
               card:
                 type: entities
