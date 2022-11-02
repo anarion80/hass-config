@@ -62,16 +62,19 @@ automation:
       topic: frigate/events
     action:
       - service: light.turn_on
-        data:
+        target:
           entity_id: light.fire_tablet_screen
+        data:
           brightness_pct: >
             {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
       - service: browser_mod.more_info
         data:
-          entity_id: >
+          entity: >
             camera.{{trigger.payload_json["after"]["camera"]}}_2
           browser_id:
             - amazon_tablet
+          large: true
+          ignore_popup_card: true
       - delay:
           minutes: 1
       - service: browser_mod.close_popup
