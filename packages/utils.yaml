@@ -55,8 +55,8 @@ sensor:
       - 'date'
       - 'time'
 
-  - platform: uptime
-    name: HA Uptime
+  # - platform: uptime
+  #   name: HA Uptime
 
   - platform: template
     sensors:
