@@ -132,7 +132,7 @@ automation:
       data:
         title: Sodexo załadowane
         message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
-    mode: single
+    mode: parallel
 
 input_boolean:
   stopa_bazowa_rising:
