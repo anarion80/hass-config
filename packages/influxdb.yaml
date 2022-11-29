@@ -7,6 +7,7 @@ influxdb:
   organization: anarion
   bucket: anarion
   precision: s
+  max_retries: 3
   tags:
     source: HA
   tags_attributes:
