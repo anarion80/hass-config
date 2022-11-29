@@ -1,0 +1,133 @@
+template:
+  - sensor:
+    - name: "Temperatura Salon"
+      unique_id: "temperatura_salon"
+      state: "{{ state_attr('climate.salon','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Gabinet"
+      unique_id: "temperatura_gabinet"
+      state: "{{ state_attr('climate.gabinet','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Łazienka Dół"
+      unique_id: "temperatura_lazienka_dol"
+      state: "{{ state_attr('climate.lazienka_dol','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Wejście"
+      unique_id: "temperatura_wejscie"
+      state: "{{ state_attr('climate.wejscie','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Sypialnia"
+      unique_id: "temperatura_sypialnia"
+      state: "{{ state_attr('climate.sypialnia','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Wojtek"
+      unique_id: "temperatura_wojtek"
+      state: "{{ state_attr('climate.wojtek','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Hania"
+      unique_id: "temperatura_hania"
+      state: "{{ state_attr('climate.Hania','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Łazienka"
+      unique_id: "temperatura_lazienka"
+      state: "{{ state_attr('climate.lazienka','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Wodomierz"
+      unique_id: "temperatura_wodomierz"
+      state: "{{ state_attr('climate.wodomierz','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Kotłownia"
+      unique_id: "temperatura_kotlownia"
+      state: "{{ state_attr('climate.kotlownia','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Piwnica"
+      unique_id: "temperatura_piwnica"
+      state: "{{ state_attr('climate.piwnica','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Schowek"
+      unique_id: "temperatura_schowek"
+      state: "{{ state_attr('climate.schowek','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+    - name: "Temperatura Garaż"
+      unique_id: "temperatura_garaz"
+      state: "{{ state_attr('climate.garaz','current_temperature') | float(default=0) }}"
+      unit_of_measurement: "°C"
+      state_class: measurement
+      device_class: temperature
+  - binary_sensor:
+    - name: "Grzanie Salon"
+      unique_id: "grzanie_salom"
+      icon: "{{ (state_attr('climate.salon','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.salon','hvac_action') == 'heating' }}"
+    - name: "Grzanie Gabinet"
+      unique_id: "grzanie_gabinet"
+      icon: "{{ (state_attr('climate.gabinet','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.gabinet','hvac_action') == 'heating' }}"
+    - name: "Grzanie Łazienka Dół"
+      unique_id: "grzanie_lazienka_dol"
+      icon: "{{ (state_attr('climate.lazienka_dol','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.lazienka_dol','hvac_action') == 'heating' }}"
+    - name: "Grzanie Wejście"
+      unique_id: "grzanie_wejscie"
+      icon: "{{ (state_attr('climate.wejscie','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.wejscie','hvac_action') == 'heating' }}"
+    - name: "Grzanie Sypialnia"
+      unique_id: "grzanie_sypialnia"
+      icon: "{{ (state_attr('climate.sypialnia','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.sypialnia','hvac_action') == 'heating' }}"
+    - name: "Grzanie Wojtek"
+      unique_id: "grzanie_wojtek"
+      icon: "{{ (state_attr('climate.wojtek','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.wojtek','hvac_action') == 'heating' }}"
+    - name: "Grzanie Hania"
+      unique_id: "grzanie_hania"
+      icon: "{{ (state_attr('climate.hania','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.hania','hvac_action') == 'heating' }}"
+    - name: "Grzanie Łazienka"
+      unique_id: "grzanie_lazienka"
+      icon: "{{ (state_attr('climate.lazienka','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.lazienka','hvac_action') == 'heating' }}"
+    - name: "Grzanie Wodomierz"
+      unique_id: "grzanie_wodomierz"
+      icon: "{{ (state_attr('climate.wodomierz','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.wodomierz','hvac_action') == 'heating' }}"
+    - name: "Grzanie Kotłownia"
+      unique_id: "grzanie_kotlownia"
+      icon: "{{ (state_attr('climate.kotlownia','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.kotlownia','hvac_action') == 'heating' }}"
+    - name: "Grzanie Piwnica"
+      unique_id: "grzanie_piwnica"
+      icon: "{{ (state_attr('climate.piwnica','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.piwnica','hvac_action') == 'heating' }}"
+    - name: "Grzanie Schowek"
+      unique_id: "grzanie_schowek"
+      icon: "{{ (state_attr('climate.schowek','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.schowek','hvac_action') == 'heating' }}"
+    - name: "Grzanie Garaż"
+      unique_id: "grzanie_garaz"
+      icon: "{{ (state_attr('climate.garaz','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      state: "{{ state_attr('climate.garaz','hvac_action') == 'heating' }}"

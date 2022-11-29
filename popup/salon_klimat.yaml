@@ -67,7 +67,7 @@ browser_mod:
             #   apex_config:
             #     tickAmount: 4
           series:
-            - entity: sensor.airpurifier_temperature
+            - entity: sensor.temperatura_salon
               #yaxis_id: temp
               fill_raw: last
               type: area
