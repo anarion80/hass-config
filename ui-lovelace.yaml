@@ -341,7 +341,7 @@ views:
                       ]]]
 
                 - type: custom:button-card
-                  entity: sensor.komfovent_status_panel_temperature
+                  entity: sensor.temperatura_salon
                   name: Temperatura
                   double_tap_action: none
                   tap_action:
@@ -355,7 +355,7 @@ views:
                     graph:
                       card:
                         entities:
-                          - sensor.komfovent_status_panel_temperature
+                          - sensor.temperatura_salon
                   variables:
                     circle_input: >
                       [[[
@@ -452,7 +452,7 @@ views:
               - icon_shade
 
           - type: custom:button-card
-            entity: sensor.gabinet_temperature
+            entity: sensor.temperatura_gabinet
             name: Temperatura
             double_tap_action: none
             tap_action:
@@ -461,7 +461,7 @@ views:
               graph:
                 card:
                   entities:
-                    - sensor.gabinet_temperature
+                    - sensor.temperatura_gabinet
             template:
               - base
               - icon_temperature
@@ -834,9 +834,10 @@ views:
           #     !include popup/camera_garden.yaml
 
           - type: custom:button-card
-            entity: sensor.gabinet_temperature
+            entity: sensor.temperatura_gabinet
             name: Temperatura
-            tap_action: none
+            double_tap_action:
+              !include popup/klimat.yaml
             state_display: >
               [[[ return '&nbsp;'; ]]]
             template:
@@ -848,7 +849,7 @@ views:
               graph:
                 card:
                   entities:
-                    - sensor.gabinet_temperature
+                    - sensor.temperatura_gabinet
             variables:
               circle_input: >
                 [[[
@@ -861,7 +862,7 @@ views:
             #entity: alarm_control_panel.glowny_alarm
             entity: sensor.alarm_status
             name: Alarm
-            tap_action:
+            tap_action: none
               !include popup/alarm.yaml
             double_tap_action: none
             template:
@@ -906,62 +907,6 @@ views:
             template:
               - light
               - icon_pendants
-            #   - base
-            #   - circle
-            #   - loader
-            # double_tap_action:
-            #   action: fire-dom-event
-            #   browser_mod:
-            #     service: browser_mod.popup
-            #     data:
-            #       title: >
-            #         [[[
-            #           return !entity || entity.attributes.friendly_name;
-            #         ]]]
-            #       content:
-            #         type: entities
-            #         card_mod:
-            #           style: |
-            #             #states {
-            #               padding-top: 0.5em;
-            #             }
-            #         entities:
-            #           - type: custom:mushroom-light-card
-            #             entity: light.yeelight_ceilc_0x19fcaf7c
-            #             fill_container: false
-            #             primary_info: name
-            #             secondary_info: state
-            #             icon_type: icon
-            #             show_brightness_control: true
-            #             use_light_color: true
-            #             show_color_temp_control: true
-            #             show_color_control: true
-            #             collapsible_controls: true
-            #           - type: custom:mushroom-light-card
-            #             entity: light.yeelight_ceilc_0x19fcaf7c_ambilight
-            #             fill_container: false
-            #             primary_info: name
-            #             secondary_info: state
-            #             icon_type: icon
-            #             show_brightness_control: true
-            #             use_light_color: true
-            #             show_color_temp_control: true
-            #             show_color_control: true
-            #             collapsible_controls: true
-            #   circle_input: >
-            #     [[[
-            #       if (entity) {
-            #           // if light group get brightness from child to remove bounce
-            #           let child = entity.attributes.entity_id,
-            #               brightness = child && states[child[0]].attributes.brightness
-            #                   ? Math.round(states[child[0]].attributes.brightness / 2.54)
-            #                   : Math.round(entity.attributes.brightness / 2.54);
-            #           return brightness === 0 && entity.state !== 'off'
-            #               ? 1
-            #               : brightness
-            #       }
-            #     ]]]
-            #   circle_input_unit: '%'
 
       #################################################
       #                                               #
@@ -1225,7 +1170,7 @@ views:
                   ha-card:
                     $: |
                       #main {
-                          border-radius: calc(var(--custom-button-card-border-radius) / 2) !important;
+                          border-radius: calc(var(--button-card-border-radius) / 2) !important;
                         }
 
 
@@ -1551,6 +1496,7 @@ views:
             template: footer
 
           - type: custom:button-card
+            entity: sensor.template_updates
             name: >
               <ha-icon icon="mdi:arrow-up-bold-circle-outline"></ha-icon> Update
             tap_action:
@@ -1558,20 +1504,7 @@ views:
             variables:
               notify: >
                 [[[
-                  let hass_installed = hass.config.version,
-                    hass_version_latest = states['sensor.hass_version_latest'],
-                    hass_version_latest_beta = states['sensor.hass_version_latest_beta'],
-                    hacs = states['sensor.hacs'];
-                  if (hass_version_latest && hass_version_latest.state.includes('.')
-                    && hass_version_latest_beta && hass_version_latest_beta.state.includes('.')
-                    && hacs && Number.isInteger(parseInt(hacs.state))) {
-                    let hass_latest = hass_installed.includes('b')
-                        ? hass_version_latest_beta.state
-                        : hass_version_latest.state,
-                      hass_count = hass_installed !== hass_latest ? 1 : 0;
-                    return hass_count + parseInt(hacs.state);
-                  }
-                  return 0;
+                  return parseInt(entity?.state);
                 ]]]
             template: footer
 

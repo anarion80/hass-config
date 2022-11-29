@@ -77,11 +77,11 @@ automation:
 rest:
   - resource: https://api.github.com/repos/home-assistant/core/releases/latest
     sensor:
-      name: hass_release_notes
-      value_template: >
-        {{ value_json.name }}
-      json_attributes:
-        - body
+      - name: hass_release_notes
+        value_template: >
+          {{ value_json.name }}
+        json_attributes:
+          - "body"
     scan_interval: 21600
 
   - resource: https://api.github.com/repos/home-assistant/core/releases?per_page=1
@@ -90,7 +90,7 @@ rest:
       value_template: >
         {{ value_json[0].name }}
       json_attributes:
-        - body
+        - "body"
     scan_interval: 21600
 
 template:

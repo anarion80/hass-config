@@ -46,7 +46,7 @@ browser_mod:
                     color: {{ is_state(config.entity, 'home') | iif('#3182b7', '#3c3f3f') }};
                   }
 
-            - entity: device_tracker.redmi_note_5
+            - entity: device_tracker.nokia_x20
               name: Pozycja
               icon: mdi:crosshairs-gps
               card_mod:
@@ -75,7 +75,7 @@ browser_mod:
           default_zoom: 16
           dark_mode: true
           entities:
-            - device_tracker.redmi_note_5
+            - device_tracker.nokia_x20
           card_mod:
             style:
               .: |
@@ -93,6 +93,7 @@ browser_mod:
                   border-radius: 0;
                   transition: none;
                   margin-bottom: -4px !important;
+                  height: 25em !important;
                 }
               ha-map$: |
                 #map {

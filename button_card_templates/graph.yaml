@@ -11,6 +11,7 @@ graph:
         - clip-path: inset(0 round var(--button-card-border-radius))
         - left: 0
         - bottom: 0
+        - --ha-card-border-width: 0
 
   custom_fields:
     graph:
