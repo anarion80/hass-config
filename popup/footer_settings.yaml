@@ -65,3 +65,8 @@ browser_mod:
                             [[[ return states['input_number.watering_time'].state; ]]]
                     template: icon_name
 
+              - type: custom:slider-entity-row
+                entity: input_number.heating_time
+
+              - entity: input_datetime.heating_start
+

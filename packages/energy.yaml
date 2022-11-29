@@ -22,3 +22,25 @@ sensor:
   - platform: pgnig_gas_sensor
     username: !secret pgnig_username
     password: !secret pgnig_password
+
+  - platform: template
+    sensors:
+      grzejnik_voltage:
+        value_template: >-
+          {{ states.switch.grzejnik.attributes.voltage }}
+        unit_of_measurement: 'V'
+      grzejnik_current:
+        value_template: >-
+          {{ states.switch.grzejnik.attributes.current }}
+        unit_of_measurement: 'mA'
+      grzejnik_power:
+        value_template: >-
+          {{ states.switch.grzejnik.attributes.current_consumption }}
+        unit_of_measurement: 'W'
+        device_class: power
+
+  - platform: integration
+    source: sensor.grzejnik_power
+    name: Grzejnik Energy
+    unit_prefix: k
+    round: 2
