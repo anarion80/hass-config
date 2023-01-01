@@ -16,9 +16,9 @@ template:
 sensor:
   - platform: rest
     name: COVID19
-    resource: https://koronawirus-api.herokuapp.com/api/covid-vaccinations-tests/daily
+    resource: https://koronawirus-api.koyeb.app/api/covid19/daily
     value_template: >
-      {{ value_json.today.infections.newInfections }}
+      {{ value_json.today.newInfections}}
     json_attributes:
       - today
     scan_interval: 86400
@@ -27,17 +27,17 @@ sensor:
   - platform: template
     sensors:
       covid19_infections:
-        value_template: "{{ state_attr('sensor.covid19','today')['tests']['infections'] | int }}"
+        value_template: "{{ state_attr('sensor.covid19','today')['newInfections'] | int }}"
         unit_of_measurement: '🙍'
         friendly_name: "Zakażenia COVID19"
 
       covid19_deaths:
-        value_template: "{{ state_attr('sensor.covid19','today')['tests']['deaths']['deaths'] | int }}"
+        value_template: "{{ state_attr('sensor.covid19','today')['newDeaths'] | int }}"
         unit_of_measurement: '🙍'
         friendly_name: "Zgony COVID19"
 
       covid19_recovered:
-        value_template: "{{ state_attr('sensor.covid19','today')['tests']['recovered'] | int }}"
+        value_template: "{{ state_attr('sensor.covid19','today')['newRecovered'] | int }}"
         unit_of_measurement: '👨'
         friendly_name: "Wyleczenia COVID19"
 
