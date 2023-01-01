@@ -833,30 +833,37 @@ views:
           #   tap_action:
           #     !include popup/camera_garden.yaml
 
+          # - type: custom:button-card
+          #   entity: sensor.temperatura_gabinet
+          #   name: Temperatura
+          #   double_tap_action:
+          #     !include popup/klimat.yaml
+          #   state_display: >
+          #     [[[ return '&nbsp;'; ]]]
+          #   template:
+          #     - base
+          #     - full_circle
+          #     - icon_temperature
+          #     - graph
+          #   custom_fields:
+          #     graph:
+          #       card:
+          #         entities:
+          #           - sensor.temperatura_gabinet
+          #   variables:
+          #     circle_input: >
+          #       [[[
+          #         let humidity = states['sensor.gabinet_humidity'];
+          #         if (humidity) return parseInt(humidity.state);
+          #       ]]]
+          #     circle_input_unit: '%'
+
           - type: custom:button-card
-            entity: sensor.temperatura_gabinet
-            name: Temperatura
-            double_tap_action:
-              !include popup/klimat.yaml
-            state_display: >
-              [[[ return '&nbsp;'; ]]]
+            entity: binary_sensor.ogrzewanie
+            name: Kocioł
             template:
               - base
-              - full_circle
-              - icon_temperature
-              - graph
-            custom_fields:
-              graph:
-                card:
-                  entities:
-                    - sensor.temperatura_gabinet
-            variables:
-              circle_input: >
-                [[[
-                  let humidity = states['sensor.gabinet_humidity'];
-                  if (humidity) return parseInt(humidity.state);
-                ]]]
-              circle_input_unit: '%'
+              - icon_heating_coil
 
           - type: custom:button-card
             #entity: alarm_control_panel.glowny_alarm
