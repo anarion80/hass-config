@@ -861,6 +861,9 @@ views:
           - type: custom:button-card
             entity: binary_sensor.ogrzewanie
             name: Kocioł
+            tap_action:
+              !include popup/heating.yaml
+            double_tap_action: none
             template:
               - base
               - icon_heating_coil
@@ -894,7 +897,7 @@ views:
           #   entity: climate.living_room_ac
           #   name: Klima
           #   double_tap_action:
-          #     !include popup/sovrum_tv2.yaml
+          #     !include popup/livingroom_ac.yaml
           #   template:
           #     - base
           #     - icon_ac

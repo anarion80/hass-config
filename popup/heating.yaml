@@ -1,0 +1,192 @@
+action: fire-dom-event
+browser_mod:
+  service: browser_mod.popup
+  data:
+    title: Ogrzewanie
+    style: >
+      --popup-max-width: calc(385px + 385px + 385px);
+      --ha-card-border-radius: 0;
+    card_mod:
+      style:
+        layout-card:
+          $grid-layout$:
+            # card divider border
+            .: |
+              #root {
+                  margin: -24px 0 !important;
+              }
+            hui-entities-card:
+              $: |
+                .card-content {
+                  padding: var(--tablet-popup-content-padding);
+                  padding-bottom: 0.8em;
+                }
+                ha-card {
+                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                  border-radius: 0;
+                  transition: none;
+                }
+                /* portrait */
+                @media screen and (max-width: 1200px) {
+                  ha-card {
+                    border-right: none;
+                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                  }
+                }
+            hui-vertical-stack-card:
+              $hui-entities-card:
+                $: |
+                  .card-content {
+                    padding: var(--tablet-popup-content-padding);
+                    padding-bottom: 0.8em;
+                  }
+                  ha-card {
+                    border-right: 1.5px solid rgba(0, 0, 0, 0.2);
+                    border-radius: 0;
+                    transition: none;
+                  }
+                  /* portrait */
+                  @media screen and (max-width: 1200px) {
+                    ha-card {
+                      border-right: none;
+                      border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+                    }
+                  }
+    content:
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        margin: 0
+        grid-template-columns: 385px 385px 385px
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "parter pietro piwnica"
+        mediaquery:
+          #portrait
+          "(max-width: 1200px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(3, 1fr)
+            grid-template-areas: |
+              "parter"
+              "pietro"
+              "piwnica"
+      cards:
+
+        #################################################
+        #                                               #
+        #                PARTER                         #
+        #                                               #
+        #################################################
+
+        - type: entities
+          view_layout:
+            grid-area: parter
+          title: Parter
+          show_header_toggle: false
+          card_mod:
+            class: header
+          entities:
+            - type: custom:mushroom-climate-card
+              entity: climate.wejscie
+              name: Wejście
+              fill_container: true
+              show_temperature_control: true
+              collapsible_controls: true
+            - type: custom:mushroom-climate-card
+              entity: climate.lazienka_dol
+              name: Łazienka Dół
+              fill_container: true
+              show_temperature_control: true
+            - type: custom:mushroom-climate-card
+              entity: climate.salon
+              name: Salon
+              fill_container: true
+              show_temperature_control: true
+              collapsible_controls: true
+
+        #################################################
+        #                                               #
+        #                    PIETRO                     #
+        #                                               #
+        #################################################
+        - type: entities
+          view_layout:
+            grid-area: pietro
+          title: Piętro
+          show_header_toggle: false
+          card_mod:
+            class: header
+          entities:
+            - type: custom:mushroom-climate-card
+              entity: climate.gabinet
+              name: Łazienka
+              fill_container: true
+              show_temperature_control: true
+            - type: custom:mushroom-climate-card
+              entity: climate.sypialnia
+              name: Sypialnia
+              fill_container: true
+              show_temperature_control: true
+              collapsible_controls: true
+            - type: custom:mushroom-climate-card
+              entity: climate.lazienka
+              name: Łazienka
+              fill_container: true
+              show_temperature_control: true
+            - type: custom:mushroom-climate-card
+              entity: climate.hania
+              name: Hania
+              fill_container: true
+              show_temperature_control: true
+              collapsible_controls: true
+            - type: custom:mushroom-climate-card
+              entity: climate.wojtek
+              name: Wojtek
+              fill_container: true
+              show_temperature_control: true
+
+        #################################################
+        #                                               #
+        #                      PIWNICA                  #
+        #                                               #
+        #################################################
+
+        - type: entities
+          view_layout:
+            grid-area: piwnica
+          title: Piwnica
+          show_header_toggle: false
+          card_mod:
+            class: header
+            style: |
+              ha-card {
+                border: none !important;
+              }
+          entities:
+            - type: custom:mushroom-climate-card
+              entity: climate.piwnica
+              name: Piwnica
+              fill_container: true
+              show_temperature_control: true
+              collapsible_controls: true
+            - type: custom:mushroom-climate-card
+              entity: climate.wodomierz
+              name: Wodomierz
+              fill_container: true
+              show_temperature_control: true
+            - type: custom:mushroom-climate-card
+              entity: climate.schowek
+              name: Schowek
+              fill_container: true
+              show_temperature_control: true
+              collapsible_controls: true
+            - type: custom:mushroom-climate-card
+              entity: climate.kotlownia
+              name: Kotłownia
+              fill_container: true
+              show_temperature_control: true
+            - type: custom:mushroom-climate-card
+              entity: climate.garaz
+              name: Garaż
+              fill_container: true
+              show_temperature_control: true
