@@ -123,7 +123,7 @@ conditional_media:
           if (swipeCard.swiper.realIndex === 0) {
               gridTitle.textContent = "Media";
           }
-          else if (swipeCard.swiper.realIndex === 1 or swipeCard.swiper.realIndex === 2) {
+          else if (swipeCard.swiper.realIndex === 1 || swipeCard.swiper.realIndex === 2) {
               gridTitle.textContent = "Players";
           }
       });
