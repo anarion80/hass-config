@@ -40,6 +40,8 @@ automation:
       - media_player.kd_55xe9305
       - media_player.sony_kd_55xe9305
       - media_player.chromecastaudio
+      - media_player.plex_plex_cast_chromecast_3
+      - media_player.chromecastaudio9331
       attribute: media_title
       to: Advertisement
     action:
@@ -60,6 +62,8 @@ automation:
         - media_player.kd_55xe9305
         - media_player.sony_kd_55xe9305
         - media_player.chromecastaudio
+        - media_player.plex_plex_cast_chromecast_3
+        - media_player.chromecastaudio9331
         attribute: media_title
         from: Advertisement
     - service: media_player.volume_mute
@@ -223,6 +227,7 @@ group:
       - media_player.kd_55xe9305
       - media_player.sony_kd_55xe9305
       - media_player.spotify_anarion
+      - media_player.plex_plex_cast_chromecast_3
 
 template:
   - select:
@@ -232,6 +237,7 @@ template:
           {% set paused_timeout_minutes = 15 %}
           {% set media_players = [
             states.media_player.chromecastaudio,
+            states.media_player.chromecastaudio9331,
             states.media_player.kd_55xe9305,
             states.media_player.nest_mini,
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
@@ -261,6 +267,7 @@ template:
           {% set recently_added = ['Last added'] %}
           {% set media_players = [
             states.media_player.chromecastaudio,
+            states.media_player.chromecastaudio9331,
             states.media_player.kd_55xe9305,
             states.media_player.nest_mini,
             states.media_player.plex_plex_for_android_tv_shield_android_tv,
