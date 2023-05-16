@@ -337,7 +337,7 @@ views:
                       [[[
                         return entity === undefined ?
                           null :
-                          entity.attributes.source;
+                          entity.attributes.source != undefined ? entity.attributes.source : entity.attributes.media_channel || null
                       ]]]
 
                 - type: custom:button-card
@@ -872,7 +872,7 @@ views:
             #entity: alarm_control_panel.glowny_alarm
             entity: sensor.alarm_status
             name: Alarm
-            tap_action: none
+            tap_action:
               !include popup/alarm.yaml
             double_tap_action: none
             template:
@@ -959,6 +959,8 @@ views:
                         state_not: Google Nest Mini
                       - entity: select.conditional_media
                         state_not: Netflix on Shield
+                      - entity: select.conditional_media
+                        state_not: Plex (Plex Cast - Chromecast)
                     card:
                       type: custom:button-card
                       entity: sensor.plex_recently_added
@@ -1022,10 +1024,21 @@ views:
                         state: ChromecastAudio
                     card:
                       type: custom:button-card
-                      entity: media_player.chromecastaudio
+                      entity: media_player.chromecastaudio9331
                       template:
                         - conditional_media
                         - icon_chromecast
+
+                  # - type: conditional
+                  #   conditions:
+                  #     - entity: select.conditional_media
+                  #       state: Plex (Plex Cast - Chromecast)
+                  #   card:
+                  #     type: custom:button-card
+                  #     entity: media_player.plex_plex_cast_chromecast_3
+                  #     template:
+                  #       - conditional_media
+                  #       - icon_chromecast
 
                   - type: conditional
                     conditions:
@@ -1072,7 +1085,7 @@ views:
 
                   - type: custom:button-card
                     name: ChromecastAudio
-                    entity: media_player.chromecastaudio
+                    entity: media_player.chromecastaudio9331
                     template:
                       - media
                       - icon_chromecast
