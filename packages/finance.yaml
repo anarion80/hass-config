@@ -108,31 +108,31 @@ automation:
         entity_id: input_boolean.wibor6m_rising
     mode: single
 
-  - id: sodexo_top_up
-    alias: Notify when Sodexo card is updated
-    description: Notify when Sodexo card is updated
-    trigger:
-    - platform: state
-      entity_id:
-      - sensor.sodexo_dla_ciebie_praca
-      - sensor.sodexo_dla_ciebie_sodexo2
-    condition:
-    - condition: template
-      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state | float }}'
-    action:
-    - service: notify.pushover
-      data:
-        message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
-    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-      domain: mobile_app
-      type: notify
-      title: Sodexo załadowane
-      message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
-    - service: notify.email
-      data:
-        title: Sodexo załadowane
-        message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
-    mode: parallel
+  # - id: sodexo_top_up
+  #   alias: Notify when Sodexo card is updated
+  #   description: Notify when Sodexo card is updated
+  #   trigger:
+  #   - platform: state
+  #     entity_id:
+  #     - sensor.sodexo_dla_ciebie_praca
+  #     - sensor.sodexo_dla_ciebie_sodexo2
+  #   condition:
+  #   - condition: template
+  #     value_template: '{{ trigger.to_state.state | float > trigger.from_state.state | float }}'
+  #   action:
+  #   - service: notify.pushover
+  #     data:
+  #       message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+  #   - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+  #     domain: mobile_app
+  #     type: notify
+  #     title: Sodexo załadowane
+  #     message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+  #   - service: notify.email
+  #     data:
+  #       title: Sodexo załadowane
+  #       message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
+  #   mode: parallel
 
 input_boolean:
   stopa_bazowa_rising:
@@ -154,20 +154,45 @@ input_number:
     unit_of_measurement: 'PLN/kWh'
     icon: mdi:currency-usd
 
-sensor:
-  - platform: scrape
-    name: Stopa bazowa PKO BP
-    resource: https://www.pkobp.pl/waluty/#/base_rate/
-    select: '#base_rate p'
-    value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
-    unit_of_measurement: '%'
-    state_class: measurement
+scrape:
+  - resource: https://www.pkobp.pl/waluty/#/base_rate/
     scan_interval: 3600
+    sensor:
+      name: Stopa bazowa PKO BP
+      select: '#base_rate p'
+      value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
+      unit_of_measurement: '%'
+      state_class: measurement
 
-  - platform: scrape
-    name: Wibor 6M
-    resource: https://www.pkobp.pl/waluty/#/interbank/
-    select: 'div.course__irs-tab-box:nth-child(4) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)'
-    unit_of_measurement: '%'
-    state_class: measurement
+  - resource: https://www.pkobp.pl/waluty/#/interbank/
     scan_interval: 3600
+    sensor:
+      name: Wibor 6M
+      select: 'div.course__irs-tab-box:nth-child(4) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)'
+      unit_of_measurement: '%'
+      state_class: measurement
+
+  # - platform: influxdb
+  #   api_version: 2
+  #   ssl: false
+  #   host: !secret influxdb_host
+  #   port: 8086
+  #   token: !secret influx_db_token
+  #   organization: anarion
+  #   bucket: anarion
+  #   queries_flux:
+  #     - group_function: mean
+  #       # imports:
+  #       #   - strings
+  #       name: "stopa bazowa"
+  #       bucket: anarion
+  #       query: >-
+  #         filter(fn: (r) => r["_measurement"] == "sensor.stopa_bazowa_pko_bp")
+  #         |> filter(fn: (r) => r["_field"] == "value")
+  #         |> filter(fn: (r) => r["domain"] == "sensor")
+  #         |> filter(fn: (r) => r["entity_id"] == "stopa_bazowa_pko_bp")
+  #         |> filter(fn: (r) => r["friendly_name"] == "Stopa bazowa PKO BP")
+  #         |> filter(fn: (r) => r["source"] == "HA")
+  #       # range_start: "-1d"
+  #       value_template: "{{ value | float | round(2) }}"
+  #       unit_of_measurement: '%'
