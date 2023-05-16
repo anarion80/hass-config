@@ -30,14 +30,21 @@ browser_mod:
             series:
               - entity: sensor.stopa_bazowa_pko_bp
                 curve: straight
+                # fill_raw: last
                 float_precision: 2
+                # group_by:
+                #   func: last
+                #   fill: last
               - entity: sensor.wibor_6m
                 curve: straight
+                # fill_raw: zero
+                # group_by:
+                #   func: last
                 float_precision: 2
-          - type: entities
-            entities:
-              - entity: sensor.sodexo_dla_ciebie_praca
-              - entity: sensor.sodexo_dla_ciebie_sodexo2
+          # - type: entities
+          #   entities:
+          #     - entity: sensor.sodexo_dla_ciebie_praca
+          #     - entity: sensor.sodexo_dla_ciebie_sodexo2
 
 
 
