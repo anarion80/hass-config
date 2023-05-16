@@ -71,7 +71,7 @@ lovelace:
 
       #{ url: '/local/calendar-card.js',                                     type: module },
       #{ url: '/local/custom_icons.js',                                      type: module },
-      { url: '/local/marked.min.js?v=4.2.5',                                  type: module },
+      { url: '/local/marked.min.js?v=4.3.0',                                type: module },
       { url: '/local/vanilla-tilt.min.js?v=1.8',                            type: module },
       { url: '/local/browser_mod_icon.js?v=0.5',                              type: module },
       { url: '/local/fonts.css?v=2.1',                                        type: css    } ]
