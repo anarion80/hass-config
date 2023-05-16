@@ -133,20 +133,20 @@ template:
       state: "{{ state_attr('climate.garaz','hvac_action') == 'heating' }}"
     - name: "Ogrzewanie"
       unique_id: "ogrzewanie"
-      icon: "{{ (state_attr('climate.salon','hvac_action') == 'heating') | iif('mdi:heating-coil', 'mdi:power-standby') }}"
+      device_class: heat
       state: |
-                "{{ is_state_attr('climate.gabinet','hvac_action', 'heating') or
-                 is_state_attr('climate.lazienka_dol','hvac_action', 'heating') or
-                 is_state_attr('climate.wejscie','hvac_action', 'heating') or
-                 is_state_attr('climate.sypialnia','hvac_action', 'heating') or
-                 is_state_attr('climate.wojtek','hvac_action', 'heating') or
-                 is_state_attr('climate.hania','hvac_action', 'heating') or
-                 is_state_attr('climate.lazienka','hvac_action', 'heating') or
-                 is_state_attr('climate.wodomierz','hvac_action', 'heating') or
-                 is_state_attr('climate.kotlownia','hvac_action', 'heating') or
-                 is_state_attr('climate.piwnica','hvac_action', 'heating') or
-                 is_state_attr('climate.schowek','hvac_action', 'heating') or
-                 is_state_attr('climate.garaz','hvac_action', 'heating') }}"
+        {% if is_state_attr('climate.gabinet','hvac_action', 'heating') or
+          is_state_attr('climate.lazienka_dol','hvac_action', 'heating') or
+          is_state_attr('climate.wejscie','hvac_action', 'heating') or
+          is_state_attr('climate.sypialnia','hvac_action', 'heating') or
+          is_state_attr('climate.wojtek','hvac_action', 'heating') or
+          is_state_attr('climate.hania','hvac_action', 'heating') or
+          is_state_attr('climate.lazienka','hvac_action', 'heating') or
+          is_state_attr('climate.wodomierz','hvac_action', 'heating') or
+          is_state_attr('climate.kotlownia','hvac_action', 'heating') or
+          is_state_attr('climate.piwnica','hvac_action', 'heating') or
+          is_state_attr('climate.schowek','hvac_action', 'heating') or
+          is_state_attr('climate.garaz','hvac_action', 'heating') %}on{% else %}off{% endif %}
 
 group:
   regulatory_temperatury:
