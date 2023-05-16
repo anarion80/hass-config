@@ -76,6 +76,8 @@ browser_mod:
           dark_mode: true
           entities:
             - device_tracker.nokia_8_3_5g
+          auto_fit: true
+          hours_to_show: 24
           card_mod:
             style:
               .: |
