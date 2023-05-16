@@ -1,0 +1,26 @@
+automation:
+  - id: '1615319100001'
+    alias: Turn on turbo ventillation when humidity is too high
+    description: 'Turn on turbo ventillation when humidity is too high'
+    trigger:
+    - platform: numeric_state
+      entity_id: sensor.lazienka_humidity
+      above: 80
+    condition: []
+    action:
+      - alias: "Turn on turbo"
+        service: script.komfovent_set_boost
+      - alias: "Wait until Humidity Sensor drops"
+        wait_for_trigger:
+          platform: numeric_state
+          entity_id: sensor.lazienka_humidity
+          below: 80
+        timeout:
+          minutes: 15
+      - alias: "Wait the number of minutes that has been set for the time delay"
+        delay:
+          minutes: 15
+      - alias: "Turn off turbo"
+        service: switch.turn_off
+        entity_id: switch.komfovent_switch_auto
+    mode: single
