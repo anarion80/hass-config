@@ -103,6 +103,18 @@ browser_mod:
               fill_container: true
               show_temperature_control: true
               collapsible_controls: true
+            - type: custom:apexcharts-card
+              header:
+                show: true
+                title: Ogrzewanie
+                colorize_states: true
+              series:
+                - entity: binary_sensor.ogrzewanie
+                  transform: "return x === 'on' ? 1 : 0;"
+                  type: column
+                  group_by:
+                    func: last
+                    duration: 1m
 
         #################################################
         #                                               #
