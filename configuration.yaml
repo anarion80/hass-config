@@ -93,7 +93,10 @@ homeassistant:
     - /config
     - /config/www
 
-frontend: !include themes.yaml
+frontend:
+  extra_module_url:
+    - /hacsfiles/lovelace-card-mod/card-mod.js
+  themes: !include_dir_merge_named themes
 template: !include sidebar.yaml
 
 http:
@@ -162,11 +165,3 @@ recorder:
       #- sensor.pc_daily
       - sensor.pc_monthly
       - sensor.pc_yearly
-
-
-
-
-
-
-
-
