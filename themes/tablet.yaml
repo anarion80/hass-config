@@ -154,7 +154,6 @@ tablet:
     .: |
       hui-view {
         background: none !important;
-        min-height: 100vh;
       }
     grid-layout:
         $: |
