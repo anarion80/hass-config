@@ -74,11 +74,11 @@ automation:
       data:
         is_volume_muted: false
 
-binary_sensor:
-  - platform: command_line
-    name: plex_availability
-    command: !secret plex_availability
-    scan_interval: 300
+command_line:
+  - binary_sensor:
+      name: plex_availability
+      command: !secret plex_availability
+      scan_interval: 300
 
 homeassistant:
   customize:
