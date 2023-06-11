@@ -21,6 +21,10 @@ automation:
             {{ True }}
           {% endif %}
     action:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.nest_mini
+          volume_level: 0.4
       - service: tts.google_cloud_say
         data:
           entity_id: media_player.nest_mini
