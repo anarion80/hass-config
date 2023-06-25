@@ -1,0 +1,28 @@
+action: fire-dom-event
+browser_mod:
+  service: browser_mod.popup
+  data:
+    title: Kontrola mediów
+    size: NORMAL
+    content:
+      type: custom:mod-card
+      card_mod:
+        style:
+          hui-grid-card$: |
+            #root {
+              grid-gap: 0 !important;
+            }
+
+      card:
+        type: grid
+        columns: 1
+        square: false
+        cards:
+          - type: media-control
+            entity: media_player.spotify_anarion
+
+          - type: custom:mini-media-player
+            entity: media_player.spotify_anarion
+            group: false
+            volume_stateless: false
+            toggle_power: true
