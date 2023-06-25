@@ -1806,13 +1806,13 @@ script:
       target:
         entity_id: >
           {% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
-          {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecast_audio
+          {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
           {% endif %}
     - service: media_player.play_media
       data:
         entity_id:
           '{% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
-           {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecast_audio
+           {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
            {% endif %}'
         media_content_id:
           '{% if is_state("input_select.radio_station", "Rock Radio") %} http://poznan5-4.radio.pionier.net.pl:8000/tuba8-1.mp3?DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3Njc3OSwiaXNzIjoidGlzcnYifQ.nZUJ1M-g7FY-Je7H-KIdEfs22ZfRfUnk_OXjz3l7iHI
@@ -1830,4 +1830,14 @@ script:
              {% elif is_state("input_select.radio_station", "RMF Classic") %} https://ha.anarion.pl/local/radio_covers/RMF_classic.png
              {% elif is_state("input_select.radio_station", "Nowy Świat") %} https://ha.anarion.pl/local/radio_covers/nowy-swiat.jpg
              {% endif %}'
+    mode: single
+  radiostop:
+    alias: Stop Radio
+    sequence:
+    - service: media_player.media_stop
+      data:
+        entity_id:
+          '{% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
+           {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
+           {% endif %}'
     mode: single
