@@ -158,55 +158,68 @@
             Nie można załadować prognozy pogody...
           {% endif %}
         garbage: >
-          {% set entities = states.sensor | selectattr('attributes.device_class', 'defined')
-            | selectattr('attributes.device_class', 'eq', 'garbage_collection__schedule')
-            | rejectattr('entity_id', 'search', 'garbage')
-            | list %}
-            {% if entities %}
-              {% if entities | selectattr('attributes.days','eq', 0) | list | count | int > 0 -%}
+          {% set garbage = states.calendar | selectattr('entity_id', 'search', 'smieci') | selectattr('attributes.start_time','defined') | list -%}
 
-            🗑️ Śmieci {% for sensor in entities if sensor.attributes.days == 0 -%}
-              {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
-            {%- endfor %} dzisiaj ({{ now().strftime('%A') | replace('Monday', 'poniedziałek')
-                          | replace('Tuesday', 'wtorek')
-                          | replace('Wednesday', 'środę')
-                          | replace('Thursday', 'czwartek')
-                          | replace('Friday', 'piątek')
-                          | replace('Saturday', 'sobotę')
-                          | replace('Sunday', 'niedzielę') }})
+          {% if garbage %}
+          {# set helper variables #}
+          {% set ns = namespace(today=false) %}
+          {% set ns.tomorrow=false %}
+          {% set ns.after_tomorrow=false %}
 
-            {% elif entities | selectattr('attributes.days','eq', 1) | list | count | int > 0 -%}
-            🗑️ Śmieci {% for sensor in entities if sensor.attributes.days == 1 -%}
-              {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
-            {%- endfor %} jutro ({{ (now() + timedelta(days=1)).strftime('%A') | replace('Monday', 'poniedziałek')
-                          | replace('Tuesday', 'wtorek')
-                          | replace('Wednesday', 'środę')
-                          | replace('Thursday', 'czwartek')
-                          | replace('Friday', 'piątek')
-                          | replace('Saturday', 'sobotę')
-                          | replace('Sunday', 'niedzielę') }})
+          {% for item in garbage %}
+            {% if (item.attributes.start_time | as_datetime | as_local - today_at()).days == 0 %}
+              {% set ns.today = true %}
+            {% elif (item.attributes.start_time | as_datetime | as_local - today_at()).days == 1  %}
+              {% set ns.tomorrow = true %}
+            {% elif (item.attributes.start_time | as_datetime | as_local - today_at()).days == 2  %}
+              {% set ns.after_tomorrow = true %}
+            {% endif %}
+          {% endfor %}
 
-            {% elif entities | selectattr('attributes.days','eq', 2) | list | count | int > 0 -%}
-            Śmieci {% for sensor in entities if sensor.attributes.days == 2 -%}
-              {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
-            {%- endfor %} pojutrze ({{ (now() + timedelta(days=2)).strftime('%A') | replace('Monday', 'poniedziałek')
-                          | replace('Tuesday', 'wtorek')
-                          | replace('Wednesday', 'środę')
-                          | replace('Thursday', 'czwartek')
-                          | replace('Friday', 'piątek')
-                          | replace('Saturday', 'sobotę')
-                          | replace('Sunday', 'niedzielę') }})
+          {% if ns.today %}
+          🗑️ {% for calendar in garbage if ((calendar.attributes.start_time | as_datetime | as_local - today_at()).days == 0) -%}
+                {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ calendar.attributes.message  }}
+              {%- endfor %} dzisiaj ({{ now().strftime('%A') | replace('Monday', 'w poniedziałek')
+                            | replace('Tuesday', 'we wtorek')
+                            | replace('Wednesday', 'w środę')
+                            | replace('Thursday', 'w czwartek')
+                            | replace('Friday', 'w piątek')
+                            | replace('Saturday', 'w sobotę')
+                            | replace('Sunday', 'w niedzielę') }})
 
-            {% elif entities | selectattr('attributes.days','gt', 2) | list | count | int > 0 -%}
-            Śmieci {% for sensor in entities  if sensor.attributes.days == entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min -%}
-                {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ sensor.name | lower }}
-            {%- endfor %} za {{ entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min }} dni w {{ (now() + timedelta(days=entities | selectattr('attributes.days','gt', 2) | map(attribute='attributes.days') | min)).strftime('%A') | replace('Monday', 'poniedziałek')
-                          | replace('Tuesday', 'wtorek')
-                          | replace('Wednesday', 'środę')
-                          | replace('Thursday', 'czwartek')
-                          | replace('Friday', 'piątek')
-                          | replace('Saturday', 'sobotę')
-                          | replace('Sunday', 'niedzielę') }}  {% endif %}
+          {% elif ns.tomorrow %}
+          {% for calendar in garbage if ((calendar.attributes.start_time | as_datetime | as_local - today_at()).days == 1) -%}
+            {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ calendar.attributes.message }}
+          {%- endfor %} jutro ({{ (now() + timedelta(days=1)).strftime('%A') | replace('Monday', 'w poniedziałek')
+                        | replace('Tuesday', 'we wtorek')
+                        | replace('Wednesday', 'w środę')
+                        | replace('Thursday', 'w czwartek')
+                        | replace('Friday', 'w piątek')
+                        | replace('Saturday', 'w sobotę')
+                        | replace('Sunday', 'w niedzielę') }})
+
+          {% elif ns.after_tomorrow %}
+          {% for calendar in garbage if ((calendar.attributes.start_time | as_datetime | as_local - today_at()).days == 2) -%}
+            {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ calendar.attributes.message  }}
+          {%- endfor %} pojutrze ({{ (now() + timedelta(days=2)).strftime('%A') | replace('Monday', 'w poniedziałek')
+                        | replace('Tuesday', 'we wtorek')
+                        | replace('Wednesday', 'w środę')
+                        | replace('Thursday', 'w czwartek')
+                        | replace('Friday', 'w piątek')
+                        | replace('Saturday', 'w sobotę')
+                        | replace('Sunday', 'w niedzielę') }})
+
+          {% else %}
+          {% for calendar in garbage if ((calendar.attributes.start_time | as_datetime | as_local - today_at()).days == (garbage | map(attribute='attributes.start_time') | min | as_datetime | as_local - today_at()).days)  -%}
+                {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ calendar.attributes.message  }}
+              {%- endfor %} za {{ (garbage | map(attribute='attributes.start_time') | min | as_datetime | as_local - today_at()).days }} dni ({{ (now() + timedelta(days=(garbage | map(attribute='attributes.start_time') | min | as_datetime | as_local - today_at()).days)).strftime('%A') | replace('Monday', 'w poniedziałek')
+                          | replace('Tuesday', 'we wtorek')
+                          | replace('Wednesday', 'w środę')
+                          | replace('Thursday', 'w czwartek')
+                          | replace('Friday', 'w piątek')
+                          | replace('Saturday', 'w sobotę')
+                          | replace('Sunday', 'w niedzielę') }})
+            {% endif %}
             {% endif %}
 
         battery: >

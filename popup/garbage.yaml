@@ -108,8 +108,12 @@ browser_mod:
             - type: custom:atomic-calendar-revive
               #name: Śmieci
               entities:
-                - entity: calendar.garbage_collection
-                  titleColor: red
+                - entity: calendar.smieci_bio
+                  titleColor: green
+                - entity: calendar.smieci_segregowane
+                  titleColor: yellow
+                - entity: calendar.smieci_zmieszane
+                  titleColor: black
               enableModeChange: true
               firstDayOfWeek: 1
               showDate: true
