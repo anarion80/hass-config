@@ -47,54 +47,90 @@ automation:
   #         data:
   #           browser_id: amazon_tablet
 
-  - id: '1634040402000'
-    alias: fullykiosk_disable_screen
-    description: Turn off tablet screen after time-out
+  # - id: '1634040402000'
+  #   alias: fullykiosk_disable_screen
+  #   description: Turn off tablet screen after time-out
+  #   trigger:
+  #   - platform: state
+  #     entity_id: light.fire_tablet_screen
+  #     to: 'on'
+  #     for:
+  #       hours: 0
+  #       minutes: 2
+  #       seconds: 0
+  #       milliseconds: 0
+  #   condition: []
+  #   action:
+  #   - service: media_player.play_media
+  #     target:
+  #       entity_id: media_player.amazon_tablet
+  #     data:
+  #       media_content_id: /local/sound/off.m4a
+  #       media_content_type: music
+  #   - service: light.turn_off
+  #     target:
+  #       entity_id: light.fire_tablet_screen
+  #   - service: browser_mod.close_popup
+  #   mode: restart
+
+
+  - id: '1634040402001'
+    alias: fullykiosk_close_popups_disable_screen
+    description: Close popups when screensaver is enabled
     trigger:
     - platform: state
-      entity_id: light.fire_tablet_screen
+      entity_id: switch.fire_tablet_screensaver
       to: 'on'
-      for:
-        hours: 0
-        minutes: 2
-        seconds: 0
-        milliseconds: 0
     condition: []
     action:
-    - service: media_player.play_media
-      target:
-        entity_id: media_player.amazon_tablet
-      data:
-        media_content_id: /local/sound/off.m4a
-        media_content_type: music
-    - service: light.turn_off
-      target:
-        entity_id: light.fire_tablet_screen
     - service: browser_mod.close_popup
     mode: restart
-  - id: '1634041571300'
-    alias: fullykiosk_enable_screen
-    description: Turn on tablet screen on motion detected
+
+  # - id: '1634041571300'
+  #   alias: fullykiosk_enable_screen
+  #   description: Turn on tablet screen on motion detected
+  #   trigger:
+  #   - platform: state
+  #     entity_id: binary_sensor.amazon_tablet
+  #     from: 'off'
+  #     to: 'on'
+  #   condition:
+  #   - condition: state
+  #     entity_id: light.fire_tablet_screen
+  #     state: 'off'
+  #   action:
+  #   - service: media_player.play_media
+  #     target:
+  #       entity_id: media_player.amazon_tablet
+  #     data:
+  #       media_content_id: /local/sound/on.m4a
+  #       media_content_type: music
+  #   # - service: light.turn_on
+  #   #   data:
+  #   #     entity_id: light.fire_tablet_screen
+  #   #     brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
+  #   - service: number.set_value
+  #     target:
+  #       entity_id: number.fire_tablet_screensaver_brightness
+  #     data:
+  #       value: >
+  #         {% set day_percent = 90 %}
+  #         {% set night_percent = 65 %}
+  #         {% set day_convert = ((day_percent * 255) / 100) | int %}
+  #         {% set night_convert = ((night_percent * 255) / 100) | int %}
+  #         {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
+  # mode: restart
+
+  - id: '1634041571301'
+    alias: fullykiosk_enable_screen_brightness
+    description: Set brightness when screen enabled
     trigger:
     - platform: state
-      entity_id: binary_sensor.amazon_tablet
-      from: 'off'
-      to: 'on'
-    condition:
-    - condition: state
-      entity_id: light.fire_tablet_screen
-      state: 'off'
+      entity_id: switch.fire_tablet_screensaver
+      from: 'on'
+      to: 'off'
+    condition: []
     action:
-    - service: media_player.play_media
-      target:
-        entity_id: media_player.amazon_tablet
-      data:
-        media_content_id: /local/sound/on.m4a
-        media_content_type: music
-    # - service: light.turn_on
-    #   data:
-    #     entity_id: light.fire_tablet_screen
-    #     brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
     - service: number.set_value
       target:
         entity_id: number.fire_tablet_screensaver_brightness
