@@ -88,7 +88,7 @@ browser_mod:
                   name: false
             - type: conditional
               conditions:
-                - entity: media_player.chromecastaudio
+                - entity: media_player.chromecastaudio9331
                   state_not: standby
               card:
                 type: custom:mini-media-player
@@ -99,7 +99,7 @@ browser_mod:
                     --mini-media-player-media-cover-info-color: white;
                     --mini-media-player-overlay-base-color: #2196f3;
                   }
-                entity: media_player.chromecastaudio
+                entity: media_player.chromecastaudio9331
                 info: scroll
                 artwork: cover
                 volume_stateless: false
@@ -119,111 +119,55 @@ browser_mod:
                   icon: true
                   name: false
         - square: false
-          columns: 4
+          columns: 2
           type: grid
           cards:
             - type: custom:mushroom-template-card
               style: |
                 :host {
                   --primary-text-color:
-                  {% if is_state('input_select.player', 'Lazienka')%} #2196f3
-                  {% else %} #9e9e9e
-                  {% endif %}
-                  }
-              secondary: ''
-              icon: mdi:shower-head
-              entity: media_player.nest_mini
-              primary: Łazienka
-              multiline_secondary: true
-              icon_color: >-
-                {{ is_state("input_select.player", "Lazienka") | iif("blue",
-                "disabled") }}
-              tap_action:
-                action: call-service
-                service: input_select.select_option
-                service_data:
-                  option: Lazienka
-                target:
-                  entity_id: input_select.player
-              fill_container: true
-              hold_action:
-                action: more-info
-              layout: vertical
-            - type: custom:mushroom-template-card
-              style: |
-                :host {
-                  --primary-text-color:
-                  {% if is_state('input_select.player', 'Kuchnia')%} #2196f3
-                  {% else %} #9e9e9e
-                  {% endif %}
-                  }
-              secondary: ''
-              icon: mdi:silverware-fork-knife
-              entity: media_player.artur_s_echo_show
-              primary: Kuchnia
-              multiline_secondary: true
-              icon_color: >-
-                {{ is_state("iinput_select.player", "Kuchnia") | iif("blue",
-                "disabled") }}
-              tap_action:
-                action: call-service
-                service: input_select.select_option
-                service_data:
-                  option: Kuchnia
-                target:
-                  entity_id: input_select.player
-              fill_container: true
-              layout: vertical
-              hold_action:
-                action: more-info
-            - type: custom:mushroom-template-card
-              style: |
-                :host {
-                  --primary-text-color:
-                  {% if is_state('input_select.player', 'Salon')%} #2196f3
+                  {% if is_state('input_select.player', 'Chromecast Audio')%} #2196f3
                   {% else %} #9e9e9e
                   {% endif %}
                   }
               secondary: ''
               icon: mdi:television-classic
-              entity: media_player.googlehome4300
+              entity: media_player.chromecastaudio9331
               primary: Salon
               multiline_secondary: true
               icon_color: >-
-                {{ is_state("input_select.player", "Salon") | iif("blue",
-                "disabled") }}
+                {{ is_state("input_select.player", "Chromeast Audio") | iif("blue", "disabled") }}
               tap_action:
                 action: call-service
                 service: input_select.select_option
                 service_data:
-                  option: Salon
+                  option: Chromecast Audio
                 target:
                   entity_id: input_select.player
               fill_container: true
-              layout: vertical
               hold_action:
                 action: more-info
+              layout: vertical
             - type: custom:mushroom-template-card
               style: |
                 :host {
                   --primary-text-color:
-                  {% if is_state('input_select.player', 'Salon Alexa')%} #2196f3
+                  {% if is_state('input_select.player', 'Google Nest')%} #2196f3
                   {% else %} #9e9e9e
                   {% endif %}
                   }
               secondary: ''
-              icon: mdi:laptop
-              entity: media_player.artur_s_echo_dot
-              primary: Salon Alexa
+              icon: mdi:silverware-fork-knife
+              entity: media_player.nest_mini
+              primary: Kuchnia
               multiline_secondary: true
               icon_color: >-
-                {{ is_state("input_select.player", "Salon Alexa") |
-                iif("blue", "disabled") }}
+                {{ is_state("iinput_select.player", "Google Nest") | iif("blue", "disabled") }}
               tap_action:
                 action: call-service
                 service: input_select.select_option
                 service_data:
-                  option: Salon Alexa
+                  option: Google Nest
                 target:
                   entity_id: input_select.player
               fill_container: true
@@ -269,13 +213,10 @@ browser_mod:
                     - type: template
                       entity: input_select.radio_station
                       icon_color: >-
-                        {{ is_state("input_select.radio_station", "RMF FM") |
-                        iif("blue", "disabled") }}
+                        {{ is_state("input_select.radio_station", "RMF FM") | iif("blue", "disabled") }}
                       content: RMF FM
                       icon: >-
-                        {{ is_state("input_select.radio_station", "RMF FM") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
+                        {{ is_state("input_select.radio_station", "RMF FM") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
                         action: call-service
                         service: input_select.select_option
@@ -286,98 +227,24 @@ browser_mod:
                     - type: template
                       entity: input_select.radio_station
                       icon_color: >-
-                        {{ is_state("input_select.radio_station", "Meloradio") |
-                        iif("blue", "disabled") }}
-                      content: Meloradio
+                        {{ is_state("input_select.radio_station", "RMF Classic") | iif("blue", "disabled") }}
+                      content: RMF Classic
                       icon: >-
-                        {{ is_state("input_select.radio_station", "Meloradio") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
+                        {{ is_state("input_select.radio_station", "RMF Classic") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
                         action: call-service
                         service: input_select.select_option
                         service_data:
-                          option: Meloradio
+                          option: RMF Classic
                         target:
                           entity_id: input_select.radio_station
                     - type: template
                       entity: input_select.radio_station
                       icon_color: >-
-                        {{ is_state("input_select.radio_station", "RadioZET") |
-                        iif("blue", "disabled") }}
-                      content: RadioZET
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "RadioZET") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: RadioZET
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "Eska") |
-                        iif("blue", "disabled") }}
-                      content: Eska
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "Eska") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: Eska
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "Na Cały Dzień") |
-                        iif("blue", "disabled") }}
-                      content: Na Cały Dzień
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "Na Cały Dzień") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: Na Cały Dzień
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "MagicFM") |
-                        iif("blue", "disabled") }}
-                      content: Magic FM
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "MagicFM") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: MagicFM
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "Rock Radio") |
-                        iif("blue", "disabled") }}
+                        {{ is_state("input_select.radio_station", "Rock Radio") | iif("blue", "disabled") }}
                       content: Rock Radio
                       icon: >-
-                        {{ is_state("input_select.radio_station", "Rock Radio") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
+                        {{ is_state("input_select.radio_station", "Rock Radio") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
                         action: call-service
                         service: input_select.select_option
@@ -388,210 +255,32 @@ browser_mod:
                     - type: template
                       entity: input_select.radio_station
                       icon_color: >-
-                        {{ is_state("input_select.radio_station", "RadioMedias") |
-                        iif("blue", "disabled") }}
-                      content: Radio Medias
+                        {{ is_state("input_select.radio_station", "Antyradio") | iif("blue", "disabled") }}
+                      content: Antyradio
                       icon: >-
-                        {{ is_state("input_select.radio_station", "RadioMedias") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
+                        {{ is_state("input_select.radio_station", "Antyradio") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
                         action: call-service
                         service: input_select.select_option
                         service_data:
-                          option: RadioMedias
+                          option: Antyradio
                         target:
                           entity_id: input_select.radio_station
                     - type: template
                       entity: input_select.radio_station
                       icon_color: >-
-                        {{ is_state("input_select.radio_station", "RadioPetrecere") |
-                        iif("blue", "disabled") }}
-                      content: Radio Petrecere
+                        {{ is_state("input_select.radio_station", "Nowy Świat") | iif("blue", "disabled") }}
+                      content: Nowy Świat
                       icon: >-
-                        {{ is_state("input_select.radio_station", "RadioPetrecere") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
+                        {{ is_state("input_select.radio_station", "Nowy Świat") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
                         action: call-service
                         service: input_select.select_option
                         service_data:
-                          option: RadioPetrecere
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "NationalFM") |
-                        iif("blue", "disabled") }}
-                      content: National FM
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "NationalFM") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: NationalFM
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "WefunkRadio") |
-                        iif("blue", "disabled") }}
-                      content: WeFunk Radio
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "WefunkRadio") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: WefunkRadio
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "FunkyRadio") |
-                        iif("blue", "disabled") }}
-                      content: Funky Radio
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "FunkyRadio") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: FunkyRadio
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "Open FM-Praca") |
-                        iif("blue", "disabled") }}
-                      content: Open FM-Praca
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "Open FM-Praca") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: Open FM-Praca
+                          option: Nowy Świat
                         target:
                           entity_id: input_select.radio_station
                   alignment: null
-        - type: entities
-          entities:
-            - type: custom:fold-entity-row
-              padding: 0
-              style:
-                ha-icon:
-                  $: |
-                    ha-svg-icon {
-                    color: #ff5722;
-                      }
-              head:
-                type: custom:button-card
-                name: Lokalne
-                tap_action:
-                  action: none
-                styles:
-                  card:
-                    - margin-bottom: 0px
-                    - padding-bottom: 0px
-                    - padding-top: 0px
-                    - box-shadow: none
-                  name:
-                    - justify-self: start
-                    - padding-left: 8px
-                    - font-size: 15px
-                    - font-weight: bold
-                    - color: '#795548'
-              entities:
-                - type: custom:mushroom-chips-card
-                  card_mod:
-                    style: |
-                      ha-card {
-                        --chip-border-radius: 12px;
-                        --primary-text-color: grey;
-                      }
-                  chips:
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "P1") | iif("blue",
-                        "disabled") }}
-                      content: P1
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "P1") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: P1
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "P2") | iif("blue",
-                        "disabled") }}
-                      content: P2
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "P2") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: P2
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "P3") | iif("blue",
-                        "disabled") }}
-                      content: P3
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "P3") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: P3
-                        target:
-                          entity_id: input_select.radio_station
-                    - type: template
-                      entity: input_select.radio_station
-                      icon_color: >-
-                        {{ is_state("input_select.radio_station", "P4") | iif("blue",
-                        "disabled") }}
-                      content: P4
-                      icon: >-
-                        {{ is_state("input_select.radio_station", "P4") |
-                        iif("mdi:checkbox-blank-circle",
-                        "mdi:checkbox-blank-circle-outline") }}
-                      tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
-                          option: P4
-                        target:
-                          entity_id: input_select.radio_station
         - type: custom:mushroom-chips-card
           chips:
             - type: action
@@ -613,17 +302,21 @@ browser_mod:
             - type: action
               tap_action:
                 action: call-service
-                service: input_number.decrement
+                service: media_player.volume_down
                 service_data: {}
                 target:
-                  entity_id: input_number.volume_radio
+                  entity_id: >
+                    {% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
+                    {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
+                    {% endif %}
               icon: mdi:volume-minus
               icon_color: grey
             - type: template
               card_mod: null
               content: >-
-                {{ state_attr('media_player.googlehome4300', 'volume_level') |
-                round(2,default="0") }}
+                    {% if is_state("input_select.player", "Google Nest") %} {{ state_attr('media_player.nest_mini', 'volume_level') | round(2,default="0") }}
+                    {% elif is_state("input_select.player", "Chromecast Audio") %} {{ state_attr('media_player.chromecastaudio9331', 'volume_level') | round(2,default="0") }}
+                    {% endif %}
               style: |
                 ha-card {
                     box-shadow: 0px 0px;
@@ -632,13 +325,15 @@ browser_mod:
               icon: mdi:volume-plus
               tap_action:
                 action: call-service
-                service: input_number.increment
+                service: media_player.volume_down
                 service_data: {}
                 target:
-                  entity_id: input_number.volume_radio
+                  entity_id: >
+                    {% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
+                    {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
+                    {% endif %}
               icon_color: grey
-        - type: custom:mushroom-entity-card
-          entity: input_number.volume_radio
-        - type: custom:slider-entity-row
-          entity: input_number.volume_radio
-
+        # - type: custom:mushroom-entity-card
+        #   entity: input_number.volume_radio
+        # - type: custom:slider-entity-row
+        #   entity: input_number.volume_radio
