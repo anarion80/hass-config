@@ -96,7 +96,7 @@ browser_mod:
                 - entity: sensor.alarm_keypad_battery
                 - entity: sensor.drzwi_do_ogrodu_battery
                 - entity: sensor.drzwi_wejsciowe_battery
-                - entity: sensor.gabinet_battery
+                - entity: sensor.lazienka_battery
                 - entity: sensor.server_room_battery
 
         #################################################
