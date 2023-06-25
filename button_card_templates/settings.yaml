@@ -5,8 +5,8 @@ settings:
 
     translate_unknown: Nieznany
     translate_idle: Nieaktywny
-    translate_home: Tak
-    translate_not_home: Nie
+    translate_home: W domu
+    translate_not_home: Poza domem
     translate_available: dostępny
     translate_no_updates: Brak aktualizacji
     translate_update_available: aktualizacja dostępna
