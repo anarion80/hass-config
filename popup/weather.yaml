@@ -88,25 +88,62 @@ browser_mod:
               entity: weather.openweathermap
 
 
-            - type: custom:auto-entities
-              card:
-                type: entities
-              filter:
-                include:
-                  - entity_id: '*antistorm*'
-                exclude: []
-              sort:
-                method: none
-            # - type: custom:auto-entities
-            #   card:
-            #     type: entities
-            #   filter:
-            #     include:
-            #       - entity_id: '*.*airly*'
-            #     exclude: []
-            #   sort:
-            #     method: none
-            #   view_layout:
-            #     grid-area: doors
-            #   title: Airly
-            #   show_header_toggle: false
+            - square: false
+              columns: 3
+              type: grid
+              cards:
+                - type: 'custom:button-card'
+                  entity: binary_sensor.antistorm_148_rain_alarm
+                  name: Alarm opadów
+                  color: '#3182b7'
+                  state:
+                    - value: 'off'
+                      color: "#9da0a2"
+                - type: 'custom:button-card'
+                  entity: binary_sensor.antistorm_148_storm_alarm
+                  name: Alarm burzowy
+                  color: '#3182b7'
+                  state:
+                    - value: 'off'
+                      color: "#9da0a2"
+                - type: 'custom:button-card'
+                  entity: binary_sensor.antistorm_148_storm_active
+                  name: Aktywna burza
+                  color: '#3182b7'
+                  state:
+                    - value: 'off'
+                      color: "#9da0a2"
+
+            - square: false
+              columns: 2
+              type: grid
+              cards:
+                - type: gauge
+                  entity: sensor.rain_probability
+                  name: Ryzyko deszczu
+                  min: 0
+                  max: 100
+                  needle: true
+                  unit: '%'
+                - type: gauge
+                  entity: sensor.storm_probability
+                  name: Ryzyko burzy
+                  min: 0
+                  max: 100
+                  needle: true
+                  unit: '%'
+
+            - square: false
+              columns: 2
+              type: grid
+              cards:
+                - type: entity
+                  entity: sensor.antistorm_148_rain_time
+                  name: Czas do opadów
+                  unit: min
+                  state_color: false
+                - type: entity
+                  entity: sensor.antistorm_148_storm_time
+                  name: Czas do burzy
+                  unit: min
+                  state_color: false

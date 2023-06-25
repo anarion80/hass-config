@@ -50,6 +50,13 @@ sensor:
           {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy_sensitive") -%} niezdrowy dla grup wrażliwych
           {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
           {%- endif %}
+      rain_probability:
+        friendly_name: Ryzyko deszczu
+        value_template: "{{ (states('sensor.antistorm_148_rain_probability')| int * 100 / 255) | round }}"
+
+      storm_probability:
+        friendly_name: Ryzyko burzy
+        value_template: "{{ (states('sensor.antistorm_148_storm_probability')| int * 100 / 255) | round }}"
 
   - platform: antistorm
     station_id: 148
