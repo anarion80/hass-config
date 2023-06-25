@@ -84,68 +84,68 @@ browser_mod:
                 - value: 26
                   color: '#c0392b'
 
-        - type: custom:apexcharts-card
-          graph_span: 48h
-          apex_config:
-            tooltip:
-              style:
-                fontSize: 14px
-              x:
-                show: true
-                formatter: |
-                  EVAL:(timestamp) => {
-                    let date = new Date(timestamp).toLocaleString('pl-PL',{year: 'numeric', month:'long'}).toString()
-                    return date.charAt(0).toUpperCase() + date.slice(1);
-                  }
-            title:
-              text: 💧 Wilgotność [%]
-              style:
-                color: white
-                fontSize: 24px
-                fontWeight: 700
-            chart:
-              height: 300px
-              fontFamily: SF Text
-            fill:
-              type: gradient
-              gradient:
-                type: horizontal
-                shadeIntensity: 0.2
-                opacityFrom: 1
-                opacityTo: 0.7
-                stops:
-                  - 0
-                  - 30
-                  - 70
-          experimental:
-            color_threshold: true
-          header:
-            show: false
-            title: ApexCharts-Card
-            show_states: true
-            colorize_states: true
-          # yaxis:
-          #   - id: hum # identification name of the second y-axis
-          #     opposite: true # make it show on the right side
-          #     decimals: 0
-          #     apex_config:
-          #       tickAmount: 4
-          series:
-            - entity: sensor.gabinet_humidity
-              #yaxis_id: hum
-              fill_raw: last
-              type: area
-              group_by:
-                func: last
-                fill: last
-              color_threshold:
-                - value: 20
-                  color: 'rgb(255, 0, 0)'
-                - value: 40
-                  color: 'rgb(255, 153, 0)'
-                - value: 60
-                  color: 'rgb(0, 153, 51)'
-                - value: 80
-                  color: 'rgb(255, 153, 0)'
-                - value: 100
-                  color: 'rgb(255, 0, 0)'
+        # - type: custom:apexcharts-card
+        #   graph_span: 48h
+        #   apex_config:
+        #     tooltip:
+        #       style:
+        #         fontSize: 14px
+        #       x:
+        #         show: true
+        #         formatter: |
+        #           EVAL:(timestamp) => {
+        #             let date = new Date(timestamp).toLocaleString('pl-PL',{year: 'numeric', month:'long'}).toString()
+        #             return date.charAt(0).toUpperCase() + date.slice(1);
+        #           }
+        #     title:
+        #       text: 💧 Wilgotność [%]
+        #       style:
+        #         color: white
+        #         fontSize: 24px
+        #         fontWeight: 700
+        #     chart:
+        #       height: 300px
+        #       fontFamily: SF Text
+        #     fill:
+        #       type: gradient
+        #       gradient:
+        #         type: horizontal
+        #         shadeIntensity: 0.2
+        #         opacityFrom: 1
+        #         opacityTo: 0.7
+        #         stops:
+        #           - 0
+        #           - 30
+        #           - 70
+        #   experimental:
+        #     color_threshold: true
+        #   header:
+        #     show: false
+        #     title: ApexCharts-Card
+        #     show_states: true
+        #     colorize_states: true
+        #   # yaxis:
+        #   #   - id: hum # identification name of the second y-axis
+        #   #     opposite: true # make it show on the right side
+        #   #     decimals: 0
+        #   #     apex_config:
+        #   #       tickAmount: 4
+        #   series:
+        #     - entity: sensor.gabinet_humidity
+        #       #yaxis_id: hum
+        #       fill_raw: last
+        #       type: area
+        #       group_by:
+        #         func: last
+        #         fill: last
+        #       color_threshold:
+        #         - value: 20
+        #           color: 'rgb(255, 0, 0)'
+        #         - value: 40
+        #           color: 'rgb(255, 153, 0)'
+        #         - value: 60
+        #           color: 'rgb(0, 153, 51)'
+        #         - value: 80
+        #           color: 'rgb(255, 153, 0)'
+        #         - value: 100
+        #           color: 'rgb(255, 0, 0)'
