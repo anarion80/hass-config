@@ -27,8 +27,20 @@ base:
   aspect_ratio: 1/1
   show_state: true
   show_icon: false
+  # state_display: >
+  #   [[[ if (variables.state === true) return variables.translate_unknown; ]]]
   state_display: >
-    [[[ if (variables.state === true) return variables.translate_unknown; ]]]
+    [[[
+      if (variables.state === 'on') {
+        return 'Wł.';
+      }
+      else if (variables.state === 'off') {
+        return 'Wył.';
+      }
+      if (variables.state === true) {
+        return variables.translate_unknown;
+      }
+    ]]]
   tap_action:
     ui_sound_tablet: |
       [[[
