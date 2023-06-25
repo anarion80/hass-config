@@ -1,0 +1,518 @@
+action: fire-dom-event
+browser_mod:
+  service: browser_mod.popup
+  data:
+    title: Temperatury
+    style: >
+      --popup-max-width: 1000px;
+      --ha-card-border-radius: 0;
+    size: NORMAL
+    card_mod:
+      style:
+        hui-grid-card:
+          $: |
+            #root {
+              width: 600px;
+              height: 600px;
+              margin: 30px;
+              gap: 20px !important;
+            }
+    content:
+
+
+      # type: custom:layout-card
+      # layout_type: custom:grid-layout
+      # layout:
+      #   #default
+      #   margin: 0
+      #   grid-gap: var(--custom-layout-card-padding)
+      #   grid-template-columns: repeat(4, 1fr) 0
+      #   grid-template-rows: 0 repeat(4, fit-content(100%)) 0fr
+      #   grid-template-areas: |
+      #     "temp  temp  temp  temp"
+      #     "temp  temp  temp  temp"
+      #     "temp  temp  temp  temp"
+      #     "temp  temp  temp  temp"
+      # cards:
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_salon
+      #     name: Salon
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_salon
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+      #   - type: custom:button-card
+      #     view_layout:
+      #       grid-area: temp
+      #     entity: sensor.temperatura_gabinet
+      #     name: Gabinet
+      #     double_tap_action: none
+      #     tap_action:
+      #       !include gabinet_klimat.yaml
+      #     custom_fields:
+      #       graph:
+      #         card:
+      #           entities:
+      #             - sensor.temperatura_gabinet
+      #     template:
+      #       - base
+      #       - icon_temperature
+      #       # - full_circle
+      #       - graph
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      # card:
+        type: grid
+        columns: 4
+        square: true
+        cards:
+          - type: custom:button-card
+            entity: sensor.temperatura_salon
+            name: Salon
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_salon
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_lazienka_dol
+            name: Toaleta
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_lazienka_dol
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_wejscie
+            name: Wejście
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_wejscie
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_gabinet
+            name: Gabinet
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_gabinet
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_lazienka
+            name: Łazienka
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_lazienka
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_hania
+            name: Hania
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_hania
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_wojtek
+            name: Wojtek
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_wojtek
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_sypialnia
+            name: Sypialnia
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_sypialnia
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_piwnica
+            name: Piwnica
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_piwnica
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_wodomierz
+            name: Wodomierz
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_wodomierz
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_schowek
+            name: Schowek
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_schowek
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_kotlownia
+            name: Kotłownia
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_kotlownia
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph
+
+          - type: custom:button-card
+            entity: sensor.temperatura_garaz
+            name: Garaż
+            double_tap_action: none
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.temperatura_garaz
+            template:
+              - base
+              - icon_temperature
+              - temperature_chart
+              - graph

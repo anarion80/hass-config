@@ -121,3 +121,96 @@ humidity:
         - margin: -6% -6% 0 0
         - justify-self: end
         - opacity: 1
+
+temperature_chart:
+  tap_action:
+    action: fire-dom-event
+    browser_mod:
+      service: browser_mod.popup
+      data:
+        title: >
+          [[[
+            return !entity || entity.attributes.friendly_name;
+          ]]]
+        size: wide
+        card_mod:
+          style:
+            hui-vertical-stack-card:
+              $: |
+                #root {
+                  padding: 1.5em;
+                }
+
+        content:
+          type: vertical-stack
+          cards:
+            - type: custom:apexcharts-card
+              graph_span: 48h
+              apex_config:
+                tooltip:
+                  style:
+                    fontSize: 14px
+                  x:
+                    show: true
+                    formatter: |
+                      EVAL:(timestamp) => {
+                        let date = new Date(timestamp).toLocaleString('pl-PL',{year: 'numeric', month:'long'}).toString()
+                        return date.charAt(0).toUpperCase() + date.slice(1);
+                      }
+                title:
+                  text: 🌡️ Temperatura [°C]
+                  style:
+                    color: white
+                    fontSize: 24px
+                    fontWeight: 700
+                chart:
+                  height: 300px
+                  fontFamily: SF Text
+                colors:
+                  - '#385581'
+                  - '#c0392b'
+                  - '#32a852'
+                  - '#d35400'
+                fill:
+                  type: gradient
+                  gradient:
+                    type: vertical
+                    shadeIntensity: 0.2
+                    opacityFrom: 1
+                    opacityTo: 0.7
+                    stops:
+                      - 0
+                      - 70
+                      - 100
+                    # gradientToColors:
+                    #   - '#d35400'
+              experimental:
+                color_threshold: true
+              header:
+                show: false
+                title: ApexCharts-Card
+                show_states: true
+                #colorize_states: true
+              #yaxis:
+                # - id: temp # identification name of the first y-axis
+                #   decimals: 0
+                #   apex_config:
+                #     tickAmount: 4
+              series:
+                - entity: >
+                    [[[ return !entity || entity.entity_id; ]]]
+                  #yaxis_id: temp
+                  fill_raw: last
+                  type: area
+                  group_by:
+                    func: last
+                    fill: last
+                  color_threshold:
+                    - value: 20
+                      color: '#385581'
+                    - value: 22
+                      color: '#32a852'
+                    - value: 24
+                      color: '#d35400'
+                    - value: 26
+                      color: '#c0392b'
