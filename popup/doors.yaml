@@ -16,25 +16,6 @@ browser_mod:
               #root {
                   margin: -24px 0 !important;
               }
-            auto-entities:
-              hui-entities-card:
-                $: |
-                  .card-content {
-                    padding: var(--tablet-popup-content-padding);
-                    padding-bottom: 0.8em;
-                  }
-                  ha-card {
-                    border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                    border-radius: 0;
-                    transition: none;
-                  }
-                  /* portrait */
-                  @media screen and (max-width: 1200px) {
-                    ha-card {
-                      border-right: none;
-                      border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                    }
-                  }
     content:
       type: custom:layout-card
       layout_type: custom:grid-layout
@@ -62,6 +43,10 @@ browser_mod:
         - type: custom:auto-entities
           card:
             type: entities
+            style: |
+              ha-card {
+                border-right: 1.5px solid rgba(0, 0, 0, 0.8);
+              }
           filter:
             include:
               - entity_id: '*.*drzwi*_contact'
@@ -72,13 +57,6 @@ browser_mod:
             grid-area: doors
           title: Drzwi
           show_header_toggle: false
-          # card_mod:
-          #   class: header
-          #   style: |
-          #     ha-card {
-          #       margin: 0px !important;
-          #     }
-
 
         #################################################
         #                                               #
@@ -91,7 +69,7 @@ browser_mod:
             type: entities
           filter:
             include:
-              - entity_id: '*.*window*_contact'
+              - entity_id: '*.*okno*_contact'
             exclude: []
           sort:
             method: none

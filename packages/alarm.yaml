@@ -96,6 +96,9 @@ automation:
       - binary_sensor.drzwi_wejsciowe_contact
       - binary_sensor.motion_sensor_1_battery_low
       - switch.server_power
+      - binary_sensor.okno_wodomierz_lewe_contact
+      - binary_sensor.okno_wodomierz_prawe_contact
+      - binary_sensor.okno_wejscie_contact
       to: unavailable
       for: 0:05:00
     condition: []
@@ -116,10 +119,13 @@ automation:
     alias: Trigger alarm while armed
     trigger:
     - platform: state
-      entity_id: group.all_door_sensors
+      entity_id: binary_sensor.okna
       to: 'on'
     - platform: state
-      entity_id: group.all_motion_detectors
+      entity_id: binary_sensor.drzwi
+      to: 'on'
+    - platform: state
+      entity_id: binary_sensor.czujniki_ruchu
       to: 'on'
     condition:
     - condition: or
@@ -440,16 +446,48 @@ automation:
     mode: parallel
     max: 10
 
-group:
-  all_motion_detectors:
-    entities:
-      - binary_sensor.alarm_keypad_occupancy
-      - binary_sensor.motion_sensor_1_occupancy
+# group:
+#   all_motion_detectors:
+#     entities:
+#       - binary_sensor.alarm_keypad_occupancy
+#       - binary_sensor.motion_sensor_1_occupancy
 
-  all_door_sensors:
+#   all_door_sensors:
+#     entities:
+#       - binary_sensor.drzwi_do_ogrodu_contact
+#       - binary_sensor.drzwi_wejsciowe_contact
+
+#   all_window_sensors:
+#     entities:
+#       - binary_sensor.okno_wejscie_contact
+#       - binary_sensor.okno_wodomierz_lewe_contact
+#       - binary_sensor.okno_wodomierz_prawe_contact
+
+binary_sensor:
+  - platform: group
+    name: "Okna"
+    unique_id: group_windows
+    device_class: window
+    entities:
+      - binary_sensor.okno_wejscie_contact
+      - binary_sensor.okno_wodomierz_lewe_contact
+      - binary_sensor.okno_wodomierz_prawe_contact
+
+  - platform: group
+    name: "Drzwi"
+    unique_id: group_doors
+    device_class: door
     entities:
       - binary_sensor.drzwi_do_ogrodu_contact
       - binary_sensor.drzwi_wejsciowe_contact
+
+  - platform: group
+    name: "Czujniki ruchu"
+    unique_id: group_motion_detectors
+    device_class: occupancy
+    entities:
+      - binary_sensor.alarm_keypad_occupancy
+      - binary_sensor.motion_sensor_1_occupancy
 
 sensor:
   - platform: template

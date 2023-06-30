@@ -66,8 +66,9 @@ browser_mod:
             view_layout:
               grid-area: entities
             entities:
-              - entity: group.all_door_sensors
-              - entity: group.all_motion_detectors
+              - entity: binary_sensor.czujniki_ruchu
+              - entity: binary_sensor.okna
+              - entity: binary_sensor.drzwi
               - entity: binary_sensor.motion_sensor_1_occupancy
               - entity: binary_sensor.drzwi_wejsciowe_contact
               - entity: binary_sensor.drzwi_do_ogrodu_contact
