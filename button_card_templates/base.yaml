@@ -31,15 +31,14 @@ base:
   #   [[[ if (variables.state === true) return variables.translate_unknown; ]]]
   state_display: >
     [[[
-      if (variables.state === 'on') {
-        return 'Wł.';
-      }
-      else if (variables.state === 'off') {
-        return 'Wył.';
-      }
-      if (variables.state === true) {
-        return variables.translate_unknown;
-      }
+      const stateDict = {
+        'on': variables.translate_on,
+        'off': variables.translate_off,
+        'cool': variables.translate_cool,
+        'fan_only': variables.translate_fan_only,
+      };
+      if (variables.state === true) return variables.translate_unknown;
+      return stateDict[variables.state];
     ]]]
   tap_action:
     ui_sound_tablet: |

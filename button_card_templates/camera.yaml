@@ -29,7 +29,7 @@ base_camera:
               variables.state === 'unknown' || variables.state === 'unavailable' || entity === undefined) {
               return 'rgba(255, 255, 255, 0.3)';
             }
-            return (variables.state != 'off' && variables.state != 'standby') && (entity_picture == null) ? 'rgba(0, 0, 0, 0.6)' : '#efefef';
+            return (variables.state != 'off' && variables.state != 'standby') && (entity_picture == null) ? '#4b5254' : '#97989c';
           ]]]
       - text-shadow: >
           [[[

@@ -11,3 +11,11 @@ settings:
     translate_no_updates: Brak aktualizacji
     translate_update_available: aktualizacja dostępna
     translate_updates_available: aktualizacje dostępne
+
+    translate_on: Wł.
+    translate_off: Wył.
+    translate_cool: Chłodzenie
+    translate_fan_only: Wentylator
+    translate_playing: Granie
+    translate_paused: Pauza
+    translate_standby: Standby
