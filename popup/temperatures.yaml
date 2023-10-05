@@ -17,6 +17,13 @@ browser_mod:
               margin: 30px;
               gap: 20px !important;
             }
+          ha-card:
+            $: |
+              #name, #state {
+                font-size: 1vw;
+                font-weight: var(--button-card-font-weight);
+                letter-spacing: var(--button-card-letter-spacing);
+              }
     content:
 
 
@@ -351,6 +358,15 @@ browser_mod:
               - icon_temperature
               - temperature_chart
               - graph
+            styles:
+              name:
+                - font-size: 1vw;
+                - font-weight: var(--button-card-font-weight);
+                - letter-spacing: var(--button-card-letter-spacing);
+              state:
+                - font-size: 1vw;
+                - font-weight: var(--button-card-font-weight);
+                - letter-spacing: var(--button-card-letter-spacing);
 
           - type: custom:button-card
             entity: sensor.temperatura_wejscie

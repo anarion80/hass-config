@@ -8,10 +8,10 @@ browser_mod:
       type: custom:mod-card
       card_mod:
         style:
-          .: |
-            :host .content {
-              width: 100%;
-            }
+          # .: |
+          #   :host .content {
+          #     width: 100%;
+          #   }
           hui-grid-card:
             $: |
               button-card:nth-child(2),

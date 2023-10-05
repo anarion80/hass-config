@@ -12,10 +12,10 @@ browser_mod:
         layout-card:
           $grid-layout$:
             # card divider border
-            .: |
-              #root {
-                  margin: -24px 0 !important;
-              }
+            # .: |
+            #   #root {
+            #       margin: -24px 0 !important;
+            #   }
             atomic-calendar-revive:
               $: |
                 .card-content {
@@ -97,4 +97,3 @@ browser_mod:
           entities:
             - calendar.plan_lekcji_hani
           title: Plan lekcji Hani
-

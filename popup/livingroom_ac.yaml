@@ -7,10 +7,10 @@ browser_mod:
     card_mod:
       style:
         #popup header
-        .: |
-          div.content {
-            margin-top: -24px !important;
-          }
+        # .: |
+        #   div.content {
+        #     margin-top: -24px !important;
+        #   }
     content:
       type: custom:tabbed-card
       styles:

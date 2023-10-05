@@ -6,10 +6,10 @@ browser_mod:
     card_mod:
       style:
         #popup header
-        .: |
-          div.content {
-            margin-top: -24px !important;
-          }
+        # .: |
+        #   div.content {
+        #     margin-top: -24px !important;
+        #   }
     content:
       type: custom:tabbed-card
       styles:
@@ -98,7 +98,7 @@ browser_mod:
 
                   - entity: sensor.temperatura_salon
                     name: Temperatura
-                  - entity: sensor.humidity_living_room
+                  - entity: sensor.komfovent_status_panel_humidity
                     name: Wilgotność
 
               - type: custom:apexcharts-card

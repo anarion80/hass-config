@@ -5,15 +5,12 @@ browser_mod:
     title: Odkurzanie
     timeout: 300000
     style: |
-      --popup-max-width: calc(385px + 495px);
+      --popup-max-width: calc(385px + 595px);
       --primary-color: transparent; /* hide timeout progress */
     card_mod:
       style:
         # card divider border
         layout-card$grid-layout$: |
-          #root {
-            margin: -24px 0 !important;
-          }
           hui-vertical-stack-card {
             border-right: 1.5px solid rgba(0, 0, 0, 0.2);
             border-radius: 0;
@@ -26,12 +23,13 @@ browser_mod:
               border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
             }
           }
+
     content:
       type: custom:layout-card
       layout_type: custom:grid-layout
       layout:
         margin: 0
-        grid-template-columns: 385px 495px
+        grid-template-columns: 385px 595px
         grid-template-rows: 1fr
         grid-template-areas: |
           "info map"
@@ -44,15 +42,12 @@ browser_mod:
               "info"
               "map"
       cards:
-
-        ### ÖVERSIKT
-
         - type: vertical-stack
           view_layout:
             grid-area: info
           cards:
           - type: entities
-            title: Översikt
+            # title: Ogólne
             card_mod:
               class: header
               style: |
@@ -62,38 +57,21 @@ browser_mod:
                 }
             entities:
 
-            - entity: vacuum.morty
-            - entity: sensor.morty_last_clean_end
+            - entity: vacuum.valetudo_dreame1
 
-            - type: custom:bar-card
-              width: 55%
-              height: 2em
-              decimal: 0
-              unit_of_measurement: '%'
-              positions:
-                icon: outside
-                indicator: 'off'
-                name: outside
-              severity:
-                - color: '#303435'
-                  from: 11
-                  to: 999
-                - color: '#6d2525'
-                  from: 0
-                  to: 10
-              entity_row: true
-              entities:
-                - entity: vacuum.morty
-                  attribute: battery_level
-                  name: Bateria
-                  icon: mdi:battery
-                - entity: sensor.template_vacuum_filter
-                - entity: sensor.template_vacuum_mainbrush
-                - entity: sensor.template_vacuum_sidebrush
-                - entity: sensor.template_vacuum_sensors
+            - entity: vacuum.valetudo_dreame1
+              type: attribute
+              attribute: battery_level
+              name: Bateria
+              icon: mdi:battery
+              suffix: "%"
+            - entity: sensor.template_vacuum_filter
+            - entity: sensor.template_vacuum_mainbrush
+            - entity: sensor.template_vacuum_sidebrush
+            - entity: sensor.template_vacuum_sensors
 
             - type: custom:more-info-card
-              entity: vacuum.morty
+              entity: vacuum.valetudo_dreame1
               card_mod:
                 style:
                   # hide everything but ha-select
@@ -142,7 +120,7 @@ browser_mod:
               type: horizontal-stack
               cards:
                 - type: custom:button-card
-                  entity: vacuum.morty
+                  entity: vacuum.valetudo_dreame1
                   icon: mdi:play-pause
                   tap_action:
                     action: call-service
@@ -155,34 +133,33 @@ browser_mod:
                         ]]]`
                       ]]]
                     service_data:
-                      entity_id: vacuum.morty
+                      entity_id: vacuum.valetudo_dreame1
                   template: icon_only
 
                 - type: custom:button-card
-                  entity: vacuum.morty
+                  entity: vacuum.valetudo_dreame1
                   icon: mdi:battery-charging
                   tap_action:
                     action: call-service
                     service: vacuum.return_to_base
                     service_data:
-                      entity_id: vacuum.morty
+                      entity_id: vacuum.valetudo_dreame1
                   template: icon_only
 
                 - type: custom:button-card
-                  icon: mdi:delete-empty
+                  entity: vacuum.valetudo_dreame1
+                  icon: mdi:robot-vacuum
                   tap_action:
                     action: call-service
-                    service: vacuum.send_command
-                    service_data:
-                      entity_id: vacuum.morty
-                      command: app_goto_target
-                      params: [16821,23105]
+                    service: script.vacuum_clean_segments
+                    # service: script.vacuum_clean_segments_message
+                    # service_data:
+                    #   segments: '{{expand("group.vacuum_rooms") | selectattr("state","eq","on") | map(attribute="attributes.room_id") | list | to_json}}'
+                    target: {}
                   template: icon_only
 
-        ### KARTLÄGGNING
-
         - type: custom:xiaomi-vacuum-map-card
-          title: Map
+          # title: Mapa
           view_layout:
             grid-area: map
           card_mod:
@@ -202,7 +179,7 @@ browser_mod:
               }
               div.map-wrapper, div.controls-wrapper {
                 padding: var(--tablet-popup-content-padding);
-                padding-top: 0;
+                padding-top: 12px;
                 padding-bottom: 0;
                 letter-spacing: normal;
               }
@@ -218,40 +195,105 @@ browser_mod:
                 padding: 0.42em;
               }
           language: pl
-          entity: vacuum.morty
+          entity: vacuum.valetudo_dreame1
+          vacuum_platform: "Hypfer/Valetudo"
           map_source:
-            camera: camera.vacuum_map
+            # camera: camera.valetudo_dreame1_map_data
+            image: http://192.168.2.13:3001/api/map/image
+          # calibration_source:
+          #   # camera: true
+          #   identity: true
           calibration_source:
-            camera: true
+            calibration_points:
+              - vacuum:
+                  x: 25500
+                  y: 25500
+                map:
+                  x: 20
+                  y: 1
+              - vacuum:
+                  x: 25500
+                  y: 26500
+                map:
+                  x: 20
+                  y: 270
+              - vacuum:
+                  x: 26500
+                  y: 26500
+                map:
+                  x: 242
+                  y: 270
+              - vacuum:
+                  x: 26500
+                  y: 25500
+                map:
+                  x: 242
+                  y: 1
           map_locked: true
+          internal_variables:
+            topic: valetudo/dreame1
           map_modes:
+            - template: vacuum_clean_segment
+              variables:
+                topic: valetudo/dreame1
+              predefined_selections:
+                - id: "1"
+                  outline: [[ 25500, 25500 ], [ 26500, 25500 ], [ 26500, 26500 ], [ 25500, 26500 ]]
+                  label:
+                    text: "Salon"
+                    x: 26000
+                    y: 26000
+                    offset_y: 35
+                  icon:
+                    name: "mdi:sofa"
+                    x: 26000
+                    y: 26000
+                - id: "3"
+                  outline: [[ 26500, 25600 ], [ 27450, 25600 ], [ 27450, 27050 ], [ 26500, 27050 ]]
+                  label:
+                    text: "Jadalnia"
+                    x: 27000
+                    y: 26000
+                    offset_y: 35
+                  icon:
+                    name: "mdi:silverware-fork-knife"
+                    x: 27000
+                    y: 26000
+                - id: "4"
+                  outline: [[ 26650, 27050 ], [ 26900, 27050 ], [ 26900, 27190 ], [ 27230, 27190 ], [ 27230, 27600 ], [ 26650, 27600 ]]
+                  label:
+                    text: "Kuchnia"
+                    x: 26940
+                    y: 27350
+                    offset_y: 35
+                  icon:
+                    name: "mdi:countertop-outline"
+                    x: 26940
+                    y: 27350
             - template: vacuum_clean_zone
             - template: vacuum_clean_zone_predefined
               predefined_selections:
-                - zones: [[14895, 20640, 18409, 24058]]
+                - id: "5"
+                  zones: [[26668, 25729, 27183, 26327]]
+                  label:
+                    text: "Stół"
+                    x: 26950
+                    y: 26000
+                    offset_y: 35
                   icon:
-                    name: mdi:silverware-fork-knife
-                    x: 16708
-                    y: 22291
-                - zones: [[15208, 17278, 20204, 20980]]
+                    name: mdi:table-furniture
+                    x: 26950
+                    y: 26000
+                - id: "6"
+                  zones: [[26280, 25965, 26481, 26154]]
+                  label:
+                    text: "Test"
+                    x: 26300
+                    y: 25900
+                    offset_y: 35
                   icon:
-                    name: mdi:bed
-                    x: 17706
-                    y: 19043
-                - zones: [[18170, 20925, 23138, 25026]]
-                  icon:
-                    name: mdi:door
-                    x: 22293
-                    y: 21864
-                - zones: [[21474, 24942, 27269, 28873]]
-                  icon:
-                    name: mdi:sofa
-                    x: 24401
-                    y: 26736
-                - zones: [[17687, 24885, 21487, 28816]]
-                  icon:
-                    name: mdi:speaker
-                    x: 19757
-                    y: 26622
+                    name: mdi:table-furniture
+                    x: 26300
+                    y: 25900
             - template: vacuum_goto
-            - template: vacuum_follow_path
+            # - template: vacuum_follow_path
