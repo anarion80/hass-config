@@ -61,12 +61,12 @@ automation:
     - platform: mqtt
       topic: frigate/events
     action:
-      - service: light.turn_on
+      - service: switch.turn_on
         target:
-          entity_id: light.fire_tablet_screen
-        data:
-          brightness_pct: >
-            {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
+          entity_id: switch.fire_tablet_screen
+        # data:
+        #   brightness_pct: >
+        #     {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
       - service: browser_mod.more_info
         data:
           entity: >
@@ -80,10 +80,10 @@ automation:
       - service: browser_mod.close_popup
         data:
           browser_id: amazon_tablet
-      - service: light.turn_off
+      - service: switch.turn_off
         data:
-          entity_id: light.fire_tablet_screen
-    mode: restart
+          entity_id: switch.fire_tablet_screen
+    mode: single
 
   - id: '1618433673900'
     alias: Notify on device unavailable
@@ -486,7 +486,7 @@ binary_sensor:
     unique_id: group_motion_detectors
     device_class: occupancy
     entities:
-      - binary_sensor.alarm_keypad_occupancy
+      # - binary_sensor.alarm_keypad_occupancy
       - binary_sensor.motion_sensor_1_occupancy
 
 sensor:
