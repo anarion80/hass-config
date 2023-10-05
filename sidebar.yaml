@@ -120,7 +120,7 @@
             <b>Pralka pierze</b>
           {% endif %}
         vacuum: >
-          {% set entity_id = 'vacuum.valetudo_robot' %}
+          {% set entity_id = 'vacuum.valetudo_dreame1' %}
           {% if is_state(entity_id, 'cleaning') %}
             <b>Robot sprząta</b>
           {% elif is_state(entity_id, 'returning') %}
@@ -179,13 +179,7 @@
           {% if ns.today %}
           🗑️ {% for calendar in garbage if ((calendar.attributes.start_time | as_datetime | as_local - today_at()).days == 0) -%}
                 {% if not loop.first %}{% if not loop.last %}, {% else %} i {% endif %}{% endif %}{{ calendar.attributes.message  }}
-              {%- endfor %} dzisiaj ({{ now().strftime('%A') | replace('Monday', 'w poniedziałek')
-                            | replace('Tuesday', 'we wtorek')
-                            | replace('Wednesday', 'w środę')
-                            | replace('Thursday', 'w czwartek')
-                            | replace('Friday', 'w piątek')
-                            | replace('Saturday', 'w sobotę')
-                            | replace('Sunday', 'w niedzielę') }})
+              {%- endfor %} dzisiaj
 
           {% elif ns.tomorrow %}
           {% for calendar in garbage if ((calendar.attributes.start_time | as_datetime | as_local - today_at()).days == 1) -%}
