@@ -19,9 +19,9 @@ automation:
         #value_template: ‘{{ now().month in [1,2,3,4,5,10,11,12] }}’
       - alias: "Prawdopodobieństwo deszczu poniżej 60%"
         condition: numeric_state
-        # entity_id: sensor.openweathermap_forecast_precipitation_probability
-        entity_id: sensor.rain_probability
-        below: 60
+        entity_id: sensor.openweathermap_forecast_precipitation_probability
+        # entity_id: sensor.rain_probability
+        below: 75
     action:
     - service: switch.turn_on
       entity_id: switch.zraszacz
