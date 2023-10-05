@@ -1,18 +1,18 @@
 binary_sensor:
-  - platform: burze_dzis_net
-    api_key: !secret burze_dzis_net.api_key
-    name: Storm warning
-    latitude: !secret burze_net_latitude
-    longitude: !secret burze_net_longitude
-    warnings:
-      - frost_warning
-      - heat_warning
-      - wind_warning
-      - precipitation_warning
-      - storm_warning
-      - tornado_warning
-    storms_nearby:
-      radius: 30
+  # - platform: burze_dzis_net
+  #   api_key: !secret burze_dzis_net.api_key
+  #   name: Storm warning
+  #   latitude: !secret burze_net_latitude
+  #   longitude: !secret burze_net_longitude
+  #   warnings:
+  #     - frost_warning
+  #     - heat_warning
+  #     - wind_warning
+  #     - precipitation_warning
+  #     - storm_warning
+  #     - tornado_warning
+  #   storms_nearby:
+  #     radius: 30
 
   - platform: antistorm
     station_id: 148
