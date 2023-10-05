@@ -9,13 +9,13 @@ automation:
       - condition: or
         conditions:
           - condition: state
-            entity_id: sensor.garbage_collection
+            entity_id: sensor.smieci_bio
             state: 'smieci bio jutro'
           - condition: state
-            entity_id: sensor.garbage_collection
+            entity_id: sensor.smieci_zmieszane
             state: 'smieci zmieszane jutro'
           - condition: state
-            entity_id: sensor.garbage_collection
+            entity_id: sensor.smieci_segregowane
             state: 'smieci segregowane jutro'
     action:
     - service: input_boolean.turn_on
@@ -117,6 +117,12 @@ template:
     event: end
     entity_id: calendar.smieci_bio
     id: "off"
+  sensor:
+    - name: Śmieci BIO
+      state: "{{ trigger.id }}"
+      icon: mdi:trash-can
+
+- trigger:
   - platform: calendar
     event: start
     entity_id: calendar.smieci_zmieszane
@@ -130,6 +136,12 @@ template:
     event: end
     entity_id: calendar.smieci_zmieszane
     id: "off"
+  sensor:
+    - name: Śmieci zmieszane
+      state: "{{ trigger.id }}"
+      icon: mdi:trash-can
+
+- trigger:
   - platform: calendar
     event: start
     entity_id: calendar.smieci_segregowane
@@ -144,6 +156,6 @@ template:
     entity_id: calendar.smieci_segregowane
     id: "off"
   sensor:
-    - name: Garbage Collection
+    - name: Śmieci segregowane
       state: "{{ trigger.id }}"
       icon: mdi:trash-can
