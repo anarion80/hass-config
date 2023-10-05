@@ -10,7 +10,7 @@ automation:
         to: 'on'
     condition:
       - condition: time
-        after: '07:00'
+        after: '06:00'
         before: '12:00'
       - condition: template
         # Only run if more than 6 hours (21,600 sec) since it last ran
@@ -143,4 +143,82 @@ template:
                   {%- endfor -%}.
                 {%- endif -%}
               {% endif %}
+            {#- Paczki -#}
+              {%- if states("sensor.mail_poczta_polska_delivering")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_poczta_polska_delivering")|int(0) -%}
+                Poczta Polska dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
+              {%- if states("sensor.mail_dhl_delivering")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_dhl_delivering")|int(0) -%}
+                DHL dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
+              {%- if states("sensor.mail_dpd_com_pl_delivering")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_dpd_com_pl_delivering")|int(0) -%}
+                DPD dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
+              {%- if states("sensor.mail_gls_delivering")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_dpd_com_pl_delivering")|int(0) -%}
+                GLS dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
+              {%- if states("sensor.mail_inpost_pl_delivering")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_inpost_pl_delivering")|int(0) -%}
+                Inpost dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
+              {%- if states("sensor.mail_ups_delivering")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_ups_delivering")|int(0) -%}
+                UPS dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
+              {%- if states("sensor.mail_amazon_packages")|int(0) > 0 -%}
+              {% set item = states("sensor.mail_amazon_packages")|int(0) -%}
+                Amazon dostarczy dziś{{' '}}
+                {%- if item == 1 -%}
+                1 paczkę.
+                {%- elif (item % 10 >= 2 and item % 10 <= 4 and (item % 100 < 10 or item % 100 >= 20)) -%}
+                {{ item }} paczki.
+                {%- elif item >4 -%}
+                {{ item }} paczek.
+                {%- endif -%}
+              {%- endif -%}
                 Miłego dnia!
