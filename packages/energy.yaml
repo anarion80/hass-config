@@ -18,10 +18,21 @@ sensor:
           {{ states.switch.grzejnik.attributes.current_consumption }}
         unit_of_measurement: 'W'
         device_class: power
+      total_power:
+        value_template: >-
+          {{ states('sensor.zamel_mew_01_electricity_meter_power_active_phase_1') | float(default=0) + states('sensor.zamel_mew_01_electricity_meter_power_active_phase_2') | float(default=0) + states('sensor.zamel_mew_01_electricity_meter_power_active_phase_3') | float(default=0) }}
+        unit_of_measurement: 'W'
+        device_class: power
 
   - platform: integration
     source: sensor.grzejnik_power
     name: Grzejnik Energy
+    unit_prefix: k
+    round: 2
+
+  - platform: integration
+    source: sensor.komfovent_power_consumption_w
+    name: Rekuperator Energy
     unit_prefix: k
     round: 2
 
