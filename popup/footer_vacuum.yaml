@@ -5,7 +5,6 @@ browser_mod:
     title: Odkurzanie
     timeout: 300000
     style: |
-      --popup-max-width: calc(385px + 595px);
       --primary-color: transparent; /* hide timeout progress */
     card_mod:
       style:
@@ -123,8 +122,8 @@ browser_mod:
                   entity: vacuum.valetudo_dreame1
                   icon: mdi:play-pause
                   tap_action:
-                    action: call-service
-                    service: >
+                    action: perform-action
+                    perform_action: >
                       [[[
                         return `[[[
                           return entity.state === 'docked' || entity.state === 'paused'
@@ -132,7 +131,7 @@ browser_mod:
                             : 'vacuum.pause';
                         ]]]`
                       ]]]
-                    service_data:
+                    data:
                       entity_id: vacuum.valetudo_dreame1
                   template: icon_only
 
@@ -140,9 +139,9 @@ browser_mod:
                   entity: vacuum.valetudo_dreame1
                   icon: mdi:battery-charging
                   tap_action:
-                    action: call-service
-                    service: vacuum.return_to_base
-                    service_data:
+                    action: perform-action
+                    perform_action: vacuum.return_to_base
+                    data:
                       entity_id: vacuum.valetudo_dreame1
                   template: icon_only
 
@@ -150,8 +149,8 @@ browser_mod:
                   entity: vacuum.valetudo_dreame1
                   icon: mdi:robot-vacuum
                   tap_action:
-                    action: call-service
-                    service: script.vacuum_clean_segments
+                    action: perform-action
+                    perform_action: script.vacuum_clean_segments
                     # service: script.vacuum_clean_segments_message
                     # service_data:
                     #   segments: '{{expand("group.vacuum_rooms") | selectattr("state","eq","on") | map(attribute="attributes.room_id") | list | to_json}}'

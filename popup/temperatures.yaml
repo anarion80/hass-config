@@ -4,11 +4,18 @@ browser_mod:
   data:
     title: Temperatury
     initial_style: normal
+    # This popup was already on the current config model, and its `--popup-width: 650px`
+    # did work - a popup style lands as `:host([normal]) ha-dialog { ... }`, which
+    # outranks browser_mod's own `ha-dialog { --popup-width: ... }` - but it pinned this
+    # popup to a fixed 650px. Its `--popup-max-width: 1000px` did nothing: that value
+    # only becomes `--ha-dialog-max-width`, which caps the outer `wa-dialog` box, while
+    # the visible surface is sized by `--popup-width`. Both are gone; the theme sizes
+    # every popup to its content now (capped at two thirds of the screen), so this grid
+    # only needs its minimum height and padding.
     popup_styles:
       - style: normal
         styles: |
           ha-dialog {
-            --popup-width: 650px;
             --popup-min-height: 85vh;
           }
       - style: wide
@@ -19,7 +26,6 @@ browser_mod:
       - style: all
         styles: |
           ha-dialog {
-            --popup-max-width: 1000px;
             --ha-card-border-radius: 0px;
             --dialog-content-padding: 30px;
           }

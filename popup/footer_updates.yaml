@@ -71,9 +71,9 @@ browser_mod:
             #           ]]]`
             #         ]]]
             tap_action:
-              action: call-service
-              service: browser_mod.sequence
-              service_data:
+              action: perform-action
+              perform_action: browser_mod.sequence
+              data:
                 sequence:
                   - service: browser_mod.notification
                     data:

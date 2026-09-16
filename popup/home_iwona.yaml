@@ -4,8 +4,6 @@ browser_mod:
   data:
     title: Iwona
     size: NORMAL
-    style: >
-      --popup-max-width: 400px;
     content:
       type: vertical-stack
       cards:
@@ -68,8 +66,8 @@ browser_mod:
                 icon: mdi:volume-high
                 template: icon_name
                 tap_action:
-                  action: call-service
-                  service: script.iwona_find_my_iphone
+                  action: perform-action
+                  perform_action: script.iwona_find_my_iphone
 
         - type: map
           default_zoom: 16

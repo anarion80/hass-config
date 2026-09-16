@@ -73,17 +73,17 @@ browser_mod:
               - type: custom:button-card
                 icon: mdi:volume-minus
                 tap_action:
-                  action: call-service
-                  service: input_number.decrement
-                  service_data:
+                  action: perform-action
+                  perform_action: input_number.decrement
+                  data:
                     entity_id: input_number.monitors_volume
                 template: icon_only
 
               - type: custom:button-card
                 icon: mdi:volume-plus
                 tap_action:
-                  action: call-service
-                  service: input_number.increment
-                  service_data:
+                  action: perform-action
+                  perform_action: input_number.increment
+                  data:
                     entity_id: input_number.monitors_volume
                 template: icon_only

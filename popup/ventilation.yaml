@@ -4,7 +4,6 @@ browser_mod:
   data:
     title: Wentylacja
     style: >
-      --popup-max-width: calc(500px + 500px);
       --ha-card-border-radius: 0;
     size: NORMAL
     card_mod:
@@ -82,8 +81,8 @@ browser_mod:
                   icon: hass:home-export-outline
                   show_state: false
                   tap_action:
-                    action: call-service
-                    service: script.komfovent_set_away
+                    action: perform-action
+                    perform_action: script.komfovent_set_away
                   template:
                     - basic
                   state:
@@ -101,8 +100,8 @@ browser_mod:
                   icon: hass:home-account
                   show_state: false
                   tap_action:
-                    action: call-service
-                    service: script.komfovent_set_normal
+                    action: perform-action
+                    perform_action: script.komfovent_set_normal
                   template:
                     - basic
                   state:
@@ -120,8 +119,8 @@ browser_mod:
                   icon: hass:weather-windy
                   show_state: false
                   tap_action:
-                    action: call-service
-                    service: script.komfovent_set_intensive
+                    action: perform-action
+                    perform_action: script.komfovent_set_intensive
                   template:
                     - basic
                   state:
@@ -139,8 +138,8 @@ browser_mod:
                   icon: hass:fan
                   show_state: false
                   tap_action:
-                    action: call-service
-                    service: script.komfovent_set_boost
+                    action: perform-action
+                    perform_action: script.komfovent_set_boost
                   template:
                     - basic
                   state:

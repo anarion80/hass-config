@@ -5,7 +5,6 @@ browser_mod:
     title: Baterie
     size: NORMAL
     style: >
-      --popup-max-width: calc(500px + 500px);
       --ha-card-border-radius: 0;
     card_mod:
       style:

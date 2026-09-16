@@ -56,9 +56,9 @@ browser_mod:
                     name: Uruchom zraszacz
                     icon: mdi:sprinkler-variant
                     tap_action:
-                      action: call-service
-                      service: script.turn_on
-                      service_data:
+                      action: perform-action
+                      perform_action: script.turn_on
+                      data:
                         entity_id: script.sprinkler
                         variables:
                           minutes: >

@@ -4,7 +4,6 @@ browser_mod:
   data:
     title: Pogoda
     style: >
-      --popup-max-width: calc(500px + 500px);
       --ha-card-border-radius: 0;
     size: NORMAL
     card_mod:

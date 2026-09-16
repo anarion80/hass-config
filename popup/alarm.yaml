@@ -5,7 +5,6 @@ browser_mod:
     title: Alarm
     size: NORMAL
     style: >
-      --popup-max-width: calc(385px + 385px);
       --ha-card-border-radius: 0;
     content:
       type: custom:mod-card

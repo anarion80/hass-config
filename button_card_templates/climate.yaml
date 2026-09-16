@@ -12,9 +12,9 @@ climate_fan_mode:
   variables:
     fan_mode: false
   tap_action:
-    action: call-service
-    service: climate.set_fan_mode
-    service_data:
+    action: perform-action
+    perform_action: climate.set_fan_mode
+    data:
       entity_id: >
         [[[ return !entity || entity.entity_id; ]]]
       fan_mode: >
@@ -32,9 +32,9 @@ climate_fan_mode:
 
 climate_swing_mode:
   tap_action:
-    action: call-service
-    service: climate.set_swing_mode
-    service_data:
+    action: perform-action
+    perform_action: climate.set_swing_mode
+    data:
       entity_id: >
         [[[ return !entity || entity.entity_id; ]]]
       swing_mode: >

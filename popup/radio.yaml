@@ -138,9 +138,9 @@ browser_mod:
               icon_color: >-
                 {{ is_state("input_select.player", "Chromeast Audio") | iif("blue", "disabled") }}
               tap_action:
-                action: call-service
-                service: input_select.select_option
-                service_data:
+                action: perform-action
+                perform_action: input_select.select_option
+                data:
                   option: Chromecast Audio
                 target:
                   entity_id: input_select.player
@@ -164,9 +164,9 @@ browser_mod:
               icon_color: >-
                 {{ is_state("iinput_select.player", "Google Nest") | iif("blue", "disabled") }}
               tap_action:
-                action: call-service
-                service: input_select.select_option
-                service_data:
+                action: perform-action
+                perform_action: input_select.select_option
+                data:
                   option: Google Nest
                 target:
                   entity_id: input_select.player
@@ -218,9 +218,9 @@ browser_mod:
                       icon: >-
                         {{ is_state("input_select.radio_station", "RMF FM") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
+                        action: perform-action
+                        perform_action: input_select.select_option
+                        data:
                           option: RMF FM
                         target:
                           entity_id: input_select.radio_station
@@ -232,9 +232,9 @@ browser_mod:
                       icon: >-
                         {{ is_state("input_select.radio_station", "RMF Classic") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
+                        action: perform-action
+                        perform_action: input_select.select_option
+                        data:
                           option: RMF Classic
                         target:
                           entity_id: input_select.radio_station
@@ -246,9 +246,9 @@ browser_mod:
                       icon: >-
                         {{ is_state("input_select.radio_station", "Rock Radio") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
+                        action: perform-action
+                        perform_action: input_select.select_option
+                        data:
                           option: Rock Radio
                         target:
                           entity_id: input_select.radio_station
@@ -260,9 +260,9 @@ browser_mod:
                       icon: >-
                         {{ is_state("input_select.radio_station", "Antyradio") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
+                        action: perform-action
+                        perform_action: input_select.select_option
+                        data:
                           option: Antyradio
                         target:
                           entity_id: input_select.radio_station
@@ -274,9 +274,9 @@ browser_mod:
                       icon: >-
                         {{ is_state("input_select.radio_station", "Nowy Świat") | iif("mdi:checkbox-blank-circle", "mdi:checkbox-blank-circle-outline") }}
                       tap_action:
-                        action: call-service
-                        service: input_select.select_option
-                        service_data:
+                        action: perform-action
+                        perform_action: input_select.select_option
+                        data:
                           option: Nowy Świat
                         target:
                           entity_id: input_select.radio_station
@@ -287,23 +287,23 @@ browser_mod:
               icon_color: blue
               icon: mdi:play
               tap_action:
-                action: call-service
-                service: script.radio
-                service_data: {}
+                action: perform-action
+                perform_action: script.radio
+                data: {}
                 target: {}
             - type: action
               icon_color: deep-orange
               icon: mdi:stop
               tap_action:
-                action: call-service
-                service: script.radiostop
-                service_data: {}
+                action: perform-action
+                perform_action: script.radiostop
+                data: {}
                 target: {}
             - type: action
               tap_action:
-                action: call-service
-                service: media_player.volume_down
-                service_data: {}
+                action: perform-action
+                perform_action: media_player.volume_down
+                data: {}
                 target:
                   entity_id: >
                     {% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
@@ -324,9 +324,9 @@ browser_mod:
             - type: action
               icon: mdi:volume-plus
               tap_action:
-                action: call-service
-                service: media_player.volume_down
-                service_data: {}
+                action: perform-action
+                perform_action: media_player.volume_down
+                data: {}
                 target:
                   entity_id: >
                     {% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini

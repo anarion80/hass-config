@@ -141,18 +141,48 @@ tablet:
 
   #browser_mod.popup
   dialog-backdrop-filter: blur(2em) brightness(0.75)
+  # Same thing under the variable the current dialog actually reads for the scrim, since
+  # the one above is the legacy spelling (`--ha-dialog-scrim-backdrop-filter` wins over
+  # `--dialog-backdrop-filter` when both are present).
+  ha-dialog-scrim-backdrop-filter: blur(2em) brightness(0.75)
   popup-background-color: rgba(34,38,39,0.9)
-  popup-border-width: 1px
   popup-border-radius: 1em
   popup-padding-x: 0px
   popup-padding-y: 0px
-  popup-min-width: 440px
+  # browser_mod builds the dialog width from `--popup-width`, which it declares itself as
+  # `var(--popup-min-width, 580px)` on the dialog - so this key IS the width. The old
+  # `440px` pinned every popup to 440px whatever it held (content squeezed, then scrolled
+  # inside `--popup-max-height`); this one makes every non-fullscreen popup two thirds of
+  # the screen, with a 600px floor for small screens and `min(..., 95vw)` so it never
+  # leaves the viewport. `fullscreen` popups are untouched: browser_mod declares
+  # `--popup-width: 100vw` (and `--popup-max-width: 100vw`) for that style itself, so the
+  # cameras still fill the screen.
+  #
+  # Note this has to be a plain length. `min(max-content, 66vw)` would be the ideal
+  # "content-sized, capped at two thirds", but CSS math functions take lengths, not the
+  # `max-content` keyword, so that value would be invalid. `fit-content(66vw)` does mean
+  # exactly that and is valid in a `width` - worth trying as
+  # `popup-min-width: fit-content(min(max(66vw, 600px), 95vw))` - but it poisons the
+  # `--width: min(...)` computation that browser_mod's own CSS does around it.
+  popup-min-width: min(max(66vw, 600px), 95vw)
+  popup-width-full: min(max(66vw, 600px), 95vw)
+  popup-max-width: min(max(66vw, 600px), 95vw)
+  # The dialog surface colour, as plain theme variables. `ha-dialog` reads
+  # `--ha-dialog-surface-background`; the current frontend's dialog then passes that into
+  # Web Awesome's `--wa-color-surface-raised`, which is what actually paints the panel -
+  # set both, because which one wins differs between frontend builds and leaving the
+  # surface unpainted is what made the popups see-through against the dashboard.
+  ha-dialog-surface-background: var(--popup-background-color)
+  wa-color-surface-raised: var(--popup-background-color)
+  # `popup-border-width` was dropped: nothing reads it any more.
   tablet-popup-header-color: rgba(200, 218, 222, 0.05)
   tablet-popup-content-padding: 1.1em 2.2em 1.6em 1.5em
   tablet-popup-button-padding: 0.1em 2em 1.8em 2em
   tablet-popup-border-style: 1.5px solid rgba(0,0,0,0.2)
-  tablet-popup-align-dialog: center
-  tablet-popup-margin-top: 0px
+  # `tablet-popup-align-dialog`/`tablet-popup-margin-top` set `--vertical-align-dialog`
+  # (gone) and a 0px top margin. The dialog is centred again below, which is what
+  # `--vertical-align-dialog: center` did and what HA itself defaults to
+  # (`margin-top: auto`); browser_mod's own default is 40px from the top.
 
 ####################################################
 #                                                  #
@@ -235,34 +265,31 @@ tablet:
       overflow: hidden;
     }
 
-  card-mod-more-info-yaml: |
-    .: |
-      :host {
-        --ha-card-border-width: 0;
-      }
+  # browser_mod calls card-mod with the type `more-info` for untagged popups, so this is
+  # where a popup's own dialog chrome is styled. It has to be the plain (string) form:
+  # the `card-mod-more-info-yaml` selector-tree form does not take effect on this
+  # frontend at all. Inspecting an open popup shows its card-mod element with
+  # `_fixed_styles` empty and nothing rendered, i.e. card-mod's YAML->JSON conversion of
+  # the theme block never completes, so neither the rules in it nor the `$` paths are ever
+  # applied - which is also why the old `card-mod-view-yaml` block was inert.
+  #
+  # This CSS lands in the popup element's own shadow root, next to `<ha-dialog>` and
+  # browser_mod's slotted `.title`, which is as far as plain CSS reaches. The dialog
+  # header and the surface panel are inside the dialog's shadow root, so the theme's
+  # header tint and divider would need a working `-yaml` route (or Uix) to come back.
+  card-mod-more-info: |
+    :host {
+      --ha-card-border-width: 0;
+    }
 
-      ha-dialog {
-        --vertical-align-dialog: var(--tablet-popup-align-dialog) !important;
-        --dialog-surface-margin-top: var(--tablet-popup-margin-top) !important;
-      }
-      ha-dialog > div:focus {
-        outline: none;
-      }
-      ha-dialog > div.content > div.container {
-        padding: 0 !important;
-      }
-      ha-dialog-header {
-        font-family: var(--primary-font-family);
-        background-color: var(--tablet-popup-header-color);
-        border-bottom: var(--tablet-popup-border-style);
-      }
+    /* Vertical placement is left to browser_mod (40px from the top on a normal popup).
+       Do not centre it with `--dialog-surface-margin-top: auto`: a popup taller than the
+       viewport then gets pushed up, taking the header - and with it the close button -
+       off the top of the screen. Use `0px` here instead to pin popups flush to the top. */
+    ha-dialog {
+      --ha-dialog-border-radius: var(--popup-border-radius);
+    }
 
-    ha-dialog-header$header: |
-      div.header-bar {
-        padding: 10px 17px 8px 17px;
-      }
-
-    ha-dialog$: |
-      div.mdc-dialog__surface {
-        background-color: var(--popup-background-color) !important;
-      }
+    .title {
+      font-family: var(--primary-font-family);
+    }

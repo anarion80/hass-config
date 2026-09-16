@@ -4,7 +4,6 @@ browser_mod:
   data:
     title: Info
     style: >
-      --popup-max-width: calc(385px + 385px + 385px);
       --ha-card-border-radius: 0;
     card_mod:
       style:
@@ -65,7 +64,11 @@ browser_mod:
       layout_type: custom:grid-layout
       layout:
         margin: 0
-        grid-template-columns: 385px 385px 385px
+        # Was `385px 385px 385px` = 1155px, wider than two thirds of the tablet screen
+        # and impossible to shrink, so this popup could not follow the width cap.
+        # Proportional columns keep the design (three equal columns) and let the grid
+        # fit whatever width the dialog ends up with.
+        grid-template-columns: 1fr 1fr 1fr
         grid-template-rows: 1fr
         grid-template-areas: |
           "hass tablet nas"
@@ -124,16 +127,16 @@ browser_mod:
 
                 - entity: sensor.processor_use_percent
                   tap_action:
-                    action: call-service
-                    service: homeassistant.update_entity
-                    service_data:
+                    action: perform-action
+                    perform_action: homeassistant.update_entity
+                    data:
                       entity_id: sensor.processor_use_percent
 
                 - entity: sensor.memory_use_percent
                   tap_action:
-                    action: call-service
-                    service: homeassistant.update_entity
-                    service_data:
+                    action: perform-action
+                    perform_action: homeassistant.update_entity
+                    data:
                       entity_id: sensor.memory_use_percent
 
             - type: custom:hui-horizontal-stack-card
@@ -144,9 +147,9 @@ browser_mod:
                   confirmation:
                     text: Are you sure you want to restart HA?
                   tap_action:
-                    action: call-service
-                    service: browser_mod.sequence
-                    service_data:
+                    action: perform-action
+                    perform_action: browser_mod.sequence
+                    data:
                       sequence:
                         - service: browser_mod.notification
                           data:
@@ -218,9 +221,9 @@ browser_mod:
                     - entity: sensor.kftrwi_battery_level
                       icon: mdi:battery
                       tap_action:
-                        action: call-service
-                        service: homeassistant.update_entity
-                        service_data:
+                        action: perform-action
+                        perform_action: homeassistant.update_entity
+                        data:
                           entity_id: sensor.kftrwi_battery_level
 
                 - type: custom:bar-card
@@ -240,18 +243,18 @@ browser_mod:
                       name: Pamięć RAM - 2GB
                       icon: mdi:memory
                       tap_action:
-                        action: call-service
-                        service: homeassistant.update_entity
-                        service_data:
+                        action: perform-action
+                        perform_action: homeassistant.update_entity
+                        data:
                           entity_id: sensor.template_fullykiosk_memory
 
                     - entity: sensor.template_fullykiosk_storage
                       name: Pamięć - 32GB
                       icon: mdi:sd
                       tap_action:
-                        action: call-service
-                        service: homeassistant.update_entity
-                        service_data:
+                        action: perform-action
+                        perform_action: homeassistant.update_entity
+                        data:
                           entity_id: sensor.template_fullykiosk_storage
 
             - type: custom:mod-card
@@ -269,9 +272,9 @@ browser_mod:
                     name: Strona główna
                     icon: mdi:reload
                     tap_action:
-                      action: call-service
-                      service: browser_mod.sequence
-                      service_data:
+                      action: perform-action
+                      perform_action: browser_mod.sequence
+                      data:
                         sequence:
                           - service: browser_mod.notification
                             data:
@@ -285,9 +288,9 @@ browser_mod:
                     name: Cała aplikacja
                     icon: mdi:reload
                     tap_action:
-                      action: call-service
-                      service: browser_mod.sequence
-                      service_data:
+                      action: perform-action
+                      perform_action: browser_mod.sequence
+                      data:
                         sequence:
                           - service: browser_mod.notification
                             data:
@@ -342,25 +345,25 @@ browser_mod:
                 - entity: sensor.nas_cpu
                   name: Procesor
                   tap_action:
-                    action: call-service
-                    service: homeassistant.update_entity
-                    service_data:
+                    action: perform-action
+                    perform_action: homeassistant.update_entity
+                    data:
                       entity_id: sensor.nas_cpu
 
                 - entity: sensor.nas_mem
                   name: Pamięć
                   tap_action:
-                    action: call-service
-                    service: homeassistant.update_entity
-                    service_data:
+                    action: perform-action
+                    perform_action: homeassistant.update_entity
+                    data:
                       entity_id: sensor.nas_mem
 
                 - entity: sensor.nas_disk
                   name: Dysk
                   tap_action:
-                    action: call-service
-                    service: homeassistant.update_entity
-                    service_data:
+                    action: perform-action
+                    perform_action: homeassistant.update_entity
+                    data:
                       entity_id: sensor.nas_disk
 
           footer:

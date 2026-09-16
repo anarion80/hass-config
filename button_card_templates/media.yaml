@@ -29,11 +29,11 @@ base_media:
     action: >
       [[[
         return variables.media_on
-            ? 'call-service'
+            ? 'perform-action'
             : 'none';
       ]]]
-    service: media_player.media_play_pause
-    service_data:
+    perform_action: media_player.media_play_pause
+    data:
       entity_id: >
         [[[
           return variables.entity_id;
@@ -199,9 +199,9 @@ conditional_media:
       return variables.translate_unknown;
     ]]]
   tap_action:
-    action: call-service
-    service: media_player.media_play_pause
-    service_data:
+    action: perform-action
+    perform_action: media_player.media_play_pause
+    data:
       entity_id: >
         [[[ return variables.entity_id; ]]]
   styles:

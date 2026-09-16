@@ -5,7 +5,6 @@ browser_mod:
     title: Oczyszczacz powietrza
     size: NORMAL
     style: >
-      --popup-max-width: calc(400px + 400px);
       --ha-card-border-radius: 0;
     card_mod:
       style:
@@ -154,7 +153,7 @@ browser_mod:
                   color: "#c0392b"
 
               tap_action:
-                action: non
+                action: none
             # - type: custom:apexcharts-card
               # graph_span: 48h
               # experimental:
