@@ -191,6 +191,13 @@ tablet:
 ####################################################
 
   card-mod-theme: tablet
+  # Debugging aid from README-themes.md: uncomment to have card-mod log what it does for a
+  # type - and, with a class, for the cards/badges carrying that class. `more-info` is the
+  # type browser_mod uses for untagged popups, so this is how to check whether the popup
+  # styles in `card-mod-more-info` are being applied at all. Uncomment, reload, watch the
+  # browser console, comment out again (it logs for every element).
+  # card-mod-card-debug: true
+  # card-mod-more-info-debug: true
 
   card-mod-root: |
     #view {
@@ -216,8 +223,16 @@ tablet:
   # cards) and the sidebar `#name` breakpoints (they sized with
   # `--markdown-sidebar-font-size`, which this theme never defines).
 
+  # Classes are set on the card *element* in card-mod v4, which is `:host` for the styles
+  # card-mod applies in that element's shadow root (see README-application.md:
+  # `hui-card → <card> (:host, class set here) → shadowRoot (card-mod applies here)`).
+  # So a bare `.header ...` never matches - the class is on the host, not on a descendant.
+  # The dual selector covers both shapes: `:host(.x)` for cards Home Assistant loads, and
+  # `ha-card.x` for cards loaded by a custom card, where v4 also sets the class on
+  # `ha-card` itself (the docs' recommended pattern).
   card-mod-card: |
-    .header .card-header {
+    :host(.header) .card-header,
+    ha-card.header .card-header {
       letter-spacing: 0.005em;
       font-size: 1.6em;
       font-weight: 400;
@@ -226,7 +241,8 @@ tablet:
       cursor: default;
     }
 
-    .content .card-content {
+    :host(.content) .card-content,
+    ha-card.content .card-content {
       padding: var(--tablet-popup-content-padding);
     }
 
@@ -236,16 +252,19 @@ tablet:
       *                                 *
       * * * * * * * * * * * * * * * * * */
 
-    .type-custom-bar-card bar-card-name {
+    :host(.type-custom-bar-card) bar-card-name,
+    ha-card.type-custom-bar-card bar-card-name {
       padding-left: 0.25em;
       letter-spacing: normal;
     }
 
-    .type-custom-bar-card bar-card-iconbar {
+    :host(.type-custom-bar-card) bar-card-iconbar,
+    ha-card.type-custom-bar-card bar-card-iconbar {
       padding-left: 0.23em;
     }
 
-    .type-custom-bar-card bar-card-value {
+    :host(.type-custom-bar-card) bar-card-value,
+    ha-card.type-custom-bar-card bar-card-value {
       font-size: 0.9em;
       font-weight: 400;
       color: #e0e1e1;
@@ -254,11 +273,13 @@ tablet:
       margin-right: auto;
     }
 
-    .type-custom-bar-card bar-card-backgroundbar {
+    :host(.type-custom-bar-card) bar-card-backgroundbar,
+    ha-card.type-custom-bar-card bar-card-backgroundbar {
       background: none;
     }
 
-    .type-custom-bar-card bar-card-background {
+    :host(.type-custom-bar-card) bar-card-background,
+    ha-card.type-custom-bar-card bar-card-background {
       background: radial-gradient(circle, rgba(52, 57, 58, 0.1) 0%, rgba(17, 18, 18, 0.2) 75%);
       box-shadow: inset 0 0 25px #00000045;
       border-radius: 0.3em;
