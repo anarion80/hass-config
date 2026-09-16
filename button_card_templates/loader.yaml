@@ -2,21 +2,29 @@ loader:
   custom_fields:
     loader: >
       <img src="/local/loader.svg" width="100%">
+  # `loader` was a js template living inside `tap_action` (deep evaluated on tap up to
+  # button-card 4.3.0). It is now an extra step of the tap action.
+  #
+  # No `action` key on purpose: button-card concatenates the `actions` arrays of all
+  # the templates of a chain, so this step is appended to the `multi-actions` action
+  # owned by `base` (which provides the actual `toggle`).
   tap_action:
-    loader: >
-      [[[
-        if (entity) {
-            let elt = this.shadowRoot,
-                loader = (id, style, timeout) => {
-                  elt.getElementById(id) && (elt.getElementById(id).style.display = style,
-                    window.setTimeout(() => {
-                      elt.getElementById('loader').style.display = 'none'
-                    }, 20000))
-                };
-            loader('circle', 'none', 'initial'),
-            loader('loader', 'initial', 'none');
-        }
-      ]]]
+    actions:
+      - action: javascript
+        javascript: |
+          [[[
+            if (entity) {
+                let elt = this.shadowRoot,
+                    loader = (id, style, timeout) => {
+                      elt.getElementById(id) && (elt.getElementById(id).style.display = style,
+                        window.setTimeout(() => {
+                          elt.getElementById('loader').style.display = 'none'
+                        }, 20000))
+                    };
+                loader('circle', 'none', 'initial'),
+                loader('loader', 'initial', 'none');
+            }
+          ]]]
   styles:
     custom_fields:
       loader:

@@ -10,8 +10,11 @@ laundry:
         return variables.translate_idle;
       }
     ]]]
+  # `restart` / `cancel` were js templates inside `*_action` (deep evaluated on tap up
+  # to button-card 4.3.0). `action: javascript` is the supported replacement since 5.0.
   tap_action:
-    restart: >
+    action: javascript
+    javascript: >
       [[[
         hass.callService('timer', 'cancel', {
             entity_id: entity.entity_id
@@ -21,7 +24,8 @@ laundry:
         });
       ]]]
   hold_action:
-    cancel: >
+    action: javascript
+    javascript: >
       [[[
         hass.callService('timer', 'cancel', {
             entity_id: entity.entity_id

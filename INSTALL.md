@@ -9,7 +9,7 @@
   * [Swipe Card](https://github.com/bramkragten/swipe-card)
 
 * Manually copy over these files from [anarion80/hass-config](https://github.com/anarion80/hass-config)
-  * `ui-lovelace.yaml`
+  * `ui-lovelace-tablet.yaml`
   * `button_card_templates` folder
   * `popup` folder
   * `themes.yaml`
@@ -22,7 +22,7 @@
   template: !include sidebar.yaml
 
   lovelace:
-    mode: yaml #use ui-lovelace.yaml
+    mode: yaml #use ui-lovelace-tablet.yaml
     resources: #hacs
       - url: /hacsfiles/button-card/button-card.js
         type: module

@@ -21,39 +21,41 @@ basic:
   show_icon: true
   state_display: >
     [[[ if (variables.state === true) return variables.translate_unknown; ]]]
+  # `ui_sound_tablet` / `animation_card` were js templates inside `tap_action` (deep
+  # evaluated on tap up to button-card 4.3.0). They are now... the `sound` option and a
+  # `javascript` step of a `multi-actions` action.
   tap_action:
-    ui_sound_tablet: |
+    action: multi-actions
+    haptic: medium
+    sound: >
       [[[
         let screensaver = states[variables.entity_tablet] === undefined ||
           states[variables.entity_tablet].state;
 
         if (variables.state === 'off' && screensaver === 'on') {
-          hass.callService('media_player', 'play_media', {
-            entity_id: variables.entity_browser_mod,
-            media_content_id: '/local/sound/on.m4a',
-            media_content_type: 'music'
-          });
+          return '/local/sound/on.m4a';
         }
         if (variables.state_on && screensaver === 'off') {
-          hass.callService('media_player', 'play_media', {
-            entity_id: variables.entity_browser_mod,
-            media_content_id: '/local/sound/off.m4a',
-            media_content_type: 'music'
-          });
+          return '/local/sound/off.m4a';
         }
       ]]]
-    animation_card: |
-      [[[
-        let time = 900;
-        this.shadowRoot.getElementById('card').style.animation =
-          `card_bounce ${time}ms cubic-bezier(0.22, 1, 0.36, 1)`,
-          window.setTimeout(() => {
-            this.shadowRoot.getElementById('card').style.animation = 'none'
-          }, time);
-      ]]]
-    action: toggle
-    haptic: medium
+    actions:
+      - action: javascript
+        javascript: |
+          [[[
+            let time = 900;
+            this.shadowRoot.getElementById('card').style.animation =
+              `card_bounce ${time}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+              window.setTimeout(() => {
+                this.shadowRoot.getElementById('card').style.animation = 'none'
+              }, time);
+          ]]]
+      - action: toggle
+  # `haptic` alone is not a valid action anymore (5.0 validates the action config), an
+  # (empty) javascript action is what keeps the long-press swallowed.
   hold_action:
+    action: javascript
+    javascript: '[[[ ]]]'
     haptic: success
 
   styles:
@@ -65,7 +67,7 @@ basic:
       - -webkit-tap-highlight-color: rgba(0,0,0,0)
       - transition: none
       - padding: 10% 9% 9% 10%
-      - --mdc-ripple-color: >
+      - --button-card-ripple-color: >
           [[[
             return variables.state_on
               ? 'rgb(0, 0, 0)'

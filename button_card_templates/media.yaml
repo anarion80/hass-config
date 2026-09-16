@@ -5,8 +5,8 @@
 #################################################
 
 base_media:
-  template:
-    - settings
+  # `base` already pulls in `settings`; listing it here again made button-card merge
+  # that whole template chain twice for every media card.
   state_display: >
     [[[
       const stateDict = {
@@ -99,7 +99,7 @@ media:
       - background-image: >
           [[[
             if (variables.is_youtube) {
-                return `linear-gradient(0deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,0) 100%), url(${states[this._config?.triggers_update].state})`;
+                return `linear-gradient(0deg, rgba(0,0,0,.8) 0%, rgba(0,0,0,0) 100%), url(${states[variables.youtube_watching_sensor].state})`;
             } else {
                 return variables.media_on && variables.entity_picture === undefined
                     ? 'linear-gradient(0deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.8) 100%)'
@@ -222,7 +222,7 @@ conditional_media:
           [[[
             if (entity) {
                 if (variables.is_youtube) {
-                  return `url(${states[this._config?.triggers_update].state})`;
+                  return `url(${states[variables.youtube_watching_sensor].state})`;
                 } else {
                   let data = entity.attributes.data;
                   return data && (data[variables.i].fanart || data[variables.i].poster)

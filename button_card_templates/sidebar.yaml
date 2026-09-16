@@ -24,7 +24,25 @@ sidebar:
       display: flex !important;
     }
     #name {
-      /* padding: 1.8vw 2.5vw 0 var(--custom-layout-card-padding); */
+      /* This lives in the template's own extra_styles, which is injected straight into
+         this card's shadow root, where #name lives - so it cannot be knocked out by a
+         selector change or by HA wrapping stack children in <hui-card>.
+
+         Correcting an earlier comment of mine: the theme ALSO had `#name` rules for
+         this, but that whole `card-mod-view-yaml` block in themes/tablet.yaml never
+         took effect (verified in the browser: the grid titles' h1 computed to HA's
+         default 24px / 28.8px, not the 2.4vw / line-height:0 the block asked for) and
+         has since been removed. So those theme rules were never what you were seeing,
+         and the values below are the only ones.
+
+         - 2vw on both sides, equal.
+         - `0.25vw` top and bottom. It was `1vw`/`0.5vw` (24px per entry, ~64px
+           text-to-text against ~32px in the original dashboard) and then 0, which was
+           too tight. This lands at ~48px.
+         - The clock gets extra top space from its own card in ui-lovelace-tablet.yaml
+           (a `styles.card` padding), because it is the only entry that needs it and a
+           template rule cannot single it out without `:has()`. */
+      padding: 0.25vw 2vw;
       white-space: normal;
       text-align: left;
       font-family: SF Pro Display, Roboto, system-ui;
@@ -41,6 +59,12 @@ sidebar:
       font-size: 1.5em;
       color: rgba(255, 255, 255, 0.8);
     }
+    /* There is deliberately no `#name p:has(.time)` rule here: the clock's markup is a
+       bare `<span class="time">` (see sidebar.yaml's `time` attribute) and the only
+       `<p>` elements are added by this template's name-builder, which the sidebar
+       cards bypass by passing `name:` explicitly. Such a rule never matches, which is
+       why it silently did nothing. The clock's top offset lives on its own card in
+       ui-lovelace-tablet.yaml instead. */
     .time {
       font-size: var(--sidebar-time-font-size);
       font-weight: 300;

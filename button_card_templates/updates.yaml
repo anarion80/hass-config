@@ -10,14 +10,21 @@ base_updates:
     card:
       - cursor: default
       - padding: 0.2em 0 0 0.6em
-      - letter-spacing: var(--mdc-typography-body1-letter-spacing)
+      # `--mdc-typography-body1-letter-spacing` no longer exists; 0.0333em was
+      # its value.
+      - letter-spacing: 0.0333em
+      # button-card >= 5 disables pointer events on cards without an action. These
+      # rows are informational, but the release notes inside them contain links.
+      - pointer-events: auto
+  # `href:` (an option of button-card 1.x) was only kept to make the card clickable.
   tap_action:
-    href:
+    action: none
   extra_styles: |
-    #ripple {
+    ha-ripple {
       display: none;
     }
-    ha-icon {
+    ha-icon,
+    ha-state-icon {
       width: 1.4em;
       vertical-align: 12%;
       opacity: 0.5;
@@ -162,9 +169,9 @@ updates_icon_name:
           ]]]
 
 updates_hacs:
+  # `updates` already includes `settings`
   template:
     - updates
-    - settings
   state_display: |
     [[[
       if (entity) {
@@ -218,9 +225,9 @@ updates_hacs_icon_name:
           ]]]
 
 updates_other:
+  # `updates` already includes `settings`
   template:
     - updates
-    - settings
   state_display: |
     [[[
       if (entity) {
@@ -261,9 +268,9 @@ updates_other_icon_name:
           ]]]
 
 updates_supervisor:
+  # `updates` already includes `settings`
   template:
     - updates
-    - settings
   state_display: |
     [[[
       if (entity) {

@@ -9,7 +9,7 @@ icon_plex:
 icon_ac_cool:
   styles:
     card:
-      - --mdc-ripple-color: >
+      - --button-card-ripple-color: >
           [[[
             return (variables.state === 'heat_cool' || variables.state === 'cool' || variables.state === 'heat' || variables.state === 'dry' || variables.state === 'fan_only') ?
               'rgb(0, 0, 0)' :
@@ -251,7 +251,7 @@ icon_air_purifier:
 icon_ac:
   styles:
     card:
-      - --mdc-ripple-color: >
+      - --button-card-ripple-color: >
           [[[
             return (variables.state === 'heat_cool' || variables.state === 'cool' || variables.state === 'heat' || variables.state === 'dry' || variables.state === 'fan_only') ?
               'rgb(0, 0, 0)' :
@@ -430,7 +430,7 @@ icon_alarm:
   show_state: true
   styles:
     card:
-      - --mdc-ripple-color: >
+      - --button-card-ripple-color: >
           [[[
             return variables.state_on
               ? 'rgb(0, 0, 0)'

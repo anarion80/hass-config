@@ -214,7 +214,7 @@ extra_styles:
               outline: 1px solid transparent;
             }
 
-            #ripple, .js-tilt-glare {
+            ha-ripple, .js-tilt-glare {
               clip-path: inset(0 round var(--button-card-border-radius));
               overflow: hidden;
             }
@@ -248,7 +248,7 @@ extra_styles:
             }
           }
 
-          #ripple, .js-tilt-glare {
+          ha-ripple, .js-tilt-glare {
             clip-path: inset(0 round calc(var(--button-card-border-radius) / 2));
           }
 
@@ -285,7 +285,7 @@ extra_styles:
             --footer-phone: 2.8;
           }
 
-          #ripple, .js-tilt-glare {
+          ha-ripple, .js-tilt-glare {
             border-radius: calc(var(--footer-card-border-radius) - 0.1vw);
             clip-path: inset(0 round calc( var(--button-card-border-radius) - 0.1vw ));
           }

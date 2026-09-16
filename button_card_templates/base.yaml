@@ -14,12 +14,15 @@ base:
       [[[ return !entity || entity.attributes.entity_picture; ]]]
     timeout: >
       [[[ return !entity || Date.now() - Date.parse(entity.last_changed); ]]]
+    # button-card >= 7 discovers the entities used in js templates automatically,
+    # so the old `triggers_update: sensor.youtube_watching` is neither needed nor
+    # read anymore. Keep the sensor in a variable so it stays discoverable.
+    youtube_watching_sensor: sensor.youtube_watching
     is_youtube: >
       [[[
         let is_youtube = entity?.attributes?.app_id === 'com.google.android.youtube',
-            sensor = this?._config?.triggers_update,
             media_title = entity?.attributes?.media_title,
-            watching_title = states[sensor]?.attributes?.title;
+            watching_title = states[variables.youtube_watching_sensor]?.attributes?.title;
         if (is_youtube && media_title === watching_title) {
             return true;
         }
@@ -40,58 +43,71 @@ base:
       if (variables.state === true) return variables.translate_unknown;
       return stateDict[variables.state];
     ]]]
+  # Up to button-card 4.3.0 the whole `*_action` object was deep evaluated on every
+  # tap, which is how the extra js templates below used to run. 5.0 removed that and
+  # now only reads the documented action options, so they are expressed with the
+  # supported actions instead.
   tap_action:
-    ui_sound_tablet: |
+    action: multi-actions
+    haptic: medium
+    # `sound` is a first class action option (since 5.0) and, contrary to `action`,
+    # it is merged into the cards that override the tap action (popups, ...), so the
+    # tablet tap audio feedback keeps working everywhere.
+    sound: >
       [[[
         let screensaver = states[variables.entity_tablet] === undefined ||
             states[variables.entity_tablet].state;
 
-        if (variables.state === 'off' && screensaver === 'off') {
-            hass.callService('media_player', 'play_media', {
-                entity_id: variables.entity_browser_mod,
-                media_content_id: '/local/sound/on.m4a',
-                media_content_type: 'music'
-            });
+        if (screensaver !== 'off') {
+            return;
         }
-        if (variables.state_on && screensaver === 'off') {
-            hass.callService('media_player', 'play_media', {
-                entity_id: variables.entity_browser_mod,
-                media_content_id: '/local/sound/off.m4a',
-                media_content_type: 'music'
-            });
+        if (variables.state === 'off') {
+            return '/local/sound/on.m4a';
+        }
+        if (variables.state_on) {
+            return '/local/sound/off.m4a';
         }
       ]]]
-    card_bounce: |
-      [[[
-        // add animation
-        if (this.getElementsByTagName("style").length === 0) {
-            // phone condition
-            let mq = window.matchMedia('(max-width: 800px)').matches;
-            let style = document.createElement('style');
-            style.innerHTML = `
-                @keyframes card_bounce {
-                    0%   { transform: scale(1); }
-                    10%  { transform: scale(${ mq ? '0.92' : '0.94' }); }
-                    25%  { transform: scale(1); }
-                    30%  { transform: scale(${ mq ? '0.96' : '0.98' }); }
-                    100% { transform: scale(1); }
-                }
-            `;
-            this.appendChild(style);
-        }
-        // duration
-        let duration = 800;
-        // animate
-        this.style.animation = `card_bounce ${duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
-        // reset
-        window.setTimeout(() => { this.style.animation = "none"; }, duration + 100)
-      ]]]
-    action: toggle
-    haptic: medium
+    actions:
+      # visual tap feedback (was the `card_bounce` js hack)
+      - action: javascript
+        javascript: |
+          [[[
+            // add animation
+            if (this.getElementsByTagName("style").length === 0) {
+                // phone condition
+                let mq = window.matchMedia('(max-width: 800px)').matches;
+                let style = document.createElement('style');
+                style.innerHTML = `
+                    @keyframes card_bounce {
+                        0%   { transform: scale(1); }
+                        10%  { transform: scale(${ mq ? '0.92' : '0.94' }); }
+                        25%  { transform: scale(1); }
+                        30%  { transform: scale(${ mq ? '0.96' : '0.98' }); }
+                        100% { transform: scale(1); }
+                    }
+                `;
+                this.appendChild(style);
+            }
+            // duration
+            let duration = 800;
+            // animate
+            this.style.animation = `card_bounce ${duration}ms cubic-bezier(0.22, 1, 0.36, 1)`;
+            // reset
+            window.setTimeout(() => { this.style.animation = "none"; }, duration + 100)
+          ]]]
+      - action: toggle
+  # `action: block` was never a documented action: it only worked because an unknown
+  # action still makes button-card count the card as having a hold/double-tap action,
+  # which is what swallows the gesture instead of falling through to the tap action.
+  # An (empty) javascript action expresses the same thing with supported config.
   double_tap_action:
+    action: javascript
+    javascript: '[[[ ]]]'
     haptic: success
   hold_action:
-    action: block
+    action: javascript
+    javascript: '[[[ ]]]'
   styles:
     grid:
       - grid-template-areas: |
@@ -114,7 +130,8 @@ base:
       - border-width: 0
       - -webkit-tap-highlight-color: rgba(0,0,0,0)
       - transition: none
-      - --mdc-ripple-color: >
+      # `--mdc-ripple-color` was replaced by `--button-card-ripple-color` in 5.0
+      - --button-card-ripple-color: >
           [[[
             return variables.state_on
                 ? 'rgb(0, 0, 0)'

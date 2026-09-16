@@ -32,15 +32,31 @@ footer:
             return `<span style="font-weight: 900;">!</span>`;
         }
       ]]]
+  # The footer is a horizontal-stack and its grid area already spans the same three
+  # columns as the Media/Dom row above, so the row is the right width - the pills
+  # were simply packed to the left because nothing set `justify-content`.
+  #
+  # If HA hands the stack this card's host directly, the host IS the flex item, and
+  # `flex: 1 1 0` below gives all seven an equal share of the row while `width: 100%`
+  # makes the card fill its share. `:host` works from extra_styles because the rule
+  # is injected into this card's own shadow root, where `:host` means the host by
+  # definition. If instead HA wraps stack children in <hui-card> (as it does for
+  # grids), the flex item is that wrapper, which a shadow-root rule cannot reach -
+  # the `card_mod` on the footer stack in ui-lovelace-tablet.yaml covers that case,
+  # acting on the container where the distribution actually happens.
+  extra_styles: |
+    :host {
+      flex: 1 1 0;
+    }
   styles:
     card:
       - color: '#97989c'
-      - width: fit-content
+      - width: 100%
       - border: 0.12vw solid rgba(115, 115, 115, 0.2)
       - transition: none
       - padding: 0 0 0.05vw 0
       - overflow: visible
-      - --mdc-ripple-color: rgba(0, 0, 0, 0.8)
+      - --button-card-ripple-color: rgba(0, 0, 0, 0.8)
     custom_fields:
       notify:
         - display: >
@@ -66,7 +82,13 @@ footer:
         - z-index: 1
   tap_action:
     haptic: medium
+  # `action: block` was never a documented action, it only worked because an unknown
+  # action makes button-card count the card as having that gesture, which swallows it
+  # instead of falling through to the tap action. An (empty) javascript action does the
+  # same with supported config.
   hold_action:
-    action: block
+    action: javascript
+    javascript: '[[[ ]]]'
   double_tap_action:
-    action: block
+    action: javascript
+    javascript: '[[[ ]]]'
