@@ -36,8 +36,7 @@ browser_mod:
                 box-sizing: content-box;
               }
           entities:
-
-            - entity: device_tracker.a2_2b_19_c3_2b_cd
+            - entity: device_tracker.16_50_29_49_06_7e
               name: Ruter
               icon: mdi:wifi
               card_mod:
@@ -46,7 +45,7 @@ browser_mod:
                     color: {{ is_state(config.entity, 'home') | iif('#3182b7', '#3c3f3f') }};
                   }
 
-            - entity: device_tracker.nokia_8_3_5g
+            - entity: device_tracker.moto_g85_5g
               name: Pozycja
               icon: mdi:crosshairs-gps
               card_mod:
@@ -75,7 +74,7 @@ browser_mod:
           default_zoom: 16
           dark_mode: true
           entities:
-            - device_tracker.nokia_8_3_5g
+            - device_tracker.moto_g85_5g
           auto_fit: true
           hours_to_show: 24
           card_mod:

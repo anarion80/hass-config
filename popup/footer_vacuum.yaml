@@ -194,106 +194,187 @@ browser_mod:
                 color: #9da0a2 !important;
                 padding: 0.42em;
               }
-          language: pl
-          entity: vacuum.valetudo_dreame1
-          vacuum_platform: "Hypfer/Valetudo"
-          map_source:
-            # camera: camera.valetudo_dreame1_map_data
-            image: http://192.168.2.13:3001/api/map/image
+          # language: pl
+          # entity: vacuum.valetudo_dreame1
+          # vacuum_platform: "Hypfer/Valetudo"
+          # map_source:
+          #   # camera: camera.valetudo_dreame1_map_data
+          #   image: http://192.168.2.13:3001/api/map/image
+          # # calibration_source:
+          # #   # camera: true
+          # #   identity: true
           # calibration_source:
-          #   # camera: true
-          #   identity: true
+          #   calibration_points:
+          #     - vacuum:
+          #         x: 25500
+          #         y: 25500
+          #       map:
+          #         x: 20
+          #         y: 1
+          #     - vacuum:
+          #         x: 25500
+          #         y: 26500
+          #       map:
+          #         x: 20
+          #         y: 270
+          #     - vacuum:
+          #         x: 26500
+          #         y: 26500
+          #       map:
+          #         x: 242
+          #         y: 270
+          #     - vacuum:
+          #         x: 26500
+          #         y: 25500
+          #       map:
+          #         x: 242
+          #         y: 1
+          # map_locked: true
+          # internal_variables:
+          #   topic: valetudo/dreame1
+          # map_modes:
+          #   - template: vacuum_clean_segment
+          #     variables:
+          #       topic: valetudo/dreame1
+          #     predefined_selections:
+          #       - id: "1"
+          #         outline: [[ 25500, 25500 ], [ 26500, 25500 ], [ 26500, 26500 ], [ 25500, 26500 ]]
+          #         label:
+          #           text: "Salon"
+          #           x: 26000
+          #           y: 26000
+          #           offset_y: 35
+          #         icon:
+          #           name: "mdi:sofa"
+          #           x: 26000
+          #           y: 26000
+          #       - id: "3"
+          #         outline: [[ 26500, 25600 ], [ 27450, 25600 ], [ 27450, 27050 ], [ 26500, 27050 ]]
+          #         label:
+          #           text: "Jadalnia"
+          #           x: 27000
+          #           y: 26000
+          #           offset_y: 35
+          #         icon:
+          #           name: "mdi:silverware-fork-knife"
+          #           x: 27000
+          #           y: 26000
+          #       - id: "4"
+          #         outline: [[ 26650, 27050 ], [ 26900, 27050 ], [ 26900, 27190 ], [ 27230, 27190 ], [ 27230, 27600 ], [ 26650, 27600 ]]
+          #         label:
+          #           text: "Kuchnia"
+          #           x: 26940
+          #           y: 27350
+          #           offset_y: 35
+          #         icon:
+          #           name: "mdi:countertop-outline"
+          #           x: 26940
+          #           y: 27350
+          #   - template: vacuum_clean_zone
+          #   - template: vacuum_clean_zone_predefined
+          #     predefined_selections:
+          #       - id: "5"
+          #         zones: [[26668, 25729, 27183, 26327]]
+          #         label:
+          #           text: "Stół"
+          #           x: 26950
+          #           y: 26000
+          #           offset_y: 35
+          #         icon:
+          #           name: mdi:table-furniture
+          #           x: 26950
+          #           y: 26000
+          #       - id: "6"
+          #         zones: [[26280, 25965, 26481, 26154]]
+          #         label:
+          #           text: "Test"
+          #           x: 26300
+          #           y: 25900
+          #           offset_y: 35
+          #         icon:
+          #           name: mdi:table-furniture
+          #           x: 26300
+          #           y: 25900
+          #   - template: vacuum_goto
+          #   # - template: vacuum_follow_path
+          entity: vacuum.valetudo_dreame1
+          vacuum_platform: Hypfer/Valetudo
+          language: pl
+          map_source:
+            camera: camera.dreame1_camera
           calibration_source:
-            calibration_points:
-              - vacuum:
-                  x: 25500
-                  y: 25500
-                map:
-                  x: 20
-                  y: 1
-              - vacuum:
-                  x: 25500
-                  y: 26500
-                map:
-                  x: 20
-                  y: 270
-              - vacuum:
-                  x: 26500
-                  y: 26500
-                map:
-                  x: 242
-                  y: 270
-              - vacuum:
-                  x: 26500
-                  y: 25500
-                map:
-                  x: 242
-                  y: 1
-          map_locked: true
+            camera: true
           internal_variables:
             topic: valetudo/dreame1
+          two_finger_pan: true
           map_modes:
             - template: vacuum_clean_segment
-              variables:
-                topic: valetudo/dreame1
               predefined_selections:
-                - id: "1"
-                  outline: [[ 25500, 25500 ], [ 26500, 25500 ], [ 26500, 26500 ], [ 25500, 26500 ]]
-                  label:
-                    text: "Salon"
-                    x: 26000
-                    y: 26000
-                    offset_y: 35
+                - id: '1'
                   icon:
-                    name: "mdi:sofa"
-                    x: 26000
-                    y: 26000
-                - id: "3"
-                  outline: [[ 26500, 25600 ], [ 27450, 25600 ], [ 27450, 27050 ], [ 26500, 27050 ]]
+                    name: mdi:sofa
+                    x: 3152
+                    'y': 3435
                   label:
-                    text: "Jadalnia"
-                    x: 27000
-                    y: 26000
+                    text: Salon
+                    x: 3152
+                    'y': 3435
                     offset_y: 35
+                  outline:
+                    - - 2990
+                      - 3215
+                    - - 3315
+                      - 3215
+                    - - 3315
+                      - 3655
+                    - - 2990
+                      - 3655
+                - id: '3'
                   icon:
-                    name: "mdi:silverware-fork-knife"
-                    x: 27000
-                    y: 26000
-                - id: "4"
-                  outline: [[ 26650, 27050 ], [ 26900, 27050 ], [ 26900, 27190 ], [ 27230, 27190 ], [ 27230, 27600 ], [ 26650, 27600 ]]
+                    name: mdi:silverware-fork-knife
+                    x: 3485
+                    'y': 3595
                   label:
-                    text: "Kuchnia"
-                    x: 26940
-                    y: 27350
+                    text: Jadalnia
+                    x: 3485
+                    'y': 3595
                     offset_y: 35
+                  outline:
+                    - - 3370
+                      - 3280
+                    - - 3700
+                      - 3280
+                    - - 3700
+                      - 3900
+                    - - 3280
+                      - 3900
+                    - - 3260
+                      - 3680
+                    - - 3370
+                      - 3680
+                - id: '4'
                   icon:
-                    name: "mdi:countertop-outline"
-                    x: 26940
-                    y: 27350
+                    name: mdi:countertop-outline
+                    x: 3460
+                    'y': 4037
+                  label:
+                    text: Kuchnia
+                    x: 3460
+                    'y': 4037
+                    offset_y: 35
+                  outline:
+                    - - 3400
+                      - 3910
+                    - - 3500
+                      - 3910
+                    - - 3500
+                      - 3970
+                    - - 3630
+                      - 3970
+                    - - 3630
+                      - 4160
+                    - - 3400
+                      - 4160
             - template: vacuum_clean_zone
-            - template: vacuum_clean_zone_predefined
-              predefined_selections:
-                - id: "5"
-                  zones: [[26668, 25729, 27183, 26327]]
-                  label:
-                    text: "Stół"
-                    x: 26950
-                    y: 26000
-                    offset_y: 35
-                  icon:
-                    name: mdi:table-furniture
-                    x: 26950
-                    y: 26000
-                - id: "6"
-                  zones: [[26280, 25965, 26481, 26154]]
-                  label:
-                    text: "Test"
-                    x: 26300
-                    y: 25900
-                    offset_y: 35
-                  icon:
-                    name: mdi:table-furniture
-                    x: 26300
-                    y: 25900
             - template: vacuum_goto
-            # - template: vacuum_follow_path
+          map_locked: true

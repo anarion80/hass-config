@@ -89,11 +89,20 @@ browser_mod:
         #                  Plan lekcji                  #
         #                                               #
         #################################################
+        - type: vertical-stack
+          cards:
+            - type: calendar
+              view_layout:
+                grid-area: plan_lekcji
+              initial_view: dayGridDay
+              entities:
+                - calendar.plan_lekcji_hani
+              title: Plan lekcji Hani
 
-        - type: calendar
-          view_layout:
-            grid-area: plan_lekcji
-          initial_view: dayGridDay
-          entities:
-            - calendar.plan_lekcji_hani
-          title: Plan lekcji Hani
+            - type: calendar
+              view_layout:
+                grid-area: plan_lekcji
+              initial_view: dayGridDay
+              entities:
+                - calendar.plan_lekcji_wojtka
+              title: Plan lekcji Wojtka

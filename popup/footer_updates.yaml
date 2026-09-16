@@ -94,14 +94,40 @@ browser_mod:
           - type: custom:button-card
             entity: sensor.hacs
             name: Otwórz HACS
-            template:
-              - updates_hacs_icon_name
-              - >
-                [[[
-                  return window.navigator.userAgent.match(/iPhone/i)
-                    ? 'hacs_navigate_ios'
-                    : 'hacs_iframe';
-                ]]]
+            # `template` entries are resolved literally, so the js template that used
+            # to sit here always threw "Button-card template '...' is missing!" and
+            # this card rendered as an error card. The platform switch now lives in
+            # the action (`hacs_iframe` / `hacs_navigate_ios` are kept for reference).
+            template: updates_hacs_icon_name
+            tap_action: |
+              [[[
+                const url = `/${hass.panels.hacs.url_path}`;
+                return window.navigator.userAgent.match(/iPhone/i)
+                  ? {
+                      action: 'fire-dom-event',
+                      browser_mod: {
+                        service: 'browser_mod.javascript',
+                        data: {
+                          code: `window.location.href = '${url}';`
+                        }
+                      }
+                    }
+                  : {
+                      action: 'fire-dom-event',
+                      browser_mod: {
+                        service: 'browser_mod.popup',
+                        data: {
+                          title: 'HACS',
+                          size: 'fullscreen',
+                          content: {
+                            type: 'iframe',
+                            aspect_ratio: '16x9.15',
+                            url: `/${hass.panels.hacs.url_path}`
+                          }
+                        }
+                      }
+                    };
+              ]]]
 
           ### supervisor
           - type: custom:button-card
@@ -110,8 +136,6 @@ browser_mod:
 
           - type: custom:button-card
             entity: sensor.supervisor_updates
-            triggers_update:
-              - binary_sensor.template_supervisor_update
             name: Otwórz Supervisor
             icon: mdi:open-in-new
             styles:

@@ -21,9 +21,12 @@ browser_mod:
               card_mod:
                 style:
                   # icon color mute and max
+                  # `--paper-item-icon-color` was removed in HA 2022.12; the icon
+                  # colour of an entity row is now driven by `--state-icon-color`
+                  # (inactive) and `--state-active-color` (active).
                   .: |
                     :host {
-                      --paper-item-icon-color:
+                      --state-icon-color:
                         {% if is_state('binary_sensor.monitors_mute_state', 'on') %}
                           #FFFFFF20
                         {% elif states(config.entity) | int == 0 %}
@@ -33,6 +36,7 @@ browser_mod:
                         {% else %}
                           red
                         {% endif %};
+                      --state-active-color: var(--state-icon-color);
                       }
                   # full width slider
                   hui-generic-entity-row$: |

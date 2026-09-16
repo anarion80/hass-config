@@ -84,8 +84,14 @@ browser_mod:
             #   title: Pogoda
             #   entity: weather.openweathermap
             #   #mode: daily
-            - type: custom:weather-chart-card
+            # - type: custom:weather-chart-card
+            #   entity: weather.openweathermap
+            - show_current: true
+              show_forecast: true
+              type: weather-forecast
               entity: weather.openweathermap
+              forecast_type: daily
+
 
 
             - square: false

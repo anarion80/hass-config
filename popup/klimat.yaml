@@ -96,7 +96,7 @@ browser_mod:
                                   background: var(--card-background-color);
                                 }
 
-                  - entity: sensor.temperatura_salon
+                  - entity: sensor.salon_temperatura
                     name: Temperatura
                   - entity: sensor.komfovent_status_panel_humidity
                     name: Wilgotność
@@ -138,7 +138,7 @@ browser_mod:
                     crosshairs:
                       show: false
                 series:
-                  - entity: sensor.temperatura_salon
+                  - entity: sensor.salon_temperatura
                     name: Temp
                     color: '#385581'
                     type: area

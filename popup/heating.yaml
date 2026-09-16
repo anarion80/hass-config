@@ -131,7 +131,7 @@ browser_mod:
           entities:
             - type: custom:mushroom-climate-card
               entity: climate.gabinet
-              name: Łazienka
+              name: Gabinet
               fill_container: true
               show_temperature_control: true
             - type: custom:mushroom-climate-card
