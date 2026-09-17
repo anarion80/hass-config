@@ -6,13 +6,6 @@ browser_mod:
     # `wide` is a browser_mod style (90vw wide, set on the dialog from inside the popup),
     # so it wins over the theme's two-thirds cap - use the normal style instead.
     size: NORMAL
-    card_mod:
-      style:
-        hui-vertical-stack-card:
-          $: |
-            #root {
-              padding: 1.5em;
-            }
     content:
       type: vertical-stack
       cards:

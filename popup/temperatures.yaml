@@ -9,15 +9,9 @@ browser_mod:
     # outranks browser_mod's own `ha-dialog { --popup-width: ... }` - but it pinned this
     # popup to a fixed 650px. Its `--popup-max-width: 1000px` did nothing: that value
     # only becomes `--ha-dialog-max-width`, which caps the outer `wa-dialog` box, while
-    # the visible surface is sized by `--popup-width`. Both are gone; the theme sizes
-    # every popup to its content now (capped at two thirds of the screen), so this grid
-    # only needs its minimum height and padding.
+    # the visible surface is sized by `--popup-width`. Both are gone; the theme pins
+    # every normal popup's width (two thirds of the screen), while height is content-sized.
     popup_styles:
-      - style: normal
-        styles: |
-          ha-dialog {
-            --popup-min-height: 85vh;
-          }
       - style: wide
         styles: |
           ha-dialog {

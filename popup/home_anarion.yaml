@@ -8,18 +8,11 @@ browser_mod:
       type: vertical-stack
       cards:
         - type: entities
-          card_mod:
-            class: content
           entities:
             - entity: person.anarion
               secondary_info: last-changed
 
         - type: history-graph
-          card_mod:
-            style: |
-              ha-card > div {
-                padding: 0 2em 1em 1.6em !important;
-              }
           entities:
             - entity: person.anarion
           hours_to_show: 24
@@ -27,46 +20,22 @@ browser_mod:
 
         - type: glance
           show_state: false
-          card_mod:
-            style: |
-              ha-card > div {
-                padding: 1em 1.5em 0.2em 1em !important;
-                box-sizing: content-box;
-              }
           entities:
             - entity: device_tracker.16_50_29_49_06_7e
               name: Ruter
               icon: mdi:wifi
-              card_mod:
-                style: &state |
-                  state-badge {
-                    color: {{ is_state(config.entity, 'home') | iif('#3182b7', '#3c3f3f') }};
-                  }
-
             - entity: device_tracker.moto_g85_5g
               name: Pozycja
               icon: mdi:crosshairs-gps
-              card_mod:
-                style: *state
-
-        - type: custom:mod-card
-          card_mod:
-            style:
-              hui-horizontal-stack-card$: |
-                #root {
-                  justify-content: space-evenly !important;
-                  padding: var(--tablet-popup-button-padding);
-                }
-          card:
-            type: horizontal-stack
-            cards:
-              - type: custom:button-card
-                name: Graj dźwięk na telefonie
-                icon: mdi:volume-high
-                template: icon_name
-                tap_action:
-                  action: perform-action
-                  perform_action: script.anarion_find_my_iphone
+        - type: horizontal-stack
+          cards:
+            - type: custom:button-card
+              name: Graj dźwięk na telefonie
+              icon: mdi:volume-high
+              template: icon_name
+              tap_action:
+                action: perform-action
+                perform_action: script.anarion_find_my_iphone
 
         - type: map
           default_zoom: 16
@@ -75,40 +44,3 @@ browser_mod:
             - device_tracker.moto_g85_5g
           auto_fit: true
           hours_to_show: 24
-          card_mod:
-            style:
-              .: |
-                #root {
-                  height: 25em;
-                  padding-bottom: 0 !important;
-                }
-                ha-icon-button {
-                  color: var(--primary-color);
-                  zoom: 140%;
-                  margin-left: -0.2em;
-                }
-                ha-card {
-                  border-top: 2px solid #1a1a1a;
-                  border-radius: 0;
-                  transition: none;
-                  height: 25em !important;
-                }
-              ha-map$: |
-                #map {
-                  background-color: #191919 !important;
-                }
-                .leaflet-control-attribution {
-                  display: none;
-                }
-                .leaflet-bar a {
-                  background-color: rgba(115, 123, 124, 0.2) !important;
-                  color: #9da0a2 !important;
-                  backdrop-filter: blur(0.25em);
-                  zoom: 140%;
-                }
-                a.leaflet-control-zoom-in {
-                  border-bottom: 1px solid #181818 !important;
-                }
-                .leaflet-pane.leaflet-tile-pane {
-                  filter: invert(0.95) grayscale(0.95) contrast(95%);
-                }

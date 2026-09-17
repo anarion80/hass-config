@@ -3,8 +3,15 @@ light:
     - base
     - circle
     - loader
+  # Single lights open HA's native more-info dialog (no late-layout jump). Light
+  # groups keep the browser_mod popup below so each child light gets its own card.
   double_tap_action:
-    action: fire-dom-event
+    action: >
+      [[[
+        return entity && entity.attributes.entity_id
+            ? 'fire-dom-event'
+            : 'more-info';
+      ]]]
     browser_mod:
       service: browser_mod.popup
       data:
@@ -14,11 +21,6 @@ light:
           ]]]
         content:
           type: entities
-          card_mod:
-            style: |
-              #states {
-                padding-top: 0.5em;
-              }
           entities: >
             [[[
               if (entity) {

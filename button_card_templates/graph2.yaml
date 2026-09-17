@@ -39,11 +39,6 @@ graph2:
             color: "#c0392b"
         tap_action:
           action: none
-        card_mod:
-          style: |
-            .header, .value, .measurement {
-              display: none !important;
-            }
     push_graph: >
       [[[
         setTimeout(() => {

@@ -203,12 +203,6 @@ browser_mod:
                     - color: '#795548'
               entities:
                 - type: custom:mushroom-chips-card
-                  card_mod:
-                    style: |
-                      ha-card {
-                        --chip-border-radius: 12px;
-                        --primary-text-color: grey;
-                      }
                   chips:
                     - type: template
                       entity: input_select.radio_station
@@ -312,7 +306,6 @@ browser_mod:
               icon: mdi:volume-minus
               icon_color: grey
             - type: template
-              card_mod: null
               content: >-
                     {% if is_state("input_select.player", "Google Nest") %} {{ state_attr('media_player.nest_mini', 'volume_level') | round(2,default="0") }}
                     {% elif is_state("input_select.player", "Chromecast Audio") %} {{ state_attr('media_player.chromecastaudio9331', 'volume_level') | round(2,default="0") }}

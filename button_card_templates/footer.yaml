@@ -41,9 +41,8 @@ footer:
   # makes the card fill its share. `:host` works from extra_styles because the rule
   # is injected into this card's own shadow root, where `:host` means the host by
   # definition. If instead HA wraps stack children in <hui-card> (as it does for
-  # grids), the flex item is that wrapper, which a shadow-root rule cannot reach -
-  # the `card_mod` on the footer stack in ui-lovelace-tablet.yaml covers that case,
-  # acting on the container where the distribution actually happens.
+  # grids), the flex item is that wrapper, which a shadow-root rule cannot reach;
+  # that case needs a style on the container itself.
   extra_styles: |
     :host {
       flex: 1 1 0;

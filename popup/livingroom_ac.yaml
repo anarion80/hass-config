@@ -4,13 +4,6 @@ browser_mod:
   data:
     title: Klimatyzacja
     size: NORMAL
-    card_mod:
-      style:
-        #popup header
-        # .: |
-        #   div.content {
-        #     margin-top: -24px !important;
-        #   }
     content:
       type: custom:tabbed-card
       styles:
@@ -22,38 +15,6 @@ browser_mod:
             type: vertical-stack
             cards:
               - type: entities
-                card_mod:
-                  class: content
-                  style:
-                    .: |
-                      #states {
-                        padding-top: 1.2em;
-                        padding-bottom: 0em;
-                      }
-                    hui-horizontal-stack-card$: |
-                      h1 {
-                        font-size: 15px !important;
-                        font-weight: 600 !important;
-                        padding: 5px 0 4px 9px !important;
-                        letter-spacing: 0.01em !important;
-                      }
-                      :host {
-                        --climate-margin: 6.5px;
-                      }
-                      #root {
-                        padding: 2px 0px 10px 8px !important;
-                      }
-                      #root > *:nth-child(1) {
-                        margin-right: var(--climate-margin) !important;
-                      }
-                      #root > *:nth-child(2),
-                      #root > *:nth-child(3) {
-                        margin: 0px var(--climate-margin) !important;
-                      }
-                      #root > *:nth-child(4) {
-                        margin-left: var(--climate-margin) !important;
-                        margin-right: -1px !important;
-                      }
                 entities:
 
                   - type: custom:mushroom-climate-card
@@ -67,22 +28,12 @@ browser_mod:
                     primary_info: name
                     secondary_info: state
                     show_temperature_control: false
-                    card_mod:
-                      style: |
-                        mushroom-card {
-                          margin: -5px -13px 0 -4px;
-                        }
                   - type: custom:mushroom-climate-card
                     entity: climate.salon
                     icon_type: none
                     secondary_info: none
                     primary_info: none
                     show_temperature_control: true
-                    card_mod:
-                      style: |
-                        mushroom-card {
-                          margin: -18px -13px -8px -4px
-                        }
                   - type: custom:hui-horizontal-stack-card
                     title: Fan mode
                     cards:
@@ -173,8 +124,6 @@ browser_mod:
             type: vertical-stack
             cards:
               - type: entities
-                card_mod:
-                  class: content
                 entities:
                   - entity: binary_sensor.sovrum_contact_contact
                     name: Okno

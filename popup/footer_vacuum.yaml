@@ -6,23 +6,6 @@ browser_mod:
     timeout: 300000
     style: |
       --primary-color: transparent; /* hide timeout progress */
-    card_mod:
-      style:
-        # card divider border
-        layout-card$grid-layout$: |
-          hui-vertical-stack-card {
-            border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-            border-radius: 0;
-            transition: none;
-          }
-          /* phone */
-          @media screen and (max-width: 800px) {
-            hui-vertical-stack-card {
-              border-right: none;
-              border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-            }
-          }
-
     content:
       type: custom:layout-card
       layout_type: custom:grid-layout
@@ -47,13 +30,6 @@ browser_mod:
           cards:
           - type: entities
             # title: Ogólne
-            card_mod:
-              class: header
-              style: |
-                .card-content {
-                  padding: var(--tablet-popup-content-padding);
-                  padding-bottom: 0;
-                }
             entities:
 
             - entity: vacuum.valetudo_dreame1
@@ -71,128 +47,51 @@ browser_mod:
 
             - type: custom:more-info-card
               entity: vacuum.valetudo_dreame1
-              card_mod:
-                style:
-                  # hide everything but ha-select
-                  $: |
-                    h1 {
-                      display: none !important;
-                    }
-                  .: |
-                    h1, state-card-content {
-                      display: none !important;
-                    }
-                    .card-content {
-                      padding: 1.5em 0 0 0.7em;
-                    }
-                  more-info-vacuum$:
-                    .: |
-                      div.flex-horizontal>div, div:nth-child(2), ha-attributes {
-                        display: none;
-                      }
-                      ha-select {
-                        display: contents;
-                      }
-                    ha-select:
-                      $:
-                        # no icon so remove label inset
-                        .: |
-                          .mdc-floating-label {
-                            inset-inline-start: 0 !important;
-                          }
-                        # fix transparent menu background color
-                        mwc-menu$: |
-                          mwc-list {
-                            background: var(--card-background-color);
-                          }
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                entity: vacuum.valetudo_dreame1
+                icon: mdi:play-pause
+                tap_action:
+                  action: perform-action
+                  perform_action: >
+                    [[[
+                      return `[[[
+                        return entity.state === 'docked' || entity.state === 'paused'
+                          ? 'vacuum.start'
+                          : 'vacuum.pause';
+                      ]]]`
+                    ]]]
+                  data:
+                    entity_id: vacuum.valetudo_dreame1
+                template: icon_only
 
-          - type: custom:mod-card
-            card_mod:
-              style:
-                # horizontal bottom buttons
-                hui-horizontal-stack-card$: |
-                  #root {
-                    justify-content: space-evenly !important;
-                    padding: var(--tablet-popup-button-padding);
-                  }
-            card:
-              type: horizontal-stack
-              cards:
-                - type: custom:button-card
-                  entity: vacuum.valetudo_dreame1
-                  icon: mdi:play-pause
-                  tap_action:
-                    action: perform-action
-                    perform_action: >
-                      [[[
-                        return `[[[
-                          return entity.state === 'docked' || entity.state === 'paused'
-                            ? 'vacuum.start'
-                            : 'vacuum.pause';
-                        ]]]`
-                      ]]]
-                    data:
-                      entity_id: vacuum.valetudo_dreame1
-                  template: icon_only
+              - type: custom:button-card
+                entity: vacuum.valetudo_dreame1
+                icon: mdi:battery-charging
+                tap_action:
+                  action: perform-action
+                  perform_action: vacuum.return_to_base
+                  data:
+                    entity_id: vacuum.valetudo_dreame1
+                template: icon_only
 
-                - type: custom:button-card
-                  entity: vacuum.valetudo_dreame1
-                  icon: mdi:battery-charging
-                  tap_action:
-                    action: perform-action
-                    perform_action: vacuum.return_to_base
-                    data:
-                      entity_id: vacuum.valetudo_dreame1
-                  template: icon_only
-
-                - type: custom:button-card
-                  entity: vacuum.valetudo_dreame1
-                  icon: mdi:robot-vacuum
-                  tap_action:
-                    action: perform-action
-                    perform_action: script.vacuum_clean_segments
-                    # service: script.vacuum_clean_segments_message
-                    # service_data:
-                    #   segments: '{{expand("group.vacuum_rooms") | selectattr("state","eq","on") | map(attribute="attributes.room_id") | list | to_json}}'
-                    target: {}
-                  template: icon_only
+              - type: custom:button-card
+                entity: vacuum.valetudo_dreame1
+                icon: mdi:robot-vacuum
+                tap_action:
+                  action: perform-action
+                  perform_action: script.vacuum_clean_segments
+                  # service: script.vacuum_clean_segments_message
+                  # service_data:
+                  #   segments: '{{expand("group.vacuum_rooms") | selectattr("state","eq","on") | map(attribute="attributes.room_id") | list | to_json}}'
+                  target: {}
+                template: icon_only
 
         - type: custom:xiaomi-vacuum-map-card
           # title: Mapa
           view_layout:
             grid-area: map
-          card_mod:
-            class: header
-            style: |
-              ha-card {
-                --map-card-primary-color: #FFFFFF10;
-                --map-card-secondary-color: none;
-                --map-card-secondary-text-color: #9da0a2;
-                --map-card-zoomer-background: none;
-                --map-card-predefined-rectangle-fill-color: none;
-                --map-card-predefined-rectangle-line-color: none;
-                --map-card-predefined-rectangle-line-color-selected: rgba(255, 255, 255, 0.5);
-                --map-card-predefined-rectangle-fill-color-selected: rgba(42, 124, 194, 0.1);
-                --map-card-predefined-rectangle-icon-background-color-selected: rgb(42, 124, 194);
-                --map-card-internal-big-radius: 0.6em !important;
-              }
-              div.map-wrapper, div.controls-wrapper {
-                padding: var(--tablet-popup-content-padding);
-                padding-top: 12px;
-                padding-bottom: 0;
-                letter-spacing: normal;
-              }
-              div.tiles-wrapper, div.vacuum-controls, #map-zoomer-overlay {
-                display: none;
-              }
-              div.map-controls-wrapper {
-                padding-top: 24px;
-              }
-              paper-button {
-                --mdc-icon-size: 2em;
-                color: #9da0a2 !important;
-                padding: 0.42em;
-              }
           # language: pl
           # entity: vacuum.valetudo_dreame1
           # vacuum_platform: "Hypfer/Valetudo"

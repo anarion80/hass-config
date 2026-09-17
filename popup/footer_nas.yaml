@@ -5,60 +5,6 @@ browser_mod:
     title: Info
     style: >
       --ha-card-border-radius: 0;
-    card_mod:
-      style:
-        layout-card:
-          $grid-layout$:
-            # card divider border
-            # .: |
-            #   #root {
-            #       margin: -24px 0 !important;
-            #   }
-            hui-entities-card:
-              $: |
-                .card-content {
-                  padding: var(--tablet-popup-content-padding);
-                  padding-bottom: 0.8em;
-                }
-                ha-card {
-                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                  border-radius: 0;
-                  transition: none;
-                }
-                /* portrait */
-                @media screen and (max-width: 1200px) {
-                  ha-card {
-                    border-right: none;
-                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                  }
-                }
-              $hui-horizontal-stack-card:
-                # horizontal bottom buttons
-                $: |
-                  #root {
-                    justify-content: space-evenly;
-                    margin-top: 1.7em;
-                    max-width: 82vw; /* iphonex */
-                  }
-            hui-vertical-stack-card:
-              $hui-entities-card:
-                $: |
-                  .card-content {
-                    padding: var(--tablet-popup-content-padding);
-                    padding-bottom: 0.8em;
-                  }
-                  ha-card {
-                    border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                    border-radius: 0;
-                    transition: none;
-                  }
-                  /* portrait */
-                  @media screen and (max-width: 1200px) {
-                    ha-card {
-                      border-right: none;
-                      border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                    }
-                  }
     content:
       type: custom:layout-card
       layout_type: custom:grid-layout
@@ -94,8 +40,6 @@ browser_mod:
             grid-area: hass
           title: Home Assistant
           show_header_toggle: false
-          card_mod:
-            class: header
           entities:
             - entity: sensor.template_hass_version
 
@@ -176,8 +120,6 @@ browser_mod:
           cards:
             - type: entities
               state_color: true
-              card_mod:
-                class: content
               entities:
 
                 - entity: switch.fire_tablet_screensaver
@@ -191,13 +133,6 @@ browser_mod:
                   name: Jasność
                   icon: mdi:brightness-6
                   hide_state: false
-                  card_mod:
-                    style:
-                      # full width slider
-                      hui-generic-entity-row$: |
-                        div {
-                          flex: auto !important;
-                        }
                 - entity: switch.fire_tablet_screensaver
 
                 - entity: binary_sensor.fire_tablet_plugged_in
@@ -257,48 +192,39 @@ browser_mod:
                         data:
                           entity_id: sensor.template_fullykiosk_storage
 
-            - type: custom:mod-card
-              card_mod:
-                style:
-                  hui-horizontal-stack-card$: |
-                    #root {
-                      justify-content: space-evenly !important;
-                      padding: var(--tablet-popup-button-padding);
-                    }
-              card:
-                type: custom:hui-horizontal-stack-card
-                cards:
-                  - type: custom:button-card
-                    name: Strona główna
-                    icon: mdi:reload
-                    tap_action:
-                      action: perform-action
-                      perform_action: browser_mod.sequence
-                      data:
-                        sequence:
-                          - service: browser_mod.notification
-                            data:
-                              message: Wczytuję stronę główną...
-                          - service: button.press
-                            data:
-                              entity_id: button.fire_tablet_load_start_url
-                    template: icon_name
+            - type: custom:hui-horizontal-stack-card
+              cards:
+                - type: custom:button-card
+                  name: Strona główna
+                  icon: mdi:reload
+                  tap_action:
+                    action: perform-action
+                    perform_action: browser_mod.sequence
+                    data:
+                      sequence:
+                        - service: browser_mod.notification
+                          data:
+                            message: Wczytuję stronę główną...
+                        - service: button.press
+                          data:
+                            entity_id: button.fire_tablet_load_start_url
+                  template: icon_name
 
-                  - type: custom:button-card
-                    name: Cała aplikacja
-                    icon: mdi:reload
-                    tap_action:
-                      action: perform-action
-                      perform_action: browser_mod.sequence
-                      data:
-                        sequence:
-                          - service: browser_mod.notification
-                            data:
-                              message: Restartuję Fully Kiosk Browser...
-                          - service: button.press
-                            data:
-                              entity_id: button.fire_tablet_reboot_device
-                    template: icon_name
+                - type: custom:button-card
+                  name: Cała aplikacja
+                  icon: mdi:reload
+                  tap_action:
+                    action: perform-action
+                    perform_action: browser_mod.sequence
+                    data:
+                      sequence:
+                        - service: browser_mod.notification
+                          data:
+                            message: Restartuję Fully Kiosk Browser...
+                        - service: button.press
+                          data:
+                            entity_id: button.fire_tablet_reboot_device
+                  template: icon_name
 
         #################################################
         #                                               #
@@ -311,12 +237,6 @@ browser_mod:
             grid-area: nas
           title: NAS
           show_header_toggle: false
-          card_mod:
-            class: header
-            style: |
-              ha-card {
-                border: none !important;
-              }
           entities:
             #- entity: sensor.template_nas_status
 

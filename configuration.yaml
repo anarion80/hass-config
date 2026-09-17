@@ -20,7 +20,6 @@ lovelace:
       #{ url: /hacsfiles/browser_mod/browser_mod.js,                         type: module },
     #{ url: /hacsfiles/light-entity-card/light-entity-card.js,             type: module },
     #{ url: /hacsfiles/light-popup-card/light-popup-card.js,               type: module },
-    #{ url: /hacsfiles/lovelace-card-mod/card-mod.js,                      type: module },
       {url: /hacsfiles/lovelace-hui-element/hui-element.js, type: module},
       {url: /hacsfiles/lovelace-layout-card/layout-card.js, type: module},
       {
@@ -189,8 +188,10 @@ homeassistant:
     - /config/www
 
 frontend:
-  extra_module_url:
-    - /hacsfiles/lovelace-card-mod/card-mod.js
+  # Lovelace card resources belong in `lovelace.resources` below. Do NOT move them
+  # here to preload them: `extra_module_url` modules are loaded before Home Assistant's
+  # card machinery exists, so cards that expect it throw during boot and the frontend
+  # fails to render at all (which is exactly what happened when this was tried).
   themes: !include_dir_merge_named themes
 template: !include sidebar.yaml
 automation ui: !include automations.yaml

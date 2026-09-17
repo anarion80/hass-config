@@ -133,14 +133,6 @@ temperature_chart:
             return !entity || entity.attributes.friendly_name;
           ]]]
         size: wide
-        card_mod:
-          style:
-            hui-vertical-stack-card:
-              $: |
-                #root {
-                  padding: 1.5em;
-                }
-
         content:
           type: vertical-stack
           cards:

@@ -7,67 +7,37 @@ browser_mod:
     style: >
       --ha-card-border-radius: 0;
     content:
-      type: custom:mod-card
-      card_mod:
-        style:
-          layout-card:
-            $grid-layout:
-              $:
-                # .: |
-                #   #root {
-                #       margin: -24px 0 !important;
-                #   }
-                hui-entities-card:
-                  $: |
-                    .card-content {
-                      padding: var(--tablet-popup-content-padding);
-                      padding-bottom: 0.8em;
-                    }
-                    ha-card {
-                      border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                      border-radius: 0;
-                      transition: none;
-                    }
-                    /* portrait */
-                    @media screen and (max-width: 1200px) {
-                      ha-card {
-                        border-right: none;
-                        border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                      }
-                    }
+      type: custom:layout-card
+      layout_type: custom:grid-layout
+      layout:
+        grid-template-columns: repeat(2, 1fr)
+        grid-template-rows: 1fr
+        grid-template-areas: |
+          "panel entities"
+        mediaquery:
+          #phone
+          "(max-width: 800px)":
+            grid-template-columns: 1fr
+            grid-template-rows: repeat(2, 1fr)
+            grid-template-areas: |
+              "panel"
+              "entities"
+      cards:
 
-      card:
-        type: custom:layout-card
-        layout_type: custom:grid-layout
-        layout:
-          grid-template-columns: repeat(2, 1fr)
-          grid-template-rows: 1fr
-          grid-template-areas: |
-            "panel entities"
-          mediaquery:
-            #phone
-            "(max-width: 800px)":
-              grid-template-columns: 1fr
-              grid-template-rows: repeat(2, 1fr)
-              grid-template-areas: |
-                "panel"
-                "entities"
-        cards:
-
-          - type: alarm-panel
-            view_layout:
-              grid-area: panel
-            states:
-              - arm_home
-              - arm_away
-            entity: alarm_control_panel.glowny_alarm
-          - type: entities
-            view_layout:
-              grid-area: entities
-            entities:
-              - entity: binary_sensor.czujniki_ruchu
-              - entity: binary_sensor.okna
-              - entity: binary_sensor.drzwi
-              - entity: binary_sensor.motion_sensor_1_occupancy
-              - entity: binary_sensor.drzwi_wejsciowe_contact
-              - entity: binary_sensor.drzwi_do_ogrodu_contact
+        - type: alarm-panel
+          view_layout:
+            grid-area: panel
+          states:
+            - arm_home
+            - arm_away
+          entity: alarm_control_panel.glowny_alarm
+        - type: entities
+          view_layout:
+            grid-area: entities
+          entities:
+            - entity: binary_sensor.czujniki_ruchu
+            - entity: binary_sensor.okna
+            - entity: binary_sensor.drzwi
+            - entity: binary_sensor.motion_sensor_1_occupancy
+            - entity: binary_sensor.drzwi_wejsciowe_contact
+            - entity: binary_sensor.drzwi_do_ogrodu_contact

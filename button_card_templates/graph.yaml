@@ -38,11 +38,6 @@ graph:
             color: "#c0392b"
         tap_action:
           action: none
-        card_mod:
-          style: |
-            .header, .value, .measurement {
-              display: none !important;
-            }
     icon: >
       [[[
       if (entity.state != 'unavailable')

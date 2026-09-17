@@ -57,8 +57,7 @@ Conditionally display media players based on the last active device. If nothing 
 
 ## Theme
 
-[card-mod](https://github.com/thomasloven/lovelace-card-mod) is used for the styles in `include/themes.yaml` and each popup also contain styles depending on content.
-I've made a tool to help with css element selectors - [https://matt8707.github.io/card-mod-helper/](https://matt8707.github.io/card-mod-helper/)
+Styling now uses Home Assistant's built-in theme variables plus the native card/dialog styling; `card-mod`/Uix are no longer used.
 
 ![media](https://raw.githubusercontent.com/matt8707/hass-config/master/www/img/cardmod_helper.png)
 

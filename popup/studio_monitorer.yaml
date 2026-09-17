@@ -10,39 +10,12 @@ browser_mod:
 
         - type: entities
           state_color: true
-          card_mod:
-            class: content
           entities:
 
             - entity: switch.gosund_monitors_switch
               secondary_info: last-changed
 
             - type: custom:slider-entity-row
-              card_mod:
-                style:
-                  # icon color mute and max
-                  # `--paper-item-icon-color` was removed in HA 2022.12; the icon
-                  # colour of an entity row is now driven by `--state-icon-color`
-                  # (inactive) and `--state-active-color` (active).
-                  .: |
-                    :host {
-                      --state-icon-color:
-                        {% if is_state('binary_sensor.monitors_mute_state', 'on') %}
-                          #FFFFFF20
-                        {% elif states(config.entity) | int == 0 %}
-                          #9da0a2
-                        {% elif states(config.entity) | int < 60 %}
-                          initial
-                        {% else %}
-                          red
-                        {% endif %};
-                      --state-active-color: var(--state-icon-color);
-                      }
-                  # full width slider
-                  hui-generic-entity-row$: |
-                    div {
-                      flex: auto !important;
-                    }
               entity: input_number.monitors_volume
               hide_state: false
 
@@ -50,40 +23,30 @@ browser_mod:
 
             - entity: automation.monitors_calibration
 
-        - type: custom:mod-card
-          card_mod:
-            style:
-              hui-horizontal-stack-card$: |
-                #root {
-                  justify-content: space-evenly !important;
-                  padding: var(--tablet-popup-button-padding);
-                }
-          card:
+        - type: horizontal-stack
+          cards:
 
-            type: horizontal-stack
-            cards:
+            - type: custom:button-card
+              entity: switch.monitors_mute
+              icon: mdi:volume-mute
+              tap_action:
+                action: toggle
+              template: icon_only
 
-              - type: custom:button-card
-                entity: switch.monitors_mute
-                icon: mdi:volume-mute
-                tap_action:
-                  action: toggle
-                template: icon_only
+            - type: custom:button-card
+              icon: mdi:volume-minus
+              tap_action:
+                action: perform-action
+                perform_action: input_number.decrement
+                data:
+                  entity_id: input_number.monitors_volume
+              template: icon_only
 
-              - type: custom:button-card
-                icon: mdi:volume-minus
-                tap_action:
-                  action: perform-action
-                  perform_action: input_number.decrement
-                  data:
-                    entity_id: input_number.monitors_volume
-                template: icon_only
-
-              - type: custom:button-card
-                icon: mdi:volume-plus
-                tap_action:
-                  action: perform-action
-                  perform_action: input_number.increment
-                  data:
-                    entity_id: input_number.monitors_volume
-                template: icon_only
+            - type: custom:button-card
+              icon: mdi:volume-plus
+              tap_action:
+                action: perform-action
+                perform_action: input_number.increment
+                data:
+                  entity_id: input_number.monitors_volume
+              template: icon_only

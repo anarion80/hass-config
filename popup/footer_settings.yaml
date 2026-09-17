@@ -5,68 +5,35 @@ browser_mod:
     title: Ustawienia
     size: NORMAL
     content:
-      type: custom:mod-card
-      card_mod:
-        style:
-          hui-vertical-stack-card:
-            $hui-entities-card:
-              $: |
-                .card-content {
-                  padding: var(--tablet-popup-content-padding);
-                  padding-bottom: 0.8em;
-                }
-                ha-card {
-                  border-right: 1.5px solid rgba(0, 0, 0, 0.2);
-                  border-radius: 0;
-                  transition: none;
-                }
-                /* portrait */
-                @media screen and (max-width: 1200px) {
-                  ha-card {
-                    border-right: none;
-                    border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
-                  }
-                }
-              $hui-horizontal-stack-card:
-                $: |
-                  #root {
-                    justify-content: space-evenly;
-                    margin-top: 1.7em;
-                    max-width: 82vw; /* iphonex */
-                  }
+      type: vertical-stack
+      cards:
+        - type: entities
+          state_color: true
+          entities:
 
-      card:
-        type: vertical-stack
-        cards:
-          - type: entities
-            state_color: true
-            card_mod:
-              class: content
-            entities:
+            - entity: automation.turn_on_sprinkler
+              name: Automatyczne włączanie zraszacza
 
-              - entity: automation.turn_on_sprinkler
-                name: Automatyczne włączanie zraszacza
+            - type: custom:slider-entity-row
+              entity: input_number.watering_time
 
-              - type: custom:slider-entity-row
-                entity: input_number.watering_time
+            - type: custom:hui-horizontal-stack-card
+              cards:
+                - type: custom:button-card
+                  name: Uruchom zraszacz
+                  icon: mdi:sprinkler-variant
+                  tap_action:
+                    action: perform-action
+                    perform_action: script.turn_on
+                    data:
+                      entity_id: script.sprinkler
+                      variables:
+                        minutes: >
+                          [[[ return states['input_number.watering_time'].state; ]]]
+                  template: icon_name
 
-              - type: custom:hui-horizontal-stack-card
-                cards:
-                  - type: custom:button-card
-                    name: Uruchom zraszacz
-                    icon: mdi:sprinkler-variant
-                    tap_action:
-                      action: perform-action
-                      perform_action: script.turn_on
-                      data:
-                        entity_id: script.sprinkler
-                        variables:
-                          minutes: >
-                            [[[ return states['input_number.watering_time'].state; ]]]
-                    template: icon_name
+            - type: custom:slider-entity-row
+              entity: input_number.heating_time
 
-              - type: custom:slider-entity-row
-                entity: input_number.heating_time
-
-              - entity: input_datetime.heating_start
+            - entity: input_datetime.heating_start
 

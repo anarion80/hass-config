@@ -28,17 +28,8 @@ sidebar:
          this card's shadow root, where #name lives - so it cannot be knocked out by a
          selector change or by HA wrapping stack children in <hui-card>.
 
-         Correcting an earlier comment of mine: the theme ALSO had `#name` rules for
-         this, but that whole `card-mod-view-yaml` block in themes/tablet.yaml never
-         took effect (verified in the browser: the grid titles' h1 computed to HA's
-         default 24px / 28.8px, not the 2.4vw / line-height:0 the block asked for) and
-         has since been removed. So those theme rules were never what you were seeing,
-         and the values below are the only ones.
-
          - 2vw on both sides, equal.
-         - `0.25vw` top and bottom. It was `1vw`/`0.5vw` (24px per entry, ~64px
-           text-to-text against ~32px in the original dashboard) and then 0, which was
-           too tight. This lands at ~48px.
+         - `0.25vw` top and bottom (~48px text-to-text).
          - The clock gets extra top space from its own card in ui-lovelace-tablet.yaml
            (a `styles.card` padding), because it is the only entry that needs it and a
            template rule cannot single it out without `:has()`. */

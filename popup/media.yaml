@@ -5,24 +5,15 @@ browser_mod:
     title: Kontrola mediów
     size: NORMAL
     content:
-      type: custom:mod-card
-      card_mod:
-        style:
-          hui-grid-card$: |
-            #root {
-              grid-gap: 0 !important;
-            }
+      type: grid
+      columns: 1
+      square: false
+      cards:
+        - type: media-control
+          entity: media_player.spotify_anarion
 
-      card:
-        type: grid
-        columns: 1
-        square: false
-        cards:
-          - type: media-control
-            entity: media_player.spotify_anarion
-
-          - type: custom:mini-media-player
-            entity: media_player.spotify_anarion
-            group: false
-            volume_stateless: false
-            toggle_power: true
+        - type: custom:mini-media-player
+          entity: media_player.spotify_anarion
+          group: false
+          volume_stateless: false
+          toggle_power: true

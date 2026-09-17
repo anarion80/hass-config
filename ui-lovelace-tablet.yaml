@@ -111,32 +111,6 @@ views:
       - type: vertical-stack
         view_layout:
           grid-area: sidebar
-        # The tinted panel and the divider on the sidebar's right edge from the original
-        # design. It used to come from the theme's `grid-layout$hui-vertical-stack-card`
-        # rule, which no longer takes effect (see the note in themes/tablet.yaml), so it
-        # sits on the stack itself: card-mod 4 applies a card's `card_mod` in that card
-        # element's shadow root, which is where `#root` is. Values are the originals -
-        # 6% black over the background image, a 0.1vw divider, and `min-height: 100vh` so
-        # the panel reaches the bottom of the screen even where the entries do not. The
-        # phone override keeps the stack untinted there, as the theme did.
-        card_mod:
-          style: |
-            #root {
-              background-color: rgba(0, 0, 0, 0.06);
-              border-radius: 0;
-              border-right: 0.1vw solid rgba(58, 69, 73, 0.2);
-              min-height: 100vh;
-            }
-            /* phone */
-            @media screen and (max-width: 800px) {
-              #root {
-                background-color: rgba(0, 0, 0, 0);
-                border-right: none;
-                min-height: 100%;
-                margin-left: -0.8%;
-                margin-bottom: -6%;
-              }
-            }
         cards:
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -1493,11 +1467,6 @@ views:
         # since been removed (see themes/tablet.yaml). Works whatever the flex items
         # turn out to be (HA wraps stack children in <hui-card>), which is why it
         # complements the `:host { flex: 1 1 0 }` in button_card_templates/footer.yaml.
-        card_mod:
-          style: |
-            #root {
-              justify-content: space-between !important;
-            }
         cards:
           - type: custom:button-card
             name: >

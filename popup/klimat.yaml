@@ -3,13 +3,6 @@ browser_mod:
   service: browser_mod.popup
   data:
     title: Klimat
-    card_mod:
-      style:
-        #popup header
-        # .: |
-        #   div.content {
-        #     margin-top: -24px !important;
-        #   }
     content:
       type: custom:tabbed-card
       styles:
@@ -21,13 +14,6 @@ browser_mod:
             type: vertical-stack
             cards:
               - type: entities
-                card_mod:
-                  class: content
-                  style: |
-                    #states {
-                      padding-top: 1.2em;
-                      padding-bottom: 0em;
-                    }
                 entities:
 
                   - type: custom:mushroom-climate-card
@@ -41,61 +27,14 @@ browser_mod:
                     primary_info: name
                     secondary_info: state
                     show_temperature_control: false
-                    card_mod:
-                      style: |
-                        mushroom-card {
-                          margin: -5px -13px 0 -4px;
-                        }
-
                   - type: custom:mushroom-climate-card
                     entity: climate.living_room_ac
                     icon_type: none
                     secondary_info: none
                     primary_info: none
                     show_temperature_control: true
-                    card_mod:
-                      style: |
-                        mushroom-card {
-                          margin: -18px -13px -8px -4px;
-
                   - type: custom:more-info-card
                     entity: climate.living_room_ac
-                    card_mod:
-                      style:
-                        # hide everything but ha-select
-                        $: |
-                          h1 {
-                            display: none !important;
-                          }
-                        .: |
-                          h1 {
-                            display: none !important;
-                          }
-                          .card-content {
-                            padding: 0.3em 0 0.6em 0.6em;
-                          }
-                        state-card-climate$: |
-                          div {
-                            display: none !important;
-                          }
-                        more-info-climate$:
-                          .: |
-                            .container-temperature, .container-hvac_modes {
-                              display: none;
-                            }
-                          ha-select:
-                            $:
-                              # no icon so reduce label inset
-                              .: |
-                                .mdc-floating-label {
-                                  inset-inline-start: 4px !important;
-                                }
-                              # fix transparent menu background color
-                              mwc-menu$: |
-                                mwc-list {
-                                  background: var(--card-background-color);
-                                }
-
                   - entity: sensor.salon_temperatura
                     name: Temperatura
                   - entity: sensor.komfovent_status_panel_humidity
@@ -152,8 +91,6 @@ browser_mod:
             type: vertical-stack
             cards:
               - type: entities
-                card_mod:
-                  class: content
                 entities:
                   - entity: binary_sensor.drzwi_wejsciowe_contact
                     name: Drzwi wejściowe

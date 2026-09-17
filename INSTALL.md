@@ -2,23 +2,23 @@
 
 * Install and configure [HACS](https://hacs.xyz/)
 
-* Within HACS Frontend add the following repositories
-  * [button-card](https://github.com/custom-cards/button-card)
-  * [card-mod](https://github.com/thomasloven/lovelace-card-mod)
-  * [layout-card](https://github.com/thomasloven/lovelace-layout-card)
-  * [Swipe Card](https://github.com/bramkragten/swipe-card)
+* Within HACS install the following
+  * [button-card](https://github.com/custom-cards/button-card) (Frontend)
+  * [layout-card](https://github.com/thomasloven/lovelace-layout-card) (Frontend)
+  * [Swipe Card](https://github.com/bramkragten/swipe-card) (Frontend)
 
 * Manually copy over these files from [anarion80/hass-config](https://github.com/anarion80/hass-config)
   * `ui-lovelace-tablet.yaml`
   * `button_card_templates` folder
   * `popup` folder
-  * `themes.yaml`
+  * `themes` folder
   * `sidebar.yaml`
 
 * In `configuration.yaml` add lines [[docs](https://www.home-assistant.io/lovelace/dashboards/)]
 
   ```yaml
-  frontend: !include themes.yaml
+  frontend:
+    themes: !include_dir_merge_named themes
   template: !include sidebar.yaml
 
   lovelace:
