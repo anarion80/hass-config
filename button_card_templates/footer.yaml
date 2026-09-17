@@ -38,11 +38,11 @@ footer:
   extra_styles: |
     :host {
       flex: 1 1 0;
+      width: 100%;
     }
   styles:
     card:
       - color: '#97989c'
-      - width: 100%
       - border: 0.12vw solid rgba(115, 115, 115, 0.2)
       - transition: none
       - padding: 0 0 0.05vw 0

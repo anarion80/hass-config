@@ -1,0 +1,59 @@
+action: fire-dom-event
+browser_mod:
+  service: browser_mod.popup
+  data:
+    title: Plan lekcji
+    size: NORMAL
+    content:
+      type: custom:tabbed-card
+      styles:
+        --mdc-theme-primary: var(--primary-text-color)
+        --mdc-tab-text-label-color-default: rgba(var(--rgb-primary-text-color), 0.8)
+        --mdc-typography-button-font-size: 14px
+      tabs:
+        - card:
+            type: custom:timetable-card
+            entities:
+              - id: calendar.ical_plan_lekcji_hani
+            show_location: false
+            show_notes: false
+            show_calendar: false
+            show_now_line: false
+          attributes:
+            label: Hania
+        - card:
+            type: custom:timetable-card
+            entities:
+              - id: calendar.ical_plan_lekcji_wojtka
+            show_location: false
+            show_notes: false
+            show_calendar: false
+            show_now_line: false
+          attributes:
+            label: Wojtek
+        - card:
+            type: custom:atomic-calendar-revive
+            name: Kalendarz
+            entities:
+              - entity: calendar.anarion_dunedain
+                titleColor: red
+              - entity: calendar.iwona_migalska_gmail_com
+                titleColor: blue
+              - entity: calendar.holidays_in_poland
+                titleColor: tellow
+            enableModeChange: true
+            firstDayOfWeek: 1
+            showDate: true
+            sortByStartTime: false
+            showCurrentEventLine: false
+            showProgressBar: true
+            showMonth: false
+            showWeekDay: true
+            showDescription: true
+            disableLocationLink: false
+            showNoEventsForToday: false
+            showFullDayProgress: false
+            showEventIcon: false
+            maxDaysToShow: 30
+          attributes:
+            label: Ogólne

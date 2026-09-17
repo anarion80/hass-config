@@ -206,7 +206,10 @@ views:
                   return entity?.attributes?.calendar;
                   ]]]
             template: sidebar
-            tap_action: !include popup/home_calendar.yaml
+            tap_action: !include popup/sidebar_calendar_timetable.yaml
+            # Keep the previous calendar popup reachable on double tap while you
+            # compare it with the timetable popup.
+            double_tap_action: !include popup/home_calendar.yaml
             # `style:` was a Lovelace card option dropped by Home Assistant long ago and
             # it is not read anymore. button-card's own `extra_styles` does the same and
             # (since 7.0) is merged on top of the `sidebar` template's `extra_styles`.
@@ -1456,15 +1459,19 @@ views:
       #       tap_action:
       #         !include popup/covid19.yaml
 
-      - type: grid
-        columns: 7
-        square: false
+      - type: custom:layout-card
+        layout_type: custom:grid-layout
         view_layout:
           grid-area: footer
-        # A native grid gives the seven footer pills an equal share of the row, so they
-        # span the same width as the Media/Dom row above without the old card_mod
-        # `justify-content` rule. `square: false` keeps the row from being stretched
-        # vertically.
+        layout:
+          margin: 0
+          place-items: stretch
+          grid-column-gap: 1vw
+          grid-template-columns: repeat(7, minmax(0, 1fr))
+          grid-template-rows: auto
+        # layout-card places its children directly in the grid, so the seven footer
+        # pills get equal, full-width columns without the card_mod `justify-content`
+        # rule that the old horizontal-stack needed.
         cards:
           - type: custom:button-card
             name: >

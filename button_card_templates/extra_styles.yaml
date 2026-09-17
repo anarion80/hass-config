@@ -283,6 +283,8 @@ extra_styles:
           :host {
             --footer-portrait: 1.4;
             --footer-phone: 2.8;
+            width: 100%;
+            container-type: inline-size;
           }
 
           ha-ripple, .js-tilt-glare {
@@ -291,9 +293,13 @@ extra_styles:
           }
 
           #name {
-            font-size: var(--footer-card-font-size);
+            font-size: min(var(--footer-card-font-size), 8cqw);
             padding: var(--footer-card-padding-v) var(--footer-card-padding-h);
             letter-spacing: 0.05vw;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
           }
 
           ha-icon {
@@ -322,7 +328,7 @@ extra_styles:
           /* portrait */
           @media screen and (max-width: 1200px) {
             #name {
-              font-size: calc(var(--footer-card-font-size) * var(--footer-portrait));
+              font-size: min(calc(var(--footer-card-font-size) * var(--footer-portrait)), 8cqw);
               padding: calc(var(--footer-card-padding-v) * var(--footer-portrait)) calc(var(--footer-card-padding-h) * var(--footer-portrait));
             }
 
@@ -346,7 +352,7 @@ extra_styles:
           /* phone */
           @media screen and (max-width: 800px) {
             #name {
-              font-size: calc(var(--footer-card-font-size) * var(--footer-phone));
+              font-size: min(calc(var(--footer-card-font-size) * var(--footer-phone)), 8cqw);
               padding: calc(var(--footer-card-padding-v) * var(--footer-phone)) calc(var(--footer-card-padding-h) * var(--footer-phone));
               letter-spacing: 0.05vw;
             }
