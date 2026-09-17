@@ -83,7 +83,8 @@ browser_mod:
                     data:
                       entity_id: sensor.memory_use_percent
 
-            - type: custom:hui-horizontal-stack-card
+            - type: custom:hui-element
+              card_type: horizontal-stack
               cards:
                 - type: custom:button-card
                   name: Home Assistant
@@ -192,7 +193,7 @@ browser_mod:
                         data:
                           entity_id: sensor.template_fullykiosk_storage
 
-            - type: custom:hui-horizontal-stack-card
+            - type: horizontal-stack
               cards:
                 - type: custom:button-card
                   name: Strona główna

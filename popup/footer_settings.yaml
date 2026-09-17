@@ -17,7 +17,8 @@ browser_mod:
             - type: custom:slider-entity-row
               entity: input_number.watering_time
 
-            - type: custom:hui-horizontal-stack-card
+            - type: custom:hui-element
+              card_type: horizontal-stack
               cards:
                 - type: custom:button-card
                   name: Uruchom zraszacz

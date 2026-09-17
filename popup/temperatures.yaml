@@ -25,8 +25,8 @@ browser_mod:
           }
     content:
       type: grid
-      columns: 4
-      square: true
+      columns: 6
+      square: false
       cards:
         - type: custom:button-card
           entity: sensor.temperatura_salon
@@ -42,15 +42,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_lazienka_dol
@@ -66,15 +57,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_wejscie
@@ -90,15 +72,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_gabinet
@@ -114,15 +87,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_lazienka
@@ -138,15 +102,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_hania
@@ -162,15 +117,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_wojtek
@@ -186,15 +132,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_sypialnia
@@ -210,15 +147,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_piwnica
@@ -234,15 +162,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_wodomierz
@@ -258,15 +177,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_schowek
@@ -282,15 +192,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_kotlownia
@@ -306,15 +207,6 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
 
         - type: custom:button-card
           entity: sensor.temperatura_garaz
@@ -330,12 +222,3 @@ browser_mod:
             - icon_temperature
             - temperature_chart
             - graph
-          styles:
-            name:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)
-            state:
-              - font-size: 1vw
-              - font-weight: var(--button-card-font-weight)
-              - letter-spacing: var(--button-card-letter-spacing)

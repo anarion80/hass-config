@@ -34,7 +34,8 @@ browser_mod:
                     secondary_info: none
                     primary_info: none
                     show_temperature_control: true
-                  - type: custom:hui-horizontal-stack-card
+                  - type: custom:hui-element
+                    card_type: horizontal-stack
                     title: Fan mode
                     cards:
 
