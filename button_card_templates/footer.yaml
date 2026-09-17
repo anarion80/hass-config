@@ -32,17 +32,9 @@ footer:
             return `<span style="font-weight: 900;">!</span>`;
         }
       ]]]
-  # The footer is a horizontal-stack and its grid area already spans the same three
-  # columns as the Media/Dom row above, so the row is the right width - the pills
-  # were simply packed to the left because nothing set `justify-content`.
-  #
-  # If HA hands the stack this card's host directly, the host IS the flex item, and
-  # `flex: 1 1 0` below gives all seven an equal share of the row while `width: 100%`
-  # makes the card fill its share. `:host` works from extra_styles because the rule
-  # is injected into this card's own shadow root, where `:host` means the host by
-  # definition. If instead HA wraps stack children in <hui-card> (as it does for
-  # grids), the flex item is that wrapper, which a shadow-root rule cannot reach;
-  # that case needs a style on the container itself.
+  # The footer is a native `type: grid` with `columns: 7`, so each pill gets an
+  # equal share of the row; `styles.card.width: 100%` makes the button-card fill
+  # its grid cell.
   extra_styles: |
     :host {
       flex: 1 1 0;

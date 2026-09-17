@@ -1456,17 +1456,15 @@ views:
       #       tap_action:
       #         !include popup/covid19.yaml
 
-      - type: horizontal-stack
+      - type: grid
+        columns: 7
+        square: false
         view_layout:
           grid-area: footer
-        # The footer spans the same three columns as the Media/Dom row above, so its
-        # row is already the right width - but nothing set `justify-content`, which
-        # computes to `normal` (= flex-start), so the pills packed to the left. This
-        # spreads them across the full row. Set here rather than in the theme's
-        # `grid-layout$hui-horizontal-stack-card` rule, which never took effect and has
-        # since been removed (see themes/tablet.yaml). Works whatever the flex items
-        # turn out to be (HA wraps stack children in <hui-card>), which is why it
-        # complements the `:host { flex: 1 1 0 }` in button_card_templates/footer.yaml.
+        # A native grid gives the seven footer pills an equal share of the row, so they
+        # span the same width as the Media/Dom row above without the old card_mod
+        # `justify-content` rule. `square: false` keeps the row from being stretched
+        # vertically.
         cards:
           - type: custom:button-card
             name: >
