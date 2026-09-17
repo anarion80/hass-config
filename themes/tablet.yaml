@@ -102,8 +102,10 @@ tablet:
   ha-card-header-font-family: var(--primary-font-family)
   # Section titles. Every `type: grid` / stack card renders its title as
   # `h1.card-header` inside `hui-stack-card`'s shadow root. These theme keys
-  # set the title size and colour directly.
-  ha-card-header-font-size: max(2.4vw, 22px)
+  # set the title size and colour directly. The old 2.4vw looked right for the
+  # dashboard section titles but made popup card headers ("Czujniki", etc.) too
+  # large, so cap the size at 24px while keeping a vw ramp on the tablet.
+  ha-card-header-font-size: clamp(18px, 1.6vw, 24px)
   ha-card-header-color: rgba(255, 255, 255, 0.8)
 
   #custom variables
