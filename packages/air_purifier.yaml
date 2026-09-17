@@ -1,54 +1,53 @@
 automation:
-  - id: '1613824435200'
+  - id: "1613824435200"
     alias: Air Purifier On
-    description: ''
+    description: ""
     trigger:
-    - above: '25'
-      for: 0:05:00
-      platform: numeric_state
-      entity_id: sensor.airpurifier_pm2_5
+      - above: "25"
+        for: 0:05:00
+        trigger: numeric_state
+        entity_id: sensor.airpurifier_pm2_5
     condition:
       and:
         - condition: time
-          after: '9:00'
-          before: '23:00'
+          after: "09:00:00"
+          before: "23:00:00"
         - condition: zone
           entity_id: person.anarion
           zone: zone.home
         - condition: state
           entity_id: fan.zhimi_airpurifier_v7
-          state: 'off'
+          state: "off"
     action:
-    - service: notify.pushover
-      data:
-        message: AQI powyżej {{ states('sensor.airpurifier_pm2_5') }}, włączam oczyszczacz!
-    - service: fan.turn_on
-      data:
-        preset_mode: Auto
-      target:
+      - action: notify.pushover
+        data:
+          message: AQI powyżej {{ states('sensor.airpurifier_pm2_5') }}, włączam oczyszczacz!
+      - action: fan.turn_on
+        data:
+          preset_mode: Auto
+        target:
+          entity_id: fan.zhimi_airpurifier_v7
+    mode: single
+  - id: "1613826008700"
+    alias: Air Purifier Off
+    description: ""
+    trigger:
+      - trigger: numeric_state
+        below: "20"
+        for: 0:10:00
+        entity_id: sensor.airpurifier_pm2_5
+    condition:
+      - condition: state
+        entity_id: fan.zhimi_airpurifier_v7
+        state: "on"
+    action:
+      - action: notify.pushover
+        data:
+          message: AQI jest w normie, wyłączam oczyszczacz!
+      - action: fan.turn_off
+        data: {}
         entity_id: fan.zhimi_airpurifier_v7
     mode: single
-  - id: '1613826008700'
-    alias: Air Purifier Off
-    description: ''
-    trigger:
-    - platform: numeric_state
-      below: '20'
-      for: 0:10:00
-      entity_id: sensor.airpurifier_pm2_5
-    condition:
-    - condition: state
-      entity_id: fan.zhimi_airpurifier_v7
-      state: 'on'
-    action:
-    - service: notify.pushover
-      data:
-        message: AQI jest w normie, wyłączam oczyszczacz!
-    - service: fan.turn_off
-      data: {}
-      entity_id: fan.zhimi_airpurifier_v7
-    mode: single
-
 
 input_number:
   air_purifier_speed:
@@ -56,7 +55,7 @@ input_number:
     initial: 0
     min: 0
     max: 100
-    unit_of_measurement: '%'
+    unit_of_measurement: "%"
 
 input_select:
   air_purifier_speed:
@@ -66,27 +65,34 @@ input_select:
       - Silent
       - Favorite
 
-
 script:
   aqi_level_tts:
     alias: AQI level TTS
     sequence:
-    - service: tts.google_say
-      data:
-        message: Poziom zanieczyszczeń w salonie to {{ state_attr('fan.zhimi_airpurifier_v7','aqi') }}
-        entity_id: media_player.nest_mini
-        language: pl
+      - action: tts.google_say
+        data:
+          message: Poziom zanieczyszczeń w salonie to {{ state_attr('fan.zhimi_airpurifier_v7','aqi') }}
+          entity_id: media_player.nest_mini
+          language: pl
     mode: single
     icon: mdi:blur
 
+template:
+  - sensor:
+      - unique_id: room_aqi
+        unit_of_measurement: µg/m³
+        default_entity_id: sensor.room_aqi
+        name: Living Room AQI
+        state: "{{ states('sensor.airpurifier_pm2_5') | int(default=0) }}"
+
 sensor:
-  - platform: template
-    sensors:
-      room_aqi:
-        unique_id: "room_aqi"
-        value_template: "{{ states('sensor.airpurifier_pm2_5') | int(default=0) }}"
-        unit_of_measurement: "µg/m³"
-        friendly_name: Living Room AQI
+  # - platform: template
+  #   sensors:
+  #     room_aqi:
+  #       unique_id: "room_aqi"
+  #       value_template: "{{ states('sensor.airpurifier_pm2_5') | int(default=0) }}"
+  #       unit_of_measurement: "µg/m³"
+  #       friendly_name: Living Room AQI
 
   - platform: filter
     name: "Smoothed Living Room AQI"
@@ -106,11 +112,10 @@ sensor:
     entity_id: sensor.airpurifier_temperature
     filters:
       # - filter: outlier
-        # window_size: 4
-        # radius: 2.0
+      # window_size: 4
+      # radius: 2.0
       # - filter: lowpass
-        # time_constant: 10
+      # time_constant: 10
       - filter: time_simple_moving_average
         window_size: "00:05"
         precision: 2
-

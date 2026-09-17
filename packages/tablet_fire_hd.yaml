@@ -1,184 +1,202 @@
-automation:
-  - alias: homeassistant_start
-    id: '7426848686945'
-    trigger:
-      - platform: homeassistant
-        event: start
-    action:
-      - service: button.press
-        data:
-          entity_id: button.fire_tablet_restart_browser
+# automation:
+#   - alias: homeassistant_start
+#     id: "7426848686945"
+#     trigger:
+#       - trigger: homeassistant
+#         event: start
+#     action:
+#       - action: button.press
+#         data:
+#           entity_id: button.fire_tablet_restart_browser
+#
+# - alias: fullykiosk_screensaver
+#   id: '9452750674803'
+#   mode: restart
+#   trigger:
+#     platform: state
+#     entity_id: binary_sensor.amazon_tablet
+#     from: 'off'
+#     to: 'on'
+#   action:
+#     if: >
+#       {{ 'binary_sensor.amazon_tablet' in trigger.entity_id }}
+#     then:
+#       - action: switch.turn_off
+#         entity_id: switch.fire_tablet_screensaver
+#       # - action: light.turn_on
+#       #   data:
+#       #     entity_id: light.fire_tablet_screen
+#       #     brightness_pct: >
+#       #       {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
+#       - action: number.set_value
+#         target:
+#           entity_id: number.fire_tablet_screensaver_brightness
+#         data:
+#           value: >
+#             {% set day_percent = 90 %}
+#             {% set night_percent = 65 %}
+#             {% set day_convert = ((day_percent * 255) / 100) | int %}
+#             {% set night_convert = ((night_percent * 255) / 100) | int %}
+#             {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
+#     else:
+#       - action: switch.turn_on
+#         entity_id: switch.fire_tablet_screensaver
+#       - delay:
+#           minutes: 15
+#       - action: browser_mod.close_popup
+#         data:
+#           browser_id: amazon_tablet
 
-  # - alias: fullykiosk_screensaver
-  #   id: '9452750674803'
-  #   mode: restart
-  #   trigger:
-  #     platform: state
-  #     entity_id: binary_sensor.amazon_tablet
-  #     from: 'off'
-  #     to: 'on'
-  #   action:
-  #     if: >
-  #       {{ 'binary_sensor.amazon_tablet' in trigger.entity_id }}
-  #     then:
-  #       - service: switch.turn_off
-  #         entity_id: switch.fire_tablet_screensaver
-  #       # - service: light.turn_on
-  #       #   data:
-  #       #     entity_id: light.fire_tablet_screen
-  #       #     brightness_pct: >
-  #       #       {{ is_state('sun.sun', 'above_horizon') | iif(90, 65) }}
-  #       - service: number.set_value
-  #         target:
-  #           entity_id: number.fire_tablet_screensaver_brightness
-  #         data:
-  #           value: >
-  #             {% set day_percent = 90 %}
-  #             {% set night_percent = 65 %}
-  #             {% set day_convert = ((day_percent * 255) / 100) | int %}
-  #             {% set night_convert = ((night_percent * 255) / 100) | int %}
-  #             {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
-  #     else:
-  #       - service: switch.turn_on
-  #         entity_id: switch.fire_tablet_screensaver
-  #       - delay:
-  #           minutes: 15
-  #       - service: browser_mod.close_popup
-  #         data:
-  #           browser_id: amazon_tablet
+# - id: '1634040402000'
+#   alias: fullykiosk_disable_screen
+#   description: Turn off tablet screen after time-out
+#   trigger:
+#   - platform: state
+#     entity_id: light.fire_tablet_screen
+#     to: 'on'
+#     for:
+#       hours: 0
+#       minutes: 2
+#       seconds: 0
+#       milliseconds: 0
+#   condition: []
+#   action:
+#   - action: media_player.play_media
+#     target:
+#       entity_id: media_player.amazon_tablet
+#     data:
+#       media_content_id: /local/sound/off.m4a
+#       media_content_type: music
+#   - action: light.turn_off
+#     target:
+#       entity_id: light.fire_tablet_screen
+#   - action: browser_mod.close_popup
+#   #   mode: restart
+#
+#   - id: "1634040402001"
+#     alias: fullykiosk_close_popups_disable_screen
+#     description: Close popups when screensaver is enabled
+#     trigger:
+#       - trigger: state
+#         entity_id: switch.fire_tablet_screensaver
+#         to: "on"
+#     condition: []
+#     action:
+#       - action: browser_mod.close_popup
+#     mode: restart
 
-  # - id: '1634040402000'
-  #   alias: fullykiosk_disable_screen
-  #   description: Turn off tablet screen after time-out
-  #   trigger:
-  #   - platform: state
-  #     entity_id: light.fire_tablet_screen
-  #     to: 'on'
-  #     for:
-  #       hours: 0
-  #       minutes: 2
-  #       seconds: 0
-  #       milliseconds: 0
-  #   condition: []
-  #   action:
-  #   - service: media_player.play_media
-  #     target:
-  #       entity_id: media_player.amazon_tablet
-  #     data:
-  #       media_content_id: /local/sound/off.m4a
-  #       media_content_type: music
-  #   - service: light.turn_off
-  #     target:
-  #       entity_id: light.fire_tablet_screen
-  #   - service: browser_mod.close_popup
-  #   mode: restart
+# - id: "1634040402002"
+#   alias: close ha-fusion popup
+#   trigger:
+#     - trigger: state
+#       entity_id: switch.fire_tablet_screensaver
+#       to: "on"
+#   action:
+#     - event: HA_FUSION
+#       event_data:
+#         event: close_popup
+#     - delay:
+#         seconds: 4
+#     - action: fully_kiosk.load_url
+#       data:
+#         url: "http://192.168.2.13:5052/?menu=false"
+#       target:
+#         device_id: 7f638c5d2109f57bc81656e358e23254
+#   mode: restart
 
+# - id: '1634041571300'
+#   alias: fullykiosk_enable_screen
+#   description: Turn on tablet screen on motion detected
+#   trigger:
+#   - platform: state
+#     entity_id: binary_sensor.amazon_tablet
+#     from: 'off'
+#     to: 'on'
+#   condition:
+#   - condition: state
+#     entity_id: light.fire_tablet_screen
+#     state: 'off'
+#   action:
+#   - action: media_player.play_media
+#     target:
+#       entity_id: media_player.amazon_tablet
+#     data:
+#       media_content_id: /local/sound/on.m4a
+#       media_content_type: music
+#   # - action: light.turn_on
+#   #   data:
+#   #     entity_id: light.fire_tablet_screen
+#   #     brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
+#   - action: number.set_value
+#     target:
+#       entity_id: number.fire_tablet_screensaver_brightness
+#     data:
+#       value: >
+#         {% set day_percent = 90 %}
+#         {% set night_percent = 65 %}
+#         {% set day_convert = ((day_percent * 255) / 100) | int %}
+#         {% set night_convert = ((night_percent * 255) / 100) | int %}
+#         {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
+# mode: restart
+#
+# - id: "1634041571301"
+#   alias: fullykiosk_enable_screen_brightness
+#   description: Set brightness when screen enabled
+#   trigger:
+#     - trigger: state
+#       entity_id: switch.fire_tablet_screensaver
+#       from: "on"
+#       to: "off"
+#   condition: []
+#   action:
+#     - action: number.set_value
+#       target:
+#         entity_id: number.fire_tablet_screensaver_brightness
+#       data:
+#         value: >
+#           {% set day_percent = 90 %}
+#           {% set night_percent = 65 %}
+#           {% set day_convert = ((day_percent * 255) / 100) | int %}
+#           {% set night_convert = ((night_percent * 255) / 100) | int %}
+#           {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
+#   mode: restart
+#
+# - id: "1637682511628"
+#   alias: Bateria w tablecie
+#   description: Bateria w tablecie
+#   trigger:
+#     - trigger: state
+#       entity_id: sensor.kftrwi_battery_level
+#   condition: []
+#   action:
+#     - choose:
+#         - conditions:
+#             - condition: numeric_state
+#               entity_id: sensor.kftrwi_battery_level
+#               above: "80"
+#           sequence:
+#             - action: switch.turn_off
+#               target:
+#                 entity_id: switch.sonoff_1000d4b2e1_1
+#         - conditions:
+#             - condition: numeric_state
+#               entity_id: sensor.kftrwi_battery_level
+#               below: "20"
+#           sequence:
+#             - action: switch.turn_on
+#               target:
+#                 entity_id: switch.sonoff_1000d4b2e1_1
+#       default: []
+#   mode: restart
 
-  - id: '1634040402001'
-    alias: fullykiosk_close_popups_disable_screen
-    description: Close popups when screensaver is enabled
-    trigger:
-    - platform: state
-      entity_id: switch.fire_tablet_screensaver
-      to: 'on'
-    condition: []
-    action:
-    - service: browser_mod.close_popup
-    mode: restart
-
-  # - id: '1634041571300'
-  #   alias: fullykiosk_enable_screen
-  #   description: Turn on tablet screen on motion detected
-  #   trigger:
-  #   - platform: state
-  #     entity_id: binary_sensor.amazon_tablet
-  #     from: 'off'
-  #     to: 'on'
-  #   condition:
-  #   - condition: state
-  #     entity_id: light.fire_tablet_screen
-  #     state: 'off'
-  #   action:
-  #   - service: media_player.play_media
-  #     target:
-  #       entity_id: media_player.amazon_tablet
-  #     data:
-  #       media_content_id: /local/sound/on.m4a
-  #       media_content_type: music
-  #   # - service: light.turn_on
-  #   #   data:
-  #   #     entity_id: light.fire_tablet_screen
-  #   #     brightness_pct: '{{ 90 if is_state(''sun.sun'', ''above_horizon'') else 60 }}'
-  #   - service: number.set_value
-  #     target:
-  #       entity_id: number.fire_tablet_screensaver_brightness
-  #     data:
-  #       value: >
-  #         {% set day_percent = 90 %}
-  #         {% set night_percent = 65 %}
-  #         {% set day_convert = ((day_percent * 255) / 100) | int %}
-  #         {% set night_convert = ((night_percent * 255) / 100) | int %}
-  #         {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
-  # mode: restart
-
-  - id: '1634041571301'
-    alias: fullykiosk_enable_screen_brightness
-    description: Set brightness when screen enabled
-    trigger:
-    - platform: state
-      entity_id: switch.fire_tablet_screensaver
-      from: 'on'
-      to: 'off'
-    condition: []
-    action:
-    - service: number.set_value
-      target:
-        entity_id: number.fire_tablet_screensaver_brightness
-      data:
-        value: >
-          {% set day_percent = 90 %}
-          {% set night_percent = 65 %}
-          {% set day_convert = ((day_percent * 255) / 100) | int %}
-          {% set night_convert = ((night_percent * 255) / 100) | int %}
-          {{ iif(is_state('sun.sun', 'above_horizon'), day_convert, night_convert) }}
-    mode: restart
-
-  - id: '1637682511628'
-    alias: Bateria w tablecie
-    description: Bateria w tablecie
-    trigger:
-    - platform: state
-      entity_id: sensor.kftrwi_battery_level
-    condition: []
-    action:
-    - choose:
-      - conditions:
-        - condition: numeric_state
-          entity_id: sensor.kftrwi_battery_level
-          above: '80'
-        sequence:
-        - service: switch.turn_off
-          target:
-            entity_id: switch.sonoff_1000d4b2e1_1
-      - conditions:
-        - condition: numeric_state
-          entity_id: sensor.kftrwi_battery_level
-          below: '20'
-        sequence:
-        - service: switch.turn_on
-          target:
-            entity_id: switch.sonoff_1000d4b2e1_1
-      default: []
-    mode: restart
-
-browser_mod:
-  devices:
-    #ffd92947-09fd7c47:
-    25ffd809-364afacd:
-      name: amazon_tablet
-      #screensaver: true
-      force_stay_awake: true
-      camera: true
+# browser_mod:
+#   devices:
+#     #ffd92947-09fd7c47:
+#     25ffd809-364afacd:
+#       name: amazon_tablet
+#       #screensaver: true
+#       force_stay_awake: true
+#       camera: true
 
 homeassistant:
   customize:
@@ -199,53 +217,75 @@ homeassistant:
 
 template:
   - sensor:
+      - unique_id: smart_plug_2_current
+        unit_of_measurement: mA
+        default_entity_id: sensor.smart_plug_2_current
+        name: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Current"
+        state: "{{ state_attr('switch.smart_plug_2','current') | float(default=0) }}"
+      - unique_id: smart_plug_2_power
+        unit_of_measurement: W
+        default_entity_id: sensor.smart_plug_2_power
+        name: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Power"
+        state: "{{ state_attr('switch.smart_plug_2','current_consumption') |
+          float(default=0) }}"
+      - unique_id: smart_plug_2_voltage
+        unit_of_measurement: V
+        default_entity_id: sensor.smart_plug_2_voltage
+        name: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Voltage"
+        state: "{{ state_attr('switch.smart_plug_2','voltage') | float(default=0) }}"
+
       - unique_id: fullykiosk_storage
         state: >
-          {% set FreeSpace = states('sensor.fire_tablet_internal_storage_free_space') | float(default=0) %}
-          {% set TotalSpace = states('sensor.fire_tablet_internal_storage_total_space') | float(default=0) %}
-          {% if not (FreeSpace == 0.0 or TotalSpace == 0.0) %}
+          {% set FreeSpace =
+          states('sensor.fire_tablet_internal_storage_free_space') |
+          float(default=0) %} {% set TotalSpace =
+          states('sensor.fire_tablet_internal_storage_total_space') |
+          float(default=0) %} {% if not (FreeSpace == 0.0 or TotalSpace == 0.0)
+          %}
             {{ 100 - (FreeSpace / TotalSpace * 100) | int(default=0) }}
           {% endif %}
         attributes:
           friendly_name: Storage
           icon: mdi:sd
-          unit_of_measurement: '%'
+          unit_of_measurement: "%"
 
       - unique_id: fullykiosk_memory
         state: >
-          {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') | float(default=0) %}
-          {% set TotalMemory = states('sensor.fire_tablet_ram_total_memory') | float(default=0) %}
-          {% if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
+          {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') |
+          float(default=0) %} {% set TotalMemory =
+          states('sensor.fire_tablet_ram_total_memory') | float(default=0) %} {%
+          if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
             {{ 100 - (FreeMemory / TotalMemory * 100) | int(default=0) }}
           {% endif %}
         attributes:
           friendly_name: Memory
           icon: mdi:memory
-          unit_of_measurement: '%'
+          unit_of_measurement: "%"
 
       - unique_id: fullykiosk_last_app_start
         state: >
-          {{ as_timestamp(states('sensor.fire_tablet_last_app_start'), default=0) | timestamp_local(default=0) }}
+          {{ as_timestamp(states('sensor.fire_tablet_last_app_start'),
+          default=0) | timestamp_local(default=0) }}
         attributes:
           friendly_name: Ostatni restart
           icon: mdi:update
           device_class: timestamp
 
-sensor:
-  - platform: template
-    sensors:
-      smart_plug_2_current:
-        unique_id: "smart_plug_2_current"
-        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Current"
-        value_template: "{{ state_attr('switch.smart_plug_2','current') | float(default=0) }}"
-        unit_of_measurement: "mA"
-      smart_plug_2_power:
-        unique_id: "smart_plug_2_power"
-        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Power"
-        value_template: "{{ state_attr('switch.smart_plug_2','current_consumption') | float(default=0) }}"
-        unit_of_measurement: "W"
-      smart_plug_2_voltage:
-        unique_id: "smart_plug_2_voltage"
-        friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Voltage"
-        value_template: "{{ state_attr('switch.smart_plug_2','voltage') | float(default=0) }}"
-        unit_of_measurement: "V"
+# sensor:
+#   - platform: template
+#     sensors:
+#       smart_plug_2_current:
+#         unique_id: "smart_plug_2_current"
+#         friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Current"
+#         value_template: "{{ state_attr('switch.smart_plug_2','current') | float(default=0) }}"
+#         unit_of_measurement: "mA"
+#       smart_plug_2_power:
+#         unique_id: "smart_plug_2_power"
+#         friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Power"
+#         value_template: "{{ state_attr('switch.smart_plug_2','current_consumption') | float(default=0) }}"
+#         unit_of_measurement: "W"
+#       smart_plug_2_voltage:
+#         unique_id: "smart_plug_2_voltage"
+#         friendly_name_template: "{{ state_attr('switch.smart_plug_2','friendly_name') }} Voltage"
+#         value_template: "{{ state_attr('switch.smart_plug_2','voltage') | float(default=0) }}"
+#         unit_of_measurement: "V"

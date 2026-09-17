@@ -8,7 +8,7 @@ automation:
   #       entity_id: sensor.komfovent_status_normal_setpoint_c
   #   condition: []
   #   action:
-  #     - service: input_number.set_value
+  #     - action: input_number.set_value
   #       data:
   #         value: '{{states.sensor.komfovent_status_normal_setpoint_c.state}}'
   #       target:
@@ -16,15 +16,15 @@ automation:
   #   mode: single
 
   - alias: Komfovent Write Normal Temp Setpoint on Input change
-    description: 'Write Normal Setpoint when input_number changes'
+    description: "Write Normal Setpoint when input_number changes"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_number.komfovent_set_temp
     condition: []
     action:
-      - service: script.komfovent_write_temp_setpoint_normal
+      - action: script.komfovent_write_temp_setpoint_normal
         data:
-          komfovent_temp_setpoint: '{{(states.input_number.komfovent_set_temp.state | float(0.0) * 10) | int(0)}}'
+          komfovent_temp_setpoint: "{{(states.input_number.komfovent_set_temp.state | float(0.0) * 10) | int(0)}}"
     mode: single
 
   # - alias: Komfovent Set Normal Fan Input Number
@@ -36,7 +36,7 @@ automation:
   #       entity_id: sensor.komfovent_status_normal_setpoint_c
   #   condition: []
   #   action:
-  #     - service: input_number.set_value
+  #     - action: input_number.set_value
   #       data:
   #         value: '{{(states.sensor.komfovent_extract_fan_intensivity.state | round(0))}}'
   #       target:
@@ -44,83 +44,84 @@ automation:
   #   mode: single
 
   - alias: Komfovent Write Normal Fan Setpoint on Input change
-    description: 'Write Normal Fan Setpoint (Sup & Extract) when input_number changes'
+    description: "Write Normal Fan Setpoint (Sup & Extract) when input_number changes"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: input_number.komfovent_set_fan
     condition: []
     action:
-      - service: script.komfovent_write_fan_intensity_normal
+      - action: script.komfovent_write_fan_intensity_normal
         data:
-          komfovent_fan_intensity: ["0","{{states.input_number.komfovent_set_fan.state}}"]
+          komfovent_fan_intensity:
+            ["0", "{{states.input_number.komfovent_set_fan.state}}"]
     mode: single
 
   - alias: Komfovent Record daily Heater consumption kWh
-    description: ''
+    description: ""
     mode: single
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.komfovent_heater_consumption_day_kwh
-        to: '0'
+        to: "0"
     condition: []
     action:
-      - service: number.set_value
+      - action: number.set_value
         data: {}
 
-binary_sensor:
-  - platform: template
-    sensors:
-      komfovent_status_starting:
-        friendly_name: "Komfovent Status - Starting"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(1) > 0 }}"
-      komfovent_status_stopping:
-        friendly_name: "Komfovent Status - Stopping"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(2) > 0 }}"
-      komfovent_status_fan:
-        friendly_name: "Komfovent Status - Fan"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(4) > 0 }}"
-      komfovent_status_rotor:
-        friendly_name: "Komfovent Status - Rotor"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(8) > 0 }}"
-      komfovent_status_heating:
-        friendly_name: "Komfovent Status - Heating"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(16) > 0 }}"
-      komfovent_status_cooling:
-        friendly_name: "Komfovent Status - Cooling"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(32) > 0 }}"
-      komfovent_status_heatingdenied:
-        friendly_name: "Komfovent Status - Heating Denied"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(64) > 0 }}"
-      komfovent_status_coolingdenied:
-        friendly_name: "Komfovent Status - Cooling Denied"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(128) > 0 }}"
-      komfovent_status_flow_down:
-        friendly_name: "Komfovent Status - Flow Down"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(256) > 0 }}"
-      komfovent_status_free_heating:
-        friendly_name: "Komfovent Status - Free Heating"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(512) > 0 }}"
-      komfovent_status_free_cooling:
-        friendly_name: "Komfovent Status - Free Cooling"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(1024) > 0 }}"
-      komfovent_status_alarm_f:
-        friendly_name: "Komfovent Status - Alarm F"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(2048) > 0 }}"
-      komfovent_status_alarm_w:
-        friendly_name: "Komfovent Status - Alarm W"
-        value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(4096) > 0 }}"
-      komfovent_mode_is_away:
-        friendly_name: "Komfovent mode is Away"
-        value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 1 }}"
-      komfovent_mode_is_normal:
-        friendly_name: "Komfovent mode is Normal"
-        value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 2 }}"
-      komfovent_mode_is_intensive:
-        friendly_name: "Komfovent mode is Intensive"
-        value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 3 }}"
-      komfovent_mode_is_boost:
-        friendly_name: "Komfovent mode is Boost"
-        value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 4 }}"
+# binary_sensor:
+#   - platform: template
+#     sensors:
+#       komfovent_status_starting:
+#         friendly_name: "Komfovent Status - Starting"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(1) > 0 }}"
+#       komfovent_status_stopping:
+#         friendly_name: "Komfovent Status - Stopping"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(2) > 0 }}"
+#       komfovent_status_fan:
+#         friendly_name: "Komfovent Status - Fan"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(4) > 0 }}"
+#       komfovent_status_rotor:
+#         friendly_name: "Komfovent Status - Rotor"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(8) > 0 }}"
+#       komfovent_status_heating:
+#         friendly_name: "Komfovent Status - Heating"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(16) > 0 }}"
+#       komfovent_status_cooling:
+#         friendly_name: "Komfovent Status - Cooling"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(32) > 0 }}"
+#       komfovent_status_heatingdenied:
+#         friendly_name: "Komfovent Status - Heating Denied"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(64) > 0 }}"
+#       komfovent_status_coolingdenied:
+#         friendly_name: "Komfovent Status - Cooling Denied"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(128) > 0 }}"
+#       komfovent_status_flow_down:
+#         friendly_name: "Komfovent Status - Flow Down"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(256) > 0 }}"
+#       komfovent_status_free_heating:
+#         friendly_name: "Komfovent Status - Free Heating"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(512) > 0 }}"
+#       komfovent_status_free_cooling:
+#         friendly_name: "Komfovent Status - Free Cooling"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(1024) > 0 }}"
+#       komfovent_status_alarm_f:
+#         friendly_name: "Komfovent Status - Alarm F"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(2048) > 0 }}"
+#       komfovent_status_alarm_w:
+#         friendly_name: "Komfovent Status - Alarm W"
+#         value_template: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(4096) > 0 }}"
+#       komfovent_mode_is_away:
+#         friendly_name: "Komfovent mode is Away"
+#         value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 1 }}"
+#       komfovent_mode_is_normal:
+#         friendly_name: "Komfovent mode is Normal"
+#         value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 2 }}"
+#       komfovent_mode_is_intensive:
+#         friendly_name: "Komfovent mode is Intensive"
+#         value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 3 }}"
+#       komfovent_mode_is_boost:
+#         friendly_name: "Komfovent mode is Boost"
+#         value_template: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 4 }}"
 
 homeassistant:
   customize:
@@ -129,6 +130,90 @@ homeassistant:
       device_class: energy
 
 template:
+  - binary_sensor:
+      - default_entity_id: binary_sensor.komfovent_status_starting
+        name: Komfovent Status - Starting
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(1) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_stopping
+        name: Komfovent Status - Stopping
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(2) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_fan
+        name: Komfovent Status - Fan
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(4) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_rotor
+        name: Komfovent Status - Rotor
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(8) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_heating
+        name: Komfovent Status - Heating
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(16) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_cooling
+        name: Komfovent Status - Cooling
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(32) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_heatingdenied
+        name: Komfovent Status - Heating Denied
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(64) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_coolingdenied
+        name: Komfovent Status - Cooling Denied
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(128) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_flow_down
+        name: Komfovent Status - Flow Down
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(256) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_free_heating
+        name: Komfovent Status - Free Heating
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(512) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_alarm_f
+        name: Komfovent Status - Alarm F
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(2048) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_status_alarm_w
+        name: Komfovent Status - Alarm W
+        state: "{{ states('sensor.Komfovent_status')|int(0)|bitwise_and(4096) > 0 }}"
+      - default_entity_id: binary_sensor.komfovent_mode_is_away
+        name: Komfovent mode is Away
+        state: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 1 }}"
+      - default_entity_id: binary_sensor.komfovent_mode_is_normal
+        name: Komfovent mode is Normal
+        state: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 2 }}"
+      - default_entity_id: binary_sensor.komfovent_mode_is_intensive
+        name: Komfovent mode is Intensive
+        state: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 3 }}"
+      - default_entity_id: binary_sensor.komfovent_mode_is_boost
+        name: Komfovent mode is Boost
+        state: "{{ states('sensor.komfovent_mode_num') | int(default=0) == 4 }}"
+
+  - sensor:
+      - default_entity_id: sensor.komfovent_on_off
+        name: Komfovent On Off
+        state:
+          "{% set mapper =  {\n    '0' : 'Off',\n    '1' : 'On'} %}\n{% set state
+          =  states('sensor.komfovent_on_off_num') %} {{ mapper[state] if state in mapper
+          else 'Unknown' }}"
+      - default_entity_id: sensor.komfovent_eco_mode
+        name: Komfovent Eco Mode
+        state:
+          "{% set mapper =  {\n    '0' : 'Off',\n    '1' : 'On'} %}\n{% set state
+          =  states('sensor.komfovent_eco_num') %} {{ mapper[state] if state in mapper
+          else 'Unknown' }}"
+      - default_entity_id: sensor.komfovent_auto_mode
+        name: Komfovent Auto Mode
+        state:
+          "{% set mapper =  {\n    '0' : 'Off',\n    '1' : 'On'} %}\n{% set state
+          =  states('sensor.komfovent_auto_num') %} {{ mapper[state] if state in mapper
+          else 'Unknown' }}"
+      - default_entity_id: sensor.komfovent_operation_mode
+        name: Komfovent Operation Mode
+        state:
+          "{% set mapper =  {\n    '0' : 'Standby',\n    '1' : 'Away',\n    '2' :
+          'Normal',\n    '3' : 'Intensive',\n    '4' : 'Boost',\n    '5' : 'Kitchen',\n
+          \   '6' : 'Fireplace',\n    '7' : 'Overide',\n    '8' : 'Holiday',\n    '9'
+          : 'Air Quality',\n    '10' : 'Off' } %}\n{% set state =  states('sensor.komfovent_mode_num')
+          %} {{ mapper[state] if state in mapper else 'Unknown' }}"
+      - default_entity_id: sensor.komfovent_scheduler_mode
+        name: Komfovent Scheduler Mode
+        state:
+          "{% set mapper =  {\n    '0' : 'StayAtHome',\n    '1' : 'WorkingWeek',\n
+          \   '2' : 'Office',\n    '3' : 'Custom'} %}\n{% set state =  states('sensor.komfovent_scheduler_num')
+          %} {{ mapper[state] if state in mapper else 'Unknown' }}"
+
   - sensor:
       - name: "Komfovent Mode Text"
         state: >
@@ -266,13 +351,13 @@ modbus:
         address: 40
         input_type: holding
         data_type: int16
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         scan_interval: 30
       - name: "Komfovent Status Normal Fan Supply Setpoint"
         address: 105
         input_type: holding
         data_type: uint32
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         # device_class: temperature
         state_class: measurement
         scan_interval: 5
@@ -280,7 +365,7 @@ modbus:
         address: 107
         input_type: holding
         data_type: uint32
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         # device_class: temperature
         state_class: measurement
         scan_interval: 5
@@ -332,7 +417,7 @@ modbus:
         data_type: uint32
         input_type: holding
         precision: 0
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         scan_interval: 10
       - name: "Komfovent Extract Flow volume"
         address: 907
@@ -340,7 +425,7 @@ modbus:
         data_type: uint32
         input_type: holding
         precision: 0
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         scan_interval: 10
       - name: "Komfovent Supply Fan Intensivity '%"
         address: 909
@@ -348,7 +433,7 @@ modbus:
         input_type: holding
         scale: 0.1
         precision: 1
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         state_class: measurement
         scan_interval: 30
       - name: "Komfovent Extract Fan Intensivity '%"
@@ -357,7 +442,7 @@ modbus:
         input_type: holding
         scale: 0.1
         precision: 1
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         state_class: measurement
         scan_interval: 30
       - name: "Komfovent Electric Heater %"
@@ -366,14 +451,14 @@ modbus:
         input_type: holding
         scale: 0.1
         precision: 1
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         state_class: measurement
         scan_interval: 10
       - name: "Komfovent Filter Impurity, %"
         address: 916
         data_type: uint16
         input_type: holding
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         state_class: measurement
         scan_interval: 60
       # - name: "Komfovent Supply Pressure"
@@ -416,14 +501,14 @@ modbus:
         address: 923
         data_type: uint16
         input_type: holding
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         state_class: measurement
         scan_interval: 10
       - name: "Komfovent Energy saving, %"
         address: 924
         data_type: uint16
         input_type: holding
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         state_class: measurement
         scan_interval: 10
       - name: "Komfovent Specific power (SPI)"
@@ -435,7 +520,7 @@ modbus:
         unit_of_measurement: W/(m3/h)
         state_class: measurement
         scan_interval: 10
-  #Consumption
+      #Consumption
       - name: "Komfovent AHU Consumption Day, kWh"
         address: 926
         data_type: uint32
@@ -549,11 +634,10 @@ modbus:
         address: 949
         input_type: holding
         data_type: int16
-        unit_of_measurement: '%'
+        unit_of_measurement: "%"
         device_class: humidity
         state_class: measurement
         scan_interval: 10
-
 
 shell_command:
   komfovent_kitchen_mode: >-
@@ -566,66 +650,66 @@ shell_command:
     curl 'http://192.168.2.49/' --data-raw '1=user&2=user' &&
     curl 'http://192.168.2.492/ajax.xml' --data-raw '284=20'
 
-sensor:
-  - platform: template
-    sensors:
-      komfovent_on_off:
-        friendly_name: "Komfovent On Off"
-        value_template: >-
-          {% set mapper =  {
-              '0' : 'Off',
-              '1' : 'On'} %}
-          {% set state =  states('sensor.komfovent_on_off_num') %}
-          {{ mapper[state] if state in mapper else 'Unknown' }}
-      komfovent_eco_mode:
-        friendly_name: "Komfovent Eco Mode"
-        value_template: >-
-          {% set mapper =  {
-              '0' : 'Off',
-              '1' : 'On'} %}
-          {% set state =  states('sensor.komfovent_eco_num') %}
-          {{ mapper[state] if state in mapper else 'Unknown' }}
-      komfovent_auto_mode:
-        friendly_name: "Komfovent Auto Mode"
-        value_template: >-
-          {% set mapper =  {
-              '0' : 'Off',
-              '1' : 'On'} %}
-          {% set state =  states('sensor.komfovent_auto_num') %}
-          {{ mapper[state] if state in mapper else 'Unknown' }}
-      komfovent_operation_mode:
-        friendly_name: "Komfovent Operation Mode"
-        value_template: >-
-          {% set mapper =  {
-              '0' : 'Standby',
-              '1' : 'Away',
-              '2' : 'Normal',
-              '3' : 'Intensive',
-              '4' : 'Boost',
-              '5' : 'Kitchen',
-              '6' : 'Fireplace',
-              '7' : 'Overide',
-              '8' : 'Holiday',
-              '9' : 'Air Quality',
-              '10' : 'Off' } %}
-          {% set state =  states('sensor.komfovent_mode_num') %}
-          {{ mapper[state] if state in mapper else 'Unknown' }}
-      komfovent_scheduler_mode:
-        friendly_name: "Komfovent Scheduler Mode"
-        value_template: >-
-          {% set mapper =  {
-              '0' : 'StayAtHome',
-              '1' : 'WorkingWeek',
-              '2' : 'Office',
-              '3' : 'Custom'} %}
-          {% set state =  states('sensor.komfovent_scheduler_num') %}
-          {{ mapper[state] if state in mapper else 'Unknown' }}
+# sensor:
+#   - platform: template
+#     sensors:
+#       komfovent_on_off:
+#         friendly_name: "Komfovent On Off"
+#         value_template: >-
+#           {% set mapper =  {
+#               '0' : 'Off',
+#               '1' : 'On'} %}
+#           {% set state =  states('sensor.komfovent_on_off_num') %}
+#           {{ mapper[state] if state in mapper else 'Unknown' }}
+#       komfovent_eco_mode:
+#         friendly_name: "Komfovent Eco Mode"
+#         value_template: >-
+#           {% set mapper =  {
+#               '0' : 'Off',
+#               '1' : 'On'} %}
+#           {% set state =  states('sensor.komfovent_eco_num') %}
+#           {{ mapper[state] if state in mapper else 'Unknown' }}
+#       komfovent_auto_mode:
+#         friendly_name: "Komfovent Auto Mode"
+#         value_template: >-
+#           {% set mapper =  {
+#               '0' : 'Off',
+#               '1' : 'On'} %}
+#           {% set state =  states('sensor.komfovent_auto_num') %}
+#           {{ mapper[state] if state in mapper else 'Unknown' }}
+#       komfovent_operation_mode:
+#         friendly_name: "Komfovent Operation Mode"
+#         value_template: >-
+#           {% set mapper =  {
+#               '0' : 'Standby',
+#               '1' : 'Away',
+#               '2' : 'Normal',
+#               '3' : 'Intensive',
+#               '4' : 'Boost',
+#               '5' : 'Kitchen',
+#               '6' : 'Fireplace',
+#               '7' : 'Overide',
+#               '8' : 'Holiday',
+#               '9' : 'Air Quality',
+#               '10' : 'Off' } %}
+#           {% set state =  states('sensor.komfovent_mode_num') %}
+#           {{ mapper[state] if state in mapper else 'Unknown' }}
+#       komfovent_scheduler_mode:
+#         friendly_name: "Komfovent Scheduler Mode"
+#         value_template: >-
+#           {% set mapper =  {
+#               '0' : 'StayAtHome',
+#               '1' : 'WorkingWeek',
+#               '2' : 'Office',
+#               '3' : 'Custom'} %}
+#           {% set state =  states('sensor.komfovent_scheduler_num') %}
+#           {{ mapper[state] if state in mapper else 'Unknown' }}
 
 script:
   komfovent_set_away:
     alias: Komfovent mode Away
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 4
           hub: komfovent
@@ -634,7 +718,7 @@ script:
   komfovent_set_normal:
     alias: Komfovent mode Normal
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 4
           hub: komfovent
@@ -643,7 +727,7 @@ script:
   komfovent_set_intensive:
     alias: Komfovent mode Intensive
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 4
           hub: komfovent
@@ -652,7 +736,7 @@ script:
   komfovent_set_boost:
     alias: Komfovent mode Boost
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 4
           hub: komfovent
@@ -661,7 +745,7 @@ script:
   komfovent_set_off:
     alias: Komfovent mode Off
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 0
           hub: komfovent
@@ -670,7 +754,7 @@ script:
   komfovent_set_on:
     alias: Komfovent mode On
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 0
           hub: komfovent
@@ -682,21 +766,21 @@ script:
     variables:
       temperature: "{{ ((states.input_number.ventilation_set_night_temp.state | float) * 10) | int }}"
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 109 # Normal
           hub: komfovent
           unit: 1
           value: "{{ temperature }}"
       - delay: 1
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 115 # Intensive
           hub: komfovent
           unit: 1
           value: "{{ temperature }}"
       - delay: 1
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 134 # Fireplace
           hub: komfovent
@@ -707,21 +791,21 @@ script:
     variables:
       temperature: "{{ ((states.input_number.ventilation_set_day_temp.state | float) * 10) | int }}"
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 109 # Normal
           hub: komfovent
           unit: 1
           value: "{{ temperature }}"
       - delay: 1
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 115 # Intensive
           hub: komfovent
           unit: 1
           value: "{{ temperature }}"
       - delay: 1
-      - service: modbus.write_register
+      - action: modbus.write_register
         data:
           address: 134 # Fireplace
           hub: komfovent
@@ -735,15 +819,15 @@ script:
     fields:
       komfovent_temp_setpoint:
         name: Komfovent Temp Setpoint Value
-        example: '195'
+        example: "195"
         description: Actual value is * 10; 19.5°C = 195
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data_template:
           hub: "Komfovent"
           address: 109
           unit: 1
-          value: '{{ komfovent_temp_setpoint }}'
+          value: "{{ komfovent_temp_setpoint }}"
     mode: single
 
   komfovent_write_fan_intensity_normal:
@@ -753,7 +837,7 @@ script:
     fields:
       komfovent_fan_intensity:
         name: Komfovent Fan Intensity Value
-        example: '[0,40]'
+        example: "[0,40]"
         description: Writes same value to both fans and assumes intensity is set as a %
         selector:
           number:
@@ -761,22 +845,22 @@ script:
             max: 100
             unit_of_measurement: "%"
     sequence:
-      - service: modbus.write_register
+      - action: modbus.write_register
         data_template:
           hub: "Komfovent"
           address: 105
           unit: 2
-          value: '{{ komfovent_fan_intensity }}'
-      - service: modbus.write_register
+          value: "{{ komfovent_fan_intensity }}"
+      - action: modbus.write_register
         data_template:
           hub: "Komfovent"
           address: 107
           unit: 2
-          value: '{{ komfovent_fan_intensity }}'
+          value: "{{ komfovent_fan_intensity }}"
     mode: single
-  komfovent_dummy:
-    alias: 'Komfovent Dummy script'
-    sequence:
+  # komfovent_dummy:
+  #   alias: "Komfovent Dummy script"
+  #   sequence:
 
 input_boolean:
   ventilation_auto_away:
@@ -823,7 +907,7 @@ input_number:
 
   komfovent_set_fan:
     name: "Komfovent Set Fan"
-    unit_of_measurement: '%'
+    unit_of_measurement: "%"
     min: 0
     max: 100
     step: 5

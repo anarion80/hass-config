@@ -1,37 +1,74 @@
-switch:
-  - platform: template
-    switches:
-      computer_imac:
-        friendly_name: PC
-        icon_template: custom:imac-alternative
-        value_template: "{{ is_state('switch.wol_imac', 'on') }}"
-        turn_on:
-          - service: shell_command.imac_switchbot
-          - service: light.turn_on
-            entity_id: light.dator
-        turn_off:
-          - choose:
-            - conditions:
-                - condition: state
-                  entity_id: input_boolean.computer_lock
-                  state: 'of'
-              sequence:
-                - service: shell_command.imac_off
-            default:
-              - service: shell_command.imac_off
+# switch:
+#   - platform: template
+#     switches:
+#       computer_imac:
+#         friendly_name: PC
+#         icon_template: custom:imac-alternative
+#         value_template: "{{ is_state('switch.wol_imac', 'on') }}"
+#         turn_on:
+#           - action: shell_command.imac_switchbot
+#           - action: light.turn_on
+#             entity_id: light.dator
+#         turn_off:
+#           - choose:
+#             - conditions:
+#                 - condition: state
+#                   entity_id: input_boolean.computer_lock
+#                   state: 'of'
+#               sequence:
+#                 - action: shell_command.imac_off
+#             default:
+#               - action: shell_command.imac_off
 
-lock:
-  - platform: template
-    name: Dator
-    value_template: "{{ states('input_boolean.computer_lock') }}"
-    lock:
-      service: input_boolean.turn_on
-      entity_id: input_boolean.computer_lock
-    unlock:
-      service: input_boolean.turn_off
-      entity_id: input_boolean.computer_lock
+# lock:
+#   - platform: template
+#     name: Dator
+#     value_template: "{{ states('input_boolean.computer_lock') }}"
+#     lock:
+#       action: input_boolean.turn_on
+#       entity_id: input_boolean.computer_lock
+#     unlock:
+#       action: input_boolean.turn_off
+#       entity_id: input_boolean.computer_lock
 
 input_boolean:
   computer_lock:
     name: Shut-off lock
     icon: custom:lock
+
+template:
+  - lock:
+      - name: Dator
+        lock:
+          - action: input_boolean.turn_on
+            entity_id:
+              - input_boolean.computer_lock
+        unlock:
+          - action: input_boolean.turn_off
+            entity_id:
+              - input_boolean.computer_lock
+        optimistic: false
+        state: "{{ states('input_boolean.computer_lock') }}"
+
+  - switch:
+      - turn_on:
+          - action: shell_command.imac_switchbot
+          - action: light.turn_on
+            entity_id:
+              - light.dator
+        turn_off:
+          - choose:
+              - conditions:
+                  - condition: state
+                    entity_id:
+                      - input_boolean.computer_lock
+                    state: of
+                    match: all
+                sequence:
+                  - action: shell_command.imac_off
+            default:
+              - action: shell_command.imac_off
+        default_entity_id: switch.computer_imac
+        icon: custom:imac-alternative
+        name: PC
+        state: "{{ is_state('switch.wol_imac', 'on') }}"

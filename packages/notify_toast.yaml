@@ -2,8 +2,8 @@ notify:
   - name: all_devices
     platform: group
     services:
-      - service: notify_mobile_app_nokia_8_3_5g
-      - service: notify_mobile_app_nokia_x20
+      - service: mobile_app_moto_g85_5g
+      - service: mobile_app_nokia_x20
 
 homeassistant:
   customize:
@@ -18,33 +18,33 @@ input_datetime:
 
 automation:
   - alias: toast
-    id: '3161036041566'
+    id: "3161036041566"
     mode: parallel
     trigger:
-      platform: state
+      trigger: state
       entity_id:
         - binary_sensor.motion_sensor_1_occupancy
-      from: 'off'
-      to: 'on'
+      from: "off"
+      to: "on"
     action:
-      service: browser_mod.notification
+      action: browser_mod.notification
       data:
         duration: 3000
         message: >
           Wykryto ruch w {{ trigger.to_state.name }}
 
   - alias: dismiss_lovelace_updated
-    id: '1309195316329'
+    id: "1309195316329"
     mode: restart
     trigger:
-      platform: event
+      trigger: event
       event_type: lovelace_updated
     action:
       repeat:
         count: 5
         sequence:
           - delay: 0.5
-          - service: browser_mod.notification
+          - action: browser_mod.notification
             data:
               duration: 1
-              message: ' '
+              message: " "

@@ -1,111 +1,115 @@
 automation:
   - id: stopa_bazowa_change_notification_up
     alias: Notify when stopa bazowa changes up
-    description: ''
+    description: ""
     trigger:
-    - platform: state
-      entity_id: sensor.stopa_bazowa_pko_bp
+      - trigger: state
+        entity_id: sensor.stopa_bazowa_pko_bp
     condition:
-    - condition: template
-      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state
-        | float }}'
+      - condition: template
+        value_template:
+          "{{ trigger.to_state.state | float > trigger.from_state.state
+          | float }}"
     action:
-    - service: notify.pushover
-      data:
-        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-      domain: mobile_app
-      type: notify
-      title: Zmiana stopy bazowej
-      message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: notify.email
-      data:
+      - action: notify.pushover
+        data:
+          message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+        domain: mobile_app
+        type: notify
         title: Zmiana stopy bazowej
         message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: input_boolean.turn_on
-      data:
-        entity_id: input_boolean.stopa_bazowa_rising
+      - action: notify.email_anarion
+        data:
+          title: Zmiana stopy bazowej
+          message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - action: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.stopa_bazowa_rising
     mode: single
   - id: stopa_bazowa_change_notification_down
     alias: Notify when stopa bazowa changes down
-    description: ''
+    description: ""
     trigger:
-    - platform: state
-      entity_id: sensor.stopa_bazowa_pko_bp
+      - trigger: state
+        entity_id: sensor.stopa_bazowa_pko_bp
     condition:
-    - condition: template
-      value_template: '{{ trigger.to_state.state | float < trigger.from_state.state
-        | float }}'
+      - condition: template
+        value_template:
+          "{{ trigger.to_state.state | float < trigger.from_state.state
+          | float }}"
     action:
-    - service: notify.pushover
-      data:
-        message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-      domain: mobile_app
-      type: notify
-      title: Zmiana stopy bazowej
-      message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: notify.email
-      data:
+      - action: notify.pushover
+        data:
+          message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+        domain: mobile_app
+        type: notify
         title: Zmiana stopy bazowej
         message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: input_boolean.turn_off
-      data:
-        entity_id: input_boolean.stopa_bazowa_rising
+      - action: notify.email_anarion
+        data:
+          title: Zmiana stopy bazowej
+          message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - action: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.stopa_bazowa_rising
     mode: single
   - id: wibor6m_change_notification_down
     alias: Notify when Wibor 6M changes down
-    description: ''
+    description: ""
     trigger:
-    - platform: state
-      entity_id: sensor.wibor_6m
+      - trigger: state
+        entity_id: sensor.wibor_6m
     condition:
-    - condition: template
-      value_template: '{{ trigger.to_state.state | float < trigger.from_state.state
-        | float }}'
+      - condition: template
+        value_template:
+          "{{ trigger.to_state.state | float < trigger.from_state.state
+          | float }}"
     action:
-    - service: notify.pushover
-      data:
-        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-      domain: mobile_app
-      type: notify
-      title: Zmiana Wibor
-      message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: notify.email
-      data:
+      - action: notify.pushover
+        data:
+          message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+        domain: mobile_app
+        type: notify
         title: Zmiana Wibor
         message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: input_boolean.turn_off
-      data:
-        entity_id: input_boolean.wibor6m_rising
+      - action: notify.email_anarion
+        data:
+          title: Zmiana Wibor
+          message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - action: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.wibor6m_rising
     mode: single
   - id: wibor6m_change_notification_up
     alias: Notify when Wibor 6M changes up
-    description: ''
+    description: ""
     trigger:
-    - platform: state
-      entity_id: sensor.wibor_6m
+      - trigger: state
+        entity_id: sensor.wibor_6m
     condition:
-    - condition: template
-      value_template: '{{ trigger.to_state.state | float > trigger.from_state.state
-        | float }}'
+      - condition: template
+        value_template:
+          "{{ trigger.to_state.state | float > trigger.from_state.state
+          | float }}"
     action:
-    - service: notify.pushover
-      data:
-        message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-      domain: mobile_app
-      type: notify
-      title: Zmiana Wibor
-      message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: notify.email
-      data:
+      - action: notify.pushover
+        data:
+          message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+        domain: mobile_app
+        type: notify
         title: Zmiana Wibor
         message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
-    - service: input_boolean.turn_on
-      data:
-        entity_id: input_boolean.wibor6m_rising
+      - action: notify.email_anarion
+        data:
+          title: Zmiana Wibor
+          message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{ trigger.to_state.state}}%!
+      - action: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.wibor6m_rising
     mode: single
 
   # - id: sodexo_top_up
@@ -120,7 +124,7 @@ automation:
   #   - condition: template
   #     value_template: '{{ trigger.to_state.state | float > trigger.from_state.state | float }}'
   #   action:
-  #   - service: notify.pushover
+  #   - action: notify.pushover
   #     data:
   #       message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
   #   - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
@@ -128,7 +132,7 @@ automation:
   #     type: notify
   #     title: Sodexo załadowane
   #     message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
-  #   - service: notify.email
+  #   - action: notify.email
   #     data:
   #       title: Sodexo załadowane
   #       message: Karta {{ trigger.to_state.name }} została załadowana do {{ trigger.to_state.state}} zł
@@ -151,26 +155,28 @@ input_number:
     max: 10
     step: 0.01
     mode: box
-    unit_of_measurement: 'PLN/kWh'
+    unit_of_measurement: "PLN/kWh"
     icon: mdi:currency-usd
 
 scrape:
-  - resource: https://www.pkobp.pl/waluty/#/base_rate/
-    scan_interval: 3600
+  - resource: https://www.pkobh.pl/stawki-miedzybankowe/
+    scan_interval: 7200
     sensor:
       name: Stopa bazowa PKO BP
-      select: '#base_rate p'
-      value_template: '{{ value.split(" ")[8] | replace ("%","") | replace (",",".") }}'
-      unit_of_measurement: '%'
+      #select: "#base_rate p"
+      value_template: '{{ value.split(" ")[8] | replace ("%","") | replace(",", ".") | float }}'
+      select: "#base_rate > p:nth-child(4)"
+      unit_of_measurement: "%"
       state_class: measurement
 
-  - resource: https://www.pkobp.pl/waluty/#/interbank/
-    scan_interval: 3600
+  - resource: https://www.pkobh.pl/stawki-miedzybankowe/
+    scan_interval: 7200
     sensor:
       name: Wibor 6M
-      select: 'div.course__irs-tab-box:nth-child(4) > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)'
-      unit_of_measurement: '%'
+      select: ".course__table > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)"
+      unit_of_measurement: "%"
       state_class: measurement
+      value_template: "{{ value | replace('%','') | float }}"
 
   # - platform: influxdb
   #   api_version: 2

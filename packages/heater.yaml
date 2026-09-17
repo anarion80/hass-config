@@ -16,17 +16,17 @@ input_datetime:
     initial: "22:30:00"
 
 automation:
-  - id: '1615319114511'
+  - id: "1615319114511"
     alias: Turn on bathroom heater at night
-    description: 'Turn on bathroom heater at night'
+    description: "Turn on bathroom heater at night"
     trigger:
-    - platform: time
-      at: input_datetime.heating_start
+      - trigger: time
+        at: input_datetime.heating_start
     condition: []
     action:
-    - service: switch.turn_on
-      target:
-        entity_id: switch.grzejnik
+      - action: switch.turn_on
+        target:
+          entity_id: switch.grzejnik
     mode: single
 
   # - alias: Turn off bathroom heater after timer
@@ -37,19 +37,19 @@ automation:
   #       event_data:
   #         entity_id: timer.heater
   #   action:
-  #     - service: switch.turn_off
+  #     - action: switch.turn_off
   #       target:
   #         entity_id: switch.grzejnik
 
-  - id: '1615319114512'
+  - id: "1615319114512"
     alias: Turn off bathroom heater after timer
     description: "Automatyczne wyłączanie grzejnika"
     trigger:
-    - platform: state
-      entity_id: switch.grzejnik
-      to: 'on'
-      for:
-        minutes: "{{ states('input_number.heating_time')|int }}"
+      - trigger: state
+        entity_id: switch.grzejnik
+        to: "on"
+        for:
+          minutes: "{{ states('input_number.heating_time')|int }}"
     action:
-    - service: switch.turn_off
-      entity_id: switch.grzejnik
+      - action: switch.turn_off
+        entity_id: switch.grzejnik

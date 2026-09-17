@@ -14,23 +14,84 @@ binary_sensor:
   #   storms_nearby:
   #     radius: 30
 
-  - platform: antistorm
-    station_id: 148
-    monitored_conditions:
-      - 'storm_alarm'
-      - 'rain_alarm'
-      - 'storm_active'
+  # - platform: antistorm
+  #   station_id: 148
+  #   monitored_conditions:
+  #     - 'storm_alarm'
+  #     - 'rain_alarm'
+  #     - 'storm_active'
 
   - platform: meteoalarm
     country: "Poland"
     province: "malopolska"
     language: "pl-PL"
 
-sensor:
-  - platform: template
-    sensors:
-      meteo_url:
-        value_template: >-
+# sensor:
+#   - platform: template
+#     sensors:
+#       meteo_url:
+#         value_template: >-
+#           {% if now().hour >= 0 and now().hour < 10 -%}
+#           https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ (now() - timedelta( days = 1 )).strftime('%Y%m%d') }}18&row=466&col=232&lang=pl
+#           {%- elif now().hour >= 10 and now().hour < 12 -%}
+#           https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}00&row=466&col=232&lang=pl
+#           {%- elif now().hour >= 12 and now().hour < 19 -%}
+#           https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}06&row=466&col=232&lang=pl
+#           {%- elif now().hour >= 19 and now().hour < 24 -%}
+#           https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}12&row=466&col=232&lang=pl
+#           {%- endif %}
+#       air_quality_level:
+#         friendly_name: Poziom Jakości Powietrza
+#         value_template: >-
+#           {%- if (states('sensor.u_s_air_pollution_level') == "good") -%} dobry
+#           {%- elif (states('sensor.u_s_air_pollution_level') == "hazardous") -%} niebezpieczny
+#           {%- elif (states('sensor.u_s_air_pollution_level') == "moderate") -%} umiarkowany
+#           {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy") -%} niezdrowy
+#           {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy_sensitive") -%} niezdrowy dla grup wrażliwych
+#           {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
+#           {%- endif %}
+# rain_probability:
+#   friendly_name: Ryzyko deszczu
+#   value_template: "{{ (states('sensor.antistorm_148_rain_probability')| int * 100 / 255) | round }}"
+
+# storm_probability:
+#   friendly_name: Ryzyko burzy
+#   value_template: "{{ (states('sensor.antistorm_148_storm_probability')| int * 100 / 255) | round }}"
+
+# - platform: antistorm
+#   station_id: 148
+#   monitored_conditions:
+#     - 'storm_probability'
+#     - 'storm_time'
+#     - 'rain_probability'
+#     - 'rain_time'
+
+template:
+  - sensor:
+      - default_entity_id: sensor.meteo_url
+        state:
+          "{% if now().hour >= 0 and now().hour < 10 -%} https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{
+          (now() - timedelta( days = 1 )).strftime('%Y%m%d') }}18&row=466&col=232&lang=pl
+          {%- elif now().hour >= 10 and now().hour < 12 -%} https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{
+          now().strftime('%Y%m%d') }}00&row=466&col=232&lang=pl {%- elif now().hour
+          >= 12 and now().hour < 19 -%} https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{
+          now().strftime('%Y%m%d') }}06&row=466&col=232&lang=pl {%- elif now().hour
+          >= 19 and now().hour < 24 -%} https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{
+          now().strftime('%Y%m%d') }}12&row=466&col=232&lang=pl {%- endif %}"
+        name: meteo_url
+      - default_entity_id: sensor.air_quality_level
+        name: Poziom Jakości Powietrza
+        state:
+          '{%- if (states(''sensor.u_s_air_pollution_level'') == "good") -%} dobry
+          {%- elif (states(''sensor.u_s_air_pollution_level'') == "hazardous") -%} niebezpieczny
+          {%- elif (states(''sensor.u_s_air_pollution_level'') == "moderate") -%} umiarkowany
+          {%- elif (states(''sensor.u_s_air_pollution_level'') == "unhealthy") -%} niezdrowy
+          {%- elif (states(''sensor.u_s_air_pollution_level'') == "unhealthy_sensitive")
+          -%} niezdrowy dla grup wrażliwych {%- elif (states(''sensor.u_s_air_pollution_level'')
+          == "very_unhealthy") -%} bardzo niezdrowy {%- endif %}'
+  - image:
+      - name: "Meteo URL"
+        url: >-
           {% if now().hour >= 0 and now().hour < 10 -%}
           https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ (now() - timedelta( days = 1 )).strftime('%Y%m%d') }}18&row=466&col=232&lang=pl
           {%- elif now().hour >= 10 and now().hour < 12 -%}
@@ -40,28 +101,24 @@ sensor:
           {%- elif now().hour >= 19 and now().hour < 24 -%}
           https://www.meteo.pl/um/metco/mgram_pict.php?ntype=0u&fdate={{ now().strftime('%Y%m%d') }}12&row=466&col=232&lang=pl
           {%- endif %}
-      air_quality_level:
-        friendly_name: Poziom Jakości Powietrza
-        value_template: >-
-          {%- if (states('sensor.u_s_air_pollution_level') == "good") -%} dobry
-          {%- elif (states('sensor.u_s_air_pollution_level') == "hazardous") -%} niebezpieczny
-          {%- elif (states('sensor.u_s_air_pollution_level') == "moderate") -%} umiarkowany
-          {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy") -%} niezdrowy
-          {%- elif (states('sensor.u_s_air_pollution_level') == "unhealthy_sensitive") -%} niezdrowy dla grup wrażliwych
-          {%- elif (states('sensor.u_s_air_pollution_level') == "very_unhealthy") -%} bardzo niezdrowy
-          {%- endif %}
-      rain_probability:
-        friendly_name: Ryzyko deszczu
-        value_template: "{{ (states('sensor.antistorm_148_rain_probability')| int * 100 / 255) | round }}"
 
-      storm_probability:
-        friendly_name: Ryzyko burzy
-        value_template: "{{ (states('sensor.antistorm_148_storm_probability')| int * 100 / 255) | round }}"
-
-  - platform: antistorm
-    station_id: 148
-    monitored_conditions:
-      - 'storm_probability'
-      - 'storm_time'
-      - 'rain_probability'
-      - 'rain_time'
+  - trigger:
+      - platform: homeassistant
+        event: start
+      - platform: time
+        at: "06:00:00"
+      - platform: time_pattern
+        hours: /1
+    action:
+      - action: weather.get_forecasts
+        data:
+          type: daily
+        target:
+          entity_id: weather.openweathermap
+        response_variable: daily
+    sensor:
+      - name: Weather Forecast Daily
+        unique_id: weather_forecast_daily
+        state: "{{ now().isoformat() }}"
+        attributes:
+          forecast: "{{ daily['weather.openweathermap'].forecast }}"

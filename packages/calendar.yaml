@@ -1,10 +1,22 @@
-sensor:
-  - platform: template
-    sensors:
-      today_events:
-        friendly_name: "Dzisiejsze wydarzenia"
-        value_template: "{{ state_attr('calendar.anarion_dunedain', 'message') }}"
-        icon_template: mdi:calendar
-        attribute_templates:
+# sensor:
+#   - platform: template
+#     sensors:
+#       today_events:
+#         friendly_name: "Dzisiejsze wydarzenia"
+#         value_template: "{{ state_attr('calendar.anarion_dunedain', 'message') }}"
+#         icon_template: mdi:calendar
+#         attribute_templates:
+#           location: "{{ state_attr('calendar.anarion_dunedain', 'location') }}"
+#           description: "{{ state_attr('calendar.anarion_dunedain', 'description') }}"
+
+template:
+  - sensor:
+      - default_entity_id: sensor.today_events
+        icon: mdi:calendar
+        attributes:
           location: "{{ state_attr('calendar.anarion_dunedain', 'location') }}"
-          description: "{{ state_attr('calendar.anarion_dunedain', 'description') }}"
+          description:
+            "{{ state_attr('calendar.anarion_dunedain', 'description')
+            }}"
+        name: Dzisiejsze wydarzenia
+        state: "{{ state_attr('calendar.anarion_dunedain', 'message') }}"

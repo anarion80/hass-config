@@ -7,8 +7,7 @@ homeassistant:
     input_boolean.vacuum_dining:
       room_id: "3"
     input_boolean.vacuum_kitchen:
-      room_id: "4"
-
+      room_id: "2"
 
 input_boolean:
   vacuum_livingroom:
@@ -33,7 +32,7 @@ template:
         attributes:
           friendly_name: Filtr
           icon: cil:roborock-filter
-          unit_of_measurement: 'd'
+          unit_of_measurement: "d"
 
       - unique_id: vacuum_mainbrush
         state: >
@@ -42,7 +41,7 @@ template:
         attributes:
           friendly_name: Główna szczotka
           icon: cil:roborock-mainbrush
-          unit_of_measurement: 'd'
+          unit_of_measurement: "d"
 
       - unique_id: vacuum_sensors
         state: >
@@ -51,7 +50,7 @@ template:
         attributes:
           friendly_name: Czystość czujnika
           icon: cil:roborock-sensor
-          unit_of_measurement: 'd'
+          unit_of_measurement: "d"
 
       - unique_id: vacuum_sidebrush
         state: >
@@ -60,7 +59,7 @@ template:
         attributes:
           friendly_name: Boczna szczotka
           icon: cil:roborock-sidebrush
-          unit_of_measurement: 'd'
+          unit_of_measurement: "d"
 
 group:
   vacuum_rooms:
@@ -73,21 +72,22 @@ group:
 script:
   vacuum_clean_segments:
     sequence:
-    - service: script.turn_on
-      target:
-        entity_id: script.vacuum_clean_segments_message
-      data:
-        variables:
-          segments: '{{expand("group.vacuum_rooms") | selectattr("state","eq","on")
-            | map(attribute="attributes.room_id") | list | to_json}}'
+      - action: script.turn_on
+        target:
+          entity_id: script.vacuum_clean_segments_message
+        data:
+          variables:
+            segments:
+              '{{expand("group.vacuum_rooms") | selectattr("state","eq","on")
+              | map(attribute="attributes.room_id") | list | to_json}}'
     mode: single
     alias: vacuum_clean_segments
     icon: mdi:arrow-right
   vacuum_clean_segments_message:
     alias: vacuum_clean_segments_message
     sequence:
-    - service: mqtt.publish
-      data:
-        topic: valetudo/dreame1/MapSegmentationCapability/clean/set
-        payload_template: '{"segment_ids": {{ segments }}, "iterations": 1, "customOrder": false}'
+      - action: mqtt.publish
+        data:
+          topic: valetudo/dreame1/MapSegmentationCapability/clean/set
+          payload: '{"segment_ids": {{ segments }}, "iterations": 1, "customOrder": false}'
     mode: single

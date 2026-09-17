@@ -1,13 +1,13 @@
 automation:
-  - id: '1635431265504'
+  - id: "1635431265504"
     alias: Turn on sprinkler
     trigger:
-    # - platform: time
-    #   at: '19:30'
-    - platform: sun
-      event: sunset
-      # Optional time offset. This example will trigger 45 minutes before sunset.
-      # offset: "-00:45:00"
+      # - platform: time
+      #   at: '19:30'
+      - trigger: sun
+        event: sunset
+        # Optional time offset. This example will trigger 45 minutes before sunset.
+        # offset: "-00:45:00"
     condition:
       # - alias: "Brak alarmu opadów"
       #   condition: state
@@ -17,34 +17,33 @@ automation:
         condition: template
         value_template: "{{ (4,1) <= (now().month, now().day) <= (10,1) }}"
         #value_template: ‘{{ now().month in [1,2,3,4,5,10,11,12] }}’
-      - alias: "Prawdopodobieństwo deszczu poniżej 60%"
+      - alias: "Prawdopodobieństwo deszczu poniżej 75%"
         condition: numeric_state
-        entity_id: sensor.openweathermap_forecast_precipitation_probability
+        entity_id: sensor.openweathermap_forecast
         # entity_id: sensor.rain_probability
         below: 75
     action:
-    - service: switch.turn_on
-      entity_id: switch.zraszacz
-    - service: notify.mobile_app_nokia_8_3_5g
-      data:
-        message: '🏁 Zraszacz włączony'
+      - action: switch.turn_on
+        entity_id: switch.zraszacz
+      - action: notify.mobile_app_moto_g85_5g
+        data:
+          message: "🏁 Zraszacz włączony"
 
-  - id: '1635431265505'
+  - id: "1635431265505"
     alias: Turn off sprinkler
     description: "Automatyczne włączanie zraszacza"
     trigger:
-    - platform: state
-      entity_id: switch.zraszacz
-      to: 'on'
-      for:
-        minutes: "{{ states('input_number.watering_time')|int }}"
+      - trigger: state
+        entity_id: switch.zraszacz
+        to: "on"
+        for:
+          minutes: "{{ states('input_number.watering_time')|int }}"
     action:
-    - service: switch.turn_off
-      entity_id: switch.zraszacz
-    - service: notify.mobile_app_nokia_8_3_5g
-      data:
-        message: '🛑 Zraszacz wyłączony'
-
+      - action: switch.turn_off
+        entity_id: switch.zraszacz
+      - action: notify.mobile_app_moto_g85_5g
+        data:
+          message: "🛑 Zraszacz wyłączony"
 
 input_number:
   watering_time:
@@ -83,13 +82,13 @@ script:
           entity_id: switch.zraszacz
           domain: switch
       - alias: "Turn sprinkler ON"
-        service: switch.turn_on
+        action: switch.turn_on
         target:
           entity_id: switch.zraszacz
       - delay:
           # supports seconds, milliseconds, minutes, hours
           minutes: "{{ minutes }}"
       - alias: "Turn sprinkler OFF"
-        service: switch.turn_off
+        action: switch.turn_off
         target:
           entity_id: switch.zraszacz

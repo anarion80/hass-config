@@ -1,35 +1,37 @@
-scene:
-  # TODO
+# scene:
+# TODO
 
 script:
   home_arrive:
     alias: Home
     sequence:
       - choose:
-        - conditions:
-            - condition: state
-              entity_id: light.fire_tablet_screen
-              state: 'on'
-            - condition: state
-              entity_id: switch.fire_tablet_screensaver
-              state: 'off'
-          sequence:
-            - service: tts.google_cloud_say
-              data:
-                entity_id: media_player.fire_tablet_media_player
-                message: >
-                  {{ ['Witaj', 'Cześć', 'Hej', 'Witaj w domu'] | random }}
+          - conditions:
+              - condition: state
+                entity_id: light.fire_tablet_screen
+                state: "on"
+              - condition: state
+                entity_id: switch.fire_tablet_screensaver
+                state: "off"
+            sequence:
+              - action: tts.speak
+                data:
+                  media_player_entity_id: media_player.nest_mini
+                  message: >
+                    {{ ['Witaj', 'Cześć', 'Hej', 'Witaj w domu'] | random }}
+                target:
+                  entity_id: tts.google_cloud_2
       - choose:
-        - conditions:
-            - condition: state
-              entity_id: sun.sun
-              state: below_horizon
-          sequence:
-            - service: scene.turn_on
-              data:
-                entity_id: scene.dom_ponizej_horyzontu
+          - conditions:
+              - condition: state
+                entity_id: sun.sun
+                state: below_horizon
+            sequence:
+              - action: scene.turn_on
+                data:
+                  entity_id: scene.dom_ponizej_horyzontu
         default:
-          - service: scene.turn_on
+          - action: scene.turn_on
             data:
               entity_id: scene.dom_powyzje_horyzontu
       - delay:
@@ -38,12 +40,14 @@ script:
   home_leave:
     alias: Close everything
     sequence:
-      - service: tts.google_cloud_say
+      - action: tts.speak
         data:
-          entity_id: media_player.nest_mini
+          media_player_entity_id: media_player.nest_mini
           message: >
             {{ ['Do widzenia', 'Pa Pa', 'Cześć', 'Już za tobą tęsknię', 'Wyłączam wszystko'] | random }}
-      - service: homeassistant.turn_off
+        target:
+          entity_id: tts.google_cloud_2
+      - action: homeassistant.turn_off
         data:
           entity_id: >
             {% set states = [
@@ -58,7 +62,7 @@ script:
             {{ states | selectattr('state','eq','on') | map(attribute='entity_id') | list }}
       - delay:
           seconds: 1
-      - service: fan.turn_off
+      - action: fan.turn_off
         entity_id: fan.zhimi_airpurifier_v7
       - delay:
           seconds: 4

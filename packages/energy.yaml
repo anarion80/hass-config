@@ -3,56 +3,76 @@ sensor:
     username: !secret pgnig_username
     password: !secret pgnig_password
 
-  - platform: template
-    sensors:
-      grzejnik_voltage:
-        value_template: >-
-          {{ states.switch.grzejnik.attributes.voltage }}
-        unit_of_measurement: 'V'
-      grzejnik_current:
-        value_template: >-
-          {{ states.switch.grzejnik.attributes.current }}
-        unit_of_measurement: 'mA'
-      grzejnik_power:
-        value_template: >-
-          {{ states.switch.grzejnik.attributes.current_consumption }}
-        unit_of_measurement: 'W'
-        device_class: power
-      total_power:
-        value_template: >-
-          {{ states('sensor.zamel_mew_01_electricity_meter_power_active_phase_1') | float(default=0) + states('sensor.zamel_mew_01_electricity_meter_power_active_phase_2') | float(default=0) + states('sensor.zamel_mew_01_electricity_meter_power_active_phase_3') | float(default=0) }}
-        unit_of_measurement: 'W'
-        device_class: power
+  # - platform: template
+  #   sensors:
+  # grzejnik_voltage:
+  #   value_template: >-
+  #     {{ states.switch.grzejnik_switch_1.attributes.voltage | float(default=0) }}
+  #   unit_of_measurement: 'V'
+  #   device_class: voltage
+  # grzejnik_current:
+  #   value_template: >-
+  #     {{ states.switch.grzejnik_switch_1.attributes.current | float(default=0) }}
+  #   unit_of_measurement: 'mA'
+  #   device_class: current
+  # grzejnik_power:
+  #   value_template: >-
+  #     {{ states.switch.grzejnik_switch_1.attributes.current_consumption | float(default=0) }}
+  #   unit_of_measurement: 'W'
+  #   device_class: power
+  # total_power:
+  #   value_template: >-
+  #     {{ states('sensor.zamel_mew_01_electricity_meter_power_active_phase_1') | float(default=0) + states('sensor.zamel_mew_01_electricity_meter_power_active_phase_2') | float(default=0) + states('sensor.zamel_mew_01_electricity_meter_power_active_phase_3') | float(default=0) }}
+  #   unit_of_measurement: "W"
+  #   device_class: power
 
   - platform: integration
     source: sensor.grzejnik_power
     name: Grzejnik Energy
+    unique_id: 3436d580-a39b-42d7-909e-5e661e350cba
     unit_prefix: k
     round: 2
 
   - platform: integration
     source: sensor.komfovent_power_consumption_w
     name: Rekuperator Energy
+    unique_id: cc13ba91-2085-42f0-a96d-8ba9ac715308
     unit_prefix: k
     round: 2
 
 scrape:
   - resource: http://www.cena-pradu.pl/tabela.html
-    scan_interval: 3600
+    encoding: windows-1250
+    scan_interval: 7200
     sensor:
       name: Tauron_energy_cost
-      select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div > table > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
-      index: 0
-      unit_of_measurement: 'PLN/kWh'
+      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(14) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > p:nth-child(1)"
+      #index: 0
+      unit_of_measurement: "PLN/kWh"
+      state_class: measurement
       value_template: >
-        {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
+        {{ value | replace(",",".") | float(default=0) }}
 
   - resource: http://www.cena-pradu.pl/tabela.html
-    scan_interval: 3600
+    encoding: windows-1250
+    scan_interval: 7200
     sensor:
       name: Tauron_static_cost
-      select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div > table > tr:nth-child(7) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
-      index: 1
-      unit_of_measurement: 'PLN'
+      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(32) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+      #index: 0
+      unit_of_measurement: "PLN"
+      state_class: measurement
       value_template: >
-        {{ value.split("-")[0] | replace(",",".") | float(default=0) }}
+        {{ value | replace(",",".") | float(default=0) }}
+
+template:
+  - sensor:
+      - unit_of_measurement: W
+        device_class: POWER
+        default_entity_id: sensor.total_power
+        state:
+          "{{ states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_1')
+          | float(default=0) + states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_2')
+          | float(default=0) + states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_3')
+          | float(default=0) }}"
+        name: total_power

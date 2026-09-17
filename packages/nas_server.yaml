@@ -1,30 +1,29 @@
-
 automation:
-  - id: '1635431265500'
+  - id: "1635431265500"
     alias: High CPU utlization
-    description: ''
+    description: ""
     trigger:
-    - platform: numeric_state
-      entity_id: sensor.processor_use_percent
-      above: '99'
-      for:
-        hours: 0
-        minutes: 10
-        seconds: 0
-        milliseconds: 0
+      - trigger: numeric_state
+        entity_id: sensor.processor_use_percent
+        above: "99"
+        for:
+          hours: 0
+          minutes: 10
+          seconds: 0
+          milliseconds: 0
     condition: []
     action:
-    - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-      domain: mobile_app
-      type: notify
-      title: High Home Assistant CPU!
-      message: Użycie procesora w HA było 100% przez 10 minut!
+      - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
+        domain: mobile_app
+        type: notify
+        title: High Home Assistant CPU!
+        message: Użycie procesora w HA było 100% przez 10 minut!
     mode: single
 
-binary_sensor:
-  - platform: ping
-    name: nas_internet_access
-    host: 8.8.8.8
+# binary_sensor:
+#   - platform: ping
+#     name: nas_internet_access
+#     host: 8.8.8.8
 
 homeassistant:
   customize:
@@ -44,7 +43,7 @@ homeassistant:
     sensor.router_current_consumption:
       friendly_name: Pobór mocy NAS
     sensor.nas_cpu:
-      friendly_name: Procesor
+      friendly_name: Użycie CPU NAS
       icon: mdi:chip
     sensor.nas_mem:
       friendly_name: Pamięć
@@ -80,7 +79,7 @@ template:
             mdi:shield-{{ 'alert' if states('sensor.myip') == states('sensor.template_public_ip') else 'check' }}
 
       - unique_id: nas_net_down
-        state: ' '
+        state: " "
         attributes:
           friendly_name: >
             {% set down = states('sensor.nas_network_down') | float(default=0) %}
@@ -90,7 +89,7 @@ template:
           icon: mdi:arrow-down-bold
 
       - unique_id: nas_net_up
-        state: ' '
+        state: " "
         attributes:
           friendly_name: >
             {% set up = states('sensor.nas_network_up') | float(default=0) %}
@@ -99,34 +98,23 @@ template:
             {% endif %}
           icon: mdi:arrow-up-bold
 
-sensor:
-  - platform: systemmonitor
-    resources:
-      - type: disk_use_percent
-        arg: '/'
-      - type: memory_use_percent
-      - type: processor_use
-      - type: last_boot
-      - type: swap_use_percent
-    scan_interval: 120
-
 command_line:
   - sensor:
       name: nas_disk
       command: !secret nas_disk
-      unit_of_measurement: '%'
+      unit_of_measurement: "%"
       value_template: >
         {{ value[:-1] }}
       scan_interval: 300
   - sensor:
       name: nas_cpu
       command: !secret nas_cpu
-      unit_of_measurement: '%'
+      unit_of_measurement: "%"
       scan_interval: 300
   - sensor:
       name: nas_mem
       command: !secret nas_mem
-      unit_of_measurement: '%'
+      unit_of_measurement: "%"
       value_template: >
         {{ value | round(1) }}
       scan_interval: 300

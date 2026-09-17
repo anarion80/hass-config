@@ -4,23 +4,92 @@ notify:
   #   api_key: !secret pushover_api_key
   #   user_key: !secret pushover_user_key
 
-  - platform: smtp
-    name: Email
-    server: !secret smtp_server
-    port: 25
-    timeout: 15
-    sender: !secret smtp_sender
-    encryption: none
-    recipient: !secret smtp_receiver
-    sender_name: Home Assistant
+  # - platform: smtp
+  #   name: Email_anarion
+  #   server: !secret smtp_server
+  #   port: 25
+  #   timeout: 15
+  #   sender: !secret smtp_sender
+  #   encryption: none
+  #   recipient: !secret smtp_receiver
+  #   sender_name: Home Assistant
 
   - platform: tts
     name: salon
-    tts_service: tts.google_cloud_say
-    media_player: media_player.nest_mini
+    tts_service: tts.speak
+    media_player: media_player.nest_min
 
   - platform: group
     name: anarion_iwona_phones
     services:
-      - service: mobile_app_nokia_8_3_5g
+      - service: mobile_app_moto_g85_5g
       - service: mobile_app_nokia_x20
+
+automation:
+  - id: "1656780834677"
+    alias: Nowa automatyzacja
+    description: ""
+    trigger:
+      - trigger: sun
+        event: sunset
+        offset: 0
+    condition: []
+    action:
+      - action: notify.mobile_app_moto_g85_5g
+        data:
+          message: Słońce zaszło
+          title: Słońce
+    mode: single
+  - id: "1706895330336"
+    alias: Lodówka power
+    description: ""
+    trigger:
+      - trigger: numeric_state
+        entity_id:
+          - sensor.lodowka_energy_power
+        for:
+          hours: 0
+          minutes: 10
+          seconds: 0
+        below: 1
+    condition: []
+    action:
+      - action: notify.anarion_iwona_phones
+        metadata: {}
+        data:
+          message: Lodówka wyłączona!!!
+          title: Lodówka
+    mode: single
+  - id: "1707584874483"
+    alias: Dzwonek do drzwi
+    description: "Dzwonek do drzwi"
+    trigger:
+      - trigger: device
+        device_id: 5c31c6d983cf15df10f7081a661e1d22
+        domain: nest
+        type: doorbell_chime
+    condition: []
+    action:
+      - action: notify.anarion_iwona_phones
+        metadata: {}
+        data:
+          message: Dzwonek do drzwi
+          title: Ktoś dzwoni do drzwi
+      - action: media_player.volume_set
+        data:
+          entity_id: media_player.nest_mini
+          volume_level: 0.8
+      - action: media_player.play_media
+        target:
+          entity_id: media_player.nest_mini
+        data:
+          media_content_id: /local/sound/doorbell.wav
+          media_content_type: music
+        metadata: {}
+      - action: tts.speak
+        data:
+          media_player_entity_id: media_player.nest_mini
+          message: "Ktoś dzwoni do drzwi"
+        target:
+          entity_id: tts.google_cloud_2
+    mode: single

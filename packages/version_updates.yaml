@@ -1,8 +1,8 @@
 automation:
   - alias: ios_notify_hass_rc
-    id: '3984233949106'
+    id: "3984233949106"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.hass_version_latest_beta
     condition:
       - condition: state
@@ -11,7 +11,7 @@ automation:
           - Today
           - Released
     action:
-      - service: notify.mobile_app_nokia_8_3_5g
+      - action: notify.mobile_app_moto_g85_5g
         data:
           title: >
             RC {{ states(trigger.entity_id) }} dostępny
@@ -22,54 +22,54 @@ automation:
             url: https://rc.home-assistant.io/latest-release-notes/
 
   - alias: ios_notify_hass_update
-    id: '7958228563778'
+    id: "7958228563778"
     variables:
       latest: >
         {{ states(trigger.entity_id) }}
       installed: >
         {{ states('sensor.hass_version_installed') }}
     trigger:
-      - platform: state
+      - trigger: state
         entity_id: sensor.hass_version_latest
     condition: >
       {{ installed != latest if '.' in installed and '.' in latest else false }}
     action:
-      - service: homeassistant.update_entity
+      - action: homeassistant.update_entity
         target:
           entity_id:
             - sensor.hass_release_notes
             - sensor.hass_release_notes_rc
       - delay:
           minutes: 30
-      - service: notify.mobile_app_nokia_8_3_5g
+      - action: notify.mobile_app_moto_g85_5g
         data:
           title: >
-           {{ latest }} dostępny {{ '\U0001F389' }}
+            {{ latest }} dostępny {{ '\U0001F389' }}
           message: Przytrzymaj żeby uaktualnić
           data:
             data:
               url: https://www.home-assistant.io/latest-release-notes/
 
   - alias: ios_notify_hass_update_action
-    id: '0694774018396'
+    id: "0694774018396"
     trigger:
-      - platform: event
+      - trigger: event
         event_type: ios.notification_action_fired
         event_data:
           actionName: START_WATCHTOWER
     action:
-      - service: switch.turn_on
+      - action: switch.turn_on
         entity_id: switch.watchtower
 
   - alias: update_hass_release_notes
-    id: '4289040658246'
+    id: "4289040658246"
     trigger:
-      - platform: state
+      - trigger: state
         entity_id:
           - sensor.hass_version_latest
           - sensor.hass_version_latest_beta
     action:
-      - service: homeassistant.update_entity
+      - action: homeassistant.update_entity
         entity_id:
           - sensor.hass_release_notes
           - sensor.hass_release_notes_rc
@@ -123,7 +123,7 @@ template:
 
       - unique_id: updates
         state: >
-          {{ this.attributes.values() | sum }}
+          {{ this.attributes.values() | map('int', 0) | sum }}
         attributes:
           home_assistant: >
             {% set installed = states('sensor.current_version') %}
@@ -134,14 +134,18 @@ template:
           other_updates: >
             {{ states('sensor.template_other_updates') | int(0) }}
           supervisor_update: >
-            {% set ns = namespace(update=false) %}
             {% set supervisor = state_attr('sensor.supervisor_updates','addons') %}
+            {% if supervisor is not none %}
+              {% set ns = namespace(update=0) %}
               {% for addon in supervisor %}
                 {% if addon.version != addon.version_latest %}
-                {% set ns.update = true %}
+                  {% set ns.update = 1 %}
                 {% endif %}
               {% endfor %}
-            {{ ns.update }}
+              {{ ns.update }}
+            {% else %}
+              0
+            {% endif %}
 
       # - unique_id: hass_dev_release
       #   state: >
@@ -161,16 +165,16 @@ template:
       #     device_class: timestamp
 
   - binary_sensor:
-    - unique_id: supervisor_update
-      state: >
-        {% set ns = namespace(update=false) %}
-        {% set supervisor = state_attr('sensor.supervisor_updates','addons') %}
-          {% for addon in supervisor %}
-            {% if addon.version != addon.version_latest %}
-            {% set ns.update = true %}
-            {% endif %}
-          {% endfor %}
-        {{ ns.update }}
+      - unique_id: supervisor_update
+        state: >
+          {% set ns = namespace(update=false) %}
+          {% set supervisor = state_attr('sensor.supervisor_updates','addons') %}
+            {% for addon in supervisor %}
+              {% if addon.version != addon.version_latest %}
+              {% set ns.update = true %}
+              {% endif %}
+            {% endfor %}
+          {{ ns.update }}
 
 command_line:
   - sensor:
@@ -199,9 +203,9 @@ command_line:
       command: 'curl http://supervisor/supervisor/info -H "Authorization: Bearer $(printenv SUPERVISOR_TOKEN)" | jq ''{"newest_version":.data.version_latest,"current_version":.data.version,"addons":[.data.addons[] | select(.version != .installed)]}'''
       value_template: "{{ value_json.addons | length }}"
       json_attributes:
-      - newest_version
-      - current_version
-      - addons
+        - newest_version
+        - current_version
+        - addons
 
 shell_command:
   ha_core_update: !secret ha_core_update_command
@@ -211,12 +215,12 @@ shell_command:
 script:
   homeassistant_restart:
     sequence:
-      - service: shell_command.ha_dockermon_restart_container
+      - action: shell_command.ha_dockermon_restart_container
 
   homeassistant_core_update:
     sequence:
-      - service: shell_command.ha_core_update
+      - action: shell_command.ha_core_update
 
   homeassistant_supervisor_update:
     sequence:
-      - service: shell_command.ha_supervisor_update
+      - action: shell_command.ha_supervisor_update

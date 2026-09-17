@@ -1,11 +1,4 @@
 influxdb:
-  api_version: 2
-  ssl: false
-  host: !secret influxdb_host
-  port: 8086
-  token: !secret influx_db_token
-  organization: anarion
-  bucket: anarion
   precision: s
   max_retries: 3
   tags:

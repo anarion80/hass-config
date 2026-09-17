@@ -38,7 +38,7 @@ template:
       device_class: temperature
     - name: "Temperatura Hania"
       unique_id: "temperatura_hania"
-      state: "{{ state_attr('climate.Hania','current_temperature') | float(default=0) }}"
+      state: "{{ state_attr('climate.hania','current_temperature') | float(default=0) }}"
       unit_of_measurement: "°C"
       state_class: measurement
       device_class: temperature
@@ -164,3 +164,34 @@ group:
       - climate.wejscie
       - climate.wodomierz
       - climate.wojtek
+
+automation:
+  - alias: Ogłupiały regulator
+    id: "1656782342342"
+    description: "Powiadomienie o ogłupiałym regulatorze"
+    triggers:
+      - trigger: numeric_state
+        entity_id:
+          - climate.wejscie
+          - climate.gabinet
+          - climate.salon
+          - climate.sypialnia
+          - climate.wojtek
+          - climate.hania
+          - climate.lazienka
+          - climate.lazienka_dol
+          - climate.piwnica
+          - climate.wodomierz
+          - climate.kotlownia
+          - climate.schowek
+          - climate.garaz
+        attribute: temperature
+        above: 24
+    conditions: []
+    actions:
+      - action: notify.anarion_iwona_phones
+        metadata: {}
+        data:
+          message: Regulator ogłupiał!
+          title: Regulator ogłupiał!
+    mode: single
