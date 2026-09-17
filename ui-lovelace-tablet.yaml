@@ -5,7 +5,7 @@ kiosk_mode:
     - users:
         - "Tablet"
         - "homeassistant"
-      kiosk: false
+      kiosk: true
 
 # NOTE: every `type: grid` below sets `square: false`.
 # Home Assistant defaults grid cards to `square: true`, which forces
