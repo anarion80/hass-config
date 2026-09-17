@@ -18,7 +18,12 @@ browser_mod:
               entity: input_number.watering_time
 
             - type: custom:hui-element
-              card_type: horizontal-stack
+              card_type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                margin: 0
+                grid-template-columns: max-content
+                place-content: center
               cards:
                 - type: custom:button-card
                   name: Uruchom zraszacz

@@ -28,7 +28,12 @@ browser_mod:
           view_layout:
             grid-area: buttons
           cards:
-            - type: horizontal-stack
+            - type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                margin: 0
+                grid-template-columns: max-content
+                place-content: center
               cards:
                 - type: custom:button-card
                   entity: input_boolean.garbage_reminder
@@ -41,10 +46,6 @@ browser_mod:
                     name: 'Śmieci wyniesione'
                   icon: mdi:reload
                   template: icon_name
-              styles:
-                name:
-                  - text-align: center;
-              template: icon_name
 
             # - type: custom:button-card
             #   #name: Śmieci

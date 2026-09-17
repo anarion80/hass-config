@@ -84,7 +84,12 @@ browser_mod:
                       entity_id: sensor.memory_use_percent
 
             - type: custom:hui-element
-              card_type: horizontal-stack
+              card_type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                margin: 0
+                grid-template-columns: max-content
+                place-content: center
               cards:
                 - type: custom:button-card
                   name: Home Assistant
@@ -193,7 +198,13 @@ browser_mod:
                         data:
                           entity_id: sensor.template_fullykiosk_storage
 
-            - type: horizontal-stack
+            - type: custom:layout-card
+              layout_type: custom:grid-layout
+              layout:
+                margin: 0
+                grid-template-columns: repeat(2, max-content)
+                grid-column-gap: 1em
+                place-content: center
               cards:
                 - type: custom:button-card
                   name: Strona główna
