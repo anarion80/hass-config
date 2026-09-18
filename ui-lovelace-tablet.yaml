@@ -18,6 +18,22 @@ kiosk_mode:
 views:
   - type: custom:grid-layout
     title: Tablet
+    # The dashboard background used to come from `card-mod-root`
+    # (`#view { background: url('/local/background.png'); background-size: cover }`).
+    # The frontend paints it natively now: `hui-root` renders a `hui-view-background`
+    # element behind the view content with
+    # `background: var(--view-background, var(--lovelace-background, var(--primary-background-color)))`,
+    # fed from this view's `background:`. It is rendered outside the layout element, so
+    # it works for a `custom:grid-layout` view like this one, and it covers the sidebar
+    # area as well - which is what lets the sidebar panel below read as a tint over it.
+    # (The `lovelace-background` theme key would do the same, but for every view using
+    # the tablet theme; the map form also gives `size`/`alignment`/`repeat`, which the
+    # old one-line CSS asked for.)
+    background:
+      image: /local/background.png
+      size: cover
+      alignment: center
+      repeat: no-repeat
     layout:
       #default
       margin: 0
@@ -107,6 +123,45 @@ views:
       #                    SIDEBAR                    #
       #                                               #
       #################################################
+
+      # Sidebar panel. card-mod used to tint the stack's `#root` below
+      # (`background-color: rgba(0, 0, 0, 0.06)` plus a `0.1vw` right border). With
+      # card-mod/uix gone nothing can target that stack any more: theme variables are
+      # global, and layout-card 2.4.7 only forwards `grid*` / `place-items` /
+      # `place-content` keys from `layout:` onto its own `#root`, so wrapping the stack
+      # in a layout-card cannot paint a panel either.
+      # What does work is `view_layout`: the grid applies every `grid*` key in it as
+      # inline CSS on the card element and appends the cards in config order, so this
+      # empty card sits in the same `sidebar` area and - being earlier in the list - is
+      # painted underneath the sidebar stack that follows. HA's `createCardElement`
+      # hands layout-card the card element itself, so the grid item is this
+      # `button-card` and `:host` is the panel's box. `pointer-events: none` keeps it
+      # out of the way of the entries' tap actions.
+      - type: custom:button-card
+        view_layout:
+          grid-area: sidebar
+        show_name: false
+        show_icon: false
+        tap_action:
+          action: none
+        extra_styles: |
+          :host {
+            /* Painted on the host rather than on `#card`: the host *is* the grid item,
+               blockified and stretched to the `sidebar` area, while `#card` sits behind
+               button-card's inner `#aspect-ratio` wrapper. */
+            display: block;
+            height: 100%;
+            pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.06);
+            border-right: 0.1vw solid rgba(58, 69, 73, 0.2);
+          }
+          /* phone - the theme left the sidebar untinted there */
+          @media screen and (max-width: 800px) {
+            :host {
+              background-color: rgba(0, 0, 0, 0);
+              border-right: none;
+            }
+          }
 
       - type: vertical-stack
         view_layout:
