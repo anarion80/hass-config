@@ -38,12 +38,12 @@
           </b>
         active: >
           <b>
-          {% set lights = [
+          {%- set lights = [
             states.light.lampka_u_hani,
             states.light.kotlownia
-          ] %}
+          ] -%}
 
-          {% set switches = [
+          {%- set switches = [
             states.switch.chromecast_audio,
             states.switch.netflix,
             states.switch.plex,
@@ -52,111 +52,112 @@
             states.switch.tv,
             states.switch.youtube,
             states.switch.zraszacz
-          ] %}
+          ] -%}
 
-          {% set media_players = [
+          {%- set media_players = [
             states.media_player.sony_kd_55xe9305
-          ] %}
+          ] -%}
 
-          {% set lights_on = lights | selectattr('state','eq','on') | list %}
-          {% set lights_name = lights | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
+          {%- set lights_on = lights | selectattr('state','eq','on') | list -%}
+          {%- set lights_name = lights | selectattr('state','eq','on') | map(attribute='name') | join(', ') -%}
 
-          {% set switches_on = switches | selectattr('state','eq','on') | list %}
-          {% set media_players_playing = media_players | selectattr('state','eq','playing') | list %}
-          {% set append = switches_on + media_players_playing %}
-          {% set switches_name = append | map(attribute='name') | join(', ') %}
+          {%- set switches_on = switches | selectattr('state','eq','on') | list -%}
+          {%- set media_players_playing = media_players | selectattr('state','eq','playing') | list -%}
+          {%- set append = switches_on + media_players_playing -%}
+          {%- set switches_name = append | map(attribute='name') | join(', ') -%}
 
-          {% if (lights_on | length == 0) and (switches_on | length == 1) %}
+          {%- if (lights_on | length == 0) and (switches_on | length == 1) -%}
             {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} jest włączone
 
-          {% elif (lights_on | length == 0) and (switches_on | length > 1) %}
+          {%- elif (lights_on | length == 0) and (switches_on | length > 1) -%}
             {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} są włączone
 
-          {% elif (lights_on | length == 1) and (switches_on | length == 1) %}
+          {%- elif (lights_on | length == 1) and (switches_on | length == 1) -%}
             {{ lights_name }} i {{switches_name }} są włączone
 
-          {% elif (lights_on | length == 1) and (switches_on | length > 1) %}
+          {%- elif (lights_on | length == 1) and (switches_on | length > 1) -%}
             {{ lights_name }}, {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} są włączone
 
-          {% elif (lights_on | length > 1) and (switches_on | length == 1) %}
+          {%- elif (lights_on | length > 1) and (switches_on | length == 1) -%}
             {{ lights_on | length }} światła i {{ switches_name }} są włączone
 
-          {% elif (lights_on | length > 1) and (switches_on | length > 1) %}
+          {%- elif (lights_on | length > 1) and (switches_on | length > 1) -%}
             {{ lights_on | length }} światła, {{ switches_name | regex_replace(',([^,]*)$',' i\\1') }} są włączone
 
-          {% elif (lights_on | length == 1) and (switches_on | length == 0) %}
+          {%- elif (lights_on | length == 1) and (switches_on | length == 0) -%}
             {{ lights_name }} jest włączony
 
-          {% elif (lights_on | length > 1) and (switches_on | length == 0) %}
+          {%- elif (lights_on | length > 1) and (switches_on | length == 0) -%}
             {{ lights_on | length }} światła są włączone
 
-          {% else %}
-            <font color='#6a7377'>Wszystko wyłączone</font>
-          {% endif %}
+          {%- else -%}
+            Wszystko wyłączone
+          {%- endif -%}
           </b>
         open: >
           <b>
-          {% set doors = [
+          {%- set doors = [
             states.binary_sensor.drzwi_wejsciowe_contact,
             states.binary_sensor.drzwi_do_ogrodu_contact
-          ] %}
+          ] -%}
 
-          {% set doors_open = doors | selectattr('state','eq','on') | list %}
-          {% set doors_name = doors | selectattr('state','eq','on') | map(attribute='name') | join(', ') %}
+          {%- set doors_open = doors | selectattr('state','eq','on') | list -%}
+          {%- set doors_name = doors | selectattr('state','eq','on') | map(attribute='name') | join(', ') -%}
 
-          {% if (doors_open | length == 1) %}
+          {%- if (doors_open | length == 1) -%}
             {{ doors_name }} są otwarte
 
-          {% elif (doors_open | length > 1) %}
+          {%- elif (doors_open | length > 1) -%}
             {{ doors_open | length }} drzwi są otwarte
 
-          {% else %}
-            <font color='#6a7377'>Wszystkie drzwi i okna zamknięte</font>
-          {% endif %}
+          {%- else -%}
+            Wszystkie drzwi i okna zamknięte
+          {%- endif -%}
           </b>
-        laundry: >
-          {% set entity_id = 'input_select.washing_machine' %}
-          {% if is_state(entity_id, 'Washing') %}
-            <b>Pralka pierze</b>
-          {% endif %}
-        vacuum: >
-          {% set entity_id = 'vacuum.valetudo_dreame1' %}
-          {% if is_state(entity_id, 'cleaning') %}
-            <b>Robot sprząta</b>
-          {% elif is_state(entity_id, 'returning') %}
-            <b>Robot skończył sprzątać</b>
-          {% endif %}
+        # laundry: >
+        #   {%- set entity_id = 'input_select.washing_machine' -%}
+        #   {%- if is_state(entity_id, 'Washing') -%}
+        #     <b>Pralka pierze</b>
+        #   {%- endif -%}
+        # vacuum: >
+        #   {%- set entity_id = 'vacuum.valetudo_dreame1' -%}
+        #   {%- if is_state(entity_id, 'cleaning') -%}
+        #     <b>Robot sprząta</b>
+        #   {%- elif is_state(entity_id, 'returning') -%}
+        #     <b>Robot skończył sprzątać</b>
+        #   {%- endif -%}
         weather: >
-          {% set temperature = states('sensor.openweathermap_temperature') %}
-          {% set condition = states('sensor.openweathermap_condition') %}
-          {% set weather_icon = '' %}
-          {% if condition == 'clear-night' %} {{ weather_icon }} {{'\U0001F315'}}
-          {% elif condition == 'cloudy' %} {{ weather_icon }} {{'\U00002601\U0000FE0F'}}
-          {% elif condition == 'exceptional' %} {{ weather_icon }} {{'\U0001F31E'}}
-          {% elif condition == 'fog' %} {{ weather_icon }} {{'\U0001F32B\U0000FE0F'}}
-          {% elif condition == 'hail' %} {{ weather_icon }} {{'\U000026AA'}}
-          {% elif condition == 'lightning' %} {{ weather_icon }} {{'\U0001F329\U0000FE0F'}}
-          {% elif condition == 'lightning-rainy' %} {{ weather_icon }} {{'\U000026C8\U0000FE0F'}}
-          {% elif condition == 'partlycloudy' %} {{ weather_icon }} {{'\U0001F324\U0000FE0F'}}
-          {% elif condition == 'pouring' %} {{ weather_icon }} {{'\U00002614'}}
-          {% elif condition == 'rainy' %} {{ weather_icon }} {{'\U00002602\U0000FE0F'}}
-          {% elif condition == 'snowy' %} {{ weather_icon }} {{'\U00002744\U0000FE0F'}}
-          {% elif condition == 'snowy-rainy' %} {{ weather_icon }} {{'\U0001F328\U0000FE0F'}}
-          {% elif condition == 'sunny' %} {{ weather_icon }} {{'\U00002600\U0000FE0F'}}
-          {% elif condition == 'windy' %} {{ weather_icon }} {{'\U0001F32C\U0000FE0F'}}
-          {% elif condition == 'windy-variant' %} {{ weather_icon }} {{'\U0001F390'}}
-          {% endif %}
-          {% set apparent = states('sensor.openweathermap_feels_like_temperature') | round %}
-          {% set precip = states('sensor.openweathermap_forecast_precipitation_probability') | round %}
-          {% if not is_state('sensor.openweathermap_temperature', 'unknown') %}
-            {% if temperature | float(default=0) <= 0.0 %}
+          {%- set temperature = states('sensor.openweathermap_temperature') -%}
+          {%- set condition = states('sensor.openweathermap_condition') -%}
+          {%- set forecast = state_attr('sensor.weather_forecast_daily','forecast')[0] -%}
+          {%- set weather_icon = '' -%}
+          {%- if condition == 'clear-night' -%} {{ weather_icon }} {{'\U0001F315'}}
+          {%- elif condition == 'cloudy' -%} {{ weather_icon }} {{'\U00002601\U0000FE0F'}}
+          {%- elif condition == 'exceptional' -%} {{ weather_icon }} {{'\U0001F31E'}}
+          {%- elif condition == 'fog' -%} {{ weather_icon }} {{'\U0001F32B\U0000FE0F'}}
+          {%- elif condition == 'hail' -%} {{ weather_icon }} {{'\U000026AA'}}
+          {%- elif condition == 'lightning' -%} {{ weather_icon }} {{'\U0001F329\U0000FE0F'}}
+          {%- elif condition == 'lightning-rainy' -%} {{ weather_icon }} {{'\U000026C8\U0000FE0F'}}
+          {%- elif condition == 'partlycloudy' -%} {{ weather_icon }} {{'\U0001F324\U0000FE0F'}}
+          {%- elif condition == 'pouring' -%} {{ weather_icon }} {{'\U00002614'}}
+          {%- elif condition == 'rainy' -%} {{ weather_icon }} {{'\U00002602\U0000FE0F'}}
+          {%- elif condition == 'snowy' -%} {{ weather_icon }} {{'\U00002744\U0000FE0F'}}
+          {%- elif condition == 'snowy-rainy' -%} {{ weather_icon }} {{'\U0001F328\U0000FE0F'}}
+          {%- elif condition == 'sunny' -%} {{ weather_icon }} {{'\U00002600\U0000FE0F'}}
+          {%- elif condition == 'windy' -%} {{ weather_icon }} {{'\U0001F32C\U0000FE0F'}}
+          {%- elif condition == 'windy-variant' -%} {{ weather_icon }} {{'\U0001F390'}}
+          {%- endif -%}
+          {%- set apparent = states('sensor.openweathermap_feels_like_temperature') | round -%}
+          {%- set precip = forecast.precipitation_probability | round -%}
+          {%- if not is_state('sensor.openweathermap_temperature', 'unknown') -%}
+            {%- if temperature | float(default=0) <= 0.0 -%}
               {{ weather_icon }} Odczuwalna {{ apparent }}° z {{ precip }}% ryzykiem śniegu {{'\u2744\uFE0F'}}
-            {% elif temperature | float(default=0) > 0.0 %}
+            {%- elif temperature | float(default=0) > 0.0 -%}
               {{ weather_icon }} Odczuwalna {{ apparent}}° z {{ precip }}% ryzykiem deszczu {{ '\u2614\uFE0F' if precip > 30 }}
-            {% endif %}
-          {% else %}
+            {%- endif -%}
+          {%- else -%}
             Nie można załadować prognozy pogody...
-          {% endif %}
+          {%- endif -%}
         garbage: >
           {% set garbage = states.calendar | selectattr('entity_id', 'search', 'smieci') | selectattr('attributes.start_time','defined') | list -%}
 
@@ -327,3 +328,125 @@
           # {% if is_state('binary_sensor.nas_internet_access', 'off') %}
             # {{'\u26A0\uFE0F'}} Check NAS Internet access
           # {% endif %}
+    - unique_id: vacuum
+      state: >
+        {%- set entity_id = 'vacuum.valetudo_dreame1' -%}
+        {%- if is_state(entity_id, 'cleaning') -%}
+          <b>Robot sprząta</b>
+        {%- elif is_state(entity_id, 'returning') -%}
+          <b>Robot skończył sprzątać</b>
+        {%- endif -%}
+    - unique_id: laundry
+      state: >
+        {%- set entity_id = 'input_select.washing_machine' -%}
+        {%- if is_state(entity_id, 'Washing') -%}
+          <b>Pralka pierze</b>
+        {%- endif -%}
+    - unique_id: dryer
+      state: >
+        {%- set dryer_state = 'sensor.suszarka' -%}
+        {%- set dryer_completed = 'binary_sensor.suszarka_run_completed' -%}
+        {%- set dryer_run_state = 'sensor.suszarka_run_state' -%}
+        {%- set time = states[dryer_state].attributes.remain_time -%}
+        {%- set parts = time.split(":") -%}
+        {%- set total_minutes = parts[0] | int * 60 + parts[1] | int -%}
+        {%- if (is_state(dryer_state, 'on') and is_state(dryer_run_state, 'Suszenie') and is_state(dryer_completed, 'off')) -%}
+          <b>Suszarka suszy, {{ total_minutes }} {% if total_minutes == 1 -%}
+        minuta {% elif (total_minutes % 10 >= 2 and total_minutes % 10 <= 4 and (total_minutes % 100 < 10 or total_minutes % 100 >= 20)) -%}
+        minuty {% elif total_minutes >4 -%}
+        minut {% endif -%} do końca</b>
+        {%- endif -%}
+    - unique_id: apparent_temperature
+      state: >
+        {{ states['weather.openweathermap'].attributes.apparent_temperature | round }}°C ({{ states['weather.openweathermap'].attributes.temperature | round}}°C)
+    - unique_id: calendar
+      state: |
+        {# set helper variables #}
+        {% set ns = namespace(today=false) %}
+        {% set ns.tomorrow=false %}
+
+        {# Get a list of calendar event entities with start times #}
+        {% set entities = states.sensor | selectattr('entity_id','search','ical_kalendarz') | selectattr('attributes.start','defined') | list %}
+
+        {# Check if there is any event today or tomorrow #}
+        {% if entities %}
+        {% for item in entities %}
+          {% if item.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') %}
+            {% set ns.today = true %}
+          {% elif item.attributes.start.strftime('%Y-%m-%d') == (now() + timedelta(days=1)).strftime('%Y-%m-%d')  %}
+            {% set ns.tomorrow = true %}
+          {% endif %}
+        {% endfor %}
+
+        {# If there is at least one event today, iterate over them #}
+        {% if ns.today %}
+          {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == now().strftime('%Y-%m-%d') -%}
+            {%- set start_time = sensor.attributes.start -%}
+            {%- set end_time = sensor.attributes.end -%}
+            {%- set event = sensor.attributes.summary -%}
+            {%- set location = sensor.attributes.location -%}
+            {%- if start_time != None -%}
+              {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') -%}
+              {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') -%}
+              {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 -%}
+              {%- set day = start_time.strftime('%A')
+              | replace('Monday', 'poniedziałek')
+              | replace('Tuesday', 'wtorek')
+              | replace('Wednesday', 'środę')
+              | replace('Thursday', 'czwartek')
+              | replace('Friday', 'piątek')
+              | replace('Saturday', 'sobotę')
+              | replace('Sunday', 'niedzielę') -%}
+                {{'\U0001F4C5'}} {{ event }} dziś między {{ time }}-{{ time_end }}{{ '\n' }}
+            {%- endif -%}
+          {% endfor %}
+        {# If there is at least one event tomorrow, iterate over them #}
+        {% elif ns.tomorrow %}
+          {% for sensor in entities if sensor.attributes.start.strftime('%Y-%m-%d') == (now() + timedelta(days=1)).strftime('%Y-%m-%d') -%}
+            {%- set start_time = sensor.attributes.start -%}
+            {%- set end_time = sensor.attributes.end -%}
+            {%- set event = sensor.attributes.summary -%}
+            {%- set location = sensor.attributes.location -%}
+            {%- if start_time != None -%}
+              {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') -%}
+              {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') -%}
+              {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 -%}
+              {%- set day = start_time.strftime('%A')
+              | replace('Monday', 'poniedziałek')
+              | replace('Tuesday', 'wtorek')
+              | replace('Wednesday', 'środę')
+              | replace('Thursday', 'czwartek')
+              | replace('Friday', 'piątek')
+              | replace('Saturday', 'sobotę')
+              | replace('Sunday', 'niedzielę') -%}
+                {{ event }} jutro między {{ time }}-{{ time_end }}{{ '\n' }}
+            {%- endif -%}
+          {% endfor %}
+
+        {# Else just list the next event as usual #}
+        {% else %}
+          {%- set start_time = entities[0].attributes.start -%}
+          {%- set end_time = entities[0].attributes.end -%}
+          {%- set event = entities[0].attributes.summary -%}
+          {%- set location = entities[0].attributes.location -%}
+          {%- if start_time != None -%}
+            {%- set time = as_timestamp(start_time) | timestamp_custom('%H:%M') %}
+            {%- set time_end = as_timestamp(end_time) | timestamp_custom('%H:%M') %}
+            {%- set hours = as_timestamp(start_time) | timestamp_custom('%H') | int(default=0) / 24 %}
+            {%- set count = (as_timestamp(start_time) - as_timestamp(now())) / 86400 - hours %}
+            {%- set day = start_time.strftime('%A')
+            | replace('Monday', 'poniedziałek')
+            | replace('Tuesday', 'wtorek')
+            | replace('Wednesday', 'środę')
+            | replace('Thursday', 'czwartek')
+            | replace('Friday', 'piątek')
+            | replace('Saturday', 'sobotę')
+            | replace('Sunday', 'niedzielę') %}
+              {% if day == 'wtorek' -%}
+                {{event }} za {{ (count + hours) | round }} dni we {{ day }} między {{ time }}-{{ time_end }}
+              {% else -%}
+                {{event }} za {{ (count + hours) | round }} dni w {{ day }} między {{ time }}-{{ time_end }}
+              {% endif %}
+          {% endif -%}
+        {% endif %}
+        {% endif %}

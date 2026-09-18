@@ -157,18 +157,20 @@ views:
             tap_action: !include popup/doors.yaml
 
           - type: custom:button-card
-            entity: sensor.template_sidebar
+            # Standalone template sensor now (`unique_id: laundry` in sidebar.yaml).
+            entity: sensor.template_laundry
             name: >
               [[[
-                  return entity?.attributes?.laundry;
+                  return entity?.state;
                   ]]]
             template: sidebar
 
           - type: custom:button-card
-            entity: sensor.template_sidebar
+            # Standalone template sensor now (`unique_id: vacuum` in sidebar.yaml).
+            entity: sensor.template_vacuum
             name: >
               [[[
-                  return entity?.attributes?.vacuum;
+                  return entity?.state;
                   ]]]
             template: sidebar
 
@@ -189,6 +191,20 @@ views:
                   ]]]
             template: sidebar
             tap_action: !include popup/footer_batteries.yaml
+
+          - type: custom:button-card
+            # The dryer is a standalone template sensor now (`unique_id: dryer` in
+            # sidebar.yaml), so it is read from `sensor.template_dryer` - the same
+            # `<domain>.template_<unique_id>` entity_id that `unique_id: sidebar` gets.
+            # Its state already carries the `<b>...</b>` markup, and the `sidebar`
+            # template's own name builder only walks `entity.attributes` (the dryer
+            # sensor has none), so `name` is still passed explicitly here.
+            entity: sensor.template_dryer
+            name: >
+              [[[
+                  return entity?.state;
+                  ]]]
+            template: sidebar
 
           - type: custom:button-card
             entity: sensor.template_sidebar
