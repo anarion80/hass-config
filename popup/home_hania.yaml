@@ -25,10 +25,15 @@ browser_mod:
             - entity: device_tracker.cc_9f_7a_a8_1e_27
               name: Ruter
               icon: mdi:wifi
-            - entity: device_tracker.ta_1004
+            - entity: device_tracker.nokia_x20
               name: Pozycja
               icon: mdi:crosshairs-gps
-        - type: horizontal-stack
+        - type: custom:layout-card
+          layout_type: custom:grid-layout
+          layout:
+            margin: 0
+            grid-template-columns: max-content
+            place-content: center
           cards:
             - type: custom:button-card
               name: Graj dźwięk na telefonie
@@ -42,4 +47,4 @@ browser_mod:
           default_zoom: 16
           dark_mode: true
           entities:
-            - device_tracker.ta_1004
+            - device_tracker.nokia_x20

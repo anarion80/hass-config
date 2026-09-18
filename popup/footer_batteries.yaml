@@ -89,6 +89,8 @@ browser_mod:
                 - entity: sensor.ipad_iwona_battery_level
                 - entity: sensor.moto_g85_5g_battery_level
                 - entity: sensor.ta_1004_poziom_baterii
-                - entity: sensor.kftrwi_battery_level
+                - entity: sensor.tablet2_battery_level
                 #- entity: sensor.redmi_note_5_battery_level
                 - entity: sensor.nokia_x20_battery_level
+                - entity: sensor.iphone_battery_level
+                - entity: sensor.pixel_10_pro_xl_battery_level

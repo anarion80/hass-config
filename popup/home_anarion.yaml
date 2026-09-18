@@ -24,10 +24,15 @@ browser_mod:
             - entity: device_tracker.16_50_29_49_06_7e
               name: Ruter
               icon: mdi:wifi
-            - entity: device_tracker.moto_g85_5g
+            - entity: device_tracker.pixel_10_pro_xl
               name: Pozycja
               icon: mdi:crosshairs-gps
-        - type: horizontal-stack
+        - type: custom:layout-card
+          layout_type: custom:grid-layout
+          layout:
+            margin: 0
+            grid-template-columns: max-content
+            place-content: center
           cards:
             - type: custom:button-card
               name: Graj dźwięk na telefonie
@@ -41,6 +46,6 @@ browser_mod:
           default_zoom: 16
           dark_mode: true
           entities:
-            - device_tracker.moto_g85_5g
+            - device_tracker.pixel_10_pro_xl
           auto_fit: true
           hours_to_show: 24
