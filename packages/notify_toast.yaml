@@ -2,8 +2,8 @@ notify:
   - name: all_devices
     platform: group
     services:
-      - service: mobile_app_moto_g85_5g
-      - service: mobile_app_nokia_x20
+      - service: mobile_app_iphone
+      - service: mobile_app_pixel_10_pro_xl
 
 homeassistant:
   customize:

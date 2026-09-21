@@ -1540,6 +1540,19 @@ views:
           grid-column-gap: 1vw
           grid-template-columns: repeat(7, minmax(0, 1fr))
           grid-template-rows: auto
+          mediaquery:
+            #phone
+            "(max-width: 800px)":
+              # Seven pills across a ~390px phone leave ~43px each, and the footer label
+              # size is capped at `8cqw` (a share of the card width), which is what made
+              # the phone labels unreadable. Wrap instead: an `88px` minimum keeps three
+              # pills per row from 360px up (~104px each at 390px), the labels keep the
+              # 12px phone floor, and wider phones inside this breakpoint still get three
+              # or more columns. layout-card applies the mediaquery's `grid*` keys on top
+              # of the ones above, so only the differences are set.
+              grid-template-columns: repeat(auto-fit, minmax(88px, 1fr))
+              grid-column-gap: calc(1vw * 1.7)
+              grid-row-gap: calc(1vw * 1.7)
         # layout-card places its children directly in the grid, so the seven footer
         # pills get equal, full-width columns without the card_mod `justify-content`
         # rule that the old horizontal-stack needed.

@@ -191,9 +191,9 @@ homeassistant:
       entity_picture: /local/anarion.png
     person.iwona:
       entity_picture: /local/iwona.png
-    device_tracker.moto_g85_5g:
+    device_tracker.pixel_10_pro_xl:
       entity_picture: /local/anarion.png
-    device_tracker.nokia_x20:
+    device_tracker.iphone:
       entity_picture: /local/iwona.png
 
 mqtt:
@@ -360,18 +360,18 @@ script:
       - repeat:
           count: 3
           sequence:
-            - action: notify.mobile_app_nokia_x20
+            - action: notify.mobile_app_nokia_8_3_5g
               data:
                 message: "command_ringer_mode"
                 data:
                   command: "normal"
-            - action: notify.mobile_nokia_x20
+            - action: notify.mobile_nokia_8_3_5g
               data:
                 message: "command_volume_level"
                 data:
                   media_stream: "alarm_stream"
                   command: 20
-            - action: notify.mobile_app_nokia_x20
+            - action: notify.mobile_app_nokia_8_3_5g
               data:
                 title: Znajdź mój telefon
                 message: Tu jestem

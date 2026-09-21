@@ -91,6 +91,6 @@ browser_mod:
                 - entity: sensor.ta_1004_poziom_baterii
                 - entity: sensor.tablet2_battery_level
                 #- entity: sensor.redmi_note_5_battery_level
-                - entity: sensor.nokia_x20_battery_level
+                - entity: sensor.nokia_8_3_5g_battery_level
                 - entity: sensor.iphone_battery_level
                 - entity: sensor.pixel_10_pro_xl_battery_level

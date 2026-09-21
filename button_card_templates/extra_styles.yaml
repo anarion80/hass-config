@@ -1,6 +1,11 @@
 extra_styles:
   extra_styles: >
     [[[
+      // The whole template below is ONE js template literal, so the css text it returns
+      // must never contain a backtick: an inline css comment quoting a token with
+      // backticks closes the literal, the template stops compiling, and every card that
+      // uses it (everything with the `base` or `footer` template) fails with
+      // ButtonCardJSTemplateError. Write inline comments as plain text instead.
       if (entity) {
           if (entity.entity_id.split('.')[0] === 'light' && variables.state_on) {
               // theme variable and conditions
@@ -352,7 +357,14 @@ extra_styles:
           /* phone */
           @media screen and (max-width: 800px) {
             #name {
-              font-size: min(calc(var(--footer-card-font-size) * var(--footer-phone)), 8cqw);
+              /* 8cqw is a share of the *card* width, and on a phone seven pills in one row
+                 made that ~43px - so the cap shrank the labels to ~3px. The 12px floor
+                 wins over the cap (clamp() returns MIN when MIN > MAX) and matches the
+                 phone size of the main buttons (button-card-font-size * card-phone = 12px
+                 at 390px), while the cap keeps protecting the narrower portrait pills when
+                 the footer wraps to three per row on a phone (see the footer layout-card
+                 in ui-lovelace-tablet.yaml). */
+              font-size: clamp(12px, calc(var(--footer-card-font-size) * var(--footer-phone)), 8cqw);
               padding: calc(var(--footer-card-padding-v) * var(--footer-phone)) calc(var(--footer-card-padding-h) * var(--footer-phone));
               letter-spacing: 0.05vw;
             }

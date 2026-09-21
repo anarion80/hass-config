@@ -94,8 +94,14 @@ sidebar:
       .time {
         font-size: calc(var(--sidebar-time-font-size) * 2.6 );
       }
-      p {
-        font-size: calc(var(--sidebar-font-size) * 2.6 );
+      /* The entries are NOT wrapped in `<p>` any more: every sidebar card in
+         ui-lovelace-tablet.yaml passes its own `name:` with the raw attribute markup, so
+         the `p` rule below never matched and the entries kept the desktop `1.42vw` -
+         about 5px on a 390px phone - while only the clock scaled. Size `#name` itself
+         with the same 2.6 ramp; the `12px` floor keeps narrow phones readable, and `p`
+         stays in the list for any card that does use the template's name builder. */
+      #name, p {
+        font-size: max(calc(var(--sidebar-font-size) * 2.6 ), 12px);
         line-height: calc(var(--sidebar-line-height) * 2.6 );
         letter-spacing: 0.16vw;
       }
