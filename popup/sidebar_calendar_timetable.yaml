@@ -12,26 +12,6 @@ browser_mod:
         --mdc-typography-button-font-size: 14px
       tabs:
         - card:
-            type: custom:timetable-card
-            entities:
-              - id: calendar.ical_plan_lekcji_hani
-            show_location: false
-            show_notes: false
-            show_calendar: false
-            show_now_line: false
-          attributes:
-            label: Hania
-        - card:
-            type: custom:timetable-card
-            entities:
-              - id: calendar.ical_plan_lekcji_wojtka
-            show_location: false
-            show_notes: false
-            show_calendar: false
-            show_now_line: false
-          attributes:
-            label: Wojtek
-        - card:
             type: custom:atomic-calendar-revive
             name: Kalendarz
             entities:
@@ -57,3 +37,23 @@ browser_mod:
             maxDaysToShow: 30
           attributes:
             label: Ogólne
+        - card:
+            type: custom:timetable-card
+            entities:
+              - id: calendar.ical_plan_lekcji_hani
+            show_location: false
+            show_notes: false
+            show_calendar: false
+            show_now_line: false
+          attributes:
+            label: Hania
+        - card:
+            type: custom:timetable-card
+            entities:
+              - id: calendar.ical_plan_lekcji_wojtka
+            show_location: false
+            show_notes: false
+            show_calendar: false
+            show_now_line: false
+          attributes:
+            label: Wojtek
