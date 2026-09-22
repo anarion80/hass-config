@@ -1,6 +1,6 @@
 homeassistant:
   customize:
-    vacuum.valetudeo_dreame1:
+    vacuum.valetudo_dreame1:
       icon: cil:roborock-vacuum
     input_boolean.vacuum_livingroom:
       room_id: "1"
