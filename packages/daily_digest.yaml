@@ -44,7 +44,9 @@ template:
                 {%- set months = ['Stycznia', 'Lutego', 'Marca', 'Kwietnia', 'Maja', 'Czerwca',
                 'Lipca', 'Sierpnia', 'Września', 'Października', 'Listopada', 'Grudnia'] %}
                 {% set temp = states('sensor.openweathermap_feels_like_temperature')|round %}
-                  {{- days[now().weekday()] }} {{ strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}.
+                {%- set date = states('sensor.date') -%}
+                {%- set day = strptime(date, '%Y-%m-%d').day if date | length == 10 else now().day -%}
+                  {{- days[now().weekday()] }} {{ day }} {{ months[now().month-1] }}.
 
             {#- Pogoda -#}
                 Obecnie mamy {{states('sensor.openweathermap_weather')}} i temperaturę odczuwalną: {{ temp }}
@@ -52,7 +54,9 @@ template:
                 {% elif (temp|int % 10 >= 2 and temp|int % 10 <= 4 and (temp|int % 100 < 10 or temp|int % 100 >= 20)) %} stopnie.
                 {% else %} stopni.
                 {% endif -%}
-                {%- set forecast = state_attr('sensor.weather_forecast_daily','forecast')[0] -%}
+                {%- set forecast = state_attr('sensor.weather_forecast_daily','forecast') -%}
+                {%- if forecast -%}
+                {%- set forecast = forecast[0] -%}
                 {%- set condition = forecast.condition -%}
                 {%- set temp = forecast.temperature |round -%}
                 Dzisiaj będzie {% if condition == 'clear-night' -%}bezchmurnie
@@ -81,6 +85,9 @@ template:
                 {% if forecast.precipitation_probability |int == 0 %} Dzisiaj ma nie padać.
                 {% else -%} Prognozowany opad wyniesie {{ forecast.precipitation | replace(".", ",") }} milimetra.
                 {% endif -%}
+                {%- else %}
+                Brak danych o prognozie pogody.
+                {%- endif -%}
             {#- Czas do pracy -#}
             {# Czas dojazdu do pracy: {{states('sensor.home_to_work')}} minut. #}
             {#- Przypomnienie o śmieciach #}

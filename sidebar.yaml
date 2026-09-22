@@ -10,13 +10,13 @@
           </span>
         date: >
           <font color='#6a7377'><b>
-          {% if strptime(states('sensor.date'), '%Y-%m-%d').day != null %}
+          {% set date = states('sensor.date') %}
+          {% set day = strptime(date, '%Y-%m-%d').day if date | length == 10 else now().day %}
           {% set days = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'] %}
           {% set months = ['Stycznia', 'Lutego', 'Marca', 'Kwietnia', 'Maja', 'Czerwca',
           'Lipca', 'Sierpnia', 'Września', 'Października', 'Listopada', 'Grudnia'] %}
             {{ days[now().weekday()] }}<br>
-            {{ strptime(states('sensor.date'), '%Y-%m-%d').day }} {{ months[now().month-1] }}
-          {% endif %}
+            {{ day }} {{ months[now().month-1] }}
           </b></font>
         greet: >
           <b>
@@ -129,7 +129,7 @@
         weather: >
           {%- set temperature = states('sensor.openweathermap_temperature') -%}
           {%- set condition = states('sensor.openweathermap_condition') -%}
-          {%- set forecast = state_attr('sensor.weather_forecast_daily','forecast')[0] -%}
+          {%- set forecast = state_attr('sensor.weather_forecast_daily', 'forecast') -%}
           {%- set weather_icon = '' -%}
           {%- if condition == 'clear-night' -%} {{ weather_icon }} {{'\U0001F315'}}
           {%- elif condition == 'cloudy' -%} {{ weather_icon }} {{'\U00002601\U0000FE0F'}}
@@ -148,8 +148,8 @@
           {%- elif condition == 'windy-variant' -%} {{ weather_icon }} {{'\U0001F390'}}
           {%- endif -%}
           {%- set apparent = states('sensor.openweathermap_feels_like_temperature') | round -%}
-          {%- set precip = forecast.precipitation_probability | round -%}
-          {%- if not is_state('sensor.openweathermap_temperature', 'unknown') -%}
+          {%- if not is_state('sensor.openweathermap_temperature', 'unknown') and forecast -%}
+            {%- set precip = forecast[0].precipitation_probability | round -%}
             {%- if temperature | float(default=0) <= 0.0 -%}
               {{ weather_icon }} Odczuwalna {{ apparent }}° z {{ precip }}% ryzykiem śniegu {{'\u2744\uFE0F'}}
             {%- elif temperature | float(default=0) > 0.0 -%}
@@ -347,18 +347,26 @@
         {%- set dryer_state = 'sensor.suszarka' -%}
         {%- set dryer_completed = 'binary_sensor.suszarka_run_completed' -%}
         {%- set dryer_run_state = 'sensor.suszarka_run_state' -%}
-        {%- set time = states[dryer_state].attributes.remain_time -%}
-        {%- set parts = time.split(":") -%}
-        {%- set total_minutes = parts[0] | int * 60 + parts[1] | int -%}
         {%- if (is_state(dryer_state, 'on') and is_state(dryer_run_state, 'Suszenie') and is_state(dryer_completed, 'off')) -%}
+          {%- set time = state_attr(dryer_state, 'remain_time') -%}
+          {%- if time is string and ':' in time -%}
+            {%- set parts = time.split(":") -%}
+            {%- set total_minutes = parts[0] | int * 60 + parts[1] | int -%}
           <b>Suszarka suszy, {{ total_minutes }} {% if total_minutes == 1 -%}
         minuta {% elif (total_minutes % 10 >= 2 and total_minutes % 10 <= 4 and (total_minutes % 100 < 10 or total_minutes % 100 >= 20)) -%}
         minuty {% elif total_minutes >4 -%}
         minut {% endif -%} do końca</b>
+          {%- else -%}
+            <b>Suszarka suszy</b>
+          {%- endif -%}
         {%- endif -%}
     - unique_id: apparent_temperature
       state: >
-        {{ states['weather.openweathermap'].attributes.apparent_temperature | round }}°C ({{ states['weather.openweathermap'].attributes.temperature | round}}°C)
+        {%- set apparent = state_attr('weather.openweathermap', 'apparent_temperature') -%}
+        {%- set temperature = state_attr('weather.openweathermap', 'temperature') -%}
+        {%- if apparent is not none and temperature is not none -%}
+          {{ apparent | round }}°C ({{ temperature | round }}°C)
+        {%- endif %}
     - unique_id: calendar
       state: |
         {# set helper variables #}
