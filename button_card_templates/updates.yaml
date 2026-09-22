@@ -62,7 +62,12 @@ updates_hass:
   state_display: |
     [[[
       if (entity) {
-          let available = states[variables.available].attributes.home_assistant;
+          // `states[...]` is undefined for entities this user can't see (a restricted
+          // session, e.g. the non-admin "Tablet" user) and `marked` is a Lovelace
+          // resource - if either lookup throws here, the whole browser_mod popup fails
+          // to render, so everything is optional-chained.
+          const md = text => typeof marked === 'undefined' ? (text ?? '') : marked.parse(text);
+          let available = states[variables.available]?.attributes?.home_assistant;
           let links = new RegExp('<a href="([^"]+)"', "g"),
               installed = entity.state,
               hass_version_latest = states[variables.latest],
@@ -70,11 +75,11 @@ updates_hass:
               hass_release_notes = states[variables.release_notes],
               hass_release_notes_beta = states[variables.release_notes_beta];
           let latest = installed.includes('b')
-              ? hass_version_latest_beta.state
-              : hass_version_latest.state;
-          let release_notes = installed.includes('b')
-              ? marked.parse(hass_release_notes.attributes.body)
-              : marked.parse(hass_release_notes_beta.attributes.body);
+              ? hass_version_latest_beta?.state
+              : hass_version_latest?.state;
+          let release_notes = md(installed.includes('b')
+              ? hass_release_notes?.attributes?.body
+              : hass_release_notes_beta?.attributes?.body);
           let subtitle = available === 0
               ? `${variables.translate_no_updates} <b>&larr;</b> ${installed}`
               : `${installed} <b>&rarr;</b> ${latest} ${variables.translate_available} ${String.fromCodePoint("0x1f389")}`;
@@ -138,7 +143,7 @@ updates:
       });
       // Supervisor updates
       let attr = Object.fromEntries(
-          Object.entries(supervisor_updates?.attributes).filter(([, value]) => value != false));
+          Object.entries(supervisor_updates?.attributes ?? {}).filter(([, value]) => value != false));
       for (const [, value] of Object.entries(attr)) {
         if (value.version !== value.version_latest) {
           output += `<li><b>${value.name}</b> ${value.version} <b>&rarr;</b> ${value.latest_version}</li>`
@@ -178,7 +183,7 @@ updates_hacs:
           let output = '',
               count = parseInt(entity.state) || 0,
               subtitle = count === 0
-                  ? `${variables.translate_no_updates} <b>&larr;</b> ${states['update.hacs_update'].attributes.installed_version || ''}`
+                  ? `${variables.translate_no_updates} <b>&larr;</b> ${states['update.hacs_update']?.attributes?.installed_version || ''}`
                   : `${count} ${count === 1 ? variables.translate_update_available : variables.translate_updates_available} ${String.fromCodePoint('0x1f389')}`;
 
           Object.keys(states).forEach(key => {
@@ -189,7 +194,7 @@ updates_hacs:
             if (e.includes('update.') && s.state === 'on' && a.release_url) {
                 let split_url = a.release_url.split('/'),
                     name = `${split_url[3]}/${split_url[4]}`,
-                    installed = states[variables.installed].attributes.repositories;
+                    installed = states[variables.installed]?.attributes?.repositories ?? [];
 
                 if (installed.includes(name)) {
                     output += `<li><b><a href="#" onclick="window.open('${a.release_url}');">
@@ -275,11 +280,11 @@ updates_supervisor:
     [[[
       if (entity) {
         let output = "";
-        let attr = entity.attributes.addons;
+        let attr = entity.attributes.addons ?? [];
         attr = attr.filter(addon => addon.version !== addon.version_latest).map(addon => output += `<li>${addon.name}</a></b> ${addon.version} \u279e ${addon.version_latest}</li>`);
         let count = attr.length;
         let subtitle = count == 0
-            ? `${variables.translate_no_updates} <b>&larr;</b> ${states['update.home_assistant_supervisor_update'].attributes.installed_version || ''}`
+            ? `${variables.translate_no_updates} <b>&larr;</b> ${states['update.home_assistant_supervisor_update']?.attributes?.installed_version || ''}`
             : `${count} ${count == 1 ? variables.translate_update_available : variables.translate_updates_available} ${String.fromCodePoint("0x1f389")}`;
         return `
           <ha-icon icon="mdi:update"></ha-icon> <span class="title">Supervisor</span><br>

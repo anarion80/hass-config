@@ -79,7 +79,14 @@ browser_mod:
           template: updates_hacs_icon_name
           tap_action: |
             [[[
-              const url = `/${hass.panels.hacs.url_path}`;
+              // `hass.panels.hacs` only exists for administrators, so on a restricted
+              // session (e.g. the non-admin "Tablet" kiosk user) this threw a TypeError
+              // on tap and the row did nothing. Fall back to a no-op action.
+              const url_path = hass.panels?.hacs?.url_path;
+              if (!url_path) {
+                return { action: 'none' };
+              }
+              const url = `/${url_path}`;
               return window.navigator.userAgent.match(/iPhone/i)
                 ? {
                     action: 'fire-dom-event',
@@ -100,7 +107,7 @@ browser_mod:
                         content: {
                           type: 'iframe',
                           aspect_ratio: '16x9.15',
-                          url: `/${hass.panels.hacs.url_path}`
+                          url
                         }
                       }
                     }
@@ -121,7 +128,7 @@ browser_mod:
               - width: max-content
               - filter: >
                   [[[
-                    return states['binary_sensor.template_supervisor_update'].state === 'off' ?
+                    return states['binary_sensor.template_supervisor_update']?.state === 'off' ?
                       'opacity(30%)' :
                       'drop-shadow(3px 3px 5px #00000050)';
                   ]]]
