@@ -46,9 +46,11 @@ scrape:
     scan_interval: 7200
     sensor:
       name: Tauron_energy_cost
-      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) >
-        tr:nth-child(1) > td:nth-child(1) > div:nth-child(14) >
-        table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) >
+      # `tbody:nth-child(1)` was in this chain but the page has no <tbody> at all and
+      # HA parses with lxml (no implicit <tbody>), so the chain matched nothing.
+      select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) >
+        td:nth-child(1) > div:nth-child(14) >
+        table:nth-child(1) > tr:nth-child(4) >
         td:nth-child(6) > p:nth-child(1)"
       #index: 0
       unit_of_measurement: "PLN/kWh"
@@ -61,9 +63,11 @@ scrape:
     scan_interval: 7200
     sensor:
       name: Tauron_static_cost
-      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) >
-        tr:nth-child(1) > td:nth-child(1) > div:nth-child(32) >
-        table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) >
+      # Same missing-<tbody> problem, and the OPŁATA table gained a "Handlowa" row:
+      # the bold RAZEM total moved from row 5 to row 6 (35,82 PLN/mies.).
+      select: ".WordSection1 > table:nth-child(1) > tr:nth-child(1) >
+        td:nth-child(1) > div:nth-child(32) >
+        table:nth-child(1) > tr:nth-child(6) >
         td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
       #index: 0
       unit_of_measurement: "PLN"

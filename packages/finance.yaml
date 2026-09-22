@@ -6,9 +6,14 @@ automation:
       - trigger: state
         entity_id: sensor.stopa_bazowa_pko_bp
     condition:
+      # Only act on a real numeric change: skip unknown/unavailable (e.g. the PKO API
+      # returns nulls on bank holidays, and at startup before the first fetch), which
+      # would otherwise be read as 0 and fire a bogus "changed to 0%" notification.
       - condition: template
-        value_template: "{{ trigger.to_state.state | float > trigger.from_state.state |
-          float }}"
+        value_template: >-
+          {%- set before = trigger.from_state.state if trigger.from_state else 'unknown' -%}
+          {%- set after = trigger.to_state.state if trigger.to_state else 'unknown' -%}
+          {{ before | is_number and after | is_number and after | float > before | float }}
     action:
       - action: notify.pushover
         data:
@@ -38,8 +43,10 @@ automation:
         entity_id: sensor.stopa_bazowa_pko_bp
     condition:
       - condition: template
-        value_template: "{{ trigger.to_state.state | float < trigger.from_state.state |
-          float }}"
+        value_template: >-
+          {%- set before = trigger.from_state.state if trigger.from_state else 'unknown' -%}
+          {%- set after = trigger.to_state.state if trigger.to_state else 'unknown' -%}
+          {{ before | is_number and after | is_number and after | float < before | float }}
     action:
       - action: notify.pushover
         data:
@@ -69,8 +76,10 @@ automation:
         entity_id: sensor.wibor_6m
     condition:
       - condition: template
-        value_template: "{{ trigger.to_state.state | float < trigger.from_state.state |
-          float }}"
+        value_template: >-
+          {%- set before = trigger.from_state.state if trigger.from_state else 'unknown' -%}
+          {%- set after = trigger.to_state.state if trigger.to_state else 'unknown' -%}
+          {{ before | is_number and after | is_number and after | float < before | float }}
     action:
       - action: notify.pushover
         data:
@@ -98,8 +107,10 @@ automation:
         entity_id: sensor.wibor_6m
     condition:
       - condition: template
-        value_template: "{{ trigger.to_state.state | float > trigger.from_state.state |
-          float }}"
+        value_template: >-
+          {%- set before = trigger.from_state.state if trigger.from_state else 'unknown' -%}
+          {%- set after = trigger.to_state.state if trigger.to_state else 'unknown' -%}
+          {{ before | is_number and after | is_number and after | float > before | float }}
     action:
       - action: notify.pushover
         data:
@@ -165,26 +176,41 @@ input_number:
     unit_of_measurement: "PLN/kWh"
     icon: mdi:currency-usd
 
-scrape:
-  - resource: https://www.pkobh.pl/stawki-miedzybankowe/
+rest:
+  # pkobh.pl/stawki-miedzybankowe is a Next.js app now: the rates are no longer in
+  # the served HTML (that is why `#base_rate > p:nth-child(4)` and
+  # `.course__table > tbody...` stopped matching - "Index '0' not found"), they are
+  # fetched client-side from the site's own JSON API. That API needs an explicit
+  # date and only returns values for dates that have a fixing (nulls otherwise), so
+  # ask for the last business day: Mon -> Fri, Sat/Sun -> Fri, Tue-Fri -> yesterday.
+  # Polish bank holidays come back null, i.e. the sensor reads 'unknown' that day.
+  - resource_template: >-
+      {%- set weekday = now().weekday() -%}
+      {%- set days_back = 3 if weekday == 0 else (1 if weekday < 5 else weekday - 4) -%}
+      https://www.pkobh.pl/api/modules/fxrates/interbank/rates?date={{
+      (now() - timedelta(days=days_back)).strftime('%Y-%m-%d') }}
     scan_interval: 7200
     sensor:
-      name: Stopa bazowa PKO BP
-      #select: "#base_rate p"
-      value_template: '{{ value.split(" ")[8] | replace ("%","") | replace(",", ".") |
-        float }}'
-      select: "#base_rate > p:nth-child(4)"
-      unit_of_measurement: "%"
-      state_class: measurement
+      - name: Wibor 6M
+        value_template: >-
+          {%- set rates = (value_json.wibor if value_json is defined else none) or {} -%}
+          {{ rates.m6 | default('unknown') }}
+        unit_of_measurement: "%"
+        state_class: measurement
 
-  - resource: https://www.pkobh.pl/stawki-miedzybankowe/
+  - resource_template: >-
+      {%- set weekday = now().weekday() -%}
+      {%- set days_back = 3 if weekday == 0 else (1 if weekday < 5 else weekday - 4) -%}
+      https://www.pkobh.pl/api/modules/fxrates/fixed/rates?date={{
+      (now() - timedelta(days=days_back)).strftime('%Y-%m-%d') }}
     scan_interval: 7200
     sensor:
-      name: Wibor 6M
-      select: ".course__table > tbody:nth-child(2) > tr:nth-child(8) > td:nth-child(2)"
-      unit_of_measurement: "%"
-      state_class: measurement
-      value_template: "{{ value | replace('%','') | float }}"
+      - name: Stopa bazowa PKO BP
+        value_template: >-
+          {%- set rates = (value_json.base if value_json is defined else none) or {} -%}
+          {{ rates.value | default('unknown') }}
+        unit_of_measurement: "%"
+        state_class: measurement
   # - platform: influxdb
   #   api_version: 2
   #   ssl: false
