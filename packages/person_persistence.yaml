@@ -193,6 +193,8 @@ homeassistant:
       entity_picture: /local/iwona.png
     device_tracker.pixel_10_pro_xl:
       entity_picture: /local/anarion.png
+    device_tracker.mobile_app_nokia_8_3_5g_2:
+      entity_picture: /local/hania.png
     device_tracker.iphone:
       entity_picture: /local/iwona.png
 
