@@ -25,7 +25,7 @@ automation:
     action:
       - action: switch.turn_on
         entity_id: switch.zraszacz
-      - action: notify.mobile_app_moto_g85_5g
+      - action: notify.mobile_app_pixel_10_pro_xl
         data:
           message: "🏁 Zraszacz włączony"
 
@@ -41,7 +41,7 @@ automation:
     action:
       - action: switch.turn_off
         entity_id: switch.zraszacz
-      - action: notify.mobile_app_moto_g85_5g
+      - action: notify.mobile_app_pixel_10_pro_xl
         data:
           message: "🛑 Zraszacz wyłączony"
 

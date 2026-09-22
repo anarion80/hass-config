@@ -13,11 +13,10 @@ automation:
           milliseconds: 0
     condition: []
     action:
-      - device_id: b0c171c0e7c87b51e2a35c49fd79e5ff
-        domain: mobile_app
-        type: notify
-        title: High Home Assistant CPU!
-        message: Użycie procesora w HA było 100% przez 10 minut!
+      - action: notify.mobile_app_pixel_10_pro_xl
+        data:
+          title: High CPU usage!
+          message: Użycie procesora w HA było 100% przez 10 minut!
     mode: single
 
 # binary_sensor:
@@ -60,8 +59,8 @@ template:
   - sensor:
       - unique_id: nas_status
         state: >
-          {% set entity_id = 'sensor.nas_volume_1_status' %}
-          {% if is_state(entity_id, 'normal') %}
+          {% set entity_id = 'sensor.nas_volume_1_status' %} {% if
+          is_state(entity_id, 'normal') %}
             Działa
           {% elif is_state(entity_id, 'background') %}
             Sprawdź
@@ -73,18 +72,20 @@ template:
 
       - unique_id: nas_vpn
         state: >
-          {{ 'Nie połączony' if states('sensor.myip') == states('sensor.template_public_ip') else 'Połączony' }}
+          {{ 'Nie połączony' if states('sensor.myip') ==
+          states('sensor.template_public_ip') else 'Połączony' }}
         attributes:
           icon: >
-            mdi:shield-{{ 'alert' if states('sensor.myip') == states('sensor.template_public_ip') else 'check' }}
+            mdi:shield-{{ 'alert' if states('sensor.myip') ==
+            states('sensor.template_public_ip') else 'check' }}
 
       - unique_id: nas_net_down
         state: " "
         attributes:
           friendly_name: >
-            {% set down = states('sensor.nas_network_down') | float(default=0) %}
-            {% if down < 1000 %} {{ down | round(0) }} kb/s
-            {% elif down >= 1000 %} {{ ((down / 1000) | round(2) | string).rstrip('.0') }} Mb/s
+            {% set down = states('sensor.nas_network_down') | float(default=0)
+            %} {% if down < 1000 %} {{ down | round(0) }} kb/s {% elif down >=
+            1000 %} {{ ((down / 1000) | round(2) | string).rstrip('.0') }} Mb/s
             {% endif %}
           icon: mdi:arrow-down-bold
 
@@ -92,10 +93,9 @@ template:
         state: " "
         attributes:
           friendly_name: >
-            {% set up = states('sensor.nas_network_up') | float(default=0) %}
-            {% if up < 1000 %} {{ up | round(0) }} kb/s
-            {% elif up >= 1000 %} {{ ((up / 1000) | round(2) | string).rstrip('.0') }} Mb/s
-            {% endif %}
+            {% set up = states('sensor.nas_network_up') | float(default=0) %} {%
+            if up < 1000 %} {{ up | round(0) }} kb/s {% elif up >= 1000 %} {{
+            ((up / 1000) | round(2) | string).rstrip('.0') }} Mb/s {% endif %}
           icon: mdi:arrow-up-bold
 
 command_line:

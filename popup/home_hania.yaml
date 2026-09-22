@@ -25,7 +25,7 @@ browser_mod:
             - entity: device_tracker.cc_9f_7a_a8_1e_27
               name: Ruter
               icon: mdi:wifi
-            - entity: device_tracker.nokia_8_3_5g
+            - entity: device_tracker.nokia_8_3_5g_2
               name: Pozycja
               icon: mdi:crosshairs-gps
         - type: custom:layout-card
@@ -47,4 +47,4 @@ browser_mod:
           default_zoom: 16
           dark_mode: true
           entities:
-            - device_tracker.nokia_8_3_5g
+            - device_tracker.nokia_8_3_5g_2

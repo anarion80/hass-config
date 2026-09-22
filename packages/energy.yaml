@@ -1,7 +1,7 @@
 sensor:
-  - platform: pgnig_gas_sensor
-    username: !secret pgnig_username
-    password: !secret pgnig_password
+  # - platform: pgnig_gas_sensor
+  #   username: !secret pgnig_username
+  #   password: !secret pgnig_password
 
   # - platform: template
   #   sensors:
@@ -46,7 +46,10 @@ scrape:
     scan_interval: 7200
     sensor:
       name: Tauron_energy_cost
-      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(14) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) > td:nth-child(6) > p:nth-child(1)"
+      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) >
+        tr:nth-child(1) > td:nth-child(1) > div:nth-child(14) >
+        table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(4) >
+        td:nth-child(6) > p:nth-child(1)"
       #index: 0
       unit_of_measurement: "PLN/kWh"
       state_class: measurement
@@ -58,7 +61,10 @@ scrape:
     scan_interval: 7200
     sensor:
       name: Tauron_static_cost
-      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(1) > div:nth-child(32) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) > td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
+      select: ".WordSection1 > table:nth-child(1) > tbody:nth-child(1) >
+        tr:nth-child(1) > td:nth-child(1) > div:nth-child(32) >
+        table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(5) >
+        td:nth-child(6) > p:nth-child(1) > b:nth-child(1) > span:nth-child(1)"
       #index: 0
       unit_of_measurement: "PLN"
       state_class: measurement
@@ -70,9 +76,11 @@ template:
       - unit_of_measurement: W
         device_class: POWER
         default_entity_id: sensor.total_power
-        state:
-          "{{ states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_1')
-          | float(default=0) + states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_2')
-          | float(default=0) + states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_3')
+        state: "{{
+          states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_1')
+          | float(default=0) +
+          states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_2')
+          | float(default=0) +
+          states('sensor.zamel_mew_01_0_electricity_meter_power_active_phase_3')
           | float(default=0) }}"
         name: total_power

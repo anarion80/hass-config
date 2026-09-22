@@ -31,7 +31,7 @@ automation:
       input:
         person_entity: person.anarion
         zone_entity: zone.home
-        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+        notify_device: 1a6834c951c46f58d3c05318125bd343
 
   - id: "1613996396700"
     alias: Iwona is out
@@ -41,7 +41,7 @@ automation:
       input:
         person_entity: person.iwona
         zone_entity: zone.home
-        notify_device: b0c171c0e7c87b51e2a35c49fd79e5ff
+        notify_device: 1a6834c951c46f58d3c05318125bd343
 
   - id: "1614021562500"
     alias: Notify when redmi note 5 battery level is lower than 5
@@ -360,18 +360,18 @@ script:
       - repeat:
           count: 3
           sequence:
-            - action: notify.mobile_app_nokia_8_3_5g
+            - action: notify.mobile_app_nokia_8_3_5g_2
               data:
                 message: "command_ringer_mode"
                 data:
                   command: "normal"
-            - action: notify.mobile_nokia_8_3_5g
+            - action: notify.mobile_nokia_8_3_5g_2
               data:
                 message: "command_volume_level"
                 data:
                   media_stream: "alarm_stream"
                   command: 20
-            - action: notify.mobile_app_nokia_8_3_5g
+            - action: notify.mobile_app_nokia_8_3_5g_2
               data:
                 title: Znajdź mój telefon
                 message: Tu jestem
