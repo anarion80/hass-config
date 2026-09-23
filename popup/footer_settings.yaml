@@ -3,7 +3,21 @@ browser_mod:
   service: browser_mod.popup
   data:
     title: Ustawienia
-    size: NORMAL
+    # See popup/footer_updates.yaml for the full explanation (`initial_style` + an inline
+    # `popup_styles` entry, because browser_mod has no place to define popup styles
+    # globally); `narrower` is the 460px variant. A single-entry `style_sequence` keeps
+    # the title tap from widening this one.
+    initial_style: narrower
+    style_sequence:
+      - narrower
+    popup_styles:
+      - style: narrower
+        include_styles:
+          - normal
+        styles: |
+          --popup-min-width: min(92vw, 460px);
+          --popup-max-width: min(92vw, 460px);
+          --popup-width-full: min(92vw, 460px);
     content:
       type: vertical-stack
       cards:

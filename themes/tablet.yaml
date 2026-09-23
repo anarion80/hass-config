@@ -163,6 +163,28 @@ tablet:
   popup-width-full: min(max(92vw, 800px), 95vw, 1100px)
   popup-max-width: min(max(92vw, 800px), 95vw, 1100px)
   # Height is content-sized; browser_mod's own `--popup-max-height` caps it.
+  #
+  # NARROWER POPUPS: the three keys above are global, so a per-popup width needs a
+  # browser_mod *popup style* selected with `initial_style:` (`size:` is the pre-2.6
+  # spelling; `style:` is the deprecated one-off CSS). There is **no** place to define
+  # popup styles globally - browser_mod has no YAML config (`CONFIG_SCHEMA =
+  # cv.empty_config_schema`), nothing named `popup_styles` exists in its backend, and the
+  # frontend simply does `this._popupStyles = <popup parameter>`. So the styles are
+  # declared inline in the popup that uses them; see popup/footer_updates.yaml
+  # (`narrow`, 560px) and popup/footer_settings.yaml (`narrower`, 460px).
+  #
+  # Two things that bite:
+  # * browser_mod injects a style's `styles` CSS as `:host([<style>]) { ... }`, so it must
+  #   be *declarations only* - selectors there would rely on browser CSS nesting.
+  # * Nothing inside the popup declares `--popup-min-width`, `--popup-max-width` or
+  #   `--popup-width-full` itself, so overriding them on the popup host (they inherit down
+  #   to the dialog) needs no `!important`. That is the lever: browser_mod's own
+  #   unconditional rule is
+  #   `ha-dialog, ha-adaptive-dialog { --popup-width: var(--popup-min-width, 580px);
+  #   --ha-dialog-width-full: var(--popup-width-full, min(95vw, var(--safe-width)));
+  #   --ha-dialog-max-width: var(--popup-max-width, 600px); ... }`
+  # * `style_sequence` is the tap-the-title cycle; the default is `wide` -> `normal`, so
+  #   without setting it the first title tap blows a narrow popup back up to ~92vw.
 
   # The dialog surface colour, as plain theme variables. `ha-dialog` reads
   # `--ha-dialog-surface-background`; the current frontend's dialog then passes that into

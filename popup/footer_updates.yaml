@@ -3,7 +3,29 @@ browser_mod:
   service: browser_mod.popup
   data:
     title: Aktualizacje
-    size: NORMAL
+    # `size:` was the pre-2.6 spelling; it now maps onto `initial_style:`, whose value is
+    # a *popup style* name. Popup styles have no global config (browser_mod has no YAML
+    # config and nothing named `popup_styles` in its backend - the frontend just does
+    # `this._popupStyles = <popup parameter>`), so they are declared here, per popup.
+    # The theme sets `popup-min-width` for every `normal` popup, hence the override:
+    # browser_mod's unconditional `ha-dialog, ha-adaptive-dialog` rule reads
+    # `--popup-min-width` / `--popup-max-width` / `--popup-width-full`.
+    # NOTE: a style's `styles` is injected as `:host([narrow]) { ... }`, so it must be
+    # declarations only - selectors would need browser CSS nesting.
+    initial_style: narrow
+    # Default sequence is `wide` -> `normal`; without this the first title tap would blow
+    # the popup back up to the theme's ~92vw. Tap once to widen the release notes.
+    style_sequence:
+      - narrow
+      - wide
+    popup_styles:
+      - style: narrow
+        include_styles:
+          - normal
+        styles: |
+          --popup-min-width: min(92vw, 560px);
+          --popup-max-width: min(92vw, 560px);
+          --popup-width-full: min(92vw, 560px);
     content:
       type: grid
       columns: 1
