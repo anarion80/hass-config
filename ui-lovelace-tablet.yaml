@@ -610,36 +610,19 @@ views:
                     template:
                       - light
                       - icon_pendants
+                    # - type: custom:button-card
+                    #   entity: light.lampka_u_hani
+                    #   name: U Hani
+                    #   template:
+                    #     - base
+                    #     - icon_shade
 
-                  # - type: custom:button-card
-                  #   entity: light.lampka_u_hani
-                  #   name: U Hani
-                  #   template:
-                  #     - base
-                  #     - icon_shade
                   - type: custom:button-card
-                    entity: sensor.gabinet_temperatura
-                    name: Temperatura
-                    double_tap_action: none
-                    tap_action: !include popup/temperatures.yaml # !include popup/gabinet_klimat.yaml
-                    custom_fields:
-                      graph:
-                        card:
-                          entities:
-                            - sensor.gabinet_temperatura
+                    entity: switch.kotlownia
+                    name: Kotłownia
                     template:
-                      - base
-                      - icon_temperature
-                      # - full_circle
-                      - graph
-                    # variables:
-                    #   circle_input: >
-                    #     [[[
-                    #       let humidity = states['sensor.gabinet_humidity'];
-                    #       if (humidity) return parseInt(humidity.state);
-                    #     ]]]
-                    #   circle_input_unit: '%'
-
+                      - light
+                      - icon_pendants
                     # - type: custom:button-card
                     #   entity: sensor.gabinet_temperature
                     #   graph:
@@ -1302,75 +1285,98 @@ views:
               action: navigate
               navigation_path: /energy
 
-      # - type: grid
-      #   title: Camera
-      #   view_layout:
-      #     grid-area: other
-      #   columns: 1
-      #   cards:
+          - type: custom:button-card
+            entity: sensor.gabinet_temperatura
+            name: Temperatura
+            double_tap_action: none
+            tap_action: !include popup/temperatures.yaml # !include popup/gabinet_klimat.yaml
+            custom_fields:
+              graph:
+                card:
+                  entities:
+                    - sensor.gabinet_temperatura
+            template:
+              - base
+              - icon_temperature
+              # - full_circle
+              - graph
+            # variables:
+            #   circle_input: >
+            #     [[[
+            #       let humidity = states['sensor.gabinet_humidity'];
+            #       if (humidity) return parseInt(humidity.state);
+            #     ]]]
+            #   circle_input_unit: '%'
 
-      #     - type: custom:frigate-card
-      #       cameras:
-      #         - camera_entity: camera.main_2
-      #           live_provider: ha
-      #         - camera_entity: camera.garage_2
-      #           live_provider: ha
-      #         - camera_entity: camera.garden_2
-      #         - camera_entity: camera.main_2
-      #           live_provider: webrtc-card
-      #           title: Front Door (WebRTC)
-      #           webrtc_card:
-      #             url: 'rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.48:554/h264Preview_01_main'
-      #           id: front-door-webrtc
-      #       view:
-      #         # scan:
-      #         #   enabled: false
-      #         default: live
-      #         timeout_seconds: 300
-      #         update_seconds: 5
-      #         update_force: false
-      #         actions:
-      #           double_tap_action:
-      #             action: custom:frigate-card-action
-      #             frigate_card_action: fullscreen
-      #       # dimensions:
-      #       #   aspect_ratio_mode: unconstrained
-      #       #   aspect_ratio: '4:4'
-      #       # image:
-      #       #   layout:
-      #       #     fit: fill
-      #       # live:
-      #       #   webrtc_card:
-      #       #     ui: true
-      #       live:
-      #         layout:
-      #           fit: cover
-      #         controls:
-      #           thumbnails:
-      #             mode: none
-      #           title:
-      #             mode: none
-      #       overrides:
-      #         - conditions:
-      #             fullscreen: true
-      #           overrides:
-      #             live:
-      #               layout:
-      #                 fit: contain
-      #       card_mod:
-      #         style:
-      #           frigate-card$:
-      #             ha-card:
-      #               $: |
-      #                 #main {
-      #                     border-radius: calc(var(--button-card-border-radius) / 2) !important;
-      #                   }
+            # - type: grid
+            #   title: Camera
+            #   view_layout:
+            #     grid-area: other
+            #   columns: 1
+            #   cards:
 
-      #################################################
-      #                                               #
-      #                     home                      #
-      #                                               #
-      #################################################
+            #     - type: custom:frigate-card
+            #       cameras:
+            #         - camera_entity: camera.main_2
+            #           live_provider: ha
+            #         - camera_entity: camera.garage_2
+            #           live_provider: ha
+            #         - camera_entity: camera.garden_2
+            #         - camera_entity: camera.main_2
+            #           live_provider: webrtc-card
+            #           title: Front Door (WebRTC)
+            #           webrtc_card:
+            #             url: 'rtsp://homeassistant:pKP3wbpQVefjcS@192.168.2.48:554/h264Preview_01_main'
+            #           id: front-door-webrtc
+            #       view:
+            #         # scan:
+            #         #   enabled: false
+            #         default: live
+            #         timeout_seconds: 300
+            #         update_seconds: 5
+            #         update_force: false
+            #         actions:
+            #           double_tap_action:
+            #             action: custom:frigate-card-action
+            #             frigate_card_action: fullscreen
+            #       # dimensions:
+            #       #   aspect_ratio_mode: unconstrained
+            #       #   aspect_ratio: '4:4'
+            #       # image:
+            #       #   layout:
+            #       #     fit: fill
+            #       # live:
+            #       #   webrtc_card:
+            #       #     ui: true
+            #       live:
+            #         layout:
+            #           fit: cover
+            #         controls:
+            #           thumbnails:
+            #             mode: none
+            #           title:
+            #             mode: none
+            #       overrides:
+            #         - conditions:
+            #             fullscreen: true
+            #           overrides:
+            #             live:
+            #               layout:
+            #                 fit: contain
+            #       card_mod:
+            #         style:
+            #           frigate-card$:
+            #             ha-card:
+            #               $: |
+            #                 #main {
+            #                     border-radius: calc(var(--button-card-border-radius) / 2) !important;
+            #                   }
+
+            #################################################
+            #                                               #
+            #                     home                      #
+            #                                               #
+            #################################################
 
       - type: grid
         square: false
