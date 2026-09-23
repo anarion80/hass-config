@@ -189,8 +189,10 @@ automation:
         above: 24
     conditions: []
     actions:
-      - action: notify.anarion_iwona_phones
+      - action: notify.send_message
         metadata: {}
+        target:
+          entity_id: notify.anarion_iwona_phones
         data:
           message: Regulator ogłupiał!
           title: Regulator ogłupiał!

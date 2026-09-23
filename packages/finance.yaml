@@ -26,7 +26,9 @@ automation:
             trigger.to_state.state}}%!
           data:
             ttl: 0
-      - action: notify.email_anarion
+      - action: notify.send_message
+        target:
+          entity_id: notify.email_anarion_anarion_go2_pl
         data:
           title: Zmiana stopy bazowej
           message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{
@@ -59,7 +61,9 @@ automation:
             trigger.to_state.state}}%!
           data:
             ttl: 0
-      - action: notify.email_anarion
+      - action: notify.send_message
+        target:
+          entity_id: notify.email_anarion_anarion_go2_pl
         data:
           title: Zmiana stopy bazowej
           message: Stopa bazowa zmieniła się z {{ trigger.from_state.state }}% na {{
@@ -90,7 +94,9 @@ automation:
           title: Zmiana Wibor
           message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{
             trigger.to_state.state}}%!
-      - action: notify.email_anarion
+      - action: notify.send_message
+        target:
+          entity_id: notify.email_anarion_anarion_go2_pl
         data:
           title: Zmiana Wibor
           message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{
@@ -121,7 +127,9 @@ automation:
           title: Zmiana Wibor
           message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{
             trigger.to_state.state}}%!
-      - action: notify.email_anarion
+      - action: notify.send_message
+        target:
+          entity_id: notify.email_anarion_anarion_go2_pl
         data:
           title: Zmiana Wibor
           message: Wibor 6M zmienił się z {{ trigger.from_state.state }}% na {{

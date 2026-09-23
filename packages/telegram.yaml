@@ -8,7 +8,9 @@ automation:
       event_data:
         command: /camera
     action:
-      - action: notify.telegram_anarion
+      - action: telegram_bot.send_message
+        target:
+          entity_id: notify.telegram_bot_5421860582_1469896663
         data:
           message: Kamery
       - action: script.camera_snapshot
@@ -22,18 +24,19 @@ automation:
       event_data:
         command: /start
     action:
-      - action: notify.telegram_anarion
+      - action: telegram_bot.send_message
+        target:
+          entity_id: notify.telegram_bot_5421860582_1469896663
         data:
           message: "{{ [ \"Hi, I'm your housekeeper .. I'll list you below \
             \ list of available commands \", \" How can I help you? \", \" Yes Sir! \"\
             , \"If you really insist, this is the command list \", \"Aaaaa .. more here? \",
             \" Nice to see you again\"] | random }}       \n"
-          data:
-            keyboard:
-              - /nico, /mamma
-              - /nicopcon, /nicopcoff, /nicopcreboot
-              - /ping, /camera
-              - /start, /cp
+          keyboard:
+            - /nico, /mamma
+            - /nicopcon, /nicopcoff, /nicopcreboot
+            - /ping, /camera
+            - /start, /cp
 
   - alias: Telegram_Bot_Stop
     id: telegram-stop
@@ -43,15 +46,16 @@ automation:
         event_data:
           data: /stop
     action:
-      - action: notify.telegram_anarion
-        data_template:
+      - action: telegram_bot.send_message
+        target:
+          entity_id: notify.telegram_bot_5421860582_1469896663
+        data:
           message: "*Control Panel*"
-          data:
-            inline_keyboard:
-              - 💡 Lights:/lights, 🚨 Security:/security
-              - 💻 System:/system, 💻 Status:/status, Help:/help, Ping:/ping
-              - 📄 Summary:/summary, ☀ Weather:/weather
-              - Addons:/addons
+          inline_keyboard:
+            - 💡 Lights:/lights, 🚨 Security:/security
+            - 💻 System:/system, 💻 Status:/status, Help:/help, Ping:/ping
+            - 📄 Summary:/summary, ☀ Weather:/weather
+            - Addons:/addons
 
   - id: telegram-control-pannel-start
     alias: Telegram Control Pannel Command
@@ -62,18 +66,19 @@ automation:
       event_data:
         command: /cp
     action:
-      - action: notify.telegram_anarion
+      - action: telegram_bot.send_message
+        target:
+          entity_id: notify.telegram_bot_5421860582_1469896663
         data:
           message:
             "{{ [ \"Home Assistant Status\", \"Control Panel\", \"Yes Sir!\", \"\
             Home Assistant Control Panel\" ] | random }}  \
             \     \n"
-          data:
-            inline_keyboard:
-              - 💡 Lights:/lights, 🚨 Security:/security
-              - 💻 System:/system, ℹ Status:/status, Help:/help, Ping:/ping
-              - 📄 Summary:/summar, ☀ Weather:/weather
-              - Addons:/addons
+          inline_keyboard:
+            - 💡 Lights:/lights, 🚨 Security:/security
+            - 💻 System:/system, ℹ Status:/status, Help:/help, Ping:/ping
+            - 📄 Summary:/summar, ☀ Weather:/weather
+            - Addons:/addons
 
   - id: telegram-ik-ping-pong
     alias: telegram ping pong
@@ -91,11 +96,6 @@ automation:
             id: {{ trigger.event.data.message.message_id }}. Data: {{ trigger.event.data.data
             }} {{now().strftime("%Y-%m-%d %H:%M:%S")}} Pong, Message from {{ trigger.event.data.message.chat.username }}.'
           show_alert: true
-
-notify:
-  - platform: telegram
-    name: telegram_anarion
-    chat_id: !secret telegram_anarion_chat_id
 
 script:
   camera_snapshot:

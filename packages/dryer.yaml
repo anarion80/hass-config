@@ -8,7 +8,9 @@ automation:
         to: "on"
     condition: []
     action:
-      - action: notify.anarion_iwona_phones
+      - action: notify.send_message
+        target:
+          entity_id: notify.anarion_iwona_phones
         data:
           message: >
             {{ '🏁 ' + ['Pranie wysuszone', 'Czas wyjąć pranie', 'Suszenie się skończyło'] | random }}

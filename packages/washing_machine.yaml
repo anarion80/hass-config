@@ -63,7 +63,9 @@ automation:
         entity_id: input_select.washing_machine
         state: "Off"
     action:
-      - action: notify.anarion_iwona_phones
+      - action: notify.send_message
+        target:
+          entity_id: notify.anarion_iwona_phones
         data:
           message: 💚 Washing Machine has started
       - action: input_select.select_option
@@ -90,7 +92,9 @@ automation:
         entity_id: input_select.washing_machine
         state: "Washing"
     action:
-      - action: notify.anarion_iwona_phones
+      - action: notify.send_message
+        target:
+          entity_id: notify.anarion_iwona_phones
         data:
           message: >
             {{ '🏁 ' + ['Pranie gotowe', 'Czas wyjąć pranie', 'Pranie się skończyło'] | random }}

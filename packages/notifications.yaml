@@ -54,8 +54,10 @@ automation:
         below: 1
     condition: []
     action:
-      - action: notify.anarion_iwona_phones
+      - action: notify.send_message
         metadata: {}
+        target:
+          entity_id: notify.anarion_iwona_phones
         data:
           message: Lodówka wyłączona!!!
           title: Lodówka
@@ -70,8 +72,10 @@ automation:
         type: doorbell_chime
     condition: []
     action:
-      - action: notify.anarion_iwona_phones
+      - action: notify.send_message
         metadata: {}
+        target:
+          entity_id: notify.anarion_iwona_phones
         data:
           message: Dzwonek do drzwi
           title: Ktoś dzwoni do drzwi
