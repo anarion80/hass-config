@@ -240,7 +240,7 @@
   - choose:
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.kftrwi_battery_level
+        entity_id: sensor.tablet2_battery_level
         above: '80'
       sequence:
       - action: switch.turn_off
@@ -248,7 +248,7 @@
           entity_id: switch.sonoff_1000d4b2e1_1
     - conditions:
       - condition: numeric_state
-        entity_id: sensor.kftrwi_battery_level
+        entity_id: sensor.tablet2_battery_level
         below: '20'
       sequence:
       - action: switch.turn_on
