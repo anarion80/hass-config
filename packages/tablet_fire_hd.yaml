@@ -237,11 +237,11 @@ template:
       - unique_id: fullykiosk_storage
         state: >
           {% set FreeSpace =
-          states('sensor.fire_tablet_internal_storage_free_space') |
-          float(default=0) %} {% set TotalSpace =
-          states('sensor.fire_tablet_internal_storage_total_space') |
-          float(default=0) %} {% if not (FreeSpace == 0.0 or TotalSpace == 0.0)
-          %}
+          states('sensor.salon_samsung_tablet_wolne_miejsce_w_pamieci_wewnetrznej')
+          | float(default=0) %} {% set TotalSpace =
+          states('sensor.salon_samsung_tablet_calkowity_rozmiar_pamieci_wewnetrznej')
+          | float(default=0) %} {% if not (FreeSpace == 0.0 or TotalSpace ==
+          0.0) %}
             {{ 100 - (FreeSpace / TotalSpace * 100) | int(default=0) }}
           {% endif %}
         attributes:
@@ -251,10 +251,12 @@ template:
 
       - unique_id: fullykiosk_memory
         state: >
-          {% set FreeMemory = states('sensor.fire_tablet_ram_free_memory') |
+          {% set FreeMemory =
+          states('sensor.salon_samsung_tablet_dostepna_pamiec_ram') |
           float(default=0) %} {% set TotalMemory =
-          states('sensor.fire_tablet_ram_total_memory') | float(default=0) %} {%
-          if not (FreeMemory == 0.0 or TotalMemory == 0.0) %}
+          states('sensor.salon_samsung_tablet_calkowita_pamiec_ram') |
+          float(default=0) %} {% if not (FreeMemory == 0.0 or TotalMemory ==
+          0.0) %}
             {{ 100 - (FreeMemory / TotalMemory * 100) | int(default=0) }}
           {% endif %}
         attributes:
