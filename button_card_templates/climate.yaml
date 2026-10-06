@@ -54,7 +54,6 @@ climate_swing_mode:
   template:
     - climate_base
 
-
 climate:
   template:
     - circle
@@ -132,12 +131,21 @@ temperature_chart:
           [[[
             return !entity || entity.attributes.friendly_name;
           ]]]
-        size: wide
+        # `size: wide` was the pre-2.6 spelling, but it still selects browser_mod's built-in
+        # `wide` style, which ships as `:host([wide]) ha-dialog { --popup-width:
+        # var(--popup-wide-width, 90vw) }` plus `:host([wide]) ha-dialog > .content { width:
+        # max(--popup-width, ...) }`. So it sized the dialog *content* to 90vw and outranked the
+        # theme's pinned width (`--popup-min-width`/`--popup-max-width`, max 1100px), while the
+        # theme can only cap the outer `wa-dialog` box via `--ha-dialog-max-width`. The
+        # apexcharts card is 100% of that content, so it rendered wider than the popup it sits
+        # in. The default `normal` style keeps this popup on the theme's width, like every
+        # other popup, and the chart then fits inside it.
+        initial_style: normal
         content:
           type: vertical-stack
           cards:
             - type: custom:apexcharts-card
-              graph_span: 48h
+              graph_span: 24h
               apex_config:
                 tooltip:
                   style:
@@ -183,7 +191,7 @@ temperature_chart:
                 title: ApexCharts-Card
                 show_states: true
                 #colorize_states: true
-              #yaxis:
+                #yaxis:
                 # - id: temp # identification name of the first y-axis
                 #   decimals: 0
                 #   apex_config:
