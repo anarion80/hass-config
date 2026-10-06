@@ -221,6 +221,20 @@ views:
             template: sidebar
 
           - type: custom:button-card
+            # The dryer is a standalone template sensor now (`unique_id: dryer` in
+            # sidebar.yaml), so it is read from `sensor.template_dryer` - the same
+            # `<domain>.template_<unique_id>` entity_id that `unique_id: sidebar` gets.
+            # Its state already carries the `<b>...</b>` markup, and the `sidebar`
+            # template's own name builder only walks `entity.attributes` (the dryer
+            # sensor has none), so `name` is still passed explicitly here.
+            entity: sensor.template_dryer
+            name: >
+              [[[
+                  return entity?.state;
+                  ]]]
+            template: sidebar
+
+          - type: custom:button-card
             # Standalone template sensor now (`unique_id: vacuum` in sidebar.yaml).
             entity: sensor.template_vacuum
             name: >
@@ -237,29 +251,6 @@ views:
                   ]]]
             template: sidebar
             tap_action: !include popup/weather.yaml
-
-          - type: custom:button-card
-            entity: sensor.template_sidebar
-            name: >
-              [[[
-                  return entity?.attributes?.battery;
-                  ]]]
-            template: sidebar
-            tap_action: !include popup/footer_batteries.yaml
-
-          - type: custom:button-card
-            # The dryer is a standalone template sensor now (`unique_id: dryer` in
-            # sidebar.yaml), so it is read from `sensor.template_dryer` - the same
-            # `<domain>.template_<unique_id>` entity_id that `unique_id: sidebar` gets.
-            # Its state already carries the `<b>...</b>` markup, and the `sidebar`
-            # template's own name builder only walks `entity.attributes` (the dryer
-            # sensor has none), so `name` is still passed explicitly here.
-            entity: sensor.template_dryer
-            name: >
-              [[[
-                  return entity?.state;
-                  ]]]
-            template: sidebar
 
           - type: custom:button-card
             entity: sensor.template_sidebar
@@ -289,6 +280,15 @@ views:
                 margin-top: calc(var(--sidebar-line-height) * -1);
                 white-space: pre-line;
               }
+
+          - type: custom:button-card
+            entity: sensor.template_sidebar
+            name: >
+              [[[
+                  return entity?.attributes?.battery;
+                  ]]]
+            template: sidebar
+            tap_action: !include popup/footer_batteries.yaml
 
           - type: custom:button-card
             entity: sensor.template_sidebar
