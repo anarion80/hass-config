@@ -59,14 +59,34 @@ browser_mod:
               show_temperature_control: true
               collapsible_controls: true
             - type: custom:apexcharts-card
+              graph_span: 24h
+
               header:
                 show: true
                 title: Ogrzewanie
                 colorize_states: true
+
+              apex_config:
+                chart:
+                  animations:
+                    enabled: false
+                stroke:
+                  curve: stepline
+                  width: 2
+                fill:
+                  type: solid
+                  opacity: 0.2
+                markers:
+                  size: 0
+                yaxis:
+                  min: 0
+                  max: 1
+                  tickAmount: 1
+
               series:
                 - entity: binary_sensor.ogrzewanie
                   transform: "return x === 'on' ? 1 : 0;"
-                  type: column
+                  type: area
                   group_by:
                     func: last
                     duration: 1m
@@ -149,3 +169,4 @@ browser_mod:
               name: Garaż
               fill_container: true
               show_temperature_control: true
+
