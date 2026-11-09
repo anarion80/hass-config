@@ -1058,6 +1058,8 @@ views:
                       - entity: select.conditional_media
                         state_not: Plex
                       - entity: select.conditional_media
+                        state_not: Plex (Plex for Android (TV) - SHIELD Android TV)
+                      - entity: select.conditional_media
                         state_not: TV
                       - entity: select.conditional_media
                         state_not: KD-55XE9305
@@ -1086,10 +1088,10 @@ views:
                   - type: conditional
                     conditions:
                       - entity: select.conditional_media
-                        state: Plex
+                        state: Plex (Plex for Android (TV) - SHIELD Android TV)
                     card:
                       type: custom:button-card
-                      entity: media_player.plex_plex_for_android_tv_shield_android_tv
+                      entity: media_player.plex_plex_for_android_tv_shield_android_tv_2
                       template:
                         - conditional_media
                         - icon_plex
@@ -1186,7 +1188,7 @@ views:
                 columns: 2
                 cards:
                   - type: custom:button-card
-                    entity: media_player.plex_plex_for_android_tv_shield_android_tv
+                    entity: media_player.plex_plex_for_android_tv_shield_android_tv_2
                     name: Plex
                     template:
                       - media

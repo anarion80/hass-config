@@ -34,7 +34,7 @@ automation:
       - trigger: state
         entity_id:
           - media_player.nvidia_shield
-          - media_player.plex_plex_for_android_tv_shield_android_tv
+          - media_player.plex_plex_for_android_tv_shield_android_tv_2
           - media_player.spotify_anarion
           - media_player.nest_mini
           - media_player.kd_55xe9305
@@ -47,16 +47,14 @@ automation:
     action:
       - action: media_player.volume_mute
         target:
-          entity_id: "{{ trigger.to_state.entity_id }}
-
-            "
+          entity_id: "{{ trigger.to_state.entity_id }}\n"
         data:
           is_volume_muted: true
       - wait_for_trigger:
           trigger: state
           entity_id:
             - media_player.nvidia_shield
-            - media_player.plex_plex_for_android_tv_shield_android_tv
+            - media_player.plex_plex_for_android_tv_shield_android_tv_2
             - media_player.spotify_anarion
             - media_player.nest_mini
             - media_player.kd_55xe9305
@@ -68,9 +66,7 @@ automation:
           from: Advertisement
       - action: media_player.volume_mute
         target:
-          entity_id: "{{ trigger.to_state.entity_id }}
-
-            "
+          entity_id: "{{ trigger.to_state.entity_id }}\n"
         data:
           is_volume_muted: false
 
@@ -88,7 +84,7 @@ homeassistant:
       device_class: tv
       source_list: ["HDMI 1", "HDMI 2/MHL", "HDMI 3", "HDMI 4"]
     media_player.samsung_tv:
-      friendly_name: "Tv\u00B2"
+      friendly_name: "Tv²"
       device_class: tv
       source_list: ["TV", "HDMI"]
     media_player.spotify_anarion:
@@ -279,11 +275,11 @@ template:
         default_entity_id: switch.netflix
         icon: mdi:netflix
         name: Netflix
-        state:
-          "{% if states('media_player.nvidia_shield') in ['standby', 'idle',
-          'playing', 'paused'] and is_state_attr('media_player.nvidia_shield','app_id','com.netflix.ninja')
-          and is_state('media_player.sony_kd_55xe9305', 'on') %} on {% else %} off
-          {% endif %}"
+        state: "{% if states('media_player.nvidia_shield') in ['standby', 'idle',
+          'playing', 'paused'] and
+          is_state_attr('media_player.nvidia_shield','app_id','com.netflix.ninj\
+          a') and is_state('media_player.sony_kd_55xe9305', 'on') %} on {% else
+          %} off {% endif %}"
       - turn_on:
           - action: remote.send_command
             data:
@@ -338,11 +334,11 @@ template:
         default_entity_id: switch.plex
         icon: mdi:plex
         name: Plex
-        state:
-          "{% if states('media_player.nvidia_shield') in ['standby', 'idle',
-          'playing', 'paused'] and is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.android')
-          and states('media_player.sony_kd_55xe9305') in ['on', 'playing', 'paused']
-          %} on {% else %} off {% endif %}"
+        state: "{% if states('media_player.nvidia_shield') in ['standby', 'idle',
+          'playing', 'paused'] and
+          is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.andr\
+          oid') and states('media_player.sony_kd_55xe9305') in ['on', 'playing',
+          'paused'] %} on {% else %} off {% endif %}"
       - turn_on:
           - action: remote.send_command
             data:
@@ -395,11 +391,11 @@ template:
         default_entity_id: switch.youtube
         icon: mdi:youtube
         name: YouTube
-        state:
-          "{% if states('media_player.nvidia_shield') in ['standby', 'idle',
-          'playing', 'paused'] and is_state_attr('media_player.nvidia_shield','app_id','com.google.android.youtube.tv')
-          and is_state('media_player.sony_kd_55xe9305', 'on') %} on {% else %} off
-          {% endif %}"
+        state: "{% if states('media_player.nvidia_shield') in ['standby', 'idle',
+          'playing', 'paused'] and
+          is_state_attr('media_player.nvidia_shield','app_id','com.google.andro\
+          id.youtube.tv') and is_state('media_player.sony_kd_55xe9305', 'on') %}
+          on {% else %} off {% endif %}"
       - turn_on:
           - action: remote.send_command
             data:
@@ -442,14 +438,22 @@ template:
         default_entity_id: switch.tv
         icon: mdi:television
         name: TV
-        state:
-          "{% if state_attr('media_player.sony_kd_55xe9305','source') in ['TVP1 HD',
-          'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS
-          2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam',
-          'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP
-          Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA
-          DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV', 'TOYAcyfrowaINFO']
-          %}\n  on\n  {% else %}\n  off\n  {% endif %}"
+        state: "{% if state_attr('media_player.sony_kd_55xe9305','source') in ['TVP1
+          HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat', 'TVN', 'TV4', 'TV Puls', 'TVN
+          7', 'PULS 2', 'TV6', 'Super Polsat', 'ESKA TV', 'TTV', 'Polo TV',
+          'SILVER TV', 'TV Trwam', 'Stopklatka TV', 'Fokus TV', 'TVP ABC', 'TVP
+          Kultura HD', 'TVP Historia', 'TVP Sport HD', 'TVP Info', 'TVP
+          Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP', 'eSZKOLA DOMOWE
+          PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2', 'EmiTV',
+          'TOYAcyfrowaINFO'] %}
+
+          \  on
+
+          \  {% else %}
+
+          \  off
+
+          \  {% endif %}"
       - turn_on:
           - action: remote.send_command
             data:
@@ -538,48 +542,46 @@ template:
       - unique_id: current_tv_channel
         default_entity_id: sensor.tv_channel
         name: Current TV Channel
-        state:
-          "{%- set all_channels = ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat',
+        state: "{%- set all_channels = ['TVP1 HD', 'TVP2 HD', 'TVP3 Krakow', 'Polsat',
           'TVN', 'TV4', 'TV Puls', 'TVN 7', 'PULS 2', 'TV6', 'Super Polsat',
-          'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka
-          TV', 'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP
-          Sport HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV',
-          'WP', 'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura
-          2', 'EmiTV', 'TOYAcyfrowaINFO'] %} {{ state_attr('media_player.sony_kd_55xe9305','source')
-          }}"
+          'ESKA TV', 'TTV', 'Polo TV', 'SILVER TV', 'TV Trwam', 'Stopklatka TV',
+          'Fokus TV', 'TVP ABC', 'TVP Kultura HD', 'TVP Historia', 'TVP Sport
+          HD', 'TVP Info', 'TVP Kobieta', 'Metro', 'Zoom TV', 'Nowa TV', 'WP',
+          'eSZKOLA DOMOWE PRZEDSZKOLE', 'Telewizja Naziemna', 'TVP Kultura 2',
+          'EmiTV', 'TOYAcyfrowaINFO'] %} {{
+          state_attr('media_player.sony_kd_55xe9305','source') }}"
       - unit_of_measurement: h
         default_entity_id: sensor.czas_tv
         name: Czas działania TV
-        state:
-          '{% if (states(''sensor.czas_dzialania_tv'') == "unavailable") or (states(''sensor.czas_dzialania_tv'')
-          == "unknown") %} 0 {% else %} {{states(''sensor.czas_dzialania_tv'')}} {% endif
-          %}'
+        state: '{% if (states(''sensor.czas_dzialania_tv'') == "unavailable") or
+          (states(''sensor.czas_dzialania_tv'') == "unknown") %} 0 {% else %}
+          {{states(''sensor.czas_dzialania_tv'')}} {% endif %}'
 
   - select:
       - name: conditional_media
         state: >
-          {% set recently_added = 'Last added' %}
-          {% set paused_timeout_minutes = 15 %}
-          {% set media_players = [
+          {% set recently_added = 'Last added' %} {% set paused_timeout_minutes
+          = 15 %} {% set media_players = [
             states.media_player.chromecastaudio,
             states.media_player.chromecastaudio9331,
             states.media_player.kd_55xe9305,
             states.media_player.nest_mini,
-            states.media_player.plex_plex_for_android_tv_shield_android_tv,
+            states.media_player.plex_plex_for_android_tv_shield_android_tv_2,
             states.media_player.plex_plexamp_android,
             states.media_player.sony_kd_55xe9305,
             states.media_player.spotify_anarion,
             states.sensor.netflix_on_shield ] %}
-          {% macro media(state) %}
-          {% set state = media_players | selectattr('state','eq',state) | list %}
-          {% set last_changed = recently_added if state | length == 0 else state | map(attribute='last_changed') | list | max %}
+          {% macro media(state) %} {% set state = media_players |
+          selectattr('state','eq',state) | list %} {% set last_changed =
+          recently_added if state | length == 0 else state |
+          map(attribute='last_changed') | list | max %}
             {{ state | selectattr('last_changed','eq', last_changed) | map(attribute='name') | list | join }}
-          {% endmacro %}
-          {% set playing = media_players | selectattr('state','eq','playing') | list %}
-          {% set timeout_playing = False if playing | length == 0 else
+          {% endmacro %} {% set playing = media_players |
+          selectattr('state','eq','playing') | list %} {% set timeout_playing =
+          False if playing | length == 0 else
             (as_timestamp(now()) - as_timestamp(playing | map(attribute='last_changed') | list | max)) < paused_timeout_minutes * 60 %}
-          {% set paused = media_players | selectattr('state','eq','paused') | list %}
-          {% set timeout_paused = False if paused | length == 0 else
+          {% set paused = media_players | selectattr('state','eq','paused') |
+          list %} {% set timeout_paused = False if paused | length == 0 else
             (as_timestamp(now()) - as_timestamp(paused | map(attribute='last_changed') | list | max)) < paused_timeout_minutes * 60 %}
           {% if playing %}
             {{ media('playing') if timeout_playing else media('paused') if timeout_paused else media('playing') }}
@@ -589,13 +591,12 @@ template:
             {{ recently_added }}
           {% endif %}
         options: >
-          {% set recently_added = ['Last added'] %}
-          {% set media_players = [
+          {% set recently_added = ['Last added'] %} {% set media_players = [
             states.media_player.chromecastaudio,
             states.media_player.chromecastaudio9331,
             states.media_player.kd_55xe9305,
             states.media_player.nest_mini,
-            states.media_player.plex_plex_for_android_tv_shield_android_tv,
+            states.media_player.plex_plex_for_android_tv_shield_android_tv_2,
             states.media_player.plex_plexamp_android,
             states.media_player.sony_kd_55xe9305,
             states.media_player.spotify_anarion,
@@ -611,11 +612,12 @@ template:
 
       - name: hdmi_bravia
         state: >
-          {% set source = state_attr('media_player.sony_kd_55xe9305', 'source') %}
-          {{ iif(source == None, 'HDMI3', source) }}
+          {% set source = state_attr('media_player.sony_kd_55xe9305', 'source')
+          %} {{ iif(source == None, 'HDMI3', source) }}
         options: >
-          {% set source_list = state_attr('media_player.sony_kd_55xe9305', 'source_list') %}
-          {{ iif(source_list == None, ['HDMI3'], source_list) }}
+          {% set source_list = state_attr('media_player.sony_kd_55xe9305',
+          'source_list') %} {{ iif(source_list == None, ['HDMI3'], source_list)
+          }}
         select_option:
           action: media_player.select_source
           target:
@@ -627,31 +629,35 @@ template:
   - sensor:
       - name: "Netflix on Shield"
         state: >
-          {% set player = states.media_player.nvidia_shield.state %}
-          {% if player == 'playing' and state_attr('media_player.nvidia_shield', 'source') == 'Netflix'  %}
+          {% set player = states.media_player.nvidia_shield.state %} {% if
+          player == 'playing' and state_attr('media_player.nvidia_shield',
+          'source') == 'Netflix'  %}
             playing
-          {% elif (player == 'paused' or player == 'standby') and state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
+          {% elif (player == 'paused' or player == 'standby') and
+          state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
             paused
           {% else %}
             idle
           {% endif %}
         attributes:
           media_artist: >
-            {% set player = states.media_player.nvidia_shield.state %}
-            {% if player == 'playing' and state_attr('media_player.nvidia_shield', 'source') == 'Netflix'  %}
+            {% set player = states.media_player.nvidia_shield.state %} {% if
+            player == 'playing' and state_attr('media_player.nvidia_shield',
+            'source') == 'Netflix'  %}
               Netflix
-            {% elif (player == 'paused' or player == 'standby') and state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
+            {% elif (player == 'paused' or player == 'standby') and
+            state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
               Netflix
-            {% else %}
-            {% endif %}
+            {% else %} {% endif %}
           media_title: >
-            {% set player = states.media_player.nvidia_shield.state %}
-            {% if player == 'playing' and state_attr('media_player.nvidia_shield', 'source') == 'Netflix'  %}
+            {% set player = states.media_player.nvidia_shield.state %} {% if
+            player == 'playing' and state_attr('media_player.nvidia_shield',
+            'source') == 'Netflix'  %}
               Netflix
-            {% elif (player == 'paused' or player == 'standby') and state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
+            {% elif (player == 'paused' or player == 'standby') and
+            state_attr('media_player.nvidia_shield', 'source') == 'Netflix' %}
               Netflix
-            {% else %}
-            {% endif %}
+            {% else %} {% endif %}
           entity_picture: "/local/netflix-logo2.jpg"
 
 sensor:
@@ -2084,7 +2090,8 @@ script:
           - conditions:
               - condition: template
                 value_template: >-
-                  {{ states('media_player.nvidia_shield') in ['standby', 'idle', 'playing', 'paused']
+                  {{ states('media_player.nvidia_shield') in ['standby', 'idle',
+                  'playing', 'paused']
                     and is_state_attr('media_player.nvidia_shield','app_id','com.plexapp.android')
                     and is_state('media_player.sony_kd_55xe9305', 'on') }}
             sequence: []
@@ -2129,39 +2136,44 @@ script:
           volume_level: 0.5
         target:
           entity_id: >
-            {% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
-            {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
-            {% endif %}
+            {% if is_state("input_select.player", "Google Nest") %}
+            media_player.nest_mini {% elif is_state("input_select.player",
+            "Chromecast Audio") %} media_player.chromecastaudio9331 {% endif %}
       - action: media_player.play_media
         data:
-          entity_id:
-            '{% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
-            {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
-            {% endif %}'
-          media_content_id:
-            '{% if is_state("input_select.radio_station", "Rock Radio") %} http://poznan5-4.radio.pionier.net.pl:8000/tuba8-1.mp3?DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3Njc3OSwiaXNzIjoidGlzcnYifQ.nZUJ1M-g7FY-Je7H-KIdEfs22ZfRfUnk_OXjz3l7iHI
-            {% elif is_state("input_select.radio_station", "Antyradio") %} https://an.cdn.eurozet.pl/ant-waw.mp3?DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzMTM2NDQ2NCwiaXNzIjoidGlzcnYifQ.IvQ09BXx4eSdCHy7DWKhH9XhiGVIk0ruPZjP3G2XW7k
-            {% elif is_state("input_select.radio_station", "RMF FM") %} http://www.rmfon.pl/tunein/tunein.php?host=rs203-krk.rmfstream.pl&mount=rmf_fm&secure=0&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3ODQ2MCwiaXNzIjoidGlzcnYifQ.m-klf1WdJELmfhcNo607ecpUEwldP_G39cn5ykqWtO8
-            {% elif is_state("input_select.radio_station", "RMF Classic") %} http://www.rmfon.pl/tunein/tunein.php?host=rs203-krk.rmfstream.pl&mount=rmf_classic&secure=0&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3ODQ2MCwiaXNzIjoidGlzcnYifQ.m-klf1WdJELmfhcNo607ecpUEwldP_G39cn5ykqWtO8
-            {% elif is_state("input_select.radio_station", "Nowy Świat") %} http://stream.rcs.revma.com/ypqt40u0x1zuv
-            {% endif %}'
+          entity_id: '{% if is_state("input_select.player", "Google Nest") %}
+            media_player.nest_mini {% elif is_state("input_select.player",
+            "Chromecast Audio") %} media_player.chromecastaudio9331 {% endif %}'
+          media_content_id: '{% if is_state("input_select.radio_station", "Rock Radio") %}
+            http://poznan5-4.radio.pionier.net.pl:8000/tuba8-1.mp3?DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3Njc3OSwiaXNzIjoidGlzcnYifQ.nZUJ1M-g7FY-Je7H-KIdEfs22ZfRfUnk_OXjz3l7iHI
+            {% elif is_state("input_select.radio_station", "Antyradio") %}
+            https://an.cdn.eurozet.pl/ant-waw.mp3?DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYzMTM2NDQ2NCwiaXNzIjoidGlzcnYifQ.IvQ09BXx4eSdCHy7DWKhH9XhiGVIk0ruPZjP3G2XW7k
+            {% elif is_state("input_select.radio_station", "RMF FM") %}
+            http://www.rmfon.pl/tunein/tunein.php?host=rs203-krk.rmfstream.pl&mount=rmf_fm&secure=0&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3ODQ2MCwiaXNzIjoidGlzcnYifQ.m-klf1WdJELmfhcNo607ecpUEwldP_G39cn5ykqWtO8
+            {% elif is_state("input_select.radio_station", "RMF Classic") %}
+            http://www.rmfon.pl/tunein/tunein.php?host=rs203-krk.rmfstream.pl&mount=rmf_classic&secure=0&DIST=TuneIn&TGT=TuneIn&maxServers=2&gdpr=1&us_privacy=1YNY&gdpr_consent=CPLe3S9PLe3S9AcABBENBmCgAAAAAAAAACiQAAAAAAJBIDYAGQAQAA0gCIAIoATABSgDvASIAvMBhoDDwGRAMkAZOAy4BnIDPgGkANOgawBrIDdYHIgcqA5cB0YDrAHjgPlCAFwGIAMWAZCAyMBkwDQgGjANKAamA2gBtwDdAHBAOkAdgA7MB3QDwIHkgeUA9oB7oD5AH2BoBgCKgEiAMPAYwAycBnIDPAGfAOSAcoA6wB-AYAMAyMBoQDdAHEgOzAe6IgEgJEAYeAycBnIDPgHJAOUAdYA_AQAFAaEA3QBxIDswHuioBgATAFNgLzAYeAyIBnIDPAGfANyAckA5QB-AoAIA0IBrwDiQH2DIBYATAF5gMPAZEAzkBngDPgHJAOUAfEA_AYADAaEA4kB9g6BaABkAEAANIAiACKAEwAL4AYgBSgDvAIsAXUBFQCRAF5gMNAYeAxIBjADHgGSAMnAZUAywBlwDOQGfANEgaQBpIDSwGnANVAawA2MBuoDi4HJAcqA5cB0YDrAHjgPSAeqA-UB9YD8BwBwAdwDEAGLAMhAZMAy8BoUDRQNGAaUA00BqYDXgG0ANsAbcA4mBx4HIAOkAdgA7MB4EDyQPKAe0A90B8QD7AH4gP2IQFwAMgBMAC-AGIAd4CRAGHgMSAZEAycBnIDPAGfANEAaSA0sBqoDgAHJAOjAdYA8cB-BAAcA0IBooDSgGpgNsAbcA4kB2EDyQPKAeiA90B8QD7AH7EoC4AGQAiABMAC-AGIAUoA7wC6gIqASIAvMBh4DIgGTgMsAZyAzwBnwDSAGsAOAAdYA_AkALAHcAxYBoQDSgG5AOJAdIA7AB5QD2gH2FIEIAGQAQAA0gCIAIoATAApABfADEAKUAd4BFgEiALzAYaAw8BjADIgGSAMnAZcAzkBngDPoGkAaTA1gDWQGxgN1gcmBygDlwHWAPHAfKA_AoAUAHcAXUBiwDJgGhANEAaUA02BqQGpgNeAcEA4kB2ADswHlAPaAe6A-IB9gD9gAA.YAAAAAAAAAAA&partnertok=eyJhbGciOiJIUzI1NiIsImtpZCI6InR1bmVpbiIsInR5cCI6IkpXVCJ9.eyJ0cnVzdGVkX3BhcnRuZXIiOnRydWUsImlhdCI6MTYyOTg3ODQ2MCwiaXNzIjoidGlzcnYifQ.m-klf1WdJELmfhcNo607ecpUEwldP_G39cn5ykqWtO8
+            {% elif is_state("input_select.radio_station", "Nowy Świat") %}
+            http://stream.rcs.revma.com/ypqt40u0x1zuv {% endif %}'
           media_content_type: "audio/mp4"
           extra:
-            thumb:
-              '{% if is_state("input_select.radio_station", "Rock Radio") %} https://ha.anarion.pl/local/radio_covers/rockradio.jpg
-              {% elif is_state("input_select.radio_station", "Antyradio") %} https://ha.anarion.pl/local/radio_covers/antyradio.png
-              {% elif is_state("input_select.radio_station", "RMF FM") %} https://ha.anarion.pl/local/radio_covers/RMF-FM-logo.png
-              {% elif is_state("input_select.radio_station", "RMF Classic") %} https://ha.anarion.pl/local/radio_covers/RMF_classic.png
-              {% elif is_state("input_select.radio_station", "Nowy Świat") %} https://ha.anarion.pl/local/radio_covers/nowy-swiat.jpg
-              {% endif %}'
+            thumb: '{% if is_state("input_select.radio_station", "Rock Radio") %}
+              https://ha.anarion.pl/local/radio_covers/rockradio.jpg {% elif
+              is_state("input_select.radio_station", "Antyradio") %}
+              https://ha.anarion.pl/local/radio_covers/antyradio.png {% elif
+              is_state("input_select.radio_station", "RMF FM") %}
+              https://ha.anarion.pl/local/radio_covers/RMF-FM-logo.png {% elif
+              is_state("input_select.radio_station", "RMF Classic") %}
+              https://ha.anarion.pl/local/radio_covers/RMF_classic.png {% elif
+              is_state("input_select.radio_station", "Nowy Świat") %}
+              https://ha.anarion.pl/local/radio_covers/nowy-swiat.jpg {% endif
+              %}'
     mode: single
   radiostop:
     alias: Stop Radio
     sequence:
       - action: media_player.media_stop
         data:
-          entity_id:
-            '{% if is_state("input_select.player", "Google Nest") %} media_player.nest_mini
-            {% elif is_state("input_select.player", "Chromecast Audio") %} media_player.chromecastaudio9331
-            {% endif %}'
+          entity_id: '{% if is_state("input_select.player", "Google Nest") %}
+            media_player.nest_mini {% elif is_state("input_select.player",
+            "Chromecast Audio") %} media_player.chromecastaudio9331 {% endif %}'
     mode: single
