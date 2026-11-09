@@ -75,268 +75,478 @@ browser_mod:
                   template: icon_only
 
         - type: custom:xiaomi-vacuum-map-card
-          # title: Mapa
-          view_layout:
-            grid-area: map
-          # language: pl
-          # entity: vacuum.valetudo_dreame1
-          # vacuum_platform: "Hypfer/Valetudo"
-          # map_source:
-          #   # camera: camera.valetudo_dreame1_map_data
-          #   image: http://192.168.2.13:3001/api/map/image
-          # # calibration_source:
-          # #   # camera: true
-          # #   identity: true
-          # calibration_source:
-          #   calibration_points:
-          #     - vacuum:
-          #         x: 25500
-          #         y: 25500
-          #       map:
-          #         x: 20
-          #         y: 1
-          #     - vacuum:
-          #         x: 25500
-          #         y: 26500
-          #       map:
-          #         x: 20
-          #         y: 270
-          #     - vacuum:
-          #         x: 26500
-          #         y: 26500
-          #       map:
-          #         x: 242
-          #         y: 270
-          #     - vacuum:
-          #         x: 26500
-          #         y: 25500
-          #       map:
-          #         x: 242
-          #         y: 1
-          # map_locked: true
-          # internal_variables:
-          #   topic: valetudo/dreame1
-          # map_modes:
-          #   - template: vacuum_clean_segment
-          #     variables:
-          #       topic: valetudo/dreame1
-          #     predefined_selections:
-          #       - id: "1"
-          #         outline: [[ 25500, 25500 ], [ 26500, 25500 ], [ 26500, 26500 ], [ 25500, 26500 ]]
-          #         label:
-          #           text: "Salon"
-          #           x: 26000
-          #           y: 26000
-          #           offset_y: 35
-          #         icon:
-          #           name: "mdi:sofa"
-          #           x: 26000
-          #           y: 26000
-          #       - id: "3"
-          #         outline: [[ 26500, 25600 ], [ 27450, 25600 ], [ 27450, 27050 ], [ 26500, 27050 ]]
-          #         label:
-          #           text: "Jadalnia"
-          #           x: 27000
-          #           y: 26000
-          #           offset_y: 35
-          #         icon:
-          #           name: "mdi:silverware-fork-knife"
-          #           x: 27000
-          #           y: 26000
-          #       - id: "4"
-          #         outline: [[ 26650, 27050 ], [ 26900, 27050 ], [ 26900, 27190 ], [ 27230, 27190 ], [ 27230, 27600 ], [ 26650, 27600 ]]
-          #         label:
-          #           text: "Kuchnia"
-          #           x: 26940
-          #           y: 27350
-          #           offset_y: 35
-          #         icon:
-          #           name: "mdi:countertop-outline"
-          #           x: 26940
-          #           y: 27350
-          #   - template: vacuum_clean_zone
-          #   - template: vacuum_clean_zone_predefined
-          #     predefined_selections:
-          #       - id: "5"
-          #         zones: [[26668, 25729, 27183, 26327]]
-          #         label:
-          #           text: "Stół"
-          #           x: 26950
-          #           y: 26000
-          #           offset_y: 35
-          #         icon:
-          #           name: mdi:table-furniture
-          #           x: 26950
-          #           y: 26000
-          #       - id: "6"
-          #         zones: [[26280, 25965, 26481, 26154]]
-          #         label:
-          #           text: "Test"
-          #           x: 26300
-          #           y: 25900
-          #           offset_y: 35
-          #         icon:
-          #           name: mdi:table-furniture
-          #           x: 26300
-          #           y: 25900
-          #   - template: vacuum_goto
-          #   # - template: vacuum_follow_path
+          language: pl
           entity: vacuum.valetudo_dreame1
           vacuum_platform: Hypfer/Valetudo
-          language: pl
           map_source:
             camera: camera.dreame1_camera_camera
           calibration_source:
             camera: true
+          map_locked: true
           internal_variables:
             topic: valetudo/dreame1
-          two_finger_pan: true
           map_modes:
-            - template: vacuum_clean_segment
+            - name: Pokoje
+              icon: mdi:floor-plan
+              run_immediately: false
+              coordinates_rounding: true
+              coordinates_to_meters_divider: 1000
+              selection_type: ROOM
+              max_selections: 999
+              repeats_type: EXTERNAL
+              max_repeats: 3
+              service_call_schema:
+                service: mqtt.publish
+                service_data:
+                  topic: '[[topic]]/MapSegmentationCapability/clean/set'
+                  payload: >-
+                    {"segment_ids": [[selection]], "iterations": [[repeats]],
+                    "customOrder": true}
               predefined_selections:
                 - id: '1'
                   icon:
-                    name: mdi:sofa
-                    x: 3105
-                    'y': 3167
+                    name: mdi:broom
+                    x: 3202
+                    'y': 2915
                   label:
-                    text: SALON
-                    x: 3105
-                    'y': 3167
+                    text: Parter
+                    x: 3202
+                    'y': 2915
                     offset_y: 35
                   outline:
-                    - - 2845
-                      - 3310
-                    - - 2845
-                      - 3225
-                    - - 2850
-                      - 3190
-                    - - 2865
-                      - 3110
-                    - - 2880
-                      - 3035
-                    - - 2885
-                      - 3020
-                    - - 2900
-                      - 2980
-                    - - 2925
-                      - 2945
-                    - - 2930
-                      - 2940
-                    - - 2945
-                      - 2935
-                    - - 2955
-                      - 2935
+                    - - 3055
+                      - 2970
+                    - - 3200
+                      - 2735
+                    - - 3300
+                      - 2735
                     - - 3305
-                      - 2945
-                    - - 3360
-                      - 2960
-                    - - 3365
-                      - 2985
-                    - - 3365
-                      - 3305
-                    - - 3360
-                      - 3335
-                    - - 3255
-                      - 3400
-                    - - 3240
-                      - 3400
-                    - - 3190
-                      - 3395
-                    - - 2935
-                      - 3355
-                    - - 2860
-                      - 3340
-                    - - 2855
-                      - 3335
-                    - - 2850
-                      - 3325
-                    - - 2845
-                      - 3310
+                      - 2740
+                    - - 3350
+                      - 3015
+                    - - 3350
+                      - 3065
+                    - - 3335
+                      - 3085
+                    - - 3325
+                      - 3095
+                    - - 3060
+                      - 3095
+                    - - 3055
+                      - 3090
+                    - - 3055
+                      - 2970
                 - id: '2'
                   icon:
-                    name: mdi:countertop-outline
-                    x: 3750
-                    'y': 2790
+                    name: mdi:broom
+                    x: 2780
+                    'y': 2862
                   label:
-                    text: KUCHNIA
-                    x: 3750
-                    'y': 2790
+                    text: Kuchnia
+                    x: 2780
+                    'y': 2862
                     offset_y: 35
                   outline:
-                    - - 3860
-                      - 2905
-                    - - 3740
-                      - 2905
-                    - - 3660
-                      - 2895
-                    - - 3625
-                      - 2885
-                    - - 3625
-                      - 2795
-                    - - 3680
-                      - 2675
-                    - - 3855
-                      - 2675
-                    - - 3860
-                      - 2680
-                    - - 3875
-                      - 2705
-                    - - 3875
-                      - 2855
-                    - - 3870
-                      - 2890
-                    - - 3860
-                      - 2905
+                    - - 2675
+                      - 2745
+                    - - 2885
+                      - 2745
+                    - - 2885
+                      - 2975
+                    - - 2875
+                      - 2980
+                    - - 2795
+                      - 2980
+                    - - 2675
+                      - 2920
+                    - - 2675
+                      - 2745
                 - id: '3'
                   icon:
-                    name: mdi:silverware-fork-knife
-                    x: 3292
-                    'y': 2802
+                    name: mdi:broom
+                    x: 2820
+                    'y': 3295
                   label:
-                    text: JADALNIA
-                    x: 3292
-                    'y': 2802
+                    text: Jadalnia
+                    x: 2820
+                    'y': 3295
                     offset_y: 35
                   outline:
-                    - - 3620
-                      - 2615
-                    - - 3630
+                    - - 3045
+                      - 3195
+                    - - 2940
+                      - 3595
+                    - - 2895
+                      - 3620
+                    - - 2685
+                      - 3620
+                    - - 2630
+                      - 3590
+                    - - 2625
+                      - 3580
+                    - - 2610
+                      - 3525
+                    - - 2590
+                      - 3285
+                    - - 2590
+                      - 3225
+                    - - 2615
+                      - 3015
+                    - - 2620
+                      - 3005
+                    - - 2795
                       - 2985
-                    - - 3630
-                      - 3045
-                    - - 3505
-                      - 3045
-                    - - 3395
-                      - 3040
-                    - - 2965
-                      - 2940
-                    - - 2955
-                      - 2920
-                    - - 2955
-                      - 2880
-                    - - 2965
-                      - 2680
-                    - - 2975
-                      - 2650
-                    - - 3000
-                      - 2605
-                    - - 3005
-                      - 2600
-                    - - 3040
-                      - 2575
+                    - - 2990
+                      - 2970
                     - - 3050
-                      - 2570
-                    - - 3125
-                      - 2560
-                    - - 3360
-                      - 2560
-                    - - 3400
-                      - 2565
-                    - - 3590
-                      - 2605
-                    - - 3620
-                      - 2615
-            - template: vacuum_clean_zone
-            - template: vacuum_goto
-          map_locked: true
+                      - 2970
+                    - - 3050
+                      - 3085
+                    - - 3045
+                      - 3195
+                - id: '4'
+                  icon:
+                    name: mdi:broom
+                    x: 3147
+                    'y': 3457
+                  label:
+                    text: Salon
+                    x: 3147
+                    'y': 3457
+                    offset_y: 35
+                  outline:
+                    - - 2945
+                      - 3295
+                    - - 2990
+                      - 3230
+                    - - 3310
+                      - 3230
+                    - - 3350
+                      - 3250
+                    - - 3350
+                      - 3625
+                    - - 3335
+                      - 3665
+                    - - 3330
+                      - 3670
+                    - - 3265
+                      - 3685
+                    - - 3050
+                      - 3685
+                    - - 3035
+                      - 3675
+                    - - 3000
+                      - 3645
+                    - - 2945
+                      - 3595
+                    - - 2945
+                      - 3295
+              variables:
+                p: valetudo/dreame1
+            - name: Sprzątanie strefowe
+              icon: mdi:select-drag
+              run_immediately: false
+              coordinates_rounding: true
+              coordinates_to_meters_divider: 100
+              selection_type: MANUAL_RECTANGLE
+              max_selections: 5
+              repeats_type: EXTERNAL
+              max_repeats: 3
+              service_call_schema:
+                service: mqtt.publish
+                evaluate_data_as_template: true
+                service_data:
+                  topic: '[[topic]]/ZoneCleaningCapability/start/set'
+                  payload: >-
+                    {"zones": [{%for s in ('[[selection]]')|from_json %}{
+                    "points": {"pA": { "x": {{s[0]}}, "y": {{s[1]}} }, "pB": {
+                    "x": {{s[2]}}, "y": {{s[1]}} }, "pC": { "x": {{s[2]}}, "y":
+                    {{s[3]}} }, "pD": { "x": {{s[0]}}, "y": {{s[3]}} } } }{%if
+                    not loop.last%},{%endif%}{%endfor%}], "iterations":
+                    [[repeats]]}
+              predefined_selections: []
+              variables: {}
+            - name: Zapisane strefy
+              icon: mdi:floor-plan
+              run_immediately: false
+              coordinates_rounding: true
+              coordinates_to_meters_divider: 1000
+              selection_type: PREDEFINED_RECTANGLE
+              max_selections: 999
+              repeats_type: EXTERNAL
+              max_repeats: 3
+              service_call_schema:
+                service: mqtt.publish
+                evaluate_data_as_template: true
+                service_data:
+                  topic: '[[topic]]/ZoneCleaningCapability/start/set'
+                  payload: >-
+                    {"zones": [{%for s in ('[[selection]]')|from_json %}{
+                    "points": {"pA": { "x": {{s[0]}}, "y": {{s[1]}} }, "pB": {
+                    "x": {{s[2]}}, "y": {{s[1]}} }, "pC": { "x": {{s[2]}}, "y":
+                    {{s[3]}} }, "pD": { "x": {{s[0]}}, "y": {{s[3]}} } } }{%if
+                    not loop.last%},{%endif%}{%endfor%}], "iterations":
+                    [[repeats]]}
+              predefined_selections:
+                - id: '5'
+                  zones:
+                    - - 26668
+                      - 25729
+                      - 27183
+                      - 26327
+                  label:
+                    text: Stół
+                    x: 26950
+                    'y': 26000
+                    offset_y: 35
+                  icon:
+                    name: mdi:table-furniture
+                    x: 26950
+                    'y': 26000
+                - id: '6'
+                  zones:
+                    - - 26280
+                      - 25965
+                      - 26481
+                      - 26154
+                  label:
+                    text: Test
+                    x: 26300
+                    'y': 25900
+                    offset_y: 35
+                  icon:
+                    name: mdi:table-furniture
+                    x: 26300
+                    'y': 25900
+              variables: {}
+            - name: Idź do punktu
+              icon: mdi:map-marker-plus
+              run_immediately: false
+              coordinates_rounding: true
+              coordinates_to_meters_divider: 100
+              selection_type: MANUAL_POINT
+              max_selections: 999
+              repeats_type: NONE
+              max_repeats: 1
+              service_call_schema:
+                service: mqtt.publish
+                service_data:
+                  topic: '[[topic]]/GoToLocationCapability/go/set'
+                  payload: '{ "coordinates": { "x": [[point_x]], "y": [[point_y]] } }'
+              predefined_selections: []
+              variables: {}
+          two_finger_pan: false
+          icons:
+            - icon_id: start_cleanup
+              icon: mdi:play
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  value_not: cleaning
+                - entity: vacuum.valetudo_dreame1
+                  value_not: error
+                - entity: vacuum.valetudo_dreame1
+                  value_not: returning
+              tooltip: Uruchom
+              tap_action:
+                action: call-service
+                service: vacuum.start
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+            - icon_id: pause
+              icon: mdi:pause
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  value_not: docked
+                - entity: vacuum.valetudo_dreame1
+                  value_not: idle
+                - entity: vacuum.valetudo_dreame1
+                  value_not: error
+                - entity: vacuum.valetudo_dreame1
+                  value_not: paused
+              tooltip: Wstrzymaj
+              tap_action:
+                action: call-service
+                service: vacuum.pause
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+            - icon_id: stop
+              icon: mdi:stop
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  value_not: docked
+                - entity: vacuum.valetudo_dreame1
+                  value_not: idle
+                - entity: vacuum.valetudo_dreame1
+                  value_not: error
+                - entity: vacuum.valetudo_dreame1
+                  value_not: paused
+              tooltip: Zatrzymaj
+              tap_action:
+                action: call-service
+                service: vacuum.stop
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+            - icon_id: return_to_base
+              icon: mdi:home-map-marker
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  value_not: docked
+                - entity: vacuum.valetudo_dreame1
+                  value_not: returning
+              tooltip: Wróć do stacji dokującej
+              tap_action:
+                action: call-service
+                service: vacuum.return_to_base
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+            - icon_id: locate
+              icon: mdi:map-marker
+              tooltip: Zlokalizuj
+              tap_action:
+                action: call-service
+                service: vacuum.locate
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+            - icon_id: fan_speed_menu_low
+              menu_id: fan_speed
+              icon: mdi:fan-alert
+              label: low
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value: low
+              tooltip: Zmień prędkość wentylatora
+              tap_action:
+                action: call-service
+                service: vacuum.set_fan_speed
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+                  fan_speed: low
+            - icon_id: fan_speed_menu_medium
+              menu_id: fan_speed
+              icon: mdi:fan-alert
+              label: Średni
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value: medium
+              tooltip: Zmień prędkość wentylatora
+              tap_action:
+                action: call-service
+                service: vacuum.set_fan_speed
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+                  fan_speed: medium
+            - icon_id: fan_speed_menu_high
+              menu_id: fan_speed
+              icon: mdi:fan-alert
+              label: high
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value: high
+              tooltip: Zmień prędkość wentylatora
+              tap_action:
+                action: call-service
+                service: vacuum.set_fan_speed
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+                  fan_speed: high
+            - icon_id: fan_speed_menu_max
+              menu_id: fan_speed
+              icon: mdi:fan-alert
+              label: max
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value: max
+              tooltip: Zmień prędkość wentylatora
+              tap_action:
+                action: call-service
+                service: vacuum.set_fan_speed
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+                  fan_speed: max
+            - icon_id: fan_speed_unknown
+              icon: mdi:fan-alert
+              conditions:
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value_not: low
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value_not: medium
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value_not: high
+                - entity: vacuum.valetudo_dreame1
+                  attribute: fan_speed
+                  value_not: max
+              tooltip: Zmień prędkość wentylatora
+              tap_action:
+                action: call-service
+                service: vacuum.set_fan_speed
+                service_data:
+                  entity_id: vacuum.valetudo_dreame1
+                  fan_speed: low
+          tiles:
+            - tile_id: fan_speed
+              entity: vacuum.valetudo_dreame1
+              label: Wentylator
+              attribute: fan_speed
+              icon: mdi:fan
+              translations:
+                silent: Cichy
+                standard: Normalny
+                medium: Średni
+                turbo: Turbo
+                auto: Automatyczny
+                gentle: Delikatny
+            - tile_id: battery_level
+              label: Bateria
+              unit: '%'
+              entity: sensor.valetudo_dreame1_battery_level
+              icon: mdi:battery
+              precision: 0
+              translations: {}
+            - tile_id: filter_left
+              label: Filtr
+              icon: mdi:air-filter
+              unit: h
+              multiplier: 0.016666666666666666
+              entity: sensor.valetudo_dreame1_main_filter
+              precision: 0
+              translations: {}
+            - tile_id: main_brush_left
+              label: Główna szczotka
+              icon: mdi:brush
+              unit: h
+              multiplier: 0.016666666666666666
+              entity: sensor.valetudo_dreame1_main_brush
+              precision: 0
+              translations: {}
+            - tile_id: side_brush_left
+              label: Boczna szczotka
+              icon: mdi:brush
+              unit: h
+              multiplier: 0.016666666666666666
+              entity: sensor.valetudo_dreame1_right_brush
+              precision: 0
+              translations: {}
+            - tile_id: cleaned_area
+              label: Powierzchnia
+              icon: mdi:texture-box
+              unit: m²
+              multiplier: 0.0001
+              entity: sensor.valetudo_dreame1_current_statistics_area
+              precision: 0
+              translations: {}
+            - tile_id: cleaning_time
+              label: Czas sprzątania
+              icon: mdi:timer-sand
+              unit: min
+              multiplier: 0.016666666666666666
+              entity: sensor.valetudo_dreame1_current_statistics_time
+              precision: 0
+              translations: {}
+          additional_presets: []
