@@ -45,8 +45,12 @@ full_circle:
 
           if (variables.circle_color === undefined) {
               circle_color = '#b2b2b2';
-              text_color = '#8d8e90';
+              // keep the number themed by `--c-font-color` for the default cards
+              text_color = 'var(--c-font-color)';
           } else {
+              // `circle_color` colours the stroke *and* the number; without this the
+              // number stayed `--c-font-color` (grey) and disappeared on the bright
+              // backgrounds that set `circle_color` (e.g. the AQI card).
               circle_color = variables.circle_color;
               text_color = variables.circle_color;
           }
@@ -64,7 +68,7 @@ full_circle:
                   font-size: var(--c-font-size);
                   font-weight: var(--c-font-weight);
                   letter-spacing: var(--c-letter-spacing);
-                  fill: var(--c-font-color);
+                  fill: ${text_color};
                 }
                 tspan {
                   font-size: var(--c-unit-font-size);
