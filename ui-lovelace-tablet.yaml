@@ -1451,9 +1451,15 @@ views:
                       - marquee_state
                       - icon_aqi
                       - full_circle
-                    # styles:
-                    #   state:
-                    #     - font-size: 1vw
+                    # `full_circle` draws the number with `--c-font-color`
+                    # (`#97989c` by default), which is hard to read on the bright
+                    # AQI backgrounds (green/yellow/orange/purple/red). Use the same
+                    # dark tone as the icon, name and circle stroke.
+                    styles:
+                      card:
+                        - --c-font-color: rgba(0, 0, 0, 0.6)
+                      # state:
+                      #   - font-size: 1vw
                     variables:
                       circle_input: >
                         [[[

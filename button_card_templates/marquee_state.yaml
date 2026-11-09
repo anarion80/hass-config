@@ -37,6 +37,26 @@ marquee_state:
       }
       return variables.translate_unknown;
     ]]]
+  # The state_display above toggles the `marquee` class on `#state`, but the
+  # animation itself was only defined inside the `conditional_media` / `basic`
+  # templates' extra_styles. Without it the class did nothing and a long state
+  # stayed clipped by the `.ellipsis` rule, so ship the keyframes here too and
+  # make this template self-contained.
+  extra_styles: |
+    #container {
+      overflow: hidden;
+    }
+    .marquee {
+      animation: marquee 20s linear infinite;
+    }
+    @keyframes marquee {
+      from {
+        transform: translateX(0%);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
   styles:
     state:
       - z-index: 3
